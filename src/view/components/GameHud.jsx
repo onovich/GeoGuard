@@ -1,4 +1,4 @@
-export default function GameHud({ gameState, health, maxHealth, money, formattedTime }) {
+export default function GameHud({ gameState, health, maxHealth, money, formattedTime, currentWave }) {
   if (gameState !== 'PLAYING') {
     return null;
   }
@@ -15,8 +15,9 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
         </div>
       </div>
 
-      <div className="text-2xl font-black text-slate-700 bg-white/80 px-6 py-2 rounded-2xl shadow-sm backdrop-blur-sm">
-        {formattedTime}
+      <div className="flex flex-col items-center text-slate-700 bg-white/80 px-6 py-2 rounded-2xl shadow-sm backdrop-blur-sm min-w-[130px]">
+        <span className="text-xs font-bold tracking-[0.2em] text-slate-400">WAVE {currentWave}</span>
+        <span className="text-2xl font-black">{formattedTime}</span>
       </div>
 
       <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl shadow-sm backdrop-blur-sm pointer-events-auto">

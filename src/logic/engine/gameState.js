@@ -1,3 +1,5 @@
+import { createInitialTowerCatalog } from '../../data/gameConfig';
+
 export const createPlayerState = () => ({
   x: 0,
   y: 0,
@@ -19,6 +21,8 @@ export const createRuntimeState = () => ({
   keys: { w: false, a: false, s: false, d: false },
   joystick: { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0, dirX: 0, dirY: 0 },
   pointer: { x: 0, y: 0, active: false },
+  dragPlacement: { active: false, towerId: null, pointerX: 0, pointerY: 0, worldX: 0, worldY: 0, canPlace: false, invalidReason: null },
+  buildBarRect: null,
   enemies: [],
   towers: [],
   projectiles: [],
@@ -29,8 +33,8 @@ export const createRuntimeState = () => ({
   lastTime: 0,
   gameTime: 0,
   money: 20,
-  spawnTimer: 0,
-  spawnInterval: 1.5,
+  towerCatalog: createInitialTowerCatalog(),
+  wave: { number: 1, queue: [], spawnInterval: 0.9, spawnTimer: 0, boss: null, bossSpawned: false, awaitingReward: false },
   difficultyMultiplier: 1,
   isMobile: false,
 });
