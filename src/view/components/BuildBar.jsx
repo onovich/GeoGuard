@@ -3,6 +3,14 @@ import { UI_COPY } from '../../data/gameConfig';
 
 export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag, towerTypes, setBuildBarRect }) {
   const containerRef = useRef(null);
+  const pendingTouchRef = useRef(null);
+
+  const clearPendingTouch = () => {
+    if (pendingTouchRef.current?.timer) {
+      window.clearTimeout(pendingTouchRef.current.timer);
+    }
+    pendingTouchRef.current = null;
+  };
 
   useEffect(() => {
     const syncRect = () => {
@@ -23,15 +31,46 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
   }
 
   return (
-    <div ref={containerRef} className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg pointer-events-auto max-w-[92vw] overflow-x-auto">
+    <div
+      ref={containerRef}
+      className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg pointer-events-auto max-w-[92vw] overflow-x-auto"
+      style={{ touchAction: 'pan-x' }}
+    >
       {towerTypes.map((tower) => (
         <div
           key={tower.id}
           onMouseDown={(event) => beginTowerDrag(tower.id, event.clientX, event.clientY)}
           onTouchStart={(event) => {
-            event.preventDefault();
             const touch = event.touches[0];
-            beginTowerDrag(tower.id, touch.clientX, touch.clientY);
+            clearPendingTouch();
+            pendingTouchRef.current = {
+              towerId: tower.id,
+              startX: touch.clientX,
+              startY: touch.clientY,
+              timer: window.setTimeout(() => {
+                beginTowerDrag(tower.id, touch.clientX, touch.clientY);
+                pendingTouchRef.current = null;
+              }, 180),
+            };
+          }}
+          onTouchMove={(event) => {
+            if (!pendingTouchRef.current) {
+              return;
+            }
+
+            const touch = event.touches[0];
+            const dx = Math.abs(touch.clientX - pendingTouchRef.current.startX);
+            const dy = Math.abs(touch.clientY - pendingTouchRef.current.startY);
+
+            if (dx > 10 || dy > 10) {
+              clearPendingTouch();
+            }
+          }}
+          onTouchEnd={() => {
+            clearPendingTouch();
+          }}
+          onTouchCancel={() => {
+            clearPendingTouch();
           }}
           className={`relative flex flex-col items-center p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all border-2 min-w-[78px] ${money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'} ${dragTowerId === tower.id ? 'border-blue-500 bg-blue-50 scale-105' : 'border-transparent bg-white'}`}
         >
