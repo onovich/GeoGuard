@@ -7,11 +7,15 @@ import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/g
 const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
   x,
   y,
+  previousX: x,
+  previousY: y,
   vx: Math.cos(angle) * speed,
   vy: Math.sin(angle) * speed,
   damage,
   life: extras.life ?? 1.5,
   color: extras.color ?? COLORS.projectile,
+  kind: extras.kind ?? 'basic',
+  radius: extras.radius ?? 4,
   pierce: extras.pierce ?? 0,
   splash: extras.splash,
   isPlayer: true,
@@ -48,6 +52,21 @@ export default function useGeoGuardGame() {
 
   const spawnFloatingText = (x, y, text, color) => {
     game.current.floatingTexts.push({ x, y, text, color, life: 1, maxLife: 0.8, vy: -30 });
+  };
+
+  const spawnImpactWave = (x, y, options = {}) => {
+    game.current.impactWaves.push({
+      x,
+      y,
+      radius: options.startRadius ?? 6,
+      maxRadius: options.maxRadius ?? 54,
+      growth: options.growth ?? 220,
+      life: options.life ?? 0.28,
+      maxLife: options.life ?? 0.28,
+      color: options.color ?? COLORS.towerCannon,
+      lineWidth: options.lineWidth ?? 4,
+      fillAlpha: options.fillAlpha ?? 0.12,
+    });
   };
 
   const syncHudMoney = () => setMoney(game.current.money);
@@ -144,7 +163,12 @@ export default function useGeoGuardGame() {
       const target = findNearestTarget(state.player, state.enemies, state.player.range);
       if (target) {
         const angle = Math.atan2(target.y - state.player.y, target.x - state.player.x);
-        state.projectiles.push(createProjectile(state.player.x, state.player.y, angle, 400, state.player.damage));
+        state.projectiles.push(
+          createProjectile(state.player.x, state.player.y, angle, 400, state.player.damage, {
+            kind: 'basic',
+            radius: 4,
+          })
+        );
         state.player.lastShoot = 0;
       }
     }
@@ -169,6 +193,8 @@ export default function useGeoGuardGame() {
               pierce: tower.pierce || 0,
               life: 2,
               color: tower.color,
+              kind: tower.splash ? 'cannon' : tower.pierce ? 'sniper' : 'basic',
+              radius: tower.splash ? 7 : tower.pierce ? 3 : 4,
               hitEnemies: new Set(),
             })
           );
@@ -238,6 +264,8 @@ export default function useGeoGuardGame() {
 
     for (let projectileIndex = state.projectiles.length - 1; projectileIndex >= 0; projectileIndex -= 1) {
       const projectile = state.projectiles[projectileIndex];
+      projectile.previousX = projectile.x;
+      projectile.previousY = projectile.y;
       projectile.x += projectile.vx * dt;
       projectile.y += projectile.vy * dt;
       projectile.life -= dt;
@@ -255,23 +283,45 @@ export default function useGeoGuardGame() {
           spawnFloatingText(enemy.x, enemy.y - 15, Math.floor(projectile.damage), COLORS.text);
           spawnParticle(projectile.x, projectile.y, projectile.color, 5, 40);
 
+          if (projectile.kind === 'sniper') {
+            spawnParticle(projectile.x, projectile.y, COLORS.towerSniper, 10, 80);
+          }
+
           if (projectile.hitEnemies) {
             projectile.hitEnemies.add(enemy);
           }
 
           if (projectile.splash) {
+            spawnImpactWave(projectile.x, projectile.y, {
+              startRadius: 10,
+              maxRadius: projectile.splash,
+              growth: 320,
+              life: 0.22,
+              color: COLORS.towerCannon,
+              lineWidth: 5,
+              fillAlpha: 0.16,
+            });
             spawnParticle(projectile.x, projectile.y, COLORS.towerCannon, 15, projectile.splash);
             for (const otherEnemy of state.enemies) {
               if (otherEnemy !== enemy && dist(projectile, otherEnemy) <= projectile.splash) {
                 otherEnemy.hp -= projectile.damage * 0.5;
                 otherEnemy.hitFlash = 1;
-                spawnFloatingText(otherEnemy.x, otherEnemy.y - 15, Math.floor(projectile.damage * 0.5), COLORS.text);
+                spawnFloatingText(otherEnemy.x, otherEnemy.y - 15, Math.floor(projectile.damage * 0.5), COLORS.towerCannon);
               }
             }
           }
 
           if (projectile.pierce > 0) {
             projectile.pierce -= 1;
+            spawnImpactWave(projectile.x, projectile.y, {
+              startRadius: 4,
+              maxRadius: 18,
+              growth: 240,
+              life: 0.12,
+              color: COLORS.towerSniper,
+              lineWidth: 3,
+              fillAlpha: 0,
+            });
             hit = false;
           } else {
             break;
@@ -315,6 +365,15 @@ export default function useGeoGuardGame() {
       particle.life -= dt;
       if (particle.life <= 0) {
         state.particles.splice(particleIndex, 1);
+      }
+    }
+
+    for (let waveIndex = state.impactWaves.length - 1; waveIndex >= 0; waveIndex -= 1) {
+      const impactWave = state.impactWaves[waveIndex];
+      impactWave.radius = Math.min(impactWave.maxRadius, impactWave.radius + impactWave.growth * dt);
+      impactWave.life -= dt;
+      if (impactWave.life <= 0) {
+        state.impactWaves.splice(waveIndex, 1);
       }
     }
 
@@ -423,12 +482,64 @@ export default function useGeoGuardGame() {
     ctx.lineWidth = 3;
     ctx.stroke();
 
+    for (const impactWave of state.impactWaves) {
+      const alpha = impactWave.life / impactWave.maxLife;
+      ctx.globalAlpha = alpha * impactWave.fillAlpha;
+      ctx.fillStyle = impactWave.color;
+      ctx.beginPath();
+      ctx.arc(impactWave.x, impactWave.y, impactWave.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = impactWave.color;
+      ctx.lineWidth = impactWave.lineWidth;
+      ctx.beginPath();
+      ctx.arc(impactWave.x, impactWave.y, impactWave.radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
     ctx.shadowBlur = 4;
     for (const projectile of state.projectiles) {
       ctx.fillStyle = projectile.color;
-      ctx.beginPath();
-      ctx.arc(projectile.x, projectile.y, 4, 0, Math.PI * 2);
-      ctx.fill();
+
+      if (projectile.kind === 'cannon') {
+        ctx.save();
+        ctx.translate(projectile.x, projectile.y);
+        ctx.rotate(Math.atan2(projectile.vy, projectile.vx));
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.beginPath();
+        ctx.arc(0, 0, projectile.radius + 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = projectile.color;
+        drawRoundRect(ctx, -projectile.radius, -projectile.radius, projectile.radius * 2, projectile.radius * 2, 3);
+        ctx.fill();
+        ctx.restore();
+      } else if (projectile.kind === 'sniper') {
+        const angle = Math.atan2(projectile.vy, projectile.vx);
+        ctx.save();
+        ctx.globalAlpha = 0.45;
+        ctx.strokeStyle = projectile.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(projectile.previousX, projectile.previousY);
+        ctx.lineTo(projectile.x, projectile.y);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.translate(projectile.x, projectile.y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.moveTo(projectile.radius * 3, 0);
+        ctx.lineTo(-projectile.radius * 2, projectile.radius);
+        ctx.lineTo(-projectile.radius * 2, -projectile.radius);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      } else {
+        ctx.beginPath();
+        ctx.arc(projectile.x, projectile.y, projectile.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     ctx.shadowBlur = 0;

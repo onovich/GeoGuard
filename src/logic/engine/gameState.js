@@ -24,6 +24,7 @@ export const createRuntimeState = () => ({
   projectiles: [],
   drops: [],
   particles: [],
+  impactWaves: [],
   floatingTexts: [],
   lastTime: 0,
   gameTime: 0,
