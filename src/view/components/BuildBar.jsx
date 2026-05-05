@@ -47,6 +47,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
               towerId: tower.id,
               startX: touch.clientX,
               startY: touch.clientY,
+              activated: false,
               timer: window.setTimeout(() => {
                 beginTowerDrag(tower.id, touch.clientX, touch.clientY);
                 pendingTouchRef.current = null;
@@ -60,7 +61,13 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
 
             const touch = event.touches[0];
             const dx = Math.abs(touch.clientX - pendingTouchRef.current.startX);
-            const dy = Math.abs(touch.clientY - pendingTouchRef.current.startY);
+            const dy = touch.clientY - pendingTouchRef.current.startY;
+
+            if (dy < -12 && dx < 18) {
+              beginTowerDrag(tower.id, touch.clientX, touch.clientY);
+              clearPendingTouch();
+              return;
+            }
 
             if (dx > 10 || dy > 10) {
               clearPendingTouch();
