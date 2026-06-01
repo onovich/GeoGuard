@@ -1,4 +1,4 @@
-import { ENEMY_TYPES } from '../../data/gameConfig';
+import { BOSS_ORDER, BOSS_TYPES, ENEMY_TYPES } from '../../data/gameConfig';
 import { dist } from './gameMath';
 
 export const getSpawnPosition = (camera, viewportWidth, viewportHeight) => {
@@ -38,12 +38,6 @@ const interleaveGroups = (groups) => {
   return queue;
 };
 
-const BOSS_ARCHETYPES = [
-  { key: 'BASIC', name: '方阵统帅', speedFactor: 1.1, damageFactor: 2.2, radiusBonus: 14 },
-  { key: 'FAST', name: '疾袭领主', speedFactor: 1.25, damageFactor: 2, radiusBonus: 12 },
-  { key: 'TANK', name: '重装堡垒', speedFactor: 0.95, damageFactor: 2.8, radiusBonus: 18 },
-];
-
 export const createWaveDefinition = (waveNumber) => {
   const groups = [{ type: 'BASIC', count: 7 + waveNumber * 2 }];
 
@@ -55,26 +49,61 @@ export const createWaveDefinition = (waveNumber) => {
     groups.push({ type: 'TANK', count: 1 + Math.floor(waveNumber / 2) });
   }
 
-  const bossArchetype = BOSS_ARCHETYPES[(waveNumber - 1) % BOSS_ARCHETYPES.length];
-  const bossBase = ENEMY_TYPES[bossArchetype.key];
-  const bossHp = Math.round((bossBase.hp * 7 + waveNumber * 55) * (1 + waveNumber * 0.08));
+  if (waveNumber >= 4) {
+    groups.push({ type: 'SHARD', count: 2 + Math.floor(waveNumber / 2) });
+  }
+
+  if (waveNumber >= 5) {
+    groups.push({ type: 'SHIELD', count: 1 + Math.floor(waveNumber / 3) });
+  }
+
+  if (waveNumber >= 6) {
+    groups.push({ type: 'BOMBER', count: 1 + Math.floor(waveNumber / 3) });
+  }
+
+  if (waveNumber >= 7) {
+    groups.push({ type: 'MEDIC', count: 1 + Math.floor(waveNumber / 4) });
+  }
+
+  if (waveNumber >= 8) {
+    groups.push({ type: 'JAMMER', count: 1 + Math.floor(waveNumber / 5) });
+  }
+
+  if (waveNumber >= 9) {
+    groups.push({ type: 'PHASE', count: 2 + Math.floor(waveNumber / 4) });
+  }
+
+  if (waveNumber >= 10) {
+    groups.push({ type: 'SCOUT', count: 2 + Math.floor(waveNumber / 4) });
+  }
+
+  if (waveNumber >= 11) {
+    groups.push({ type: 'BEACON', count: 1 + Math.floor(waveNumber / 5) });
+  }
+
+  if (waveNumber >= 12) {
+    groups.push({ type: 'BURROWER', count: 1 + Math.floor(waveNumber / 5) });
+  }
+
+  if (waveNumber >= 13) {
+    groups.push({ type: 'SIEGE', count: 1 + Math.floor(waveNumber / 6) });
+  }
+
+  const bossTemplate = BOSS_TYPES[BOSS_ORDER[(waveNumber - 1) % BOSS_ORDER.length]];
+  const hpScale = 1 + waveNumber * 0.12;
 
   return {
     number: waveNumber,
     spawnInterval: Math.max(0.35, 0.95 - waveNumber * 0.05),
     queue: interleaveGroups(groups),
     boss: {
-      ...bossBase,
-      id: `BOSS_${bossArchetype.key}`,
-      name: bossArchetype.name,
-      hp: bossHp,
-      maxHp: bossHp,
-      speed: Math.round(bossBase.speed * bossArchetype.speedFactor),
-      damage: Math.round(bossBase.damage * bossArchetype.damageFactor + waveNumber * 2),
-      radius: bossBase.radius + bossArchetype.radiusBonus,
-      value: 22 + waveNumber * 6,
+      ...bossTemplate,
+      enemyType: 'BOSS',
+      hp: Math.round(bossTemplate.hp * hpScale),
+      maxHp: Math.round(bossTemplate.hp * hpScale),
+      damage: Math.round(bossTemplate.damage + waveNumber * 2),
+      value: bossTemplate.value + waveNumber * 6,
       isBoss: true,
-      color: bossBase.color,
     },
   };
 };

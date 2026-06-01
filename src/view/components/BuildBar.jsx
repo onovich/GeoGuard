@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
 
-export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag, towerTypes, setBuildBarRect }) {
+export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag, towerTypes, setBuildBarRect, openBlueprintContextMenu }) {
   const containerRef = useRef(null);
   const pendingTouchRef = useRef(null);
 
@@ -39,7 +39,14 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
       {towerTypes.map((tower) => (
         <div
           key={tower.id}
-          onMouseDown={(event) => beginTowerDrag(tower.id, event.clientX, event.clientY)}
+          onMouseDown={(event) => {
+            if (event.button !== 0) return;
+            beginTowerDrag(tower.id, event.clientX, event.clientY);
+          }}
+          onContextMenu={(event) => {
+            event.preventDefault();
+            openBlueprintContextMenu(tower.id, event.clientX, event.clientY);
+          }}
           onTouchStart={(event) => {
             const touch = event.touches[0];
             clearPendingTouch();
@@ -79,7 +86,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
           onTouchCancel={() => {
             clearPendingTouch();
           }}
-          className={`relative flex flex-col items-center p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all border-2 min-w-[78px] ${money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'} ${dragTowerId === tower.id ? 'border-blue-500 bg-blue-50 scale-105' : 'border-transparent bg-white'}`}
+          className={`relative flex flex-col items-center p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all border-2 min-w-[78px] ${money !== '∞' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'} ${dragTowerId === tower.id ? 'border-blue-500 bg-blue-50 scale-105' : 'border-transparent bg-white'}`}
         >
           <div className="w-10 h-10 mb-1 flex items-center justify-center rounded-lg shadow-inner" style={{ backgroundColor: tower.color }}>
             {tower.shape === 'circle' && <div className="w-4 h-4 bg-white/80 rounded-full"></div>}
