@@ -124,6 +124,135 @@ const drawTowerUpgradeBadge = (ctx, tower, x, y) => {
   ctx.restore();
 };
 
+const drawBossBody = (ctx, enemy) => {
+  const r = enemy.radius;
+  ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
+
+  if (enemy.form === 'twins') {
+    ctx.beginPath();
+    ctx.arc(enemy.x - r * 0.45, enemy.y, r * 0.62, 0, Math.PI * 2);
+    ctx.arc(enemy.x + r * 0.45, enemy.y, r * 0.62, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = COLORS.boss;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(enemy.x - r * 0.25, enemy.y);
+    ctx.lineTo(enemy.x + r * 0.25, enemy.y);
+    ctx.stroke();
+    return;
+  }
+
+  if (enemy.form === 'dragon') {
+    for (let index = 3; index >= 0; index -= 1) {
+      ctx.globalAlpha = 0.35 + index * 0.12;
+      ctx.beginPath();
+      ctx.ellipse(enemy.x - index * r * 0.42, enemy.y + Math.sin(index) * r * 0.18, r * (0.58 - index * 0.05), r * 0.42, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.beginPath();
+    ctx.moveTo(enemy.x + r * 0.95, enemy.y);
+    ctx.lineTo(enemy.x + r * 0.25, enemy.y - r * 0.65);
+    ctx.lineTo(enemy.x + r * 0.28, enemy.y + r * 0.65);
+    ctx.closePath();
+    ctx.fill();
+    return;
+  }
+
+  if (enemy.form === 'spider') {
+    ctx.beginPath();
+    ctx.ellipse(enemy.x, enemy.y, r * 0.78, r * 0.62, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = enemy.color;
+    ctx.lineWidth = 4;
+    for (let side = -1; side <= 1; side += 2) {
+      for (let leg = 0; leg < 4; leg += 1) {
+        const y = enemy.y - r * 0.45 + leg * r * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(enemy.x + side * r * 0.45, y);
+        ctx.lineTo(enemy.x + side * r * 1.15, y + (leg - 1.5) * 5);
+        ctx.stroke();
+      }
+    }
+    return;
+  }
+
+  if (enemy.form === 'astrolabe') {
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, r * 0.62, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = enemy.color;
+    ctx.lineWidth = 3;
+    for (const rotation of [0, Math.PI / 3, -Math.PI / 3]) {
+      ctx.save();
+      ctx.translate(enemy.x, enemy.y);
+      ctx.rotate(rotation);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, r * 1.1, r * 0.36, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+    return;
+  }
+
+  if (enemy.form === 'forge') {
+    drawRoundRect(ctx, enemy.x - r * 0.82, enemy.y - r * 0.7, r * 1.64, r * 1.4, 8);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.fillRect(enemy.x - r * 0.5, enemy.y - r * 0.18, r, r * 0.36);
+    return;
+  }
+
+  if (enemy.form === 'conductor') {
+    ctx.beginPath();
+    ctx.moveTo(enemy.x, enemy.y - r);
+    ctx.lineTo(enemy.x + r * 0.82, enemy.y);
+    ctx.lineTo(enemy.x, enemy.y + r);
+    ctx.lineTo(enemy.x - r * 0.82, enemy.y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = COLORS.boss;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(enemy.x - r, enemy.y - r * 0.65);
+    ctx.lineTo(enemy.x + r, enemy.y + r * 0.65);
+    ctx.stroke();
+    return;
+  }
+
+  if (enemy.form === 'labyrinth') {
+    drawRoundRect(ctx, enemy.x - r, enemy.y - r, r * 2, r * 2, 3);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(enemy.x - r * 0.6, enemy.y - r * 0.5);
+    ctx.lineTo(enemy.x + r * 0.5, enemy.y - r * 0.5);
+    ctx.lineTo(enemy.x + r * 0.5, enemy.y + r * 0.15);
+    ctx.lineTo(enemy.x - r * 0.45, enemy.y + r * 0.15);
+    ctx.lineTo(enemy.x - r * 0.45, enemy.y + r * 0.62);
+    ctx.stroke();
+    return;
+  }
+
+  if (enemy.form === 'bloom') {
+    for (let petal = 0; petal < 6; petal += 1) {
+      const angle = (Math.PI * 2 * petal) / 6;
+      ctx.beginPath();
+      ctx.ellipse(enemy.x + Math.cos(angle) * r * 0.42, enemy.y + Math.sin(angle) * r * 0.42, r * 0.36, r * 0.68, angle, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = COLORS.boss;
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, r * 0.32, 0, Math.PI * 2);
+    ctx.fill();
+    return;
+  }
+
+  drawRoundRect(ctx, enemy.x - r, enemy.y - r, r * 2, r * 2, 5);
+  ctx.fill();
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -677,6 +806,23 @@ export default function useGeoGuardGame() {
     });
   };
 
+  const queueAreaHazard = (x, y, options = {}) => {
+    game.current.hazards.push({
+      type: 'area',
+      x,
+      y,
+      radius: options.radius ?? 90,
+      damage: options.damage ?? 18,
+      slowRatio: options.slowRatio,
+      slowDuration: options.slowDuration,
+      pull: options.pull ?? 0,
+      timer: options.delay ?? 0.9,
+      maxTimer: options.delay ?? 0.9,
+      color: options.color ?? COLORS.danger,
+      label: options.label,
+    });
+  };
+
   const chooseBossTarget = (boss) => {
     let target = game.current.player;
     let targetDistance = dist(boss, target);
@@ -764,6 +910,121 @@ export default function useGeoGuardGame() {
       }
     }
     if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42);
+    if (abilityName === 'twinOrbit') {
+      boss.shield = Math.max(boss.shield ?? 0, 34);
+      boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 118, color: boss.color, fillAlpha: 0.08 });
+    }
+    if (abilityName === 'twinBolt') {
+      queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, game.current.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5 });
+      queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7 });
+    }
+    if (abilityName === 'twinSwap') {
+      const angle = Math.random() * Math.PI * 2;
+      boss.x = game.current.player.x + Math.cos(angle) * 170;
+      boss.y = game.current.player.y + Math.sin(angle) * 170;
+      spawnAround(boss, 'PHASE', 2, boss.radius + 34);
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });
+    }
+    if (abilityName === 'eclipsePulse') damageArea(boss.x, boss.y, 170, 20, { color: COLORS.enemyPhase, towerFactor: 0.8 });
+    if (abilityName === 'dragonBreath') {
+      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720 });
+      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680 });
+      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680 });
+    }
+    if (abilityName === 'tailSweep') queueAreaHazard(boss.x, boss.y, { radius: 145, damage: 18, delay: 0.55, color: COLORS.enemyBomber, label: 'tail' });
+    if (abilityName === 'meteorRain') {
+      for (let index = 0; index < 4; index += 1) {
+        queueAreaHazard(game.current.player.x + rand(-180, 180), game.current.player.y + rand(-130, 130), { radius: 54, damage: 24, delay: 1 + index * 0.12, color: COLORS.enemyBomber });
+      }
+    }
+    if (abilityName === 'webTrap') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 86, damage: 8, slowRatio: 0.42, slowDuration: 2.8, delay: 0.65, color: COLORS.enemyBurrower, label: 'web' });
+    if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38);
+    if (abilityName === 'webField') {
+      queueAreaHazard(boss.x, boss.y, { radius: 185, damage: 10, slowRatio: 0.5, slowDuration: 3.2, delay: 0.8, color: COLORS.enemyBurrower, label: 'web' });
+      spawnAround(boss, 'BURROWER', 2, boss.radius + 52);
+    }
+    if (abilityName === 'gravityWell') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 120, damage: 12, pull: 220, delay: 0.7, color: COLORS.enemyJammer, label: 'gravity' });
+    if (abilityName === 'orbitalShots') {
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4;
+        queueLineHazard({ x: boss.x + Math.cos(angle) * 80, y: boss.y + Math.sin(angle) * 80 }, boss, { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.65, length: 520 });
+      }
+    }
+    if (abilityName === 'singularity') {
+      for (const tower of game.current.towers) {
+        const angle = Math.atan2(boss.y - tower.y, boss.x - tower.x);
+        tower.x += Math.cos(angle) * 34;
+        tower.y += Math.sin(angle) * 34;
+      }
+      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 24, pull: 340, delay: 1, color: COLORS.enemyJammer, label: 'singularity' });
+    }
+    if (abilityName === 'forgeArmor') {
+      boss.shield = Math.max(boss.shield ?? 0, 90);
+      boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
+      spawnAround(boss, 'SHIELD', 2, boss.radius + 42);
+    }
+    if (abilityName === 'sacrificeMinions') {
+      let sacrificed = 0;
+      for (let index = game.current.enemies.length - 1; index >= 0; index -= 1) {
+        const enemy = game.current.enemies[index];
+        if (enemy !== boss && !enemy.isBoss && dist(enemy, boss) <= 180 && sacrificed < 4) {
+          game.current.enemies.splice(index, 1);
+          sacrificed += 1;
+        }
+      }
+      boss.hp = Math.min(boss.maxHp, boss.hp + sacrificed * 28);
+      boss.shield = Math.max(boss.shield ?? 0, sacrificed * 24);
+      damageArea(boss.x, boss.y, 95 + sacrificed * 18, 10 + sacrificed * 4, { color: COLORS.enemySiege, towerFactor: 1.3 });
+    }
+    if (abilityName === 'moltenBurst') {
+      for (let index = 0; index < 6; index += 1) {
+        const angle = (Math.PI * 2 * index) / 6;
+        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege });
+      }
+    }
+    if (abilityName === 'conductLines') {
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45 });
+      queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560 });
+    }
+    if (abilityName === 'tempoShift') {
+      for (const tower of game.current.towers) {
+        if (dist(tower, boss) <= 260) tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, 1.6);
+      }
+      spawnAround(boss, 'FAST', 4, boss.radius + 45);
+    }
+    if (abilityName === 'finale') {
+      for (let index = 0; index < 8; index += 1) {
+        const angle = (Math.PI * 2 * index) / 8;
+        queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620 });
+      }
+    }
+    if (abilityName === 'raiseWalls') {
+      spawnAround(boss, 'SIEGE', 3, boss.radius + 58);
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall' });
+    }
+    if (abilityName === 'gateSwap') {
+      const oldX = boss.x;
+      const oldY = boss.y;
+      boss.x = game.current.player.x + rand(-210, 210);
+      boss.y = game.current.player.y + rand(-160, 160);
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6 });
+    }
+    if (abilityName === 'mazeCrush') {
+      for (const tower of game.current.towers.slice(0, 4)) {
+        queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall' });
+      }
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall' });
+    }
+    if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46);
+    if (abilityName === 'poisonBloom') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison' });
+    if (abilityName === 'gardenWake') {
+      for (const enemy of game.current.enemies) {
+        if (enemy !== boss && dist(enemy, boss) <= 260) enemy.hp = Math.min(enemy.maxHp, enemy.hp + 20);
+      }
+      spawnAround(boss, 'SHARD', 6, boss.radius + 50);
+      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden' });
+    }
   };
 
   const updateBossBehavior = (boss, dt) => {
@@ -807,6 +1068,31 @@ export default function useGeoGuardGame() {
         overload: 6,
         stealMoney: 5,
         ransomBurst: 8,
+        twinOrbit: 9,
+        twinBolt: 3.8,
+        twinSwap: 7,
+        eclipsePulse: 8,
+        dragonBreath: 4.8,
+        tailSweep: 6,
+        meteorRain: 9,
+        webTrap: 4.5,
+        spawnSpiderlings: 7,
+        webField: 9,
+        gravityWell: 5.5,
+        orbitalShots: 6.5,
+        singularity: 10,
+        forgeArmor: 8,
+        sacrificeMinions: 9,
+        moltenBurst: 10,
+        conductLines: 4,
+        tempoShift: 7,
+        finale: 10,
+        raiseWalls: 7,
+        gateSwap: 8,
+        mazeCrush: 10,
+        seedPods: 6,
+        poisonBloom: 5.5,
+        gardenWake: 9,
       }[abilityName] ?? 6;
 
       if (boss.abilityCooldowns[abilityName] <= 0) {
@@ -1131,6 +1417,31 @@ export default function useGeoGuardGame() {
       hazard.timer -= dt;
       if (hazard.timer > 0) continue;
 
+      if (hazard.type === 'area') {
+        const applyAreaEffect = (target) => {
+          if (dist(target, hazard) > hazard.radius + target.radius) return false;
+          damageTarget(target, hazard.damage);
+          if (hazard.pull) {
+            const angle = Math.atan2(hazard.y - target.y, hazard.x - target.x);
+            target.x += Math.cos(angle) * Math.min(hazard.pull * 0.18, hazard.radius * 0.35);
+            target.y += Math.sin(angle) * Math.min(hazard.pull * 0.18, hazard.radius * 0.35);
+          }
+          return true;
+        };
+
+        applyAreaEffect(state.player);
+        syncHudHealth();
+        for (const tower of state.towers) {
+          const towerHit = applyAreaEffect(tower);
+          if (towerHit && hazard.slowRatio) {
+            tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, hazard.slowDuration ?? 1.4);
+          }
+        }
+        spawnImpactWave(hazard.x, hazard.y, { maxRadius: hazard.radius, color: hazard.color, fillAlpha: 0.12, life: 0.22 });
+        state.hazards.splice(hazardIndex, 1);
+        continue;
+      }
+
       const lineLength = Math.hypot(hazard.x2 - hazard.x, hazard.y2 - hazard.y);
       const lineDx = (hazard.x2 - hazard.x) / lineLength;
       const lineDy = (hazard.y2 - hazard.y) / lineLength;
@@ -1238,9 +1549,13 @@ export default function useGeoGuardGame() {
       }
       ctx.save();
       ctx.globalAlpha = enemy.phased ? 0.42 : 1;
-      ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
-      drawRoundRect(ctx, enemy.x - enemy.radius, enemy.y - enemy.radius, enemy.radius * 2, enemy.radius * 2, 5);
-      ctx.fill();
+      if (enemy.isBoss) {
+        drawBossBody(ctx, enemy);
+      } else {
+        ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
+        drawRoundRect(ctx, enemy.x - enemy.radius, enemy.y - enemy.radius, enemy.radius * 2, enemy.radius * 2, 5);
+        ctx.fill();
+      }
       if (enemy.shield > 0) {
         ctx.strokeStyle = COLORS.enemyShield;
         ctx.lineWidth = 3;
@@ -1304,12 +1619,26 @@ export default function useGeoGuardGame() {
       ctx.save();
       ctx.globalAlpha = 0.25 + (1 - progress) * 0.35;
       ctx.strokeStyle = hazard.color;
-      ctx.lineWidth = hazard.width * (0.7 + (1 - progress) * 0.5);
-      ctx.setLineDash([14, 10]);
-      ctx.beginPath();
-      ctx.moveTo(hazard.x, hazard.y);
-      ctx.lineTo(hazard.x2, hazard.y2);
-      ctx.stroke();
+      if (hazard.type === 'area') {
+        ctx.fillStyle = hazard.color;
+        ctx.globalAlpha = 0.09 + (1 - progress) * 0.12;
+        ctx.beginPath();
+        ctx.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 0.3 + (1 - progress) * 0.45;
+        ctx.lineWidth = 3;
+        ctx.setLineDash(hazard.label === 'web' ? [4, 8] : [12, 8]);
+        ctx.beginPath();
+        ctx.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        ctx.lineWidth = hazard.width * (0.7 + (1 - progress) * 0.5);
+        ctx.setLineDash([14, 10]);
+        ctx.beginPath();
+        ctx.moveTo(hazard.x, hazard.y);
+        ctx.lineTo(hazard.x2, hazard.y2);
+        ctx.stroke();
+      }
       ctx.restore();
     }
 
