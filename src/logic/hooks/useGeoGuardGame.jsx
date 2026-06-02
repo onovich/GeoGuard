@@ -340,6 +340,8 @@ export default function useGeoGuardGame() {
       burrowTimer: baseEnemy.burrow ? baseEnemy.burrow.duration : 0,
       burrowed: Boolean(baseEnemy.burrow),
       fuseTimer: null,
+      summonedByBossUid: null,
+      summonCategory: null,
     };
   };
 
@@ -357,6 +359,7 @@ export default function useGeoGuardGame() {
     currentPhaseIndex: -1,
     abilityCooldowns: {},
     bossState: {},
+    isDefeated: false,
   });
 
   const spawnEnemyAt = (enemyKey, x, y, extras = {}) => {
@@ -368,6 +371,37 @@ export default function useGeoGuardGame() {
     }
     game.current.enemies.push(enemy);
     return enemy;
+  };
+
+  const getBossOwnedSummonCount = (bossUid, summonCategory) =>
+    game.current.enemies.filter((enemy) => enemy.summonedByBossUid === bossUid && (!summonCategory || enemy.summonCategory === summonCategory)).length;
+
+  const hasPendingBossAftermath = (bossUid) =>
+    game.current.enemies.some((enemy) => enemy.summonedByBossUid === bossUid) ||
+    game.current.hazards.some((hazard) => hazard.ownerBossUid === bossUid);
+
+  const findOpenEnemySpawnPosition = (source, enemyTemplate, baseRadius = 46) => {
+    const blockers = [...game.current.enemies, ...game.current.towers, game.current.player];
+    for (let ring = 0; ring < 4; ring += 1) {
+      const ringRadius = baseRadius + ring * (enemyTemplate.radius + 18);
+      const samples = 10 + ring * 4;
+      for (let index = 0; index < samples; index += 1) {
+        const angle = (Math.PI * 2 * index) / samples + Math.random() * 0.18;
+        const candidate = {
+          x: source.x + Math.cos(angle) * ringRadius,
+          y: source.y + Math.sin(angle) * ringRadius,
+        };
+        const overlaps = blockers.some((blocker) => dist(candidate, blocker) < enemyTemplate.radius + (blocker.radius ?? 12) + 10);
+        if (!overlaps) {
+          return candidate;
+        }
+      }
+    }
+
+    return {
+      x: source.x + rand(-18, 18),
+      y: source.y + rand(-18, 18),
+    };
   };
 
   const spawnBossAt = (bossId, x, y) => {
@@ -399,6 +433,7 @@ export default function useGeoGuardGame() {
       boss: definition.boss,
       bossSpawned: false,
       awaitingReward: false,
+      pendingRewardBossUid: null,
     };
     setCurrentWave(waveNumber);
     showWaveMessage(`${UI_COPY.waveIncoming} ${waveNumber}`);
@@ -430,7 +465,7 @@ export default function useGeoGuardGame() {
     setGameState('PLAYING');
     showWaveMessage(isDebugMode ? '开发测试场已开启' : UI_COPY.introBanner, 2200);
     if (isDebugMode) {
-      game.current.wave = { number: 0, queue: [], spawnInterval: 999, spawnTimer: 0, boss: null, bossSpawned: true, awaitingReward: false };
+      game.current.wave = { number: 0, queue: [], spawnInterval: 999, spawnTimer: 0, boss: null, bossSpawned: true, awaitingReward: false, pendingRewardBossUid: null };
     } else {
       startWave(1);
     }
@@ -661,6 +696,7 @@ export default function useGeoGuardGame() {
 
   const openBossReward = () => {
     game.current.wave.awaitingReward = true;
+    game.current.wave.pendingRewardBossUid = null;
     setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
   };
 
@@ -782,11 +818,28 @@ export default function useGeoGuardGame() {
     spawnImpactWave(x, y, { maxRadius: radius, growth: 360, life: 0.26, color: options.color ?? COLORS.danger, lineWidth: 4, fillAlpha: 0.12 });
   };
 
-  const spawnAround = (source, enemyKey, count, radius = 46) => {
-    for (let index = 0; index < count; index += 1) {
-      const angle = (Math.PI * 2 * index) / count + Math.random() * 0.25;
-      spawnEnemyAt(enemyKey, source.x + Math.cos(angle) * radius, source.y + Math.sin(angle) * radius, { skipBurrowPosition: true });
+  const spawnAround = (source, enemyKey, count, radius = 46, options = {}) => {
+    const enemyTemplate = ENEMY_TYPES[enemyKey];
+    if (!enemyTemplate) return 0;
+
+    let remaining = count;
+    if (options.ownerBossUid && options.maxActive) {
+      const activeCount = getBossOwnedSummonCount(options.ownerBossUid, options.summonCategory ?? enemyKey);
+      remaining = Math.max(0, Math.min(count, options.maxActive - activeCount));
     }
+
+    let spawned = 0;
+    for (let index = 0; index < remaining; index += 1) {
+      const position = findOpenEnemySpawnPosition(source, enemyTemplate, radius + index * 6);
+      spawnEnemyAt(enemyKey, position.x, position.y, {
+        skipBurrowPosition: true,
+        summonedByBossUid: options.ownerBossUid ?? null,
+        summonCategory: options.summonCategory ?? (options.ownerBossUid ? enemyKey : null),
+      });
+      spawned += 1;
+    }
+
+    return spawned;
   };
 
   const queueLineHazard = (source, target, options = {}) => {
@@ -803,6 +856,7 @@ export default function useGeoGuardGame() {
       timer: options.delay ?? 0.8,
       maxTimer: options.delay ?? 0.8,
       color: options.color ?? COLORS.towerRail,
+      ownerBossUid: options.ownerBossUid ?? null,
     });
   };
 
@@ -820,6 +874,7 @@ export default function useGeoGuardGame() {
       maxTimer: options.delay ?? 0.9,
       color: options.color ?? COLORS.danger,
       label: options.label,
+      ownerBossUid: options.ownerBossUid ?? null,
     });
   };
 
@@ -838,7 +893,7 @@ export default function useGeoGuardGame() {
 
   const runBossAbility = (boss, abilityName) => {
     const target = chooseBossTarget(boss);
-    if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32);
+    if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });
     if (abilityName === 'shieldPulse') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 160) {
@@ -856,25 +911,25 @@ export default function useGeoGuardGame() {
       boss.dashVy = Math.sin(angle) * 560;
       spawnImpactWave(boss.x, boss.y, { maxRadius: 44, color: boss.color, life: 0.18 });
     }
-    if (abilityName === 'summonScouts') spawnAround(boss, 'SCOUT', 3, boss.radius + 38);
-    if (abilityName === 'afterimageBurst') spawnAround(boss, 'PHASE', 3, boss.radius + 42);
-    if (abilityName === 'summonSiege') spawnAround(boss, 'SIEGE', 2, boss.radius + 46);
+    if (abilityName === 'summonScouts') spawnAround(boss, 'SCOUT', 3, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'scouts', maxActive: 6 });
+    if (abilityName === 'afterimageBurst') spawnAround(boss, 'PHASE', 3, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'afterimage', maxActive: 6 });
+    if (abilityName === 'summonSiege') spawnAround(boss, 'SIEGE', 2, boss.radius + 46, { ownerBossUid: boss.uid, summonCategory: 'siege', maxActive: 5 });
     if (abilityName === 'fortify') {
       boss.shield = Math.max(boss.shield ?? 0, 70);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
       spawnImpactWave(boss.x, boss.y, { maxRadius: 92, color: COLORS.enemyTank, fillAlpha: 0.1 });
     }
     if (abilityName === 'quake') damageArea(boss.x, boss.y, 120, 18, { color: COLORS.enemyTank, towerFactor: 1.8 });
-    if (abilityName === 'prismBeam') queueLineHazard(boss, target, { width: 18, damage: 24, color: COLORS.enemyPhase });
-    if (abilityName === 'mirrorSummon') spawnAround(boss, 'PHASE', 2, boss.radius + 48);
+    if (abilityName === 'prismBeam') queueLineHazard(boss, target, { width: 18, damage: 24, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
+    if (abilityName === 'mirrorSummon') spawnAround(boss, 'PHASE', 2, boss.radius + 48, { ownerBossUid: boss.uid, summonCategory: 'mirror', maxActive: 5 });
     if (abilityName === 'tripleBeam') {
-      queueLineHazard(boss, game.current.player, { width: 16, damage: 22, color: COLORS.enemyPhase });
-      queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x + 120, y: boss.y - 260 }, { width: 14, damage: 18, color: COLORS.enemyPhase });
-      queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x - 140, y: boss.y - 240 }, { width: 14, damage: 18, color: COLORS.enemyPhase });
+      queueLineHazard(boss, game.current.player, { width: 16, damage: 22, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x + 120, y: boss.y - 260 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x - 140, y: boss.y - 240 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
     }
-    if (abilityName === 'spawnHive') spawnAround(boss, 'BEACON', 2, boss.radius + 50);
+    if (abilityName === 'spawnHive') spawnAround(boss, 'BEACON', 2, boss.radius + 50, { ownerBossUid: boss.uid, summonCategory: 'hive', maxActive: 4 });
     if (abilityName === 'hiveHeal') boss.hp = Math.min(boss.maxHp, boss.hp + 42);
-    if (abilityName === 'summonSwarm') spawnAround(boss, 'SHARD', 5, boss.radius + 45);
+    if (abilityName === 'summonSwarm') spawnAround(boss, 'SHARD', 5, boss.radius + 45, { ownerBossUid: boss.uid, summonCategory: 'swarm', maxActive: 10 });
     if (abilityName === 'frostRing') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 180) {
@@ -891,15 +946,15 @@ export default function useGeoGuardGame() {
         spawnImpactWave(tower.x, tower.y, { maxRadius: tower.radius + 24, color: COLORS.towerFrost, fillAlpha: 0.16 });
       }
     }
-    if (abilityName === 'summonFrostGuards') spawnAround(boss, 'SHIELD', 3, boss.radius + 48);
-    if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65 });
+    if (abilityName === 'summonFrostGuards') spawnAround(boss, 'SHIELD', 3, boss.radius + 48, { ownerBossUid: boss.uid, summonCategory: 'frostGuard', maxActive: 6 });
+    if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65, ownerBossUid: boss.uid });
     if (abilityName === 'markTower') {
       const tower = game.current.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);
-      if (tower) queueLineHazard(boss, tower, { width: 12, damage: 28, color: COLORS.towerRail, delay: 0.55 });
+      if (tower) queueLineHazard(boss, tower, { width: 12, damage: 28, color: COLORS.towerRail, delay: 0.55, ownerBossUid: boss.uid });
     }
     if (abilityName === 'overload') {
       boss.hp -= Math.min(24, boss.hp - 1);
-      queueLineHazard(boss, game.current.player, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45 });
+      queueLineHazard(boss, game.current.player, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, ownerBossUid: boss.uid });
     }
     if (abilityName === 'stealMoney') {
       if (!game.current.debugOptions.infiniteMoney) {
@@ -909,46 +964,46 @@ export default function useGeoGuardGame() {
         spawnFloatingText(boss.x, boss.y - boss.radius - 8, `-${stolen}`, COLORS.enemyScout);
       }
     }
-    if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42);
+    if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'ransom', maxActive: 8 });
     if (abilityName === 'twinOrbit') {
       boss.shield = Math.max(boss.shield ?? 0, 34);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
       spawnImpactWave(boss.x, boss.y, { maxRadius: 118, color: boss.color, fillAlpha: 0.08 });
     }
     if (abilityName === 'twinBolt') {
-      queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, game.current.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5 });
-      queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7 });
+      queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, game.current.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7, ownerBossUid: boss.uid });
     }
     if (abilityName === 'twinSwap') {
       const angle = Math.random() * Math.PI * 2;
       boss.x = game.current.player.x + Math.cos(angle) * 170;
       boss.y = game.current.player.y + Math.sin(angle) * 170;
-      spawnAround(boss, 'PHASE', 2, boss.radius + 34);
+      spawnAround(boss, 'PHASE', 2, boss.radius + 34, { ownerBossUid: boss.uid, summonCategory: 'swapEcho', maxActive: 4 });
       spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });
     }
     if (abilityName === 'eclipsePulse') damageArea(boss.x, boss.y, 170, 20, { color: COLORS.enemyPhase, towerFactor: 0.8 });
     if (abilityName === 'dragonBreath') {
-      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720 });
-      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680 });
-      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680 });
+      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, ownerBossUid: boss.uid });
+      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ownerBossUid: boss.uid });
+      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ownerBossUid: boss.uid });
     }
-    if (abilityName === 'tailSweep') queueAreaHazard(boss.x, boss.y, { radius: 145, damage: 18, delay: 0.55, color: COLORS.enemyBomber, label: 'tail' });
+    if (abilityName === 'tailSweep') queueAreaHazard(boss.x, boss.y, { radius: 145, damage: 18, delay: 0.55, color: COLORS.enemyBomber, label: 'tail', ownerBossUid: boss.uid });
     if (abilityName === 'meteorRain') {
       for (let index = 0; index < 4; index += 1) {
-        queueAreaHazard(game.current.player.x + rand(-180, 180), game.current.player.y + rand(-130, 130), { radius: 54, damage: 24, delay: 1 + index * 0.12, color: COLORS.enemyBomber });
+        queueAreaHazard(game.current.player.x + rand(-180, 180), game.current.player.y + rand(-130, 130), { radius: 54, damage: 24, delay: 1 + index * 0.12, color: COLORS.enemyBomber, ownerBossUid: boss.uid });
       }
     }
-    if (abilityName === 'webTrap') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 86, damage: 8, slowRatio: 0.42, slowDuration: 2.8, delay: 0.65, color: COLORS.enemyBurrower, label: 'web' });
-    if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38);
+    if (abilityName === 'webTrap') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 86, damage: 8, slowRatio: 0.42, slowDuration: 2.8, delay: 0.65, color: COLORS.enemyBurrower, label: 'web', ownerBossUid: boss.uid });
+    if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'spiderling', maxActive: 10 });
     if (abilityName === 'webField') {
-      queueAreaHazard(boss.x, boss.y, { radius: 185, damage: 10, slowRatio: 0.5, slowDuration: 3.2, delay: 0.8, color: COLORS.enemyBurrower, label: 'web' });
-      spawnAround(boss, 'BURROWER', 2, boss.radius + 52);
+      queueAreaHazard(boss.x, boss.y, { radius: 185, damage: 10, slowRatio: 0.5, slowDuration: 3.2, delay: 0.8, color: COLORS.enemyBurrower, label: 'web', ownerBossUid: boss.uid });
+      spawnAround(boss, 'BURROWER', 2, boss.radius + 52, { ownerBossUid: boss.uid, summonCategory: 'burrowEscort', maxActive: 4 });
     }
-    if (abilityName === 'gravityWell') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 120, damage: 12, pull: 220, delay: 0.7, color: COLORS.enemyJammer, label: 'gravity' });
+    if (abilityName === 'gravityWell') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 120, damage: 12, pull: 220, delay: 0.7, color: COLORS.enemyJammer, label: 'gravity', ownerBossUid: boss.uid });
     if (abilityName === 'orbitalShots') {
       for (let index = 0; index < 4; index += 1) {
         const angle = (Math.PI * 2 * index) / 4;
-        queueLineHazard({ x: boss.x + Math.cos(angle) * 80, y: boss.y + Math.sin(angle) * 80 }, boss, { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.65, length: 520 });
+        queueLineHazard({ x: boss.x + Math.cos(angle) * 80, y: boss.y + Math.sin(angle) * 80 }, boss, { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.65, length: 520, ownerBossUid: boss.uid });
       }
     }
     if (abilityName === 'singularity') {
@@ -957,12 +1012,12 @@ export default function useGeoGuardGame() {
         tower.x += Math.cos(angle) * 34;
         tower.y += Math.sin(angle) * 34;
       }
-      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 24, pull: 340, delay: 1, color: COLORS.enemyJammer, label: 'singularity' });
+      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 24, pull: 340, delay: 1, color: COLORS.enemyJammer, label: 'singularity', ownerBossUid: boss.uid });
     }
     if (abilityName === 'forgeArmor') {
       boss.shield = Math.max(boss.shield ?? 0, 90);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
-      spawnAround(boss, 'SHIELD', 2, boss.radius + 42);
+      spawnAround(boss, 'SHIELD', 2, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'forgeGuard', maxActive: 6 });
     }
     if (abilityName === 'sacrificeMinions') {
       let sacrificed = 0;
@@ -980,50 +1035,50 @@ export default function useGeoGuardGame() {
     if (abilityName === 'moltenBurst') {
       for (let index = 0; index < 6; index += 1) {
         const angle = (Math.PI * 2 * index) / 6;
-        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege });
+        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege, ownerBossUid: boss.uid });
       }
     }
     if (abilityName === 'conductLines') {
-      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45 });
-      queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560 });
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560, ownerBossUid: boss.uid });
     }
     if (abilityName === 'tempoShift') {
       for (const tower of game.current.towers) {
         if (dist(tower, boss) <= 260) tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, 1.6);
       }
-      spawnAround(boss, 'FAST', 4, boss.radius + 45);
+      spawnAround(boss, 'FAST', 4, boss.radius + 45, { ownerBossUid: boss.uid, summonCategory: 'tempoRunner', maxActive: 8 });
     }
     if (abilityName === 'finale') {
       for (let index = 0; index < 8; index += 1) {
         const angle = (Math.PI * 2 * index) / 8;
-        queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620 });
+        queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620, ownerBossUid: boss.uid });
       }
     }
     if (abilityName === 'raiseWalls') {
-      spawnAround(boss, 'SIEGE', 3, boss.radius + 58);
-      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall' });
+      spawnAround(boss, 'SIEGE', 3, boss.radius + 58, { ownerBossUid: boss.uid, summonCategory: 'wallGuard', maxActive: 6 });
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
     }
     if (abilityName === 'gateSwap') {
       const oldX = boss.x;
       const oldY = boss.y;
       boss.x = game.current.player.x + rand(-210, 210);
       boss.y = game.current.player.y + rand(-160, 160);
-      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6 });
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6, ownerBossUid: boss.uid });
     }
     if (abilityName === 'mazeCrush') {
       for (const tower of game.current.towers.slice(0, 4)) {
-        queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall' });
+        queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
       }
-      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall' });
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
     }
-    if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46);
-    if (abilityName === 'poisonBloom') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison' });
+    if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46, { ownerBossUid: boss.uid, summonCategory: 'seedPod', maxActive: 5 });
+    if (abilityName === 'poisonBloom') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ownerBossUid: boss.uid });
     if (abilityName === 'gardenWake') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 260) enemy.hp = Math.min(enemy.maxHp, enemy.hp + 20);
       }
-      spawnAround(boss, 'SHARD', 6, boss.radius + 50);
-      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden' });
+      spawnAround(boss, 'SHARD', 6, boss.radius + 50, { ownerBossUid: boss.uid, summonCategory: 'gardenShard', maxActive: 10 });
+      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden', ownerBossUid: boss.uid });
     }
   };
 
@@ -1039,7 +1094,6 @@ export default function useGeoGuardGame() {
 
     if (boss.currentPhaseIndex !== activePhaseIndex) {
       boss.currentPhaseIndex = activePhaseIndex;
-      showWaveMessage(`${boss.name} · ${activePhase.name}`);
       spawnImpactWave(boss.x, boss.y, { maxRadius: boss.radius + 34, color: boss.color, fillAlpha: 0.08 });
     }
 
@@ -1306,9 +1360,19 @@ export default function useGeoGuardGame() {
         if (enemy.isBoss && state.mode !== 'debug') {
           state.money += enemy.value;
           syncHudMoney();
-          openBossReward();
+          enemy.isDefeated = true;
+          if (hasPendingBossAftermath(enemy.uid)) {
+            state.wave.awaitingReward = true;
+            state.wave.pendingRewardBossUid = enemy.uid;
+          } else {
+            openBossReward();
+          }
         }
       }
+    }
+
+    if (state.wave.pendingRewardBossUid && !rewardState.active && !hasPendingBossAftermath(state.wave.pendingRewardBossUid)) {
+      openBossReward();
     }
 
     if (state.player.hp <= 0 && !state.debugOptions.infiniteHealth) {

@@ -38,7 +38,7 @@ export const createRuntimeState = () => ({
   gameTime: 0,
   money: 20,
   towerCatalog: createInitialTowerCatalog(),
-  wave: { number: 1, queue: [], spawnInterval: 0.9, spawnTimer: 0, boss: null, bossSpawned: false, awaitingReward: false },
+  wave: { number: 1, queue: [], spawnInterval: 0.9, spawnTimer: 0, boss: null, bossSpawned: false, awaitingReward: false, pendingRewardBossUid: null },
   difficultyMultiplier: 1,
   isMobile: false,
   mode: 'normal',
