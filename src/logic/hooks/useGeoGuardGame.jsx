@@ -837,6 +837,94 @@ const drawImpactWaveAccent = (ctx, impactWave, alpha) => {
   }
 };
 
+const drawAreaHazardAccent = (ctx, hazard, progress) => {
+  const alpha = 0.16 + (1 - progress) * 0.18;
+
+  if (hazard.label === 'eclipse') {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(hazard.x - hazard.radius * 0.14, hazard.y, hazard.radius * 0.24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.fillStyle = hazard.color;
+    ctx.beginPath();
+    ctx.arc(hazard.x - hazard.radius * 0.04, hazard.y, hazard.radius * 0.24, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  if (hazard.label === 'inferno') {
+    ctx.save();
+    ctx.translate(hazard.x, hazard.y);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#ffd166';
+    ctx.lineWidth = 1.8;
+    for (let index = 0; index < 4; index += 1) {
+      const angle = (Math.PI * 2 * index) / 4;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle) * hazard.radius * 0.2, Math.sin(angle) * hazard.radius * 0.2);
+      ctx.quadraticCurveTo(
+        Math.cos(angle + 0.18) * hazard.radius * 0.52,
+        Math.sin(angle + 0.18) * hazard.radius * 0.52,
+        Math.cos(angle) * hazard.radius * 0.8,
+        Math.sin(angle) * hazard.radius * 0.8
+      );
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (hazard.label === 'nest') {
+    ctx.save();
+    ctx.translate(hazard.x, hazard.y);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#fef3c7';
+    for (let index = 0; index < 3; index += 1) {
+      const angle = (Math.PI * 2 * index) / 3 - Math.PI / 2;
+      const x = Math.cos(angle) * hazard.radius * 0.78;
+      const y = Math.sin(angle) * hazard.radius * 0.78;
+      ctx.beginPath();
+      ctx.moveTo(x, y - hazard.radius * 0.06);
+      ctx.lineTo(x - hazard.radius * 0.05, y + hazard.radius * 0.06);
+      ctx.lineTo(x + hazard.radius * 0.05, y + hazard.radius * 0.06);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  if (hazard.label === 'horizon') {
+    ctx.save();
+    ctx.translate(hazard.x, hazard.y);
+    ctx.rotate((1 - progress) * 0.8);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let index = 0; index < 6; index += 1) {
+      const angle = (Math.PI * 2 * index) / 6;
+      const x = Math.cos(angle) * hazard.radius * 0.68;
+      const y = Math.sin(angle) * hazard.radius * 0.68;
+      if (index === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    for (let index = 0; index < 6; index += 1) {
+      const angle = (Math.PI * 2 * index) / 6;
+      const x = Math.cos(angle) * hazard.radius * 0.68;
+      const y = Math.sin(angle) * hazard.radius * 0.68;
+      ctx.fillStyle = index % 2 === 0 ? '#ffffff' : hazard.color;
+      ctx.beginPath();
+      ctx.arc(x, y, hazard.radius * 0.05, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -3784,6 +3872,7 @@ export default function useGeoGuardGame() {
           ctx.arc(hazard.x, hazard.y, hazard.radius * 0.72, 0, Math.PI * 2);
           ctx.stroke();
         }
+        drawAreaHazardAccent(ctx, hazard, progress);
         const areaGlyph = getHazardGlyph(hazard);
         if (areaGlyph) {
           ctx.globalAlpha = 0.34 + (1 - progress) * 0.26;
