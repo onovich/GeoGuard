@@ -17,7 +17,7 @@ export const createPlayerState = () => ({
 
 export const createRuntimeState = () => ({
   player: createPlayerState(),
-  camera: { x: 0, y: 0 },
+  camera: { x: 0, y: 0, shakeTimer: 0, shakeDuration: 0, shakeStrength: 0, shakeSeed: 0 },
   keys: { w: false, a: false, s: false, d: false },
   joystick: { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0, dirX: 0, dirY: 0 },
   pointer: { x: 0, y: 0, active: false },

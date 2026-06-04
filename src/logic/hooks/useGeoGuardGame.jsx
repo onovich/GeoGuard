@@ -761,6 +761,22 @@ const drawBossEncounterLinks = (ctx, enemies) => {
   }
 };
 
+const getBossPhaseCallout = (boss, activePhaseIndex) => {
+  if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
+    return activePhaseIndex >= 2 ? '双体封位进入终幕，交叉火线会更主动地收拢空间。' : '双子开始联动逼位，注意两体的交叉站位。';
+  }
+  if (boss.form === 'dragon') {
+    return activePhaseIndex >= 2 ? '龙翼开始封场，俯冲后的余焰会把安全区切碎。' : '空域在收紧，横切躲避会比后撤更稳。';
+  }
+  if (boss.form === 'spider') {
+    return activePhaseIndex >= 2 ? '巢域扩张到终幕密度，退路会被蛛网和孵化点一起压缩。' : '蜘蛛开始经营场地，优先留意网区和包围方向。';
+  }
+  if (boss.form === 'astrolabe') {
+    return activePhaseIndex >= 2 ? '奇点开始收束，牵引和锁线会把原本安全的角落变成陷阱。' : '轨道开始成形，提前给转向留空间。';
+  }
+  return activePhaseIndex >= 2 ? 'Boss 进入高压阶段，节奏和空间关系都在改变。' : 'Boss 的出招结构正在变化，准备切换应对节奏。';
+};
+
 const drawImpactWaveAccent = (ctx, impactWave, alpha) => {
   const progress = 1 - alpha;
   const accentColor = impactWave.accentColor ?? impactWave.color;
@@ -1242,9 +1258,18 @@ export default function useGeoGuardGame() {
     );
   };
 
-  const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex) => {
+  const addCameraShake = (strength, duration = 0.28) => {
+    const camera = game.current.camera;
+    camera.shakeTimer = Math.max(camera.shakeTimer ?? 0, duration);
+    camera.shakeDuration = Math.max(camera.shakeDuration ?? 0, duration);
+    camera.shakeStrength = Math.max(camera.shakeStrength ?? 0, strength);
+    camera.shakeSeed = Math.random() * Math.PI * 2;
+  };
+
+  const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex, previousPhaseIndex = -1) => {
     boss.bossState.phaseIntroTimer = 1.15;
     boss.bossState.phaseIntroDuration = 1.15;
+    addCameraShake(12 + activePhaseIndex * 2, previousPhaseIndex >= 0 ? 0.42 : 0.28);
     spawnImpactWave(boss.x, boss.y, {
       startRadius: boss.radius * 0.55,
       maxRadius: boss.radius + 58 + activePhaseIndex * 12,
@@ -1276,6 +1301,26 @@ export default function useGeoGuardGame() {
       font: 'bold 16px system-ui, sans-serif',
       outlineColor: 'rgba(15,23,42,0.55)',
     });
+
+    if (previousPhaseIndex >= 0) {
+      const shouldAnnounce =
+        !boss.encounterUid ||
+        boss.form === 'dragon' ||
+        boss.form === 'spider' ||
+        boss.form === 'astrolabe' ||
+        ((boss.form === 'twinSun' || boss.form === 'twinMoon') && boss.twinRole === 'sun');
+      if (shouldAnnounce) {
+        showWaveMessage(
+          {
+            title: `${boss.encounterName ?? boss.name} 路 ${activePhase.name}`,
+            subtitle: getBossPhaseCallout(boss, activePhaseIndex),
+            tone: 'phase',
+            accentColor: boss.color,
+          },
+          1700
+        );
+      }
+    }
 
     if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
       const partner = getEncounterPartner(boss);
@@ -3252,6 +3297,7 @@ export default function useGeoGuardGame() {
   const updateBossBehavior = (boss, dt) => {
     const hpRatio = boss.hp / boss.maxHp;
     boss.bossState.climaxAccentTimer = Math.max(0, (boss.bossState.climaxAccentTimer ?? 0) - dt);
+    const previousPhaseIndex = boss.currentPhaseIndex ?? -1;
     let activePhaseIndex = 0;
     for (let index = 0; index < boss.phases.length; index += 1) {
       if (hpRatio <= boss.phases[index].hpBelow) {
@@ -3262,7 +3308,7 @@ export default function useGeoGuardGame() {
 
     if (boss.currentPhaseIndex !== activePhaseIndex) {
       boss.currentPhaseIndex = activePhaseIndex;
-      triggerBossPhaseShift(boss, activePhase, activePhaseIndex);
+      triggerBossPhaseShift(boss, activePhase, activePhaseIndex, previousPhaseIndex);
       boss.bossState.climaxAccentTimer = 0.35;
     }
 
@@ -3385,6 +3431,11 @@ export default function useGeoGuardGame() {
   const update = (dt) => {
     const state = game.current;
     state.gameTime += dt;
+    state.camera.shakeTimer = Math.max(0, (state.camera.shakeTimer ?? 0) - dt);
+    if (state.camera.shakeTimer <= 0) {
+      state.camera.shakeStrength = 0;
+      state.camera.shakeDuration = 0;
+    }
 
     if (Math.floor(state.gameTime) > time) {
       setTime(Math.floor(state.gameTime));
@@ -3796,8 +3847,12 @@ export default function useGeoGuardGame() {
     const state = game.current;
     const width = canvas.width / (window.devicePixelRatio || 1);
     const height = canvas.height / (window.devicePixelRatio || 1);
-    const cameraX = state.camera.x;
-    const cameraY = state.camera.y;
+    const shakeRatio =
+      state.camera.shakeTimer > 0 && state.camera.shakeDuration > 0 ? state.camera.shakeTimer / state.camera.shakeDuration : 0;
+    const shakeStrength = (state.camera.shakeStrength ?? 0) * shakeRatio;
+    const shakeAngle = state.gameTime * 30 + (state.camera.shakeSeed ?? 0);
+    const cameraX = state.camera.x + Math.cos(shakeAngle) * shakeStrength;
+    const cameraY = state.camera.y + Math.sin(shakeAngle * 1.18) * shakeStrength * 0.72;
 
     ctx.fillStyle = COLORS.bg;
     ctx.fillRect(0, 0, width, height);

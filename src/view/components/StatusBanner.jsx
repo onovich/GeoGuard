@@ -4,6 +4,11 @@ const TONE_STYLES = {
     eyebrowClass: 'text-white/55',
     subtitleClass: 'text-white/72',
   },
+  phase: {
+    panelClass: 'bg-slate-950/88 text-white border-white/12 shadow-[0_18px_48px_rgba(15,23,42,0.36)]',
+    eyebrowClass: 'text-amber-200/80',
+    subtitleClass: 'text-white/70',
+  },
   wave: {
     panelClass: 'bg-white/92 text-slate-800 border-sky-200/80 shadow-[0_18px_40px_rgba(148,163,184,0.24)]',
     eyebrowClass: 'text-sky-600/80',
@@ -30,7 +35,9 @@ export default function StatusBanner({ waveMsg }) {
         className={`rounded-3xl border px-5 py-4 backdrop-blur-md ${toneStyle.panelClass}`}
         style={message.accentColor ? { boxShadow: `0 18px 48px ${message.accentColor}33` } : undefined}
       >
-        <div className={`text-[11px] font-black tracking-[0.22em] uppercase ${toneStyle.eyebrowClass}`}>{message.tone === 'boss' ? 'Encounter' : message.tone === 'wave' ? 'Wave' : 'Status'}</div>
+        <div className={`text-[11px] font-black tracking-[0.22em] uppercase ${toneStyle.eyebrowClass}`}>
+          {message.tone === 'boss' ? 'Encounter' : message.tone === 'phase' ? 'Phase Shift' : message.tone === 'wave' ? 'Wave' : 'Status'}
+        </div>
         <div className="mt-1 text-2xl font-black leading-tight">{message.title}</div>
         {message.subtitle ? <div className={`mt-1 text-sm leading-5 ${toneStyle.subtitleClass}`}>{message.subtitle}</div> : null}
       </div>
