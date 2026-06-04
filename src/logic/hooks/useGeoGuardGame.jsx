@@ -1711,6 +1711,11 @@ export default function useGeoGuardGame() {
     const target = chooseBossTarget(boss);
     const ownership = getBossOwnership(boss);
     const isClimaxPhase = boss.currentPhaseIndex === boss.phases.length - 1;
+    const primeBossAbility = (abilityId, cooldown) => {
+      if (!boss.phases?.[boss.currentPhaseIndex]?.abilities?.includes(abilityId)) return;
+      const current = boss.abilityCooldowns[abilityId];
+      boss.abilityCooldowns[abilityId] = current == null ? cooldown : Math.min(current, cooldown);
+    };
     if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });
     if (abilityName === 'commandLine') {
       const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
@@ -2173,6 +2178,12 @@ export default function useGeoGuardGame() {
             label: 'eclipse',
             ...ownership,
           });
+          primeBossAbility('eclipsePulse', 1.15);
+          const partnerOwnership = getEncounterPartner(boss);
+          if (partnerOwnership) {
+            const partnerCurrent = partnerOwnership.abilityCooldowns.eclipsePulse;
+            partnerOwnership.abilityCooldowns.eclipsePulse = partnerCurrent == null ? 1.15 : Math.min(partnerCurrent, 1.15);
+          }
         }
       }
     }
@@ -2258,6 +2269,7 @@ export default function useGeoGuardGame() {
             ...ownership,
           });
         }
+        primeBossAbility('infernoRing', 1.05);
       }
     }
     if (abilityName === 'infernoRing') {
@@ -2368,6 +2380,7 @@ export default function useGeoGuardGame() {
           label: 'nest',
           ...ownership,
         });
+        primeBossAbility('webField', 1.1);
       }
     }
     if (abilityName === 'gravityWell') {
@@ -2448,6 +2461,7 @@ export default function useGeoGuardGame() {
             ...ownership,
           });
         }
+        primeBossAbility('eventHorizon', 1.05);
       }
     }
     if (abilityName === 'eventHorizon') {
