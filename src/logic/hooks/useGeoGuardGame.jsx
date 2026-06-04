@@ -874,6 +874,90 @@ export default function useGeoGuardGame() {
       font: 'bold 16px system-ui, sans-serif',
       outlineColor: 'rgba(15,23,42,0.55)',
     });
+
+    if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
+      const partner = getEncounterPartner(boss);
+      if (partner) {
+        const midX = (boss.x + partner.x) * 0.5;
+        const midY = (boss.y + partner.y) * 0.5;
+        spawnImpactWave(partner.x, partner.y, {
+          startRadius: partner.radius * 0.4,
+          maxRadius: partner.radius + 36,
+          growth: 280,
+          life: 0.34,
+          color: partner.color,
+          lineWidth: 3,
+          fillAlpha: 0.08,
+          dash: [8, 8],
+          spokes: 4 + activePhaseIndex,
+        });
+        spawnImpactWave(midX, midY, {
+          startRadius: 10,
+          maxRadius: 62 + activePhaseIndex * 12,
+          growth: 260,
+          life: 0.4,
+          color: '#ffffff',
+          lineWidth: 2,
+          fillAlpha: 0.04,
+          dash: [4, 8],
+          spokes: 6,
+        });
+        spawnParticle(midX, midY, '#ffffff', 12 + activePhaseIndex * 4, 80);
+      }
+    }
+
+    if (boss.form === 'dragon') {
+      for (const offset of [-1, 1]) {
+        spawnImpactWave(boss.x - boss.radius * 0.45, boss.y + offset * boss.radius * 0.28, {
+          startRadius: 12,
+          maxRadius: boss.radius + 70 + activePhaseIndex * 16,
+          growth: 360,
+          life: 0.42,
+          color: offset === -1 ? '#ffd166' : '#ff9f43',
+          lineWidth: 3,
+          fillAlpha: 0.08,
+          dash: [10, 10],
+          spokes: 5 + activePhaseIndex,
+          spin: offset * 0.8,
+        });
+      }
+      spawnParticle(boss.x - boss.radius * 0.65, boss.y, '#ffd166', 10 + activePhaseIndex * 4, 120);
+    }
+
+    if (boss.form === 'spider') {
+      for (let index = 0; index < 6; index += 1) {
+        const angle = (Math.PI * 2 * index) / 6;
+        spawnImpactWave(boss.x + Math.cos(angle) * boss.radius * 1.4, boss.y + Math.sin(angle) * boss.radius * 1.1, {
+          startRadius: 6,
+          maxRadius: 30 + activePhaseIndex * 8,
+          growth: 220,
+          life: 0.3,
+          color: boss.color,
+          lineWidth: 2,
+          fillAlpha: 0.06,
+          dash: [3, 7],
+          spokes: 4,
+        });
+      }
+    }
+
+    if (boss.form === 'astrolabe') {
+      for (let ring = 0; ring < 3; ring += 1) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: boss.radius * (0.4 + ring * 0.18),
+          maxRadius: boss.radius + 42 + ring * 22 + activePhaseIndex * 10,
+          growth: 240 - ring * 22,
+          life: 0.48 + ring * 0.05,
+          color: ring === 1 ? '#ffffff' : boss.color,
+          lineWidth: ring === 1 ? 2 : 3,
+          fillAlpha: ring === 1 ? 0.02 : 0.06,
+          dash: ring === 1 ? [2, 8] : [5, 9],
+          spokes: 4 + ring + activePhaseIndex,
+          spin: ring % 2 === 0 ? 0.8 : -0.8,
+        });
+      }
+      boss.bossState.orbitalIndex = (boss.bossState.orbitalIndex ?? 0) + 1;
+    }
   };
 
   const getTowerById = (towerId) => towerCatalogRef.current.find((tower) => tower.id === towerId);
