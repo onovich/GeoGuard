@@ -542,6 +542,153 @@ const drawBossPhaseAura = (ctx, enemy) => {
   ctx.restore();
 };
 
+const drawBossShowcaseAccent = (ctx, enemy) => {
+  const phaseLevel = (enemy.currentPhaseIndex ?? 0) + 1;
+  const pulse = 0.72 + Math.sin((enemy.x + enemy.y + enemy.uid) * 0.01 + phaseLevel) * 0.08;
+
+  ctx.save();
+  ctx.translate(enemy.x, enemy.y);
+
+  if (enemy.form === 'dragon') {
+    ctx.globalAlpha = 0.18 + phaseLevel * 0.05;
+    ctx.fillStyle = enemy.color;
+    ctx.beginPath();
+    ctx.moveTo(-enemy.radius * 0.28, -enemy.radius * 0.16);
+    ctx.quadraticCurveTo(-enemy.radius * (1.2 + phaseLevel * 0.08), -enemy.radius * (1 + phaseLevel * 0.06), -enemy.radius * 0.1, -enemy.radius * 0.3);
+    ctx.quadraticCurveTo(-enemy.radius * 0.9, -enemy.radius * 0.1, -enemy.radius * 0.15, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-enemy.radius * 0.12, enemy.radius * 0.18);
+    ctx.quadraticCurveTo(-enemy.radius * (1.05 + phaseLevel * 0.1), enemy.radius * (0.95 + phaseLevel * 0.06), -enemy.radius * 0.08, enemy.radius * 0.34);
+    ctx.quadraticCurveTo(-enemy.radius * 0.88, enemy.radius * 0.18, -enemy.radius * 0.04, 0.08);
+    ctx.closePath();
+    ctx.fill();
+    if (phaseLevel >= 2) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-enemy.radius * 0.2, 0);
+      ctx.lineTo(-enemy.radius * 1.1, -enemy.radius * 0.46);
+      ctx.moveTo(-enemy.radius * 0.12, enemy.radius * 0.1);
+      ctx.lineTo(-enemy.radius * 1.02, enemy.radius * 0.52);
+      ctx.stroke();
+    }
+    if (phaseLevel >= 3) {
+      ctx.globalAlpha = 0.3;
+      ctx.fillStyle = 'rgba(255,196,87,0.85)';
+      for (let index = 0; index < 3; index += 1) {
+        ctx.beginPath();
+        ctx.arc(-enemy.radius * (0.55 + index * 0.22), Math.sin(index) * enemy.radius * 0.18, enemy.radius * (0.08 + index * 0.02), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  if (enemy.form === 'spider') {
+    ctx.globalAlpha = 0.16 + phaseLevel * 0.04;
+    ctx.strokeStyle = enemy.color;
+    ctx.lineWidth = 1.8;
+    ctx.setLineDash([4, 7]);
+    for (let ring = 0; ring < phaseLevel; ring += 1) {
+      const radius = enemy.radius * (1 + ring * 0.28);
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let spoke = 0; spoke < 6; spoke += 1) {
+        const angle = (Math.PI * 2 * spoke) / 6 + ring * 0.22;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(angle) * enemy.radius * 0.34, Math.sin(angle) * enemy.radius * 0.34);
+        ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+        ctx.stroke();
+      }
+    }
+  }
+
+  if (enemy.form === 'astrolabe') {
+    ctx.globalAlpha = 0.22 + phaseLevel * 0.04;
+    ctx.strokeStyle = enemy.color;
+    ctx.lineWidth = 2;
+    ctx.rotate((enemy.currentPhaseIndex ?? 0) * 0.35 + enemy.uid * 0.04);
+    for (let ring = 0; ring < Math.min(3, phaseLevel + 1); ring += 1) {
+      const radius = enemy.radius * (0.92 + ring * 0.32);
+      ctx.setLineDash(ring % 2 === 0 ? [5, 8] : [2, 6]);
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let node = 0; node < 3 + ring; node += 1) {
+        const angle = (Math.PI * 2 * node) / (3 + ring);
+        ctx.fillStyle = ring === 2 ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.38)';
+        ctx.beginPath();
+        ctx.arc(Math.cos(angle) * radius, Math.sin(angle) * radius, enemy.radius * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  if (enemy.form === 'twinSun' || enemy.form === 'twinMoon') {
+    ctx.globalAlpha = 0.16 + phaseLevel * 0.05;
+    ctx.strokeStyle = enemy.form === 'twinSun' ? 'rgba(255,211,102,0.9)' : 'rgba(148,212,255,0.9)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash(enemy.form === 'twinSun' ? [9, 6] : [4, 8]);
+    ctx.beginPath();
+    ctx.arc(0, 0, enemy.radius * (1.05 + phaseLevel * 0.16), 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.rotate(phaseLevel * 0.28);
+    ctx.setLineDash([]);
+    for (let index = 0; index < phaseLevel + 1; index += 1) {
+      const angle = (Math.PI * 2 * index) / (phaseLevel + 1);
+      const radius = enemy.radius * (0.92 + phaseLevel * 0.08);
+      ctx.fillStyle = enemy.form === 'twinSun' ? 'rgba(255,245,184,0.78)' : 'rgba(214,239,255,0.72)';
+      ctx.beginPath();
+      ctx.arc(Math.cos(angle) * radius, Math.sin(angle) * radius, enemy.radius * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+};
+
+const drawBossEncounterLinks = (ctx, enemies) => {
+  const encounterGroups = new Map();
+  for (const enemy of enemies) {
+    if (!enemy.isBoss || !enemy.encounterUid) continue;
+    const list = encounterGroups.get(enemy.encounterUid) ?? [];
+    list.push(enemy);
+    encounterGroups.set(enemy.encounterUid, list);
+  }
+
+  for (const members of encounterGroups.values()) {
+    if (members.length !== 2) continue;
+    const [a, b] = members;
+    const midX = (a.x + b.x) * 0.5;
+    const midY = (a.y + b.y) * 0.5;
+    const distance = dist(a, b);
+    const beamAlpha = Math.max(0.14, Math.min(0.34, 0.36 - distance / 900));
+
+    ctx.save();
+    ctx.globalAlpha = beamAlpha;
+    ctx.strokeStyle = 'rgba(255,255,255,0.68)';
+    ctx.lineWidth = 2.5;
+    ctx.setLineDash([10, 8]);
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,0.14)';
+    ctx.beginPath();
+    ctx.arc(midX, midY, 16, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = a.twinRole === 'sun' ? a.color : b.color;
+    ctx.beginPath();
+    ctx.arc(midX, midY, 10, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -2904,6 +3051,8 @@ export default function useGeoGuardGame() {
       ctx.fill();
     }
 
+    drawBossEncounterLinks(ctx, state.enemies);
+
     for (const enemy of state.enemies) {
       if (enemy.burrowed) {
         ctx.save();
@@ -2919,6 +3068,7 @@ export default function useGeoGuardGame() {
       ctx.globalAlpha = enemy.phased ? 0.42 : 1;
       if (enemy.isBoss) {
         drawBossPhaseAura(ctx, enemy);
+        drawBossShowcaseAccent(ctx, enemy);
         drawBossBody(ctx, enemy);
       } else {
         ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
@@ -3163,13 +3313,32 @@ export default function useGeoGuardGame() {
       if (entity) {
         ctx.save();
         ctx.globalAlpha = 0.72;
-        ctx.fillStyle = entity.color;
-        drawRoundRect(ctx, state.dragPlacement.worldX - entity.radius, state.dragPlacement.worldY - entity.radius, entity.radius * 2, entity.radius * 2, 5);
-        ctx.fill();
         if (state.dragPlacement.kind === 'boss') {
+          drawBossShowcaseAccent(ctx, {
+            ...entity,
+            x: state.dragPlacement.worldX,
+            y: state.dragPlacement.worldY,
+            uid: -1,
+            currentPhaseIndex: 1,
+            bossState: {},
+            hitFlash: 0,
+          });
+          drawBossBody(ctx, {
+            ...entity,
+            x: state.dragPlacement.worldX,
+            y: state.dragPlacement.worldY,
+            uid: -1,
+            currentPhaseIndex: 1,
+            bossState: {},
+            hitFlash: 0,
+          });
           ctx.strokeStyle = COLORS.boss;
           ctx.lineWidth = 3;
           ctx.strokeRect(state.dragPlacement.worldX - entity.radius - 4, state.dragPlacement.worldY - entity.radius - 4, (entity.radius + 4) * 2, (entity.radius + 4) * 2);
+        } else {
+          ctx.fillStyle = entity.color;
+          drawRoundRect(ctx, state.dragPlacement.worldX - entity.radius, state.dragPlacement.worldY - entity.radius, entity.radius * 2, entity.radius * 2, 5);
+          ctx.fill();
         }
         ctx.restore();
       }
