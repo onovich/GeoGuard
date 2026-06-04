@@ -689,6 +689,154 @@ const drawBossEncounterLinks = (ctx, enemies) => {
   }
 };
 
+const drawImpactWaveAccent = (ctx, impactWave, alpha) => {
+  const progress = 1 - alpha;
+  const accentColor = impactWave.accentColor ?? impactWave.color;
+  const secondaryColor = impactWave.secondaryColor ?? '#ffffff';
+  const nodeCount = impactWave.nodeCount ?? 6;
+
+  if (impactWave.style === 'twinFinisher') {
+    ctx.save();
+    ctx.translate(impactWave.x, impactWave.y);
+    ctx.rotate(progress * Math.PI * 1.4);
+    ctx.globalAlpha = alpha * 0.9;
+    ctx.strokeStyle = secondaryColor;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, impactWave.radius * 0.92, impactWave.radius * 0.54, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.rotate(-progress * Math.PI * 2);
+    ctx.strokeStyle = accentColor;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, impactWave.radius * 0.54, impactWave.radius * 0.92, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    for (let index = 0; index < nodeCount; index += 1) {
+      const angle = (Math.PI * 2 * index) / nodeCount;
+      ctx.fillStyle = index % 2 === 0 ? accentColor : secondaryColor;
+      ctx.beginPath();
+      ctx.arc(Math.cos(angle) * impactWave.radius * 0.78, Math.sin(angle) * impactWave.radius * 0.44, impactWave.radius * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.lineWidth = 1.8;
+    if (impactWave.anchorA && impactWave.anchorB) {
+      ctx.strokeStyle = secondaryColor;
+      ctx.setLineDash([4, 10]);
+      ctx.beginPath();
+      ctx.moveTo(impactWave.anchorA.x, impactWave.anchorA.y);
+      ctx.lineTo(impactWave.anchorB.x, impactWave.anchorB.y);
+      ctx.stroke();
+    }
+    for (const anchor of [impactWave.anchorA, impactWave.anchorB]) {
+      if (!anchor) continue;
+      ctx.strokeStyle = anchor.color ?? accentColor;
+      ctx.beginPath();
+      ctx.moveTo(impactWave.x, impactWave.y);
+      ctx.lineTo(anchor.x, anchor.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (impactWave.style === 'dragonFinisher') {
+    ctx.save();
+    ctx.translate(impactWave.x, impactWave.y);
+    ctx.rotate((impactWave.rotation ?? 0) + progress * 0.45);
+    for (let index = 0; index < 3; index += 1) {
+      ctx.globalAlpha = alpha * (0.75 - index * 0.12);
+      ctx.strokeStyle = index === 1 ? secondaryColor : accentColor;
+      ctx.lineWidth = 2 + index * 0.8;
+      ctx.setLineDash(index === 2 ? [10, 8] : []);
+      ctx.beginPath();
+      ctx.arc(0, 0, impactWave.radius * (0.45 + index * 0.22), -0.95, 0.95);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    for (let index = 0; index < 4; index += 1) {
+      const flameX = -impactWave.radius * (0.22 + index * 0.16);
+      const flameY = Math.sin(progress * 6 + index) * impactWave.radius * 0.16;
+      ctx.globalAlpha = alpha * (0.5 - index * 0.08);
+      ctx.fillStyle = index % 2 === 0 ? accentColor : secondaryColor;
+      ctx.beginPath();
+      ctx.moveTo(flameX, flameY - impactWave.radius * 0.08);
+      ctx.quadraticCurveTo(flameX - impactWave.radius * 0.08, flameY, flameX, flameY + impactWave.radius * 0.08);
+      ctx.quadraticCurveTo(flameX + impactWave.radius * 0.06, flameY, flameX, flameY - impactWave.radius * 0.08);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  if (impactWave.style === 'spiderFinisher') {
+    ctx.save();
+    ctx.translate(impactWave.x, impactWave.y);
+    ctx.rotate(progress * 0.3);
+    ctx.globalAlpha = alpha * 0.85;
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 1.8;
+    ctx.setLineDash([4, 8]);
+    for (let ring = 0; ring < 2; ring += 1) {
+      const radius = impactWave.radius * (0.46 + ring * 0.34);
+      ctx.beginPath();
+      for (let index = 0; index < nodeCount; index += 1) {
+        const angle = (Math.PI * 2 * index) / nodeCount;
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius * 0.86;
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.strokeStyle = secondaryColor;
+    for (let index = 0; index < nodeCount; index += 1) {
+      const angle = (Math.PI * 2 * index) / nodeCount;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle) * impactWave.radius * 0.26, Math.sin(angle) * impactWave.radius * 0.22);
+      ctx.lineTo(Math.cos(angle) * impactWave.radius * 0.8, Math.sin(angle) * impactWave.radius * 0.68);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (impactWave.style === 'astrolabeFinisher') {
+    ctx.save();
+    ctx.translate(impactWave.x, impactWave.y);
+    ctx.rotate((impactWave.rotation ?? 0) - progress * 0.65);
+    for (let ring = 0; ring < 3; ring += 1) {
+      ctx.globalAlpha = alpha * (0.86 - ring * 0.18);
+      ctx.strokeStyle = ring === 1 ? secondaryColor : accentColor;
+      ctx.lineWidth = ring === 1 ? 1.8 : 2.4;
+      ctx.setLineDash(ring === 1 ? [3, 9] : [8, 7]);
+      ctx.beginPath();
+      ctx.arc(0, 0, impactWave.radius * (0.42 + ring * 0.22), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    for (let index = 0; index < nodeCount; index += 1) {
+      const angle = (Math.PI * 2 * index) / nodeCount;
+      const x = Math.cos(angle) * impactWave.radius * 0.86;
+      const y = Math.sin(angle) * impactWave.radius * 0.86;
+      ctx.globalAlpha = alpha * 0.75;
+      ctx.strokeStyle = accentColor;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      ctx.fillStyle = index % 2 === 0 ? secondaryColor : accentColor;
+      ctx.beginPath();
+      ctx.arc(x, y, impactWave.radius * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -778,6 +926,13 @@ export default function useGeoGuardGame() {
       dash: options.dash ?? [],
       spokes: options.spokes ?? 0,
       spin: options.spin ?? 0,
+      style: options.style ?? null,
+      accentColor: options.accentColor ?? options.color ?? COLORS.towerCannon,
+      secondaryColor: options.secondaryColor ?? '#ffffff',
+      nodeCount: options.nodeCount ?? 6,
+      anchorA: options.anchorA ?? null,
+      anchorB: options.anchorB ?? null,
+      rotation: options.rotation ?? 0,
     });
   };
 
@@ -2117,6 +2272,27 @@ export default function useGeoGuardGame() {
         label: 'eclipse',
         ...ownership,
       });
+      if (isClimaxPhase) {
+        const partner = getEncounterPartner(boss);
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: boss.radius * 0.75,
+          maxRadius: 168,
+          growth: 210,
+          life: 0.72,
+          color: boss.color,
+          accentColor: boss.color,
+          secondaryColor: '#ffffff',
+          fillAlpha: 0.04,
+          lineWidth: 3,
+          dash: [6, 10],
+          spokes: 6,
+          spin: 1,
+          style: 'twinFinisher',
+          nodeCount: 6,
+          anchorA: { x: boss.x, y: boss.y, color: boss.color },
+          anchorB: partner ? { x: partner.x, y: partner.y, color: partner.color } : null,
+        });
+      }
     }
     if (abilityName === 'solarDash') {
       const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
@@ -2168,6 +2344,26 @@ export default function useGeoGuardGame() {
         queueLineHazard(partner, { x: game.current.player.x - 90, y: game.current.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });
         spawnImpactWave(game.current.player.x, game.current.player.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
         if (isClimaxPhase) {
+          const midX = (boss.x + partner.x) * 0.5;
+          const midY = (boss.y + partner.y) * 0.5;
+          spawnImpactWave(midX, midY, {
+            startRadius: 22,
+            maxRadius: 138,
+            growth: 196,
+            life: 0.84,
+            color: '#ffffff',
+            accentColor: boss.color,
+            secondaryColor: partner.color,
+            fillAlpha: 0.03,
+            lineWidth: 2.5,
+            dash: [5, 11],
+            spokes: 8,
+            spin: 1.2,
+            style: 'twinFinisher',
+            nodeCount: 8,
+            anchorA: { x: boss.x, y: boss.y, color: boss.color },
+            anchorB: { x: partner.x, y: partner.y, color: partner.color },
+          });
           queueAreaHazard(game.current.player.x, game.current.player.y, {
             radius: 112,
             damage: 18,
@@ -2255,6 +2451,22 @@ export default function useGeoGuardGame() {
       queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, label: 'diveTrail', ...ownership });
       queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });
       if (isClimaxPhase) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: 18,
+          maxRadius: 126,
+          growth: 188,
+          life: 0.88,
+          color: COLORS.enemyBomber,
+          accentColor: '#ff9f43',
+          secondaryColor: '#ffd166',
+          fillAlpha: 0.03,
+          lineWidth: 3,
+          dash: [7, 9],
+          spokes: 5,
+          spin: 0.8,
+          style: 'dragonFinisher',
+          rotation: angle,
+        });
         for (let index = 0; index < 4; index += 1) {
           const orbitAngle = (Math.PI * 2 * index) / 4;
           queueAreaHazard(boss.x + Math.cos(orbitAngle) * 78, boss.y + Math.sin(orbitAngle) * 62, {
@@ -2273,6 +2485,24 @@ export default function useGeoGuardGame() {
       }
     }
     if (abilityName === 'infernoRing') {
+      if (isClimaxPhase) {
+        spawnImpactWave(game.current.player.x, game.current.player.y, {
+          startRadius: 28,
+          maxRadius: 150,
+          growth: 220,
+          life: 0.66,
+          color: COLORS.enemyBomber,
+          accentColor: '#ffd166',
+          secondaryColor: '#ff9f43',
+          fillAlpha: 0.02,
+          lineWidth: 2.6,
+          dash: [8, 10],
+          spokes: 6,
+          spin: 0.65,
+          style: 'dragonFinisher',
+          rotation: Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x),
+        });
+      }
       for (let index = 0; index < 6; index += 1) {
         const angle = (Math.PI * 2 * index) / 6;
         queueAreaHazard(game.current.player.x + Math.cos(angle) * 140, game.current.player.y + Math.sin(angle) * 110, {
@@ -2333,6 +2563,24 @@ export default function useGeoGuardGame() {
       }
     }
     if (abilityName === 'webField') {
+      if (isClimaxPhase) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: 26,
+          maxRadius: 184,
+          growth: 210,
+          life: 0.7,
+          color: COLORS.enemyBurrower,
+          accentColor: COLORS.enemyBurrower,
+          secondaryColor: '#d9f99d',
+          fillAlpha: 0.03,
+          lineWidth: 2,
+          dash: [4, 8],
+          spokes: 8,
+          spin: 0.4,
+          style: 'spiderFinisher',
+          nodeCount: 8,
+        });
+      }
       queueAreaHazard(boss.x, boss.y, {
         radius: 170,
         damage: 9,
@@ -2367,6 +2615,22 @@ export default function useGeoGuardGame() {
       }
       spawnAround(boss, 'SPLINTER', 4, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'nestShard', maxActive: 12 });
       if (isClimaxPhase) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: boss.radius * 0.8,
+          maxRadius: 152,
+          growth: 190,
+          life: 0.82,
+          color: COLORS.enemyBurrower,
+          accentColor: COLORS.enemyBurrower,
+          secondaryColor: '#ffffff',
+          fillAlpha: 0.04,
+          lineWidth: 2.4,
+          dash: [4, 9],
+          spokes: 6,
+          spin: 0.5,
+          style: 'spiderFinisher',
+          nodeCount: 6,
+        });
         queueAreaHazard(game.current.player.x, game.current.player.y, {
           radius: 98,
           damage: 12,
@@ -2448,6 +2712,23 @@ export default function useGeoGuardGame() {
         ...ownership,
       });
       if (isClimaxPhase) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: boss.radius * 0.9,
+          maxRadius: 198,
+          growth: 176,
+          life: 0.94,
+          color: COLORS.enemyJammer,
+          accentColor: COLORS.enemyJammer,
+          secondaryColor: '#ffffff',
+          fillAlpha: 0.03,
+          lineWidth: 3,
+          dash: [4, 10],
+          spokes: 7,
+          spin: 0.7,
+          style: 'astrolabeFinisher',
+          nodeCount: 7,
+          rotation: (boss.bossState.orbitalIndex ?? 0) * 0.34,
+        });
         for (let index = 0; index < 4; index += 1) {
           const angle = (Math.PI * 2 * index) / 4;
           const source = { x: boss.x + Math.cos(angle) * 180, y: boss.y + Math.sin(angle) * 180 };
@@ -2465,6 +2746,25 @@ export default function useGeoGuardGame() {
       }
     }
     if (abilityName === 'eventHorizon') {
+      if (isClimaxPhase) {
+        spawnImpactWave(boss.x, boss.y, {
+          startRadius: 32,
+          maxRadius: 220,
+          growth: 192,
+          life: 0.76,
+          color: COLORS.enemyJammer,
+          accentColor: '#a78bfa',
+          secondaryColor: '#ffffff',
+          fillAlpha: 0.02,
+          lineWidth: 2.8,
+          dash: [3, 11],
+          spokes: 6,
+          spin: 0.8,
+          style: 'astrolabeFinisher',
+          nodeCount: 6,
+          rotation: boss.bossState.orbitalIndex ?? 0,
+        });
+      }
       for (let index = 0; index < 6; index += 1) {
         const angle = (Math.PI * 2 * index) / 6;
         queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, {
@@ -3411,6 +3711,9 @@ export default function useGeoGuardGame() {
         }
       }
       ctx.restore();
+      if (impactWave.style) {
+        drawImpactWaveAccent(ctx, impactWave, alpha);
+      }
     }
     ctx.globalAlpha = 1;
 
