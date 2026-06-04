@@ -1710,6 +1710,7 @@ export default function useGeoGuardGame() {
   const runBossAbility = (boss, abilityName) => {
     const target = chooseBossTarget(boss);
     const ownership = getBossOwnership(boss);
+    const isClimaxPhase = boss.currentPhaseIndex === boss.phases.length - 1;
     if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });
     if (abilityName === 'commandLine') {
       const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
@@ -2161,6 +2162,18 @@ export default function useGeoGuardGame() {
         queueLineHazard(boss, { x: game.current.player.x + 90, y: game.current.player.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, label: 'crossfire', ...ownership });
         queueLineHazard(partner, { x: game.current.player.x - 90, y: game.current.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });
         spawnImpactWave(game.current.player.x, game.current.player.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
+        if (isClimaxPhase) {
+          queueAreaHazard(game.current.player.x, game.current.player.y, {
+            radius: 112,
+            damage: 18,
+            delay: 0.96,
+            pulses: 2,
+            pulseInterval: 0.42,
+            color: '#ffffff',
+            label: 'eclipse',
+            ...ownership,
+          });
+        }
       }
     }
     if (abilityName === 'dragonBreath') {
@@ -2230,6 +2243,22 @@ export default function useGeoGuardGame() {
       spawnImpactWave(oldX, oldY, { maxRadius: 70, color: COLORS.enemyBomber, fillAlpha: 0.08 });
       queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, label: 'diveTrail', ...ownership });
       queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });
+      if (isClimaxPhase) {
+        for (let index = 0; index < 4; index += 1) {
+          const orbitAngle = (Math.PI * 2 * index) / 4;
+          queueAreaHazard(boss.x + Math.cos(orbitAngle) * 78, boss.y + Math.sin(orbitAngle) * 62, {
+            radius: 54,
+            damage: 14,
+            delay: 1 + index * 0.05,
+            pulses: 2,
+            pulseInterval: 0.45,
+            radiusStep: 8,
+            color: COLORS.enemyBomber,
+            label: 'inferno',
+            ...ownership,
+          });
+        }
+      }
     }
     if (abilityName === 'infernoRing') {
       for (let index = 0; index < 6; index += 1) {
@@ -2242,7 +2271,7 @@ export default function useGeoGuardGame() {
           pulseInterval: 0.55,
           radiusStep: 10,
           color: COLORS.enemyBomber,
-          label: 'ember',
+          label: 'inferno',
           ...ownership,
         });
       }
@@ -2325,6 +2354,21 @@ export default function useGeoGuardGame() {
         });
       }
       spawnAround(boss, 'SPLINTER', 4, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'nestShard', maxActive: 12 });
+      if (isClimaxPhase) {
+        queueAreaHazard(game.current.player.x, game.current.player.y, {
+          radius: 98,
+          damage: 12,
+          slowRatio: 0.58,
+          slowDuration: 2.8,
+          delay: 0.92,
+          pulses: 2,
+          pulseInterval: 0.5,
+          radiusStep: 12,
+          color: COLORS.enemyBurrower,
+          label: 'nest',
+          ...ownership,
+        });
+      }
     }
     if (abilityName === 'gravityWell') {
       queueAreaHazard(game.current.player.x, game.current.player.y, {
@@ -2390,6 +2434,21 @@ export default function useGeoGuardGame() {
         label: 'singularity',
         ...ownership,
       });
+      if (isClimaxPhase) {
+        for (let index = 0; index < 4; index += 1) {
+          const angle = (Math.PI * 2 * index) / 4;
+          const source = { x: boss.x + Math.cos(angle) * 180, y: boss.y + Math.sin(angle) * 180 };
+          queueLineHazard(source, boss, {
+            width: 10,
+            damage: 16,
+            color: COLORS.enemyJammer,
+            delay: 1.02 + index * 0.05,
+            length: Math.hypot(source.x - boss.x, source.y - boss.y),
+            label: 'lock',
+            ...ownership,
+          });
+        }
+      }
     }
     if (abilityName === 'eventHorizon') {
       for (let index = 0; index < 6; index += 1) {
