@@ -777,6 +777,37 @@ const getBossPhaseCallout = (boss, activePhaseIndex) => {
   return activePhaseIndex >= 2 ? 'Boss 进入高压阶段，节奏和空间关系都在改变。' : 'Boss 的出招结构正在变化，准备切换应对节奏。';
 };
 
+const getBossPhaseHint = (boss, activePhaseIndex) => {
+  const phaseTier = Math.max(0, Math.min(2, activePhaseIndex));
+
+  const phaseHintsByForm = {
+    commander: ['Advance', 'Shield Wall', 'Breakthrough'],
+    hunter: ['Probe', 'Pincer', 'Execution'],
+    fortress: ['Siege', 'Fortify', 'Crush'],
+    prism: ['Refraction', 'Mirrors', 'Overload'],
+    hive: ['Nest', 'Swarm', 'Collapse'],
+    frostJudge: ['Slowfield', 'Freeze Mark', 'Judgment'],
+    railWarlord: ['Targeting', 'Suppression', 'Kill Lane'],
+    collector: ['Tax', 'Escort', 'Repossess'],
+    twinSun: ['Pressure', 'Crossfire', 'Eclipse'],
+    twinMoon: ['Snare', 'Lockdown', 'Eclipse'],
+    dragon: ['Strafe', 'Air Supremacy', 'Inferno Dive'],
+    spider: ['Webs', 'Encircle', 'Nest Bloom'],
+    astrolabe: ['Gravity', 'Orbital Lock', 'Event Horizon'],
+    forge: ['Armor', 'Sacrifice', 'Detonation'],
+    conductor: ['Tempo', 'Syncopate', 'Finale'],
+    labyrinth: ['Corridor', 'Gate Shift', 'Dead End'],
+    bloom: ['Seed', 'Blight', 'Canopy'],
+  };
+
+  const hints = phaseHintsByForm[boss.form];
+  if (hints?.[phaseTier]) {
+    return hints[phaseTier];
+  }
+
+  return phaseTier === 0 ? 'Setup' : phaseTier === 1 ? 'Pressure' : 'Burst';
+};
+
 const drawImpactWaveAccent = (ctx, impactWave, alpha) => {
   const progress = 1 - alpha;
   const accentColor = impactWave.accentColor ?? impactWave.color;
@@ -1224,6 +1255,7 @@ export default function useGeoGuardGame() {
         phase: boss.phases?.[boss.currentPhaseIndex]?.name ?? '',
         phaseIndex: boss.currentPhaseIndex ?? 0,
         phaseCount: boss.phases?.length ?? 0,
+        phaseHint: getBossPhaseHint(boss, boss.currentPhaseIndex ?? 0),
         enraged: Boolean(boss.bossState.partnerFallen),
       });
       groups.set(key, existing);

@@ -37,12 +37,13 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                   <span>{group.members.length > 1 ? 'ENCOUNTER' : 'BOSS'}</span>
                 </div>
                 {group.summary ? <div className="mb-1.5 text-[11px] leading-4 text-slate-300">{group.summary}</div> : null}
-                {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">应对: {group.counterplay}</div> : null}
+                {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">Counter: {group.counterplay}</div> : null}
                 <div className="flex flex-col gap-1.5">
                   {group.members.map((member) => {
                     const phaseIndex = member.phaseIndex ?? 0;
                     const phaseCount = member.phaseCount ?? 0;
                     const phaseLabel = member.enraged ? `${member.phase} · ENRAGED` : member.phase;
+
                     return (
                       <div key={member.id}>
                         <div className="flex items-center justify-between text-xs text-slate-100 mb-1">
@@ -68,6 +69,7 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                             </span>
                           </div>
                         ) : null}
+                        {member.phaseHint ? <div className="mb-1 text-[10px] uppercase tracking-[0.14em] text-slate-400">{member.phaseHint}</div> : null}
                         <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
                         </div>
