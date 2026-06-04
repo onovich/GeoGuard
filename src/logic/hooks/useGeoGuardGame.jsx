@@ -960,6 +960,91 @@ export default function useGeoGuardGame() {
     }
   };
 
+  const triggerBossClimaxAccent = (boss) => {
+    if (boss.currentPhaseIndex < (boss.phases?.length ?? 0) - 1) return;
+
+    if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
+      const partner = getEncounterPartner(boss);
+      if (partner) {
+        const midX = (boss.x + partner.x) * 0.5;
+        const midY = (boss.y + partner.y) * 0.5;
+        spawnImpactWave(midX, midY, {
+          startRadius: 18,
+          maxRadius: 84,
+          growth: 190,
+          life: 0.36,
+          color: '#ffffff',
+          lineWidth: 2,
+          fillAlpha: 0.04,
+          dash: [5, 9],
+          spokes: 8,
+          spin: 0.9,
+        });
+        if (dist(boss, partner) > 110) {
+          spawnParticle(midX, midY, boss.color, 8, 55);
+        }
+      }
+    }
+
+    if (boss.form === 'dragon') {
+      const retreatAngle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x) + Math.PI;
+      for (let index = 0; index < 3; index += 1) {
+        spawnImpactWave(
+          boss.x + Math.cos(retreatAngle) * (28 + index * 20),
+          boss.y + Math.sin(retreatAngle) * (18 + index * 18),
+          {
+            startRadius: 10 + index * 3,
+            maxRadius: 34 + index * 12,
+            growth: 180,
+            life: 0.26 + index * 0.03,
+            color: index === 2 ? '#ffd166' : COLORS.enemyBomber,
+            lineWidth: 2,
+            fillAlpha: 0.08,
+            dash: [6, 8],
+            spokes: 4,
+          }
+        );
+      }
+      spawnParticle(boss.x - boss.radius * 0.6, boss.y, '#ffd166', 6, 70);
+    }
+
+    if (boss.form === 'spider') {
+      for (let spoke = 0; spoke < 4; spoke += 1) {
+        const angle = (Math.PI * 2 * spoke) / 4 + (boss.uid % 3) * 0.18;
+        spawnImpactWave(
+          boss.x + Math.cos(angle) * boss.radius * 1.45,
+          boss.y + Math.sin(angle) * boss.radius * 1.15,
+          {
+            startRadius: 6,
+            maxRadius: 28,
+            growth: 160,
+            life: 0.24,
+            color: boss.color,
+            lineWidth: 1.5,
+            fillAlpha: 0.05,
+            dash: [3, 8],
+            spokes: 3,
+          }
+        );
+      }
+    }
+
+    if (boss.form === 'astrolabe') {
+      spawnImpactWave(boss.x, boss.y, {
+        startRadius: boss.radius * 0.85,
+        maxRadius: boss.radius + 34,
+        growth: 120,
+        life: 0.34,
+        color: '#ffffff',
+        lineWidth: 2,
+        fillAlpha: 0.02,
+        dash: [2, 7],
+        spokes: 7,
+        spin: -1.1,
+      });
+    }
+  };
+
   const getTowerById = (towerId) => towerCatalogRef.current.find((tower) => tower.id === towerId);
 
   const createEnemyFromKey = (enemyKey) => {
@@ -2546,6 +2631,7 @@ export default function useGeoGuardGame() {
 
   const updateBossBehavior = (boss, dt) => {
     const hpRatio = boss.hp / boss.maxHp;
+    boss.bossState.climaxAccentTimer = Math.max(0, (boss.bossState.climaxAccentTimer ?? 0) - dt);
     let activePhaseIndex = 0;
     for (let index = 0; index < boss.phases.length; index += 1) {
       if (hpRatio <= boss.phases[index].hpBelow) {
@@ -2557,6 +2643,12 @@ export default function useGeoGuardGame() {
     if (boss.currentPhaseIndex !== activePhaseIndex) {
       boss.currentPhaseIndex = activePhaseIndex;
       triggerBossPhaseShift(boss, activePhase, activePhaseIndex);
+      boss.bossState.climaxAccentTimer = 0.35;
+    }
+
+    if (activePhaseIndex === boss.phases.length - 1 && boss.bossState.climaxAccentTimer <= 0) {
+      triggerBossClimaxAccent(boss);
+      boss.bossState.climaxAccentTimer = boss.form === 'dragon' ? 0.44 : boss.form === 'astrolabe' ? 0.56 : 0.62;
     }
 
     for (const abilityName of activePhase.abilities) {
