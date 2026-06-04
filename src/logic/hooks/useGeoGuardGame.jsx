@@ -925,6 +925,93 @@ const drawAreaHazardAccent = (ctx, hazard, progress) => {
   }
 };
 
+const drawLineHazardAccent = (ctx, hazard, progress) => {
+  const dx = hazard.x2 - hazard.x;
+  const dy = hazard.y2 - hazard.y;
+  const length = Math.hypot(dx, dy);
+  if (length <= 0.001) return;
+
+  const alpha = 0.18 + (1 - progress) * 0.18;
+  const angle = Math.atan2(dy, dx);
+  const midX = (hazard.x + hazard.x2) * 0.5;
+  const midY = (hazard.y + hazard.y2) * 0.5;
+
+  if (hazard.label === 'crossfire') {
+    ctx.save();
+    ctx.translate(midX, midY);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.8;
+    const size = Math.max(12, hazard.width * 1.2);
+    ctx.beginPath();
+    ctx.moveTo(-size, -size);
+    ctx.lineTo(size, size);
+    ctx.moveTo(-size, size);
+    ctx.lineTo(size, -size);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  if (hazard.label === 'flare' || hazard.label === 'shadow') {
+    ctx.save();
+    ctx.translate(midX, midY);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = hazard.label === 'flare' ? '#fde68a' : '#e0e7ff';
+    ctx.lineWidth = 1.4;
+    const offset = Math.max(10, hazard.width * 1.1);
+    for (const side of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(-length * 0.18, side * offset);
+      ctx.lineTo(0, side * (offset * 0.36));
+      ctx.lineTo(length * 0.18, side * offset);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (hazard.label === 'breath' || hazard.label === 'strafe' || hazard.label === 'diveTrail') {
+    ctx.save();
+    ctx.translate(hazard.x, hazard.y);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = hazard.label === 'diveTrail' ? '#ffd166' : 'rgba(255,255,255,0.78)';
+    ctx.lineWidth = 1.6;
+    const amplitude = hazard.label === 'diveTrail' ? hazard.width * 0.48 : hazard.width * 0.34;
+    for (let step = 0; step < 4; step += 1) {
+      const start = (length * step) / 4;
+      const end = start + length * 0.18;
+      ctx.beginPath();
+      ctx.moveTo(start, 0);
+      ctx.quadraticCurveTo((start + end) * 0.5, -amplitude, end, 0);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if (hazard.label === 'orbit' || hazard.label === 'lock') {
+    ctx.save();
+    ctx.translate(midX, midY);
+    ctx.rotate(angle + (hazard.label === 'orbit' ? (1 - progress) * 0.6 : 0));
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, Math.max(10, hazard.width), 0, Math.PI * 2);
+    ctx.stroke();
+    const ringRadius = Math.max(16, hazard.width * 1.65);
+    for (let index = 0; index < 4; index += 1) {
+      const nodeAngle = (Math.PI * 2 * index) / 4;
+      ctx.fillStyle = index % 2 === 0 ? '#ffffff' : hazard.color;
+      ctx.beginPath();
+      ctx.arc(Math.cos(nodeAngle) * ringRadius, Math.sin(nodeAngle) * ringRadius, Math.max(2.5, hazard.width * 0.22), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -3926,6 +4013,7 @@ export default function useGeoGuardGame() {
           ctx.lineTo(hazard.x2, hazard.y2);
           ctx.stroke();
         }
+        drawLineHazardAccent(ctx, hazard, progress);
         const dx = hazard.x2 - hazard.x;
         const dy = hazard.y2 - hazard.y;
         const angle = Math.atan2(dy, dx);
