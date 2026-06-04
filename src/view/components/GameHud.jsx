@@ -1,4 +1,4 @@
-export default function GameHud({ gameState, health, maxHealth, money, formattedTime, currentWave, debugMode }) {
+export default function GameHud({ gameState, health, maxHealth, money, formattedTime, currentWave, waveOverview, debugMode, bossHud = [] }) {
   if (gameState !== 'PLAYING') {
     return null;
   }
@@ -15,9 +15,44 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
         </div>
       </div>
 
-      <div className="flex flex-col items-center text-slate-700 bg-white/80 px-6 py-2 rounded-2xl shadow-sm backdrop-blur-sm min-w-[130px]">
-        <span className="text-xs font-bold tracking-[0.2em] text-slate-400">{debugMode ? 'TEST FIELD' : `WAVE ${currentWave}`}</span>
-        <span className="text-2xl font-black">{formattedTime}</span>
+      <div className="flex flex-col items-center gap-2 min-w-[220px]">
+        <div className="flex flex-col items-center text-slate-700 bg-white/80 px-6 py-2 rounded-2xl shadow-sm backdrop-blur-sm min-w-[130px]">
+          <span className="text-xs font-bold tracking-[0.2em] text-slate-400">{debugMode ? 'TEST FIELD' : `WAVE ${currentWave}`}</span>
+          <span className="text-2xl font-black">{formattedTime}</span>
+          {waveOverview?.label ? (
+            <div className="mt-1 text-center">
+              <div className="text-[11px] font-bold text-slate-600">{waveOverview.label}</div>
+              {waveOverview.focus ? <div className="text-[10px] leading-4 text-slate-500 max-w-[240px]">{waveOverview.focus}</div> : null}
+            </div>
+          ) : null}
+        </div>
+        {bossHud.length > 0 ? (
+          <div className="w-[260px] md:w-[340px] bg-slate-900/78 text-white px-3 py-2 rounded-2xl shadow-lg backdrop-blur-sm">
+            {bossHud.map((group) => (
+              <div key={group.id} className="mb-2 last:mb-0">
+                <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-slate-300 mb-1">
+                  <span>{group.title}</span>
+                  <span>{group.members.length > 1 ? 'ENCOUNTER' : 'BOSS'}</span>
+                </div>
+                {group.summary ? <div className="mb-1.5 text-[11px] leading-4 text-slate-300">{group.summary}</div> : null}
+                {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">应对：{group.counterplay}</div> : null}
+                <div className="flex flex-col gap-1.5">
+                  {group.members.map((member) => (
+                    <div key={member.id}>
+                      <div className="flex items-center justify-between text-xs text-slate-100 mb-1">
+                        <span>{member.name}</span>
+                        <span className={member.enraged ? 'text-amber-300' : 'text-slate-300'}>{member.enraged ? `${member.phase} · ENRAGED` : member.phase}</span>
+                      </div>
+                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl shadow-sm backdrop-blur-sm pointer-events-auto">

@@ -16,8 +16,10 @@ export default function GameScreen() {
     maxHealth,
     time,
     currentWave,
+    waveOverview,
     formattedTime,
     waveMsg,
+    bossHud,
     initGame,
     towerTypes,
     enemyTypes,
@@ -42,7 +44,17 @@ export default function GameScreen() {
   return (
     <div className="relative w-full h-screen overflow-hidden select-none touch-none bg-[#f0f4f8] font-sans">
       <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full block" />
-      <GameHud gameState={gameState} health={health} maxHealth={maxHealth} money={money} formattedTime={formattedTime} currentWave={currentWave} debugMode={debugMode} />
+      <GameHud
+        gameState={gameState}
+        health={health}
+        maxHealth={maxHealth}
+        money={money}
+        formattedTime={formattedTime}
+        currentWave={currentWave}
+        waveOverview={waveOverview}
+        debugMode={debugMode}
+        bossHud={bossHud}
+      />
       <StatusBanner waveMsg={waveMsg} />
       <DebugSpawnPanel debugMode={debugMode} debugOptions={debugOptions} setDebugOption={setDebugOption} enemyTypes={enemyTypes} bossTypes={bossTypes} dragEntity={dragEntity} beginDebugEntityDrag={beginDebugEntityDrag} setDebugPanelRect={setDebugPanelRect} />
       <BuildBar gameState={gameState} money={money} dragTowerId={dragTowerId} beginTowerDrag={beginTowerDrag} towerTypes={towerTypes} setBuildBarRect={setBuildBarRect} openBlueprintContextMenu={openBlueprintContextMenu} />

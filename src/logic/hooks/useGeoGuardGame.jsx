@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, TOWER_LIBRARY, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
+import { getBossPresentation } from '../../data/bossPresentation';
 import { canPlaceTowerOnField, createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
 import { createRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
@@ -28,6 +29,175 @@ const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
 
 const cloneTower = (tower) => ({ ...tower });
+
+const splitEncounterValue = (totalValue, shares) => {
+  let remaining = totalValue;
+  return shares.map((share, index) => {
+    const isLast = index === shares.length - 1;
+    const value = isLast ? remaining : Math.max(1, Math.round(totalValue * share));
+    remaining -= value;
+    return value;
+  });
+};
+
+const createTwinsEncounterMembers = (bossTemplate) => {
+  const [sunValue, moonValue] = splitEncounterValue(bossTemplate.value, [0.5, 0.5]);
+
+  return [
+    {
+      id: 'TWIN_SOL',
+      name: '曜子',
+      form: 'twinSun',
+      isBoss: true,
+      enemyType: 'BOSS',
+      hp: Math.round(bossTemplate.maxHp * 0.46),
+      maxHp: Math.round(bossTemplate.maxHp * 0.46),
+      speed: Math.round(bossTemplate.baseSpeed * 1.26),
+      damage: Math.max(8, Math.round(bossTemplate.damage * 0.72)),
+      radius: 24,
+      color: COLORS.enemyBomber,
+      value: sunValue,
+      phases: [
+        { name: '炽近', hpBelow: 1, abilities: ['solarDash'] },
+        { name: '灼线', hpBelow: 0.68, abilities: ['solarDash', 'flareLance', 'twinCrossfire'] },
+        { name: '日蚀', hpBelow: 0.34, abilities: ['solarDash', 'flareLance', 'twinCrossfire', 'eclipsePulse'] },
+      ],
+    },
+    {
+      id: 'TWIN_LUNA',
+      name: '蚀子',
+      form: 'twinMoon',
+      isBoss: true,
+      enemyType: 'BOSS',
+      hp: Math.round(bossTemplate.maxHp * 0.54),
+      maxHp: Math.round(bossTemplate.maxHp * 0.54),
+      speed: Math.round(bossTemplate.baseSpeed * 0.92),
+      damage: Math.max(7, Math.round(bossTemplate.damage * 0.62)),
+      radius: 26,
+      color: COLORS.enemyPhase,
+      value: moonValue,
+      phases: [
+        { name: '月网', hpBelow: 1, abilities: ['lunarSnare'] },
+        { name: '锁域', hpBelow: 0.68, abilities: ['lunarSnare', 'shadowArc', 'twinCrossfire'] },
+        { name: '残月', hpBelow: 0.34, abilities: ['lunarSnare', 'shadowArc', 'twinCrossfire', 'eclipsePulse'] },
+      ],
+    },
+  ];
+};
+
+const getBossPhaseOverrides = (bossTemplate) => {
+  if (bossTemplate.id === 'COMMANDER') {
+    return [
+      { name: '列阵', hpBelow: 1, abilities: ['summonFormation', 'commandLine'] },
+      { name: '压阵', hpBelow: 0.6, abilities: ['summonFormation', 'commandLine', 'shieldPulse', 'phalanxAdvance'] },
+      { name: '破阵', hpBelow: 0.3, abilities: ['summonFormation', 'shieldPulse', 'phalanxAdvance', 'commandRush'] },
+    ];
+  }
+  if (bossTemplate.id === 'HUNTER') {
+    return [
+      { name: '试探', hpBelow: 1, abilities: ['dashAtPlayer', 'markPrey'] },
+      { name: '围猎', hpBelow: 0.7, abilities: ['dashAtPlayer', 'markPrey', 'summonScouts', 'pincerRush'] },
+      { name: '残猎', hpBelow: 0.35, abilities: ['dashAtPlayer', 'markPrey', 'pincerRush', 'afterimageBurst', 'feintStrike'] },
+    ];
+  }
+  if (bossTemplate.id === 'FORTRESS') {
+    return [
+      { name: '推城', hpBelow: 1, abilities: ['summonSiege', 'bastionMortar'] },
+      { name: '重甲', hpBelow: 0.5, abilities: ['summonSiege', 'bastionMortar', 'fortify', 'shockRam'] },
+      { name: '崩垒', hpBelow: 0.2, abilities: ['summonSiege', 'fortify', 'shockRam', 'quake', 'bunkerRing'] },
+    ];
+  }
+  if (bossTemplate.id === 'PRISM') {
+    return [
+      { name: '折光', hpBelow: 1, abilities: ['prismBeam', 'refractVolley'] },
+      { name: '镜列', hpBelow: 0.66, abilities: ['prismBeam', 'refractVolley', 'mirrorSummon', 'prismLattice'] },
+      { name: '棱镜', hpBelow: 0.33, abilities: ['prismBeam', 'mirrorSummon', 'prismLattice', 'tripleBeam', 'mirrorStep'] },
+    ];
+  }
+  if (bossTemplate.id === 'HIVE') {
+    return [
+      { name: '铺巢', hpBelow: 1, abilities: ['spawnHive', 'broodShift'] },
+      { name: '孵潮', hpBelow: 0.75, abilities: ['spawnHive', 'broodShift', 'hivePulse', 'summonSwarm'] },
+      { name: '迁巢', hpBelow: 0.35, abilities: ['spawnHive', 'hivePulse', 'summonSwarm', 'hiveCollapse', 'broodShift'] },
+    ];
+  }
+  if (bossTemplate.id === 'FROST_JUDGE') {
+    return [
+      { name: '冰审', hpBelow: 1, abilities: ['frostRing', 'whiteout'] },
+      { name: '封判', hpBelow: 0.6, abilities: ['frostRing', 'whiteout', 'freezeTower', 'glacialPrison'] },
+      { name: '寒狱', hpBelow: 0.25, abilities: ['frostRing', 'freezeTower', 'glacialPrison', 'summonFrostGuards', 'coldSnap'] },
+    ];
+  }
+  if (bossTemplate.id === 'RAIL_WARLORD') {
+    return [
+      { name: '锁线', hpBelow: 1, abilities: ['railShot', 'crosshairBarrage'] },
+      { name: '钉杀', hpBelow: 0.7, abilities: ['railShot', 'markTower', 'crosshairBarrage', 'suppressiveGrid'] },
+      { name: '歼灭', hpBelow: 0.4, abilities: ['railShot', 'markTower', 'suppressiveGrid', 'overload', 'killLane'] },
+    ];
+  }
+  if (bossTemplate.id === 'COLLECTOR') {
+    return [
+      { name: '抽税', hpBelow: 1, abilities: ['stealMoney', 'taxBeacon'] },
+      { name: '搬运', hpBelow: 0.5, abilities: ['stealMoney', 'taxBeacon', 'summonScouts', 'paydaySweep'] },
+      { name: '收账', hpBelow: 0.25, abilities: ['stealMoney', 'summonScouts', 'paydaySweep', 'ransomBurst', 'repossess'] },
+    ];
+  }
+  if (bossTemplate.id === 'BLOOD_FORGE') {
+    return [
+      { name: '铸火', hpBelow: 1, abilities: ['forgeArmor', 'slagDrop'] },
+      { name: '献炉', hpBelow: 0.58, abilities: ['forgeArmor', 'slagDrop', 'sacrificeMinions', 'brandLine'] },
+      { name: '过热', hpBelow: 0.24, abilities: ['forgeArmor', 'sacrificeMinions', 'brandLine', 'moltenBurst', 'forgeDetonation'] },
+    ];
+  }
+  if (bossTemplate.id === 'VOID_CONDUCTOR') {
+    return [
+      { name: '起拍', hpBelow: 1, abilities: ['conductLines', 'pulseMeasure'] },
+      { name: '切分', hpBelow: 0.68, abilities: ['conductLines', 'pulseMeasure', 'tempoShift', 'syncopate'] },
+      { name: '终章', hpBelow: 0.34, abilities: ['conductLines', 'tempoShift', 'syncopate', 'finale', 'crescendo'] },
+    ];
+  }
+  if (bossTemplate.id === 'LABYRINTH_KEEPER') {
+    return [
+      { name: '筑墙', hpBelow: 1, abilities: ['raiseWalls', 'corridorClamp'] },
+      { name: '换门', hpBelow: 0.65, abilities: ['raiseWalls', 'corridorClamp', 'gateSwap', 'mazeFold'] },
+      { name: '迷狱', hpBelow: 0.3, abilities: ['raiseWalls', 'gateSwap', 'mazeFold', 'mazeCrush', 'deadEnd'] },
+    ];
+  }
+  if (bossTemplate.id === 'NIGHTMARE_BLOOM') {
+    return [
+      { name: '播种', hpBelow: 1, abilities: ['seedPods', 'blightRoots'] },
+      { name: '绽瘴', hpBelow: 0.68, abilities: ['seedPods', 'blightRoots', 'poisonBloom', 'sporeBurst'] },
+      { name: '花园', hpBelow: 0.33, abilities: ['seedPods', 'poisonBloom', 'sporeBurst', 'gardenWake', 'creepingCanopy'] },
+    ];
+  }
+  if (bossTemplate.id === 'DRAGON') {
+    return [
+      { name: '盘旋', hpBelow: 1, abilities: ['dragonStrafe', 'emberWake'] },
+      { name: '俯冲', hpBelow: 0.66, abilities: ['dragonStrafe', 'emberWake', 'wingBuffet', 'meteorRain'] },
+      { name: '天火', hpBelow: 0.3, abilities: ['dragonStrafe', 'wingBuffet', 'meteorRain', 'skyDive', 'infernoRing'] },
+    ];
+  }
+  if (bossTemplate.id === 'SPIDER_MATRIARCH') {
+    return [
+      { name: '织杀', hpBelow: 1, abilities: ['webTrap', 'silkVolley'] },
+      { name: '孵潮', hpBelow: 0.7, abilities: ['webTrap', 'silkVolley', 'spawnSpiderlings', 'broodAmbush'] },
+      { name: '巢域', hpBelow: 0.35, abilities: ['webTrap', 'spawnSpiderlings', 'broodAmbush', 'nestBloom', 'webField'] },
+    ];
+  }
+  if (bossTemplate.id === 'ASTROLABE') {
+    return [
+      { name: '引潮', hpBelow: 1, abilities: ['gravityWell', 'starfall'] },
+      { name: '轨域', hpBelow: 0.62, abilities: ['gravityWell', 'orbitalShots', 'starfall', 'orbitalLock'] },
+      { name: '奇点', hpBelow: 0.28, abilities: ['gravityWell', 'orbitalShots', 'orbitalLock', 'singularity', 'eventHorizon'] },
+    ];
+  }
+  return bossTemplate.phases;
+};
+
+const enrichBossTemplate = (bossTemplate) => ({
+  ...bossTemplate,
+  phases: getBossPhaseOverrides(bossTemplate),
+});
 
 const getTowerPreviewSummary = (tower) => {
   const tags = [`价格 ${tower.cost}`, `伤害 ${tower.damage}`, `射程 ${tower.range}`];
@@ -142,6 +312,38 @@ const drawBossBody = (ctx, enemy) => {
     return;
   }
 
+  if (enemy.form === 'twinSun') {
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, r * 0.68, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = 3;
+    for (let index = 0; index < 8; index += 1) {
+      const angle = (Math.PI * 2 * index) / 8;
+      ctx.beginPath();
+      ctx.moveTo(enemy.x + Math.cos(angle) * r * 0.82, enemy.y + Math.sin(angle) * r * 0.82);
+      ctx.lineTo(enemy.x + Math.cos(angle) * r * 1.18, enemy.y + Math.sin(angle) * r * 1.18);
+      ctx.stroke();
+    }
+    return;
+  }
+
+  if (enemy.form === 'twinMoon') {
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, r * 0.74, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = COLORS.bg;
+    ctx.beginPath();
+    ctx.arc(enemy.x + r * 0.24, enemy.y - r * 0.08, r * 0.56, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, r * 0.96, -Math.PI / 3, Math.PI / 2);
+    ctx.stroke();
+    return;
+  }
+
   if (enemy.form === 'dragon') {
     for (let index = 3; index >= 0; index -= 1) {
       ctx.globalAlpha = 0.35 + index * 0.12;
@@ -151,10 +353,26 @@ const drawBossBody = (ctx, enemy) => {
     }
     ctx.globalAlpha = 1;
     ctx.beginPath();
+    ctx.moveTo(enemy.x - r * 0.1, enemy.y - r * 0.88);
+    ctx.lineTo(enemy.x + r * 0.26, enemy.y - r * 0.18);
+    ctx.lineTo(enemy.x - r * 0.34, enemy.y - r * 0.28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(enemy.x + r * 0.12, enemy.y + r * 0.88);
+    ctx.lineTo(enemy.x + r * 0.4, enemy.y + r * 0.22);
+    ctx.lineTo(enemy.x - r * 0.18, enemy.y + r * 0.3);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
     ctx.moveTo(enemy.x + r * 0.95, enemy.y);
     ctx.lineTo(enemy.x + r * 0.25, enemy.y - r * 0.65);
     ctx.lineTo(enemy.x + r * 0.28, enemy.y + r * 0.65);
     ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.beginPath();
+    ctx.arc(enemy.x + r * 0.78, enemy.y - r * 0.12, r * 0.12, 0, Math.PI * 2);
     ctx.fill();
     return;
   }
@@ -162,6 +380,11 @@ const drawBossBody = (ctx, enemy) => {
   if (enemy.form === 'spider') {
     ctx.beginPath();
     ctx.ellipse(enemy.x, enemy.y, r * 0.78, r * 0.62, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.beginPath();
+    ctx.arc(enemy.x + r * 0.24, enemy.y - r * 0.08, r * 0.14, 0, Math.PI * 2);
+    ctx.arc(enemy.x - r * 0.06, enemy.y + r * 0.06, r * 0.1, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = enemy.color;
     ctx.lineWidth = 4;
@@ -191,6 +414,13 @@ const drawBossBody = (ctx, enemy) => {
       ctx.ellipse(0, 0, r * 1.1, r * 0.36, 0, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    for (let index = 0; index < 3; index += 1) {
+      const angle = (Math.PI * 2 * index) / 3 + (enemy.currentPhaseIndex ?? 0) * 0.35;
+      ctx.beginPath();
+      ctx.arc(enemy.x + Math.cos(angle) * r * 0.9, enemy.y + Math.sin(angle) * r * 0.9, r * 0.12, 0, Math.PI * 2);
+      ctx.fill();
     }
     return;
   }
@@ -253,6 +483,65 @@ const drawBossBody = (ctx, enemy) => {
   ctx.fill();
 };
 
+const getHazardGlyph = (hazard) => {
+  if (hazard.type === 'area') {
+    if (['gravity', 'singularity', 'horizon', 'star'].includes(hazard.label)) return '◎';
+    if (['web', 'nest', 'brood', 'shade', 'spore', 'garden', 'poison', 'vine'].includes(hazard.label)) return '✳';
+    if (['frost', 'prison'].includes(hazard.label)) return '✦';
+    if (['mortar', 'bunker', 'meteor', 'ember', 'dive', 'slag'].includes(hazard.label)) return '✹';
+    if (['wall', 'gate'].includes(hazard.label)) return '□';
+    if (['beat', 'coin'].includes(hazard.label)) return '◌';
+  }
+
+  if (['charge', 'ram', 'hunt', 'slash'].includes(hazard.label)) return '>>';
+  if (['rail', 'crosshair', 'grid', 'overload', 'tempo'].includes(hazard.label)) return '||';
+  if (['refract', 'lattice', 'mirror'].includes(hazard.label)) return '<>';
+  if (['formation', 'wall', 'gate', 'maze'].includes(hazard.label)) return '[]';
+  if (['brand', 'coinline'].includes(hazard.label)) return '//';
+  return '';
+};
+
+const drawBossPhaseAura = (ctx, enemy) => {
+  const timer = enemy.bossState.phaseIntroTimer ?? 0;
+  if (timer <= 0) return;
+
+  const duration = enemy.bossState.phaseIntroDuration ?? 1;
+  const t = Math.max(0, Math.min(1, timer / duration));
+  const eased = 1 - t;
+  const radius = enemy.radius + 14 + eased * 20;
+  const rotation = eased * Math.PI * 1.6 * (enemy.uid % 2 === 0 ? 1 : -1);
+  const shardCount = 4 + (enemy.currentPhaseIndex ?? 0) * 2;
+
+  ctx.save();
+  ctx.translate(enemy.x, enemy.y);
+  ctx.rotate(rotation);
+  ctx.globalAlpha = 0.2 + t * 0.45;
+  ctx.strokeStyle = enemy.color;
+  ctx.lineWidth = 2 + t * 2;
+  ctx.setLineDash([10, 7]);
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.strokeRect(-radius * 0.72, -radius * 0.72, radius * 1.44, radius * 1.44);
+
+  ctx.fillStyle = enemy.color;
+  ctx.globalAlpha = 0.22 + t * 0.28;
+  for (let index = 0; index < shardCount; index += 1) {
+    const angle = (Math.PI * 2 * index) / shardCount;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - 5, y - 10);
+    ctx.lineTo(x + 5, y - 10);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+};
+
 export default function useGeoGuardGame() {
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
@@ -262,21 +551,37 @@ export default function useGeoGuardGame() {
   const [health, setHealth] = useState(100);
   const [maxHealth] = useState(100);
   const [time, setTime] = useState(0);
-  const [waveMsg, setWaveMsg] = useState('');
+  const [waveMsg, setWaveMsg] = useState(null);
   const [currentWave, setCurrentWave] = useState(1);
+  const [waveOverview, setWaveOverview] = useState({ label: '', focus: '' });
   const [dragTowerId, setDragTowerId] = useState(null);
   const [dragEntity, setDragEntity] = useState(null);
   const [towerCatalog, setTowerCatalog] = useState(createInitialTowerCatalog());
   const [rewardState, setRewardState] = useState({ active: false, choices: [] });
+  const [bossHud, setBossHud] = useState([]);
   const [debugOptions, setDebugOptions] = useState({ infiniteMoney: false, infiniteHealth: false });
   const [towerContextMenu, setTowerContextMenu] = useState(null);
+  const waveMessageTimeoutRef = useRef(null);
 
   towerCatalogRef.current = towerCatalog;
   game.current.towerCatalog = towerCatalog;
 
+  useEffect(
+    () => () => {
+      if (waveMessageTimeoutRef.current) {
+        window.clearTimeout(waveMessageTimeoutRef.current);
+      }
+    },
+    []
+  );
+
   const showWaveMessage = (message, duration = 1800) => {
-    setWaveMsg(message);
-    window.setTimeout(() => setWaveMsg(''), duration);
+    const nextMessage = typeof message === 'string' ? { title: message, tone: 'system' } : message;
+    if (waveMessageTimeoutRef.current) {
+      window.clearTimeout(waveMessageTimeoutRef.current);
+    }
+    setWaveMsg(nextMessage);
+    waveMessageTimeoutRef.current = window.setTimeout(() => setWaveMsg(null), duration);
   };
 
   const spawnParticle = (x, y, color, count, speedBase = 50) => {
@@ -296,8 +601,19 @@ export default function useGeoGuardGame() {
     }
   };
 
-  const spawnFloatingText = (x, y, text, color) => {
-    game.current.floatingTexts.push({ x, y, text, color, life: 1, maxLife: 0.8, vy: -30 });
+  const spawnFloatingText = (x, y, text, color, options = {}) => {
+    const life = options.life ?? 0.8;
+    game.current.floatingTexts.push({
+      x,
+      y,
+      text,
+      color,
+      life,
+      maxLife: life,
+      vy: options.vy ?? -30,
+      font: options.font ?? 'bold 14px system-ui, sans-serif',
+      outlineColor: options.outlineColor ?? null,
+    });
   };
 
   const spawnImpactWave = (x, y, options = {}) => {
@@ -312,11 +628,106 @@ export default function useGeoGuardGame() {
       color: options.color ?? COLORS.towerCannon,
       lineWidth: options.lineWidth ?? 4,
       fillAlpha: options.fillAlpha ?? 0.12,
+      dash: options.dash ?? [],
+      spokes: options.spokes ?? 0,
+      spin: options.spin ?? 0,
     });
   };
 
   const syncHudMoney = () => setMoney(game.current.debugOptions.infiniteMoney ? '∞' : game.current.money);
   const syncHudHealth = () => setHealth(game.current.debugOptions.infiniteHealth ? game.current.player.maxHp : Math.max(0, Math.floor(game.current.player.hp)));
+
+  const syncBossHud = () => {
+    const bosses = game.current.enemies.filter((enemy) => enemy.isBoss);
+    const groups = new Map();
+    for (const boss of bosses) {
+      const key = boss.encounterUid ? `enc-${boss.encounterUid}` : `boss-${boss.uid}`;
+      const presentation = getBossPresentation(boss.encounterBossId ?? boss.id);
+      const existing = groups.get(key) ?? {
+        id: key,
+        title: boss.encounterName ?? boss.name,
+        summary: presentation?.summary ?? '',
+        threats: presentation?.threats ?? [],
+        counterplay: presentation?.counterplay ?? '',
+        members: [],
+      };
+      existing.members.push({
+        id: boss.uid,
+        name: boss.name,
+        color: boss.color,
+        hpRatio: Math.max(0, boss.hp / boss.maxHp),
+        phase: boss.phases?.[boss.currentPhaseIndex]?.name ?? '',
+        enraged: Boolean(boss.bossState.partnerFallen),
+      });
+      groups.set(key, existing);
+    }
+
+    const nextHud = [...groups.values()].map((group) => ({
+      ...group,
+      members: group.members.sort((left, right) => left.id - right.id),
+    }));
+    setBossHud((previous) => {
+      const previousJson = JSON.stringify(previous);
+      const nextJson = JSON.stringify(nextHud);
+      return previousJson === nextJson ? previous : nextHud;
+    });
+  };
+
+  const showBossSpotlight = (bossTemplate, options = {}) => {
+    const presentation = getBossPresentation(bossTemplate.id);
+    const subtitleParts = [];
+    if (presentation?.threats?.length) {
+      subtitleParts.push(`关键词：${presentation.threats.join(' / ')}`);
+    }
+    if (presentation?.counterplay) {
+      subtitleParts.push(`应对：${presentation.counterplay}`);
+    }
+    showWaveMessage(
+      {
+        title: `${options.prefix ?? UI_COPY.bossIncoming} · ${bossTemplate.name}`,
+        subtitle: subtitleParts.join('  ｜  '),
+        tone: 'boss',
+        accentColor: bossTemplate.color,
+      },
+      options.duration ?? 3200
+    );
+  };
+
+  const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex) => {
+    boss.bossState.phaseIntroTimer = 1.15;
+    boss.bossState.phaseIntroDuration = 1.15;
+    spawnImpactWave(boss.x, boss.y, {
+      startRadius: boss.radius * 0.55,
+      maxRadius: boss.radius + 58 + activePhaseIndex * 12,
+      growth: 320,
+      life: 0.46,
+      color: boss.color,
+      lineWidth: 5,
+      fillAlpha: 0.12,
+      dash: [14, 8],
+      spokes: 5 + activePhaseIndex * 2,
+      spin: 0.7,
+    });
+    spawnImpactWave(boss.x, boss.y, {
+      startRadius: boss.radius * 0.3,
+      maxRadius: boss.radius + 28,
+      growth: 260,
+      life: 0.3,
+      color: '#ffffff',
+      lineWidth: 2,
+      fillAlpha: 0,
+      dash: [3, 9],
+      spokes: 0,
+      spin: -1,
+    });
+    spawnParticle(boss.x, boss.y, boss.color, 20 + activePhaseIndex * 6, 90 + activePhaseIndex * 20);
+    spawnFloatingText(boss.x, boss.y - boss.radius - 20, activePhase.name, boss.color, {
+      life: 1.05,
+      vy: -24,
+      font: 'bold 16px system-ui, sans-serif',
+      outlineColor: 'rgba(15,23,42,0.55)',
+    });
+  };
 
   const getTowerById = (towerId) => towerCatalogRef.current.find((tower) => tower.id === towerId);
 
@@ -341,26 +752,40 @@ export default function useGeoGuardGame() {
       burrowed: Boolean(baseEnemy.burrow),
       fuseTimer: null,
       summonedByBossUid: null,
+      summonedByEncounterUid: null,
       summonCategory: null,
     };
   };
 
-  const createBossEnemy = (bossTemplate) => ({
-    ...bossTemplate,
-    uid: game.current.nextEnemyUid++,
-    hp: bossTemplate.hp,
-    maxHp: bossTemplate.maxHp ?? bossTemplate.hp,
-    baseSpeed: bossTemplate.speed,
+  const createBossEnemy = (bossTemplate) => {
+    const enrichedBoss = enrichBossTemplate(bossTemplate);
+    return {
+      ...enrichedBoss,
+      uid: game.current.nextEnemyUid++,
+      hp: enrichedBoss.hp,
+      maxHp: enrichedBoss.maxHp ?? enrichedBoss.hp,
+    baseSpeed: enrichedBoss.speed,
     shield: 0,
     maxShield: 0,
     slowTimer: 0,
     slowRatio: 1,
     hitFlash: 0,
     currentPhaseIndex: -1,
-    abilityCooldowns: {},
-    bossState: {},
-    isDefeated: false,
+      abilityCooldowns: {},
+      bossState: {},
+      isDefeated: false,
+    };
+  };
+
+  const getBossOwnership = (boss) => ({
+    ownerBossUid: boss.uid,
+    ownerEncounterUid: boss.encounterUid ?? null,
   });
+
+  const getEncounterPartner = (boss) => {
+    if (!boss.encounterUid) return null;
+    return game.current.enemies.find((enemy) => enemy.isBoss && enemy.uid !== boss.uid && enemy.encounterUid === boss.encounterUid) ?? null;
+  };
 
   const spawnEnemyAt = (enemyKey, x, y, extras = {}) => {
     const enemy = { ...createEnemyFromKey(enemyKey), x, y, ...extras };
@@ -379,6 +804,10 @@ export default function useGeoGuardGame() {
   const hasPendingBossAftermath = (bossUid) =>
     game.current.enemies.some((enemy) => enemy.summonedByBossUid === bossUid) ||
     game.current.hazards.some((hazard) => hazard.ownerBossUid === bossUid);
+
+  const hasPendingEncounterAftermath = (encounterUid) =>
+    game.current.enemies.some((enemy) => enemy.encounterUid === encounterUid || enemy.summonedByEncounterUid === encounterUid) ||
+    game.current.hazards.some((hazard) => hazard.ownerEncounterUid === encounterUid);
 
   const findOpenEnemySpawnPosition = (source, enemyTemplate, baseRadius = 46) => {
     const blockers = [...game.current.enemies, ...game.current.towers, game.current.player];
@@ -404,23 +833,57 @@ export default function useGeoGuardGame() {
     };
   };
 
-  const spawnBossAt = (bossId, x, y) => {
-    const bossTemplate = BOSS_TYPES[bossId];
-    if (!bossTemplate) {
-      return null;
+  const spawnBossEncounterAt = (bossTemplate, x, y) => {
+    if (bossTemplate.id === 'TWINS') {
+      const encounterUid = game.current.nextBossEncounterUid++;
+      const memberTemplates = createTwinsEncounterMembers({
+        ...bossTemplate,
+        baseSpeed: bossTemplate.baseSpeed ?? bossTemplate.speed,
+        maxHp: bossTemplate.maxHp ?? bossTemplate.hp,
+      });
+      const offsets = [-1, 1];
+      const bosses = memberTemplates.map((memberTemplate, index) => {
+        const boss = createBossEnemy({
+          ...memberTemplate,
+          encounterUid,
+          encounterBossId: bossTemplate.id,
+          encounterName: bossTemplate.name,
+          twinRole: index === 0 ? 'sun' : 'moon',
+        });
+        boss.x = x + offsets[index] * 54;
+        boss.y = y + (index === 0 ? -18 : 18);
+        return boss;
+      });
+      game.current.enemies.push(...bosses);
+      return bosses;
     }
 
     const boss = createBossEnemy({
       ...bossTemplate,
-      maxHp: bossTemplate.hp,
+      maxHp: bossTemplate.maxHp ?? bossTemplate.hp,
       isBoss: true,
       enemyType: 'BOSS',
     });
     boss.x = x;
     boss.y = y;
     game.current.enemies.push(boss);
-    showWaveMessage(`测试 Boss · ${boss.name}`);
-    return boss;
+    return [boss];
+  };
+
+  const spawnBossAt = (bossId, x, y) => {
+    const bossTemplate = BOSS_TYPES[bossId];
+    if (!bossTemplate) {
+      return null;
+    }
+
+    const bosses = spawnBossEncounterAt({
+      ...bossTemplate,
+      maxHp: bossTemplate.hp,
+      isBoss: true,
+      enemyType: 'BOSS',
+    }, x, y);
+    showBossSpotlight(bossTemplate, { prefix: '测试 Boss', duration: 2600 });
+    return bosses[0] ?? null;
   };
 
   const startWave = (waveNumber) => {
@@ -434,9 +897,18 @@ export default function useGeoGuardGame() {
       bossSpawned: false,
       awaitingReward: false,
       pendingRewardBossUid: null,
+      pendingRewardBossEncounterUid: null,
     };
     setCurrentWave(waveNumber);
-    showWaveMessage(`${UI_COPY.waveIncoming} ${waveNumber}`);
+    setWaveOverview({ label: definition.label ?? '', focus: definition.focus ?? '' });
+    showWaveMessage(
+      {
+        title: `${UI_COPY.waveIncoming} ${waveNumber}`,
+        subtitle: definition.label && definition.focus ? `${definition.label} ｜ ${definition.focus}` : definition.label ?? definition.focus ?? '',
+        tone: 'wave',
+      },
+      2400
+    );
   };
 
   const initGame = (options = {}) => {
@@ -458,14 +930,33 @@ export default function useGeoGuardGame() {
     setHealth(100);
     setTime(0);
     setRewardState({ active: false, choices: [] });
+    setBossHud([]);
+    setWaveOverview(isDebugMode ? { label: '自由测试', focus: '敌人与 Boss 由顶部面板手动拖拽生成' } : { label: '', focus: '' });
     setDragTowerId(null);
     setDragEntity(null);
     setTowerContextMenu(null);
     setCurrentWave(1);
     setGameState('PLAYING');
-    showWaveMessage(isDebugMode ? '开发测试场已开启' : UI_COPY.introBanner, 2200);
     if (isDebugMode) {
-      game.current.wave = { number: 0, queue: [], spawnInterval: 999, spawnTimer: 0, boss: null, bossSpawned: true, awaitingReward: false, pendingRewardBossUid: null };
+      showWaveMessage(
+        {
+          title: '开发测试场已开启',
+          subtitle: '无限金钱和无限血量默认开启，可在顶部面板切换',
+          tone: 'system',
+        },
+        2600
+      );
+      game.current.wave = {
+        number: 0,
+        queue: [],
+        spawnInterval: 999,
+        spawnTimer: 0,
+        boss: null,
+        bossSpawned: true,
+        awaitingReward: false,
+        pendingRewardBossUid: null,
+        pendingRewardBossEncounterUid: null,
+      };
     } else {
       startWave(1);
     }
@@ -697,6 +1188,7 @@ export default function useGeoGuardGame() {
   const openBossReward = () => {
     game.current.wave.awaitingReward = true;
     game.current.wave.pendingRewardBossUid = null;
+    game.current.wave.pendingRewardBossEncounterUid = null;
     setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
   };
 
@@ -834,6 +1326,7 @@ export default function useGeoGuardGame() {
       spawnEnemyAt(enemyKey, position.x, position.y, {
         skipBurrowPosition: true,
         summonedByBossUid: options.ownerBossUid ?? null,
+        summonedByEncounterUid: options.ownerEncounterUid ?? null,
         summonCategory: options.summonCategory ?? (options.ownerBossUid ? enemyKey : null),
       });
       spawned += 1;
@@ -856,7 +1349,9 @@ export default function useGeoGuardGame() {
       timer: options.delay ?? 0.8,
       maxTimer: options.delay ?? 0.8,
       color: options.color ?? COLORS.towerRail,
+      label: options.label,
       ownerBossUid: options.ownerBossUid ?? null,
+      ownerEncounterUid: options.ownerEncounterUid ?? null,
     });
   };
 
@@ -874,7 +1369,12 @@ export default function useGeoGuardGame() {
       maxTimer: options.delay ?? 0.9,
       color: options.color ?? COLORS.danger,
       label: options.label,
+      pulsesRemaining: options.pulses ?? 1,
+      pulseInterval: options.pulseInterval ?? Math.max(0.35, (options.delay ?? 0.9) * 0.7),
+      radiusStep: options.radiusStep ?? 0,
+      damageStep: options.damageStep ?? 0,
       ownerBossUid: options.ownerBossUid ?? null,
+      ownerEncounterUid: options.ownerEncounterUid ?? null,
     });
   };
 
@@ -893,7 +1393,20 @@ export default function useGeoGuardGame() {
 
   const runBossAbility = (boss, abilityName) => {
     const target = chooseBossTarget(boss);
+    const ownership = getBossOwnership(boss);
     if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });
+    if (abilityName === 'commandLine') {
+      const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      for (let index = -1; index <= 1; index += 1) {
+        const offsetX = Math.cos(angle + Math.PI / 2) * index * 42;
+        const offsetY = Math.sin(angle + Math.PI / 2) * index * 42;
+        queueLineHazard(
+          { x: boss.x + offsetX, y: boss.y + offsetY },
+          { x: game.current.player.x + offsetX * 0.4, y: game.current.player.y + offsetY * 0.4 },
+          { width: 12, damage: 16, color: COLORS.enemyBasic, delay: 0.7, length: 520, label: 'formation', ...ownership }
+        );
+      }
+    }
     if (abilityName === 'shieldPulse') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 160) {
@@ -904,6 +1417,30 @@ export default function useGeoGuardGame() {
       }
       spawnImpactWave(boss.x, boss.y, { maxRadius: 160, color: COLORS.enemyShield, fillAlpha: 0.08 });
     }
+    if (abilityName === 'phalanxAdvance') {
+      spawnAround(boss, 'SHIELD', 2, boss.radius + 36, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'phalanx', maxActive: 6 });
+      queueAreaHazard(boss.x, boss.y, {
+        radius: 145,
+        damage: 10,
+        delay: 0.75,
+        slowRatio: 0.72,
+        slowDuration: 1.6,
+        pulses: 2,
+        pulseInterval: 0.6,
+        radiusStep: 12,
+        color: COLORS.enemyShield,
+        label: 'wall',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'commandRush') {
+      const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      boss.dashTimer = 0.4;
+      boss.dashVx = Math.cos(angle) * 460;
+      boss.dashVy = Math.sin(angle) * 460;
+      queueLineHazard(boss, game.current.player, { width: 18, damage: 22, color: COLORS.enemyBasic, delay: 0.5, length: 420, label: 'charge', ...ownership });
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 58, color: COLORS.enemyBasic, fillAlpha: 0.1 });
+    }
     if (abilityName === 'dashAtPlayer') {
       const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
       boss.dashTimer = 0.42;
@@ -911,25 +1448,179 @@ export default function useGeoGuardGame() {
       boss.dashVy = Math.sin(angle) * 560;
       spawnImpactWave(boss.x, boss.y, { maxRadius: 44, color: boss.color, life: 0.18 });
     }
+    if (abilityName === 'markPrey') {
+      queueLineHazard(boss, game.current.player, { width: 10, damage: 14, color: COLORS.enemyFast, delay: 0.45, length: 360, label: 'mark', ...ownership });
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 64,
+        damage: 10,
+        delay: 0.8,
+        pulses: 2,
+        pulseInterval: 0.42,
+        color: COLORS.enemyFast,
+        label: 'hunt',
+        ...ownership,
+      });
+    }
     if (abilityName === 'summonScouts') spawnAround(boss, 'SCOUT', 3, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'scouts', maxActive: 6 });
+    if (abilityName === 'pincerRush') {
+      for (const side of [-1, 1]) {
+        const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x) + side * 0.6;
+        queueLineHazard(
+          { x: boss.x + Math.cos(angle) * 20, y: boss.y + Math.sin(angle) * 20 },
+          { x: game.current.player.x + Math.cos(angle) * 110, y: game.current.player.y + Math.sin(angle) * 90 },
+          { width: 10, damage: 16, color: COLORS.enemyFast, delay: 0.55, length: 460, label: 'slash', ...ownership }
+        );
+      }
+      spawnAround(boss, 'SCOUT', 2, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'pincerScout', maxActive: 6 });
+    }
+    if (abilityName === 'feintStrike') {
+      const retreatAngle = Math.atan2(boss.y - game.current.player.y, boss.x - game.current.player.x);
+      boss.x = game.current.player.x + Math.cos(retreatAngle) * 180;
+      boss.y = game.current.player.y + Math.sin(retreatAngle) * 140;
+      queueLineHazard(boss, game.current.player, { width: 14, damage: 20, color: COLORS.enemyFast, delay: 0.38, length: 300, label: 'charge', ...ownership });
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 50, color: COLORS.enemyFast, fillAlpha: 0.1 });
+    }
     if (abilityName === 'afterimageBurst') spawnAround(boss, 'PHASE', 3, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'afterimage', maxActive: 6 });
     if (abilityName === 'summonSiege') spawnAround(boss, 'SIEGE', 2, boss.radius + 46, { ownerBossUid: boss.uid, summonCategory: 'siege', maxActive: 5 });
+    if (abilityName === 'bastionMortar') {
+      const priorityTargets = [...game.current.towers.slice(0, 2), game.current.player].filter(Boolean);
+      priorityTargets.forEach((targetPoint, index) => {
+        queueAreaHazard(targetPoint.x, targetPoint.y, {
+          radius: 72,
+          damage: 20,
+          delay: 0.9 + index * 0.12,
+          color: COLORS.enemyTank,
+          label: 'mortar',
+          ...ownership,
+        });
+      });
+    }
     if (abilityName === 'fortify') {
       boss.shield = Math.max(boss.shield ?? 0, 70);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
       spawnImpactWave(boss.x, boss.y, { maxRadius: 92, color: COLORS.enemyTank, fillAlpha: 0.1 });
     }
+    if (abilityName === 'shockRam') {
+      const angle = Math.atan2(target.y - boss.y, target.x - boss.x);
+      boss.dashTimer = 0.48;
+      boss.dashVx = Math.cos(angle) * 380;
+      boss.dashVy = Math.sin(angle) * 380;
+      queueLineHazard(boss, target, { width: 22, damage: 24, color: COLORS.enemyTank, delay: 0.62, length: 360, label: 'ram', ...ownership });
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 66, color: COLORS.enemyTank, fillAlpha: 0.12 });
+    }
     if (abilityName === 'quake') damageArea(boss.x, boss.y, 120, 18, { color: COLORS.enemyTank, towerFactor: 1.8 });
+    if (abilityName === 'bunkerRing') {
+      for (let index = 0; index < 6; index += 1) {
+        const angle = (Math.PI * 2 * index) / 6;
+        queueAreaHazard(boss.x + Math.cos(angle) * 130, boss.y + Math.sin(angle) * 110, {
+          radius: 58,
+          damage: 16,
+          delay: 0.78 + index * 0.04,
+          pulses: 2,
+          pulseInterval: 0.55,
+          color: COLORS.enemyTank,
+          label: 'bunker',
+          ...ownership,
+        });
+      }
+    }
     if (abilityName === 'prismBeam') queueLineHazard(boss, target, { width: 18, damage: 24, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
+    if (abilityName === 'refractVolley') {
+      const baseAngle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      for (const offset of [-0.45, -0.15, 0.15, 0.45]) {
+        queueLineHazard(
+          boss,
+          { x: boss.x + Math.cos(baseAngle + offset) * 180, y: boss.y + Math.sin(baseAngle + offset) * 180 },
+          { width: 10, damage: 14, color: COLORS.enemyPhase, delay: 0.55, length: 560, label: 'refract', ...ownership }
+        );
+      }
+    }
     if (abilityName === 'mirrorSummon') spawnAround(boss, 'PHASE', 2, boss.radius + 48, { ownerBossUid: boss.uid, summonCategory: 'mirror', maxActive: 5 });
+    if (abilityName === 'prismLattice') {
+      const offsets = [
+        { x: -120, y: -80 },
+        { x: 120, y: -80 },
+        { x: -120, y: 80 },
+        { x: 120, y: 80 },
+      ];
+      offsets.forEach((offset) => {
+        queueLineHazard(
+          { x: boss.x + offset.x, y: boss.y + offset.y },
+          { x: boss.x - offset.x, y: boss.y - offset.y },
+          { width: 10, damage: 16, color: COLORS.enemyPhase, delay: 0.75, length: Math.hypot(offset.x * 2, offset.y * 2), label: 'lattice', ...ownership }
+        );
+      });
+    }
     if (abilityName === 'tripleBeam') {
       queueLineHazard(boss, game.current.player, { width: 16, damage: 22, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
       queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x + 120, y: boss.y - 260 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
       queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x - 140, y: boss.y - 240 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
     }
-    if (abilityName === 'spawnHive') spawnAround(boss, 'BEACON', 2, boss.radius + 50, { ownerBossUid: boss.uid, summonCategory: 'hive', maxActive: 4 });
+    if (abilityName === 'mirrorStep') {
+      const oldX = boss.x;
+      const oldY = boss.y;
+      boss.x = game.current.player.x + rand(-180, 180);
+      boss.y = game.current.player.y + rand(-120, 120);
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 12, damage: 18, color: COLORS.enemyPhase, delay: 0.52, length: Math.hypot(boss.x - oldX, boss.y - oldY), label: 'mirror', ...ownership });
+      spawnAround(boss, 'PHASE', 1, boss.radius + 28, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'mirrorStep', maxActive: 3 });
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 62, color: COLORS.enemyPhase, fillAlpha: 0.1 });
+    }
+    if (abilityName === 'spawnHive') spawnAround(boss, 'BEACON', 2, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'hive', maxActive: 4 });
+    if (abilityName === 'broodShift') {
+      const beacons = game.current.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);
+      if (beacons.length > 0) {
+        const beacon = beacons[Math.floor(Math.random() * beacons.length)];
+        const oldX = boss.x;
+        const oldY = boss.y;
+        boss.x = beacon.x + rand(-24, 24);
+        boss.y = beacon.y + rand(-24, 24);
+        queueLineHazard({ x: oldX, y: oldY }, boss, { width: 12, damage: 14, color: COLORS.enemyBeacon, delay: 0.5, length: Math.hypot(boss.x - oldX, boss.y - oldY), label: 'brood', ...ownership });
+        spawnImpactWave(boss.x, boss.y, { maxRadius: 76, color: COLORS.enemyBeacon, fillAlpha: 0.12 });
+      } else {
+        spawnAround(boss, 'BEACON', 1, boss.radius + 44, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'hive', maxActive: 4 });
+      }
+    }
     if (abilityName === 'hiveHeal') boss.hp = Math.min(boss.maxHp, boss.hp + 42);
-    if (abilityName === 'summonSwarm') spawnAround(boss, 'SHARD', 5, boss.radius + 45, { ownerBossUid: boss.uid, summonCategory: 'swarm', maxActive: 10 });
+    if (abilityName === 'hivePulse') {
+      const beacons = game.current.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);
+      const anchors = beacons.length > 0 ? beacons : [boss];
+      for (const anchor of anchors.slice(0, 3)) {
+        queueAreaHazard(anchor.x, anchor.y, {
+          radius: 92,
+          damage: 10,
+          delay: 0.7,
+          pulses: 2,
+          pulseInterval: 0.55,
+          radiusStep: 10,
+          color: COLORS.enemyBeacon,
+          label: 'brood',
+          ...ownership,
+        });
+        for (const enemy of game.current.enemies) {
+          if (!enemy.isBoss && dist(enemy, anchor) <= 110) {
+            enemy.hp = Math.min(enemy.maxHp, enemy.hp + 12);
+          }
+        }
+      }
+    }
+    if (abilityName === 'summonSwarm') spawnAround(boss, 'SHARD', 5, boss.radius + 45, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'swarm', maxActive: 10 });
+    if (abilityName === 'hiveCollapse') {
+      const beacons = game.current.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);
+      for (const beacon of beacons.slice(0, 4)) {
+        queueAreaHazard(beacon.x, beacon.y, {
+          radius: 104,
+          damage: 16,
+          delay: 0.8,
+          pulses: 2,
+          pulseInterval: 0.48,
+          radiusStep: 14,
+          color: COLORS.enemyBeacon,
+          label: 'brood',
+          ...ownership,
+        });
+        spawnAround(beacon, 'SHARD', 2, 28, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'collapseShard', maxActive: 8 });
+      }
+    }
     if (abilityName === 'frostRing') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 180) {
@@ -939,6 +1630,22 @@ export default function useGeoGuardGame() {
       }
       damageArea(boss.x, boss.y, 150, 8, { color: COLORS.towerFrost, towerFactor: 0.4 });
     }
+    if (abilityName === 'whiteout') {
+      for (let index = 0; index < 3; index += 1) {
+        queueAreaHazard(game.current.player.x + rand(-120, 120), game.current.player.y + rand(-90, 90), {
+          radius: 74,
+          damage: 8,
+          delay: 0.6 + index * 0.14,
+          slowRatio: 0.42,
+          slowDuration: 2.4,
+          pulses: 2,
+          pulseInterval: 0.5,
+          color: COLORS.towerFrost,
+          label: 'frost',
+          ...ownership,
+        });
+      }
+    }
     if (abilityName === 'freezeTower') {
       const tower = game.current.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);
       if (tower) {
@@ -946,15 +1653,66 @@ export default function useGeoGuardGame() {
         spawnImpactWave(tower.x, tower.y, { maxRadius: tower.radius + 24, color: COLORS.towerFrost, fillAlpha: 0.16 });
       }
     }
-    if (abilityName === 'summonFrostGuards') spawnAround(boss, 'SHIELD', 3, boss.radius + 48, { ownerBossUid: boss.uid, summonCategory: 'frostGuard', maxActive: 6 });
-    if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65, ownerBossUid: boss.uid });
+    if (abilityName === 'glacialPrison') {
+      const focus = game.current.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, game.current.player) < dist(nearest, game.current.player) ? candidate : nearest), null) ?? game.current.player;
+      queueAreaHazard(focus.x, focus.y, {
+        radius: 90,
+        damage: 12,
+        delay: 0.75,
+        slowRatio: 0.3,
+        slowDuration: 3.1,
+        pulses: 2,
+        pulseInterval: 0.5,
+        color: COLORS.towerFrost,
+        label: 'prison',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'summonFrostGuards') spawnAround(boss, 'SHIELD', 3, boss.radius + 48, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'frostGuard', maxActive: 6 });
+    if (abilityName === 'coldSnap') {
+      const targets = [...game.current.towers.slice(0, 3), game.current.player];
+      targets.forEach((targetPoint, index) => {
+        queueAreaHazard(targetPoint.x, targetPoint.y, {
+          radius: 68,
+          damage: 16,
+          delay: 0.72 + index * 0.08,
+          slowRatio: 0.36,
+          slowDuration: 2.8,
+          color: COLORS.towerFrost,
+          label: 'frost',
+          ...ownership,
+        });
+      });
+    }
+    if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65, label: 'rail', ...ownership });
+    if (abilityName === 'crosshairBarrage') {
+      queueLineHazard({ x: game.current.player.x - 260, y: game.current.player.y }, { x: game.current.player.x + 260, y: game.current.player.y }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.7, length: 520, label: 'crosshair', ...ownership });
+      queueLineHazard({ x: game.current.player.x, y: game.current.player.y - 220 }, { x: game.current.player.x, y: game.current.player.y + 220 }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.82, length: 440, label: 'crosshair', ...ownership });
+    }
     if (abilityName === 'markTower') {
       const tower = game.current.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);
-      if (tower) queueLineHazard(boss, tower, { width: 12, damage: 28, color: COLORS.towerRail, delay: 0.55, ownerBossUid: boss.uid });
+      if (tower) queueLineHazard(boss, tower, { width: 12, damage: 28, color: COLORS.towerRail, delay: 0.55, label: 'mark', ...ownership });
+    }
+    if (abilityName === 'suppressiveGrid') {
+      const anchors = game.current.towers.slice(0, 2);
+      anchors.forEach((tower, index) => {
+        queueLineHazard({ x: tower.x - 180, y: tower.y }, { x: tower.x + 180, y: tower.y }, { width: 9, damage: 14, color: COLORS.towerRail, delay: 0.68 + index * 0.08, length: 360, label: 'grid', ...ownership });
+        queueLineHazard({ x: tower.x, y: tower.y - 180 }, { x: tower.x, y: tower.y + 180 }, { width: 9, damage: 14, color: COLORS.towerRail, delay: 0.76 + index * 0.08, length: 360, label: 'grid', ...ownership });
+      });
     }
     if (abilityName === 'overload') {
       boss.hp -= Math.min(24, boss.hp - 1);
-      queueLineHazard(boss, game.current.player, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, ownerBossUid: boss.uid });
+      queueLineHazard(boss, game.current.player, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, label: 'overload', ...ownership });
+    }
+    if (abilityName === 'killLane') {
+      const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      for (const offset of [-0.18, 0.18]) {
+        queueLineHazard(
+          { x: boss.x + Math.cos(angle + Math.PI / 2) * offset * 180, y: boss.y + Math.sin(angle + Math.PI / 2) * offset * 180 },
+          game.current.player,
+          { width: 14, damage: 24, color: COLORS.towerRail, delay: 0.75, length: 720, label: 'crosshair', ...ownership }
+        );
+      }
     }
     if (abilityName === 'stealMoney') {
       if (!game.current.debugOptions.infiniteMoney) {
@@ -964,7 +1722,54 @@ export default function useGeoGuardGame() {
         spawnFloatingText(boss.x, boss.y - boss.radius - 8, `-${stolen}`, COLORS.enemyScout);
       }
     }
-    if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'ransom', maxActive: 8 });
+    if (abilityName === 'taxBeacon') {
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 82,
+        damage: 8,
+        delay: 0.75,
+        pulses: 2,
+        pulseInterval: 0.5,
+        color: COLORS.enemyScout,
+        label: 'coin',
+        ...ownership,
+      });
+      if (!game.current.debugOptions.infiniteMoney) {
+        const stolen = Math.min(game.current.money, 8);
+        game.current.money -= stolen;
+        syncHudMoney();
+      }
+    }
+    if (abilityName === 'paydaySweep') {
+      for (const side of [-1, 1]) {
+        queueLineHazard(
+          { x: game.current.player.x + side * 220, y: game.current.player.y - 120 },
+          { x: game.current.player.x - side * 220, y: game.current.player.y + 120 },
+          { width: 10, damage: 14, color: COLORS.enemyScout, delay: 0.68, length: Math.hypot(440, 240), label: 'coinline', ...ownership }
+        );
+      }
+      spawnAround(boss, 'SCOUT', 2, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'paydayScout', maxActive: 6 });
+    }
+    if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'ransom', maxActive: 8 });
+    if (abilityName === 'repossess') {
+      const tower = game.current.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);
+      if (tower) {
+        damageTarget(tower, 22);
+        queueAreaHazard(tower.x, tower.y, {
+          radius: 76,
+          damage: 12,
+          delay: 0.72,
+          color: COLORS.enemyScout,
+          label: 'coin',
+          ...ownership,
+        });
+      }
+      if (!game.current.debugOptions.infiniteMoney) {
+        const stolen = Math.min(game.current.money, 18);
+        game.current.money -= stolen;
+        syncHudMoney();
+        spawnFloatingText(boss.x, boss.y - boss.radius - 8, `-${stolen}`, COLORS.enemyScout);
+      }
+    }
     if (abilityName === 'twinOrbit') {
       boss.shield = Math.max(boss.shield ?? 0, 34);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
@@ -982,28 +1787,264 @@ export default function useGeoGuardGame() {
       spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });
     }
     if (abilityName === 'eclipsePulse') damageArea(boss.x, boss.y, 170, 20, { color: COLORS.enemyPhase, towerFactor: 0.8 });
-    if (abilityName === 'dragonBreath') {
-      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, ownerBossUid: boss.uid });
-      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ownerBossUid: boss.uid });
-      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ownerBossUid: boss.uid });
+    if (abilityName === 'solarDash') {
+      const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      boss.dashTimer = 0.34;
+      boss.dashVx = Math.cos(angle) * 620;
+      boss.dashVy = Math.sin(angle) * 620;
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, ...ownership });
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 52, color: boss.color, fillAlpha: 0.12 });
     }
-    if (abilityName === 'tailSweep') queueAreaHazard(boss.x, boss.y, { radius: 145, damage: 18, delay: 0.55, color: COLORS.enemyBomber, label: 'tail', ownerBossUid: boss.uid });
-    if (abilityName === 'meteorRain') {
-      for (let index = 0; index < 4; index += 1) {
-        queueAreaHazard(game.current.player.x + rand(-180, 180), game.current.player.y + rand(-130, 130), { radius: 54, damage: 24, delay: 1 + index * 0.12, color: COLORS.enemyBomber, ownerBossUid: boss.uid });
+    if (abilityName === 'flareLance') {
+      const baseAngle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      for (const offset of [-0.2, 0, 0.2]) {
+        queueLineHazard(
+          boss,
+          { x: boss.x + Math.cos(baseAngle + offset) * 240, y: boss.y + Math.sin(baseAngle + offset) * 240 },
+          { width: offset === 0 ? 16 : 12, damage: offset === 0 ? 22 : 16, color: boss.color, delay: 0.6, length: 640, ...ownership }
+        );
       }
     }
-    if (abilityName === 'webTrap') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 86, damage: 8, slowRatio: 0.42, slowDuration: 2.8, delay: 0.65, color: COLORS.enemyBurrower, label: 'web', ownerBossUid: boss.uid });
-    if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'spiderling', maxActive: 10 });
-    if (abilityName === 'webField') {
-      queueAreaHazard(boss.x, boss.y, { radius: 185, damage: 10, slowRatio: 0.5, slowDuration: 3.2, delay: 0.8, color: COLORS.enemyBurrower, label: 'web', ownerBossUid: boss.uid });
-      spawnAround(boss, 'BURROWER', 2, boss.radius + 52, { ownerBossUid: boss.uid, summonCategory: 'burrowEscort', maxActive: 4 });
+    if (abilityName === 'lunarSnare') {
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 92,
+        damage: 10,
+        slowRatio: 0.38,
+        slowDuration: 2.9,
+        delay: 0.7,
+        color: boss.color,
+        label: 'moon',
+        ...ownership,
+      });
     }
-    if (abilityName === 'gravityWell') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 120, damage: 12, pull: 220, delay: 0.7, color: COLORS.enemyJammer, label: 'gravity', ownerBossUid: boss.uid });
+    if (abilityName === 'shadowArc') {
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, ...ownership });
+      queueAreaHazard(game.current.player.x + rand(-80, 80), game.current.player.y + rand(-80, 80), {
+        radius: 76,
+        damage: 14,
+        slowRatio: 0.52,
+        slowDuration: 2.2,
+        delay: 0.82,
+        color: boss.color,
+        label: 'shade',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'twinCrossfire') {
+      const partner = getEncounterPartner(boss);
+      if (partner && boss.uid < partner.uid) {
+        queueLineHazard(boss, { x: game.current.player.x + 90, y: game.current.player.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, ...ownership });
+        queueLineHazard(partner, { x: game.current.player.x - 90, y: game.current.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, ...getBossOwnership(partner) });
+        spawnImpactWave(game.current.player.x, game.current.player.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
+      }
+    }
+    if (abilityName === 'dragonBreath') {
+      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, ...ownership });
+      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ...ownership });
+      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ...ownership });
+    }
+    if (abilityName === 'dragonStrafe') {
+      boss.bossState.strafeSide = boss.bossState.strafeSide === 'left' ? 'right' : 'left';
+      const side = boss.bossState.strafeSide === 'left' ? -1 : 1;
+      const baseAngle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
+      for (const offset of [-0.28, 0, 0.28]) {
+        queueLineHazard(
+          { x: boss.x + Math.cos(baseAngle + Math.PI / 2 * side) * 34, y: boss.y + Math.sin(baseAngle + Math.PI / 2 * side) * 34 },
+          { x: game.current.player.x + Math.cos(baseAngle + offset) * 180, y: game.current.player.y + Math.sin(baseAngle + offset) * 180 },
+          { width: offset === 0 ? 18 : 12, damage: offset === 0 ? 24 : 16, color: COLORS.enemyBomber, delay: 0.7, length: 760, ...ownership }
+        );
+      }
+    }
+    if (abilityName === 'emberWake') {
+      for (let index = 0; index < 3; index += 1) {
+        const angle = boss.bossState.strafeSide === 'left' ? Math.PI * 0.75 - index * 0.26 : Math.PI * 0.25 + index * 0.26;
+        queueAreaHazard(game.current.player.x + Math.cos(angle) * 110, game.current.player.y + Math.sin(angle) * 80, {
+          radius: 58 + index * 8,
+          damage: 10 + index * 2,
+          delay: 0.65 + index * 0.1,
+          pulses: 2,
+          pulseInterval: 0.6,
+          radiusStep: 14,
+          color: COLORS.enemyBomber,
+          label: 'ember',
+          ...ownership,
+        });
+      }
+    }
+    if (abilityName === 'wingBuffet') {
+      damageArea(boss.x, boss.y, 165, 16, { color: COLORS.enemyBomber, towerFactor: 1.15 });
+      const pushTarget = (target, amount) => {
+        const angle = Math.atan2(target.y - boss.y, target.x - boss.x);
+        target.x += Math.cos(angle) * amount;
+        target.y += Math.sin(angle) * amount;
+      };
+      pushTarget(game.current.player, 42);
+      for (const tower of game.current.towers) {
+        if (dist(tower, boss) <= 210) pushTarget(tower, 24);
+      }
+      spawnImpactWave(boss.x, boss.y, { maxRadius: 170, color: COLORS.enemyBomber, fillAlpha: 0.1 });
+    }
+    if (abilityName === 'meteorRain') {
+      for (let index = 0; index < 6; index += 1) {
+        queueAreaHazard(game.current.player.x + rand(-200, 200), game.current.player.y + rand(-160, 160), {
+          radius: 50 + (index % 2) * 8,
+          damage: 22,
+          delay: 0.95 + index * 0.1,
+          color: COLORS.enemyBomber,
+          label: 'meteor',
+          ...ownership,
+        });
+      }
+    }
+    if (abilityName === 'skyDive') {
+      const oldX = boss.x;
+      const oldY = boss.y;
+      const angle = Math.random() * Math.PI * 2;
+      boss.x = game.current.player.x + Math.cos(angle) * 140;
+      boss.y = game.current.player.y + Math.sin(angle) * 120;
+      spawnImpactWave(oldX, oldY, { maxRadius: 70, color: COLORS.enemyBomber, fillAlpha: 0.08 });
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, ...ownership });
+      queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });
+    }
+    if (abilityName === 'infernoRing') {
+      for (let index = 0; index < 6; index += 1) {
+        const angle = (Math.PI * 2 * index) / 6;
+        queueAreaHazard(game.current.player.x + Math.cos(angle) * 140, game.current.player.y + Math.sin(angle) * 110, {
+          radius: 60,
+          damage: 18,
+          delay: 0.8 + index * 0.05,
+          pulses: 2,
+          pulseInterval: 0.55,
+          radiusStep: 10,
+          color: COLORS.enemyBomber,
+          label: 'ember',
+          ...ownership,
+        });
+      }
+    }
+    if (abilityName === 'webTrap') {
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 86,
+        damage: 8,
+        slowRatio: 0.42,
+        slowDuration: 2.8,
+        delay: 0.65,
+        pulses: 2,
+        pulseInterval: 0.55,
+        radiusStep: 8,
+        color: COLORS.enemyBurrower,
+        label: 'web',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'silkVolley') {
+      for (let index = 0; index < 3; index += 1) {
+        queueAreaHazard(game.current.player.x + rand(-120, 120), game.current.player.y + rand(-90, 90), {
+          radius: 62,
+          damage: 8,
+          slowRatio: 0.5,
+          slowDuration: 2.2,
+          delay: 0.55 + index * 0.1,
+          color: COLORS.enemyBurrower,
+          label: 'web',
+          ...ownership,
+        });
+      }
+    }
+    if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'spiderling', maxActive: 10 });
+    if (abilityName === 'broodAmbush') {
+      spawnAround(boss, 'BURROWER', 2, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'broodBurrower', maxActive: 4 });
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.3;
+        const x = game.current.player.x + Math.cos(angle) * 118;
+        const y = game.current.player.y + Math.sin(angle) * 84;
+        spawnEnemyAt('SPLINTER', x, y, {
+          skipBurrowPosition: true,
+          summonedByBossUid: boss.uid,
+          summonedByEncounterUid: boss.encounterUid ?? null,
+          summonCategory: 'ambushSpiderling',
+        });
+      }
+    }
+    if (abilityName === 'webField') {
+      queueAreaHazard(boss.x, boss.y, {
+        radius: 170,
+        damage: 9,
+        slowRatio: 0.52,
+        slowDuration: 3,
+        delay: 0.8,
+        pulses: 3,
+        pulseInterval: 0.75,
+        radiusStep: 12,
+        color: COLORS.enemyBurrower,
+        label: 'web',
+        ...ownership,
+      });
+      spawnAround(boss, 'BURROWER', 2, boss.radius + 52, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'burrowEscort', maxActive: 4 });
+    }
+    if (abilityName === 'nestBloom') {
+      for (let index = 0; index < 3; index += 1) {
+        const angle = (Math.PI * 2 * index) / 3 + Math.random() * 0.24;
+        queueAreaHazard(boss.x + Math.cos(angle) * 140, boss.y + Math.sin(angle) * 110, {
+          radius: 72,
+          damage: 10,
+          slowRatio: 0.56,
+          slowDuration: 2.8,
+          delay: 0.75,
+          pulses: 3,
+          pulseInterval: 0.65,
+          radiusStep: 10,
+          color: COLORS.enemyBurrower,
+          label: 'nest',
+          ...ownership,
+        });
+      }
+      spawnAround(boss, 'SPLINTER', 4, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'nestShard', maxActive: 12 });
+    }
+    if (abilityName === 'gravityWell') {
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 120,
+        damage: 10,
+        pull: 220,
+        delay: 0.7,
+        pulses: 2,
+        pulseInterval: 0.6,
+        radiusStep: 18,
+        color: COLORS.enemyJammer,
+        label: 'gravity',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'starfall') {
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.22;
+        queueAreaHazard(game.current.player.x + Math.cos(angle) * 120, game.current.player.y + Math.sin(angle) * 88, {
+          radius: 58,
+          damage: 14,
+          delay: 0.65 + index * 0.08,
+          color: COLORS.enemyJammer,
+          label: 'star',
+          ...ownership,
+        });
+      }
+    }
     if (abilityName === 'orbitalShots') {
+      const angleOffset = (boss.bossState.orbitalIndex ?? 0) * 0.34;
+      boss.bossState.orbitalIndex = (boss.bossState.orbitalIndex ?? 0) + 1;
+      for (let index = 0; index < 5; index += 1) {
+        const angle = angleOffset + (Math.PI * 2 * index) / 5;
+        queueLineHazard(
+          { x: boss.x + Math.cos(angle) * 86, y: boss.y + Math.sin(angle) * 86 },
+          { x: boss.x - Math.cos(angle) * 160, y: boss.y - Math.sin(angle) * 160 },
+          { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.6, length: 560, ...ownership }
+        );
+      }
+    }
+    if (abilityName === 'orbitalLock') {
       for (let index = 0; index < 4; index += 1) {
         const angle = (Math.PI * 2 * index) / 4;
-        queueLineHazard({ x: boss.x + Math.cos(angle) * 80, y: boss.y + Math.sin(angle) * 80 }, boss, { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.65, length: 520, ownerBossUid: boss.uid });
+        const source = { x: game.current.player.x + Math.cos(angle) * 180, y: game.current.player.y + Math.sin(angle) * 140 };
+        queueLineHazard(source, game.current.player, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - game.current.player.x, source.y - game.current.player.y), ...ownership });
       }
     }
     if (abilityName === 'singularity') {
@@ -1012,12 +2053,54 @@ export default function useGeoGuardGame() {
         tower.x += Math.cos(angle) * 34;
         tower.y += Math.sin(angle) * 34;
       }
-      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 24, pull: 340, delay: 1, color: COLORS.enemyJammer, label: 'singularity', ownerBossUid: boss.uid });
+      queueAreaHazard(boss.x, boss.y, {
+        radius: 210,
+        damage: 20,
+        pull: 340,
+        delay: 0.95,
+        pulses: 3,
+        pulseInterval: 0.55,
+        radiusStep: -12,
+        color: COLORS.enemyJammer,
+        label: 'singularity',
+        ...ownership,
+      });
+    }
+    if (abilityName === 'eventHorizon') {
+      for (let index = 0; index < 6; index += 1) {
+        const angle = (Math.PI * 2 * index) / 6;
+        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, {
+          radius: 68,
+          damage: 16,
+          pull: 180,
+          delay: 0.75 + index * 0.05,
+          pulses: 2,
+          pulseInterval: 0.6,
+          color: COLORS.enemyJammer,
+          label: 'horizon',
+          ...ownership,
+        });
+      }
     }
     if (abilityName === 'forgeArmor') {
       boss.shield = Math.max(boss.shield ?? 0, 90);
       boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);
-      spawnAround(boss, 'SHIELD', 2, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'forgeGuard', maxActive: 6 });
+      spawnAround(boss, 'SHIELD', 2, boss.radius + 42, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'forgeGuard', maxActive: 6 });
+    }
+    if (abilityName === 'slagDrop') {
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.2;
+        queueAreaHazard(boss.x + Math.cos(angle) * 130, boss.y + Math.sin(angle) * 100, {
+          radius: 64,
+          damage: 14,
+          delay: 0.7 + index * 0.08,
+          pulses: 2,
+          pulseInterval: 0.55,
+          color: COLORS.enemySiege,
+          label: 'slag',
+          ...ownership,
+        });
+      }
     }
     if (abilityName === 'sacrificeMinions') {
       let sacrificed = 0;
@@ -1032,54 +2115,193 @@ export default function useGeoGuardGame() {
       boss.shield = Math.max(boss.shield ?? 0, sacrificed * 24);
       damageArea(boss.x, boss.y, 95 + sacrificed * 18, 10 + sacrificed * 4, { color: COLORS.enemySiege, towerFactor: 1.3 });
     }
+    if (abilityName === 'brandLine') {
+      queueLineHazard(boss, game.current.player, { width: 14, damage: 20, color: COLORS.enemySiege, delay: 0.58, length: 520, label: 'brand', ...ownership });
+      queueAreaHazard(game.current.player.x, game.current.player.y, {
+        radius: 82,
+        damage: 12,
+        delay: 0.82,
+        pulses: 2,
+        pulseInterval: 0.48,
+        color: COLORS.enemySiege,
+        label: 'slag',
+        ...ownership,
+      });
+    }
     if (abilityName === 'moltenBurst') {
       for (let index = 0; index < 6; index += 1) {
         const angle = (Math.PI * 2 * index) / 6;
-        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege, ownerBossUid: boss.uid });
+        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege, label: 'slag', ...ownership });
+      }
+    }
+    if (abilityName === 'forgeDetonation') {
+      const forgeGuards = game.current.enemies.filter((enemy) => enemy.summonedByBossUid === boss.uid && enemy.summonCategory === 'forgeGuard');
+      for (const guard of forgeGuards.slice(0, 4)) {
+        queueAreaHazard(guard.x, guard.y, {
+          radius: 84,
+          damage: 18,
+          delay: 0.7,
+          pulses: 2,
+          pulseInterval: 0.42,
+          color: COLORS.enemySiege,
+          label: 'slag',
+          ...ownership,
+        });
       }
     }
     if (abilityName === 'conductLines') {
-      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, ownerBossUid: boss.uid });
-      queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560, ownerBossUid: boss.uid });
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, label: 'tempo', ...ownership });
+      queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560, label: 'tempo', ...ownership });
+    }
+    if (abilityName === 'pulseMeasure') {
+      for (let index = 0; index < 4; index += 1) {
+        queueAreaHazard(game.current.player.x + rand(-150, 150), game.current.player.y + rand(-110, 110), {
+          radius: 54,
+          damage: 10,
+          delay: 0.5 + index * 0.16,
+          color: COLORS.towerRail,
+          label: 'beat',
+          ...ownership,
+        });
+      }
     }
     if (abilityName === 'tempoShift') {
       for (const tower of game.current.towers) {
         if (dist(tower, boss) <= 260) tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, 1.6);
       }
-      spawnAround(boss, 'FAST', 4, boss.radius + 45, { ownerBossUid: boss.uid, summonCategory: 'tempoRunner', maxActive: 8 });
+      spawnAround(boss, 'FAST', 4, boss.radius + 45, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'tempoRunner', maxActive: 8 });
+    }
+    if (abilityName === 'syncopate') {
+      for (let index = 0; index < 3; index += 1) {
+        const delay = 0.42 + index * 0.18;
+        queueLineHazard(
+          { x: game.current.player.x - 220, y: game.current.player.y - 70 + index * 70 },
+          { x: game.current.player.x + 220, y: game.current.player.y - 70 + index * 70 },
+          { width: 9, damage: 14, color: COLORS.towerRail, delay, length: 440, label: 'tempo', ...ownership }
+        );
+      }
     }
     if (abilityName === 'finale') {
       for (let index = 0; index < 8; index += 1) {
         const angle = (Math.PI * 2 * index) / 8;
-        queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620, ownerBossUid: boss.uid });
+        queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620, label: 'tempo', ...ownership });
+      }
+    }
+    if (abilityName === 'crescendo') {
+      for (let index = 0; index < 5; index += 1) {
+        queueAreaHazard(game.current.player.x, game.current.player.y, {
+          radius: 46 + index * 16,
+          damage: 8 + index * 2,
+          delay: 0.4 + index * 0.14,
+          color: COLORS.towerRail,
+          label: 'beat',
+          ...ownership,
+        });
       }
     }
     if (abilityName === 'raiseWalls') {
-      spawnAround(boss, 'SIEGE', 3, boss.radius + 58, { ownerBossUid: boss.uid, summonCategory: 'wallGuard', maxActive: 6 });
-      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
+      spawnAround(boss, 'SIEGE', 3, boss.radius + 58, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'wallGuard', maxActive: 6 });
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ...ownership });
+    }
+    if (abilityName === 'corridorClamp') {
+      queueLineHazard({ x: game.current.player.x - 240, y: game.current.player.y - 110 }, { x: game.current.player.x - 240, y: game.current.player.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
+      queueLineHazard({ x: game.current.player.x + 240, y: game.current.player.y - 110 }, { x: game.current.player.x + 240, y: game.current.player.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
     }
     if (abilityName === 'gateSwap') {
       const oldX = boss.x;
       const oldY = boss.y;
       boss.x = game.current.player.x + rand(-210, 210);
       boss.y = game.current.player.y + rand(-160, 160);
-      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6, ownerBossUid: boss.uid });
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6, label: 'gate', ...ownership });
+    }
+    if (abilityName === 'mazeFold') {
+      for (const tower of game.current.towers.slice(0, 2)) {
+        queueLineHazard({ x: tower.x - 160, y: tower.y }, { x: tower.x + 160, y: tower.y }, { width: 10, damage: 16, color: COLORS.enemyShield, delay: 0.68, length: 320, label: 'maze', ...ownership });
+      }
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 84, damage: 12, delay: 0.82, color: COLORS.enemyShield, label: 'wall', ...ownership });
     }
     if (abilityName === 'mazeCrush') {
       for (const tower of game.current.towers.slice(0, 4)) {
-        queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
+        queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall', ...ownership });
       }
-      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ownerBossUid: boss.uid });
+      queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ...ownership });
     }
-    if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46, { ownerBossUid: boss.uid, summonCategory: 'seedPod', maxActive: 5 });
-    if (abilityName === 'poisonBloom') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ownerBossUid: boss.uid });
+    if (abilityName === 'deadEnd') {
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4;
+        queueAreaHazard(game.current.player.x + Math.cos(angle) * 120, game.current.player.y + Math.sin(angle) * 90, {
+          radius: 68,
+          damage: 16,
+          delay: 0.7 + index * 0.06,
+          color: COLORS.enemyShield,
+          label: 'wall',
+          ...ownership,
+        });
+      }
+    }
+    if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'seedPod', maxActive: 5 });
+    if (abilityName === 'blightRoots') {
+      for (let index = 0; index < 3; index += 1) {
+        queueLineHazard(
+          { x: boss.x + rand(-70, 70), y: boss.y + rand(-70, 70) },
+          { x: game.current.player.x + rand(-110, 110), y: game.current.player.y + rand(-90, 90) },
+          { width: 10, damage: 12, color: COLORS.enemyMedic, delay: 0.6 + index * 0.08, length: 420, label: 'vine', ...ownership }
+        );
+      }
+    }
+    if (abilityName === 'poisonBloom') queueAreaHazard(game.current.player.x, game.current.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ...ownership });
+    if (abilityName === 'sporeBurst') {
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4;
+        queueAreaHazard(game.current.player.x + Math.cos(angle) * 90, game.current.player.y + Math.sin(angle) * 80, {
+          radius: 64,
+          damage: 10,
+          delay: 0.7 + index * 0.05,
+          pulses: 2,
+          pulseInterval: 0.52,
+          color: COLORS.enemyMedic,
+          label: 'spore',
+          ...ownership,
+        });
+      }
+    }
     if (abilityName === 'gardenWake') {
       for (const enemy of game.current.enemies) {
         if (enemy !== boss && dist(enemy, boss) <= 260) enemy.hp = Math.min(enemy.maxHp, enemy.hp + 20);
       }
-      spawnAround(boss, 'SHARD', 6, boss.radius + 50, { ownerBossUid: boss.uid, summonCategory: 'gardenShard', maxActive: 10 });
-      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden', ownerBossUid: boss.uid });
+      spawnAround(boss, 'SHARD', 6, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'gardenShard', maxActive: 10 });
+      queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden', ...ownership });
     }
+    if (abilityName === 'creepingCanopy') {
+      for (let index = 0; index < 5; index += 1) {
+        const angle = (Math.PI * 2 * index) / 5;
+        queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 120, {
+          radius: 74,
+          damage: 12,
+          delay: 0.72 + index * 0.06,
+          pulses: 3,
+          pulseInterval: 0.48,
+          color: COLORS.enemyMedic,
+          label: 'spore',
+          ...ownership,
+        });
+      }
+    }
+  };
+
+  const enrageEncounterPartner = (defeatedBoss) => {
+    const partner = getEncounterPartner(defeatedBoss);
+    if (!partner || partner.bossState.partnerFallen) {
+      return;
+    }
+
+    partner.bossState.partnerFallen = true;
+    partner.baseSpeed *= 1.16;
+    partner.damage = Math.round(partner.damage * 1.22);
+    partner.shield = Math.max(partner.shield ?? 0, 80);
+    partner.maxShield = Math.max(partner.maxShield ?? 0, partner.shield);
+    spawnImpactWave(partner.x, partner.y, { maxRadius: partner.radius + 44, color: partner.color, fillAlpha: 0.14 });
+    spawnFloatingText(partner.x, partner.y - partner.radius - 16, '狂怒', partner.color);
   };
 
   const updateBossBehavior = (boss, dt) => {
@@ -1094,59 +2316,111 @@ export default function useGeoGuardGame() {
 
     if (boss.currentPhaseIndex !== activePhaseIndex) {
       boss.currentPhaseIndex = activePhaseIndex;
-      spawnImpactWave(boss.x, boss.y, { maxRadius: boss.radius + 34, color: boss.color, fillAlpha: 0.08 });
+      triggerBossPhaseShift(boss, activePhase, activePhaseIndex);
     }
 
     for (const abilityName of activePhase.abilities) {
       boss.abilityCooldowns[abilityName] = Math.max(0, (boss.abilityCooldowns[abilityName] ?? 0) - dt);
       const cooldown = {
         summonFormation: 6,
+        commandLine: 5.8,
         shieldPulse: 8,
+        phalanxAdvance: 8.5,
+        commandRush: 7.2,
         dashAtPlayer: 4.5,
+        markPrey: 5.2,
         summonScouts: 7,
+        pincerRush: 6.8,
+        feintStrike: 8.2,
         afterimageBurst: 9,
         summonSiege: 7.5,
+        bastionMortar: 6.8,
         fortify: 10,
+        shockRam: 8,
         quake: 8,
+        bunkerRing: 10.5,
         prismBeam: 4.2,
+        refractVolley: 6.2,
         mirrorSummon: 8,
+        prismLattice: 8.8,
         tripleBeam: 7,
+        mirrorStep: 8.4,
         spawnHive: 8,
+        broodShift: 7.5,
         hiveHeal: 9,
+        hivePulse: 7.2,
         summonSwarm: 7,
+        hiveCollapse: 10.2,
         frostRing: 5.8,
+        whiteout: 6.8,
         freezeTower: 8.5,
+        glacialPrison: 8.8,
         summonFrostGuards: 9,
+        coldSnap: 10.4,
         railShot: 4,
+        crosshairBarrage: 6.5,
         markTower: 7,
+        suppressiveGrid: 8.6,
         overload: 6,
+        killLane: 9.2,
         stealMoney: 5,
+        taxBeacon: 6.5,
+        paydaySweep: 7.8,
         ransomBurst: 8,
+        repossess: 9,
         twinOrbit: 9,
         twinBolt: 3.8,
         twinSwap: 7,
         eclipsePulse: 8,
+        solarDash: 4.6,
+        flareLance: 7.5,
+        lunarSnare: 5.8,
+        shadowArc: 7.2,
+        twinCrossfire: 9,
+        dragonStrafe: 5.2,
+        emberWake: 6.2,
+        wingBuffet: 7.4,
         dragonBreath: 4.8,
         tailSweep: 6,
         meteorRain: 9,
+        skyDive: 8.5,
+        infernoRing: 10.2,
         webTrap: 4.5,
+        silkVolley: 6.4,
         spawnSpiderlings: 7,
+        broodAmbush: 8.2,
         webField: 9,
+        nestBloom: 10,
         gravityWell: 5.5,
+        starfall: 6.5,
         orbitalShots: 6.5,
+        orbitalLock: 8.4,
         singularity: 10,
+        eventHorizon: 9.8,
         forgeArmor: 8,
+        slagDrop: 6.6,
         sacrificeMinions: 9,
+        brandLine: 7.4,
         moltenBurst: 10,
+        forgeDetonation: 9.6,
         conductLines: 4,
+        pulseMeasure: 5.5,
         tempoShift: 7,
+        syncopate: 7.8,
         finale: 10,
+        crescendo: 10.5,
         raiseWalls: 7,
+        corridorClamp: 6.8,
         gateSwap: 8,
+        mazeFold: 8.2,
         mazeCrush: 10,
+        deadEnd: 10.2,
         seedPods: 6,
+        blightRoots: 6.2,
         poisonBloom: 5.5,
+        sporeBurst: 7.5,
         gardenWake: 9,
+        creepingCanopy: 10.2,
       }[abilityName] ?? 6;
 
       if (boss.abilityCooldowns[abilityName] <= 0) {
@@ -1248,9 +2522,9 @@ export default function useGeoGuardGame() {
 
       if (state.wave.queue.length === 0 && !state.wave.bossSpawned && state.enemies.length === 0) {
         const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
-        state.enemies.push({ ...createBossEnemy(state.wave.boss), x: spawnPosition.x, y: spawnPosition.y });
+        spawnBossEncounterAt(state.wave.boss, spawnPosition.x, spawnPosition.y);
         state.wave.bossSpawned = true;
-        showWaveMessage(`${UI_COPY.bossIncoming} · ${state.wave.boss.name}`);
+        showBossSpotlight(state.wave.boss);
       }
     }
 
@@ -1259,6 +2533,9 @@ export default function useGeoGuardGame() {
       enemy.hitFlash = Math.max(0, enemy.hitFlash - dt * 5);
       enemy.slowTimer = Math.max(0, enemy.slowTimer - dt);
       enemy.armoredTimer = Math.max(0, (enemy.armoredTimer ?? 0) - dt);
+      if (enemy.isBoss && enemy.bossState.phaseIntroTimer) {
+        enemy.bossState.phaseIntroTimer = Math.max(0, enemy.bossState.phaseIntroTimer - dt);
+      }
       if (enemy.slowTimer <= 0) {
         enemy.slowRatio = 1;
       }
@@ -1361,7 +2638,17 @@ export default function useGeoGuardGame() {
           state.money += enemy.value;
           syncHudMoney();
           enemy.isDefeated = true;
-          if (hasPendingBossAftermath(enemy.uid)) {
+          if (enemy.encounterUid) {
+            const hasLivingEncounterBoss = state.enemies.some((candidate) => candidate.isBoss && candidate.encounterUid === enemy.encounterUid);
+            if (hasLivingEncounterBoss) {
+              enrageEncounterPartner(enemy);
+            } else if (hasPendingEncounterAftermath(enemy.encounterUid)) {
+              state.wave.awaitingReward = true;
+              state.wave.pendingRewardBossEncounterUid = enemy.encounterUid;
+            } else {
+              openBossReward();
+            }
+          } else if (hasPendingBossAftermath(enemy.uid)) {
             state.wave.awaitingReward = true;
             state.wave.pendingRewardBossUid = enemy.uid;
           } else {
@@ -1373,6 +2660,15 @@ export default function useGeoGuardGame() {
 
     if (state.wave.pendingRewardBossUid && !rewardState.active && !hasPendingBossAftermath(state.wave.pendingRewardBossUid)) {
       openBossReward();
+    }
+    if (state.wave.pendingRewardBossEncounterUid && !rewardState.active && !hasPendingEncounterAftermath(state.wave.pendingRewardBossEncounterUid)) {
+      openBossReward();
+    }
+
+    state.bossHudTimer = (state.bossHudTimer ?? 0) + dt;
+    if (state.bossHudTimer >= 0.12) {
+      state.bossHudTimer = 0;
+      syncBossHud();
     }
 
     if (state.player.hp <= 0 && !state.debugOptions.infiniteHealth) {
@@ -1502,7 +2798,15 @@ export default function useGeoGuardGame() {
           }
         }
         spawnImpactWave(hazard.x, hazard.y, { maxRadius: hazard.radius, color: hazard.color, fillAlpha: 0.12, life: 0.22 });
-        state.hazards.splice(hazardIndex, 1);
+        hazard.pulsesRemaining -= 1;
+        if (hazard.pulsesRemaining > 0) {
+          hazard.timer = hazard.pulseInterval;
+          hazard.maxTimer = hazard.pulseInterval;
+          hazard.radius += hazard.radiusStep;
+          hazard.damage += hazard.damageStep;
+        } else {
+          state.hazards.splice(hazardIndex, 1);
+        }
         continue;
       }
 
@@ -1614,6 +2918,7 @@ export default function useGeoGuardGame() {
       ctx.save();
       ctx.globalAlpha = enemy.phased ? 0.42 : 1;
       if (enemy.isBoss) {
+        drawBossPhaseAura(ctx, enemy);
         drawBossBody(ctx, enemy);
       } else {
         ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
@@ -1639,10 +2944,17 @@ export default function useGeoGuardGame() {
         ctx.lineWidth = 3;
         ctx.strokeRect(enemy.x - enemy.radius - 3, enemy.y - enemy.radius - 3, (enemy.radius + 3) * 2, (enemy.radius + 3) * 2);
         if (enemy.phases?.[enemy.currentPhaseIndex]) {
-          ctx.fillStyle = COLORS.boss;
-          ctx.font = 'bold 12px system-ui, sans-serif';
+          const phaseTextWidth = Math.max(38, enemy.phases[enemy.currentPhaseIndex].name.length * 13);
+          ctx.fillStyle = enemy.bossState.phaseIntroTimer > 0 ? `${enemy.color}22` : 'rgba(255,255,255,0.92)';
+          drawRoundRect(ctx, enemy.x - phaseTextWidth / 2, enemy.y - enemy.radius - 29, phaseTextWidth, 18, 9);
+          ctx.fill();
+          ctx.strokeStyle = enemy.bossState.phaseIntroTimer > 0 ? enemy.color : COLORS.boss;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.fillStyle = enemy.bossState.phaseIntroTimer > 0 ? enemy.color : COLORS.boss;
+          ctx.font = enemy.bossState.phaseIntroTimer > 0 ? 'bold 13px system-ui, sans-serif' : 'bold 12px system-ui, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(enemy.phases[enemy.currentPhaseIndex].name, enemy.x, enemy.y - enemy.radius - 18);
+          ctx.fillText(enemy.phases[enemy.currentPhaseIndex].name, enemy.x, enemy.y - enemy.radius - 16);
         }
       }
       if (enemy.hp < enemy.maxHp) {
@@ -1664,6 +2976,8 @@ export default function useGeoGuardGame() {
 
     for (const impactWave of state.impactWaves) {
       const alpha = impactWave.life / impactWave.maxLife;
+      ctx.save();
+      ctx.setLineDash(impactWave.dash ?? []);
       ctx.globalAlpha = alpha * impactWave.fillAlpha;
       ctx.fillStyle = impactWave.color;
       ctx.beginPath();
@@ -1675,6 +2989,20 @@ export default function useGeoGuardGame() {
       ctx.beginPath();
       ctx.arc(impactWave.x, impactWave.y, impactWave.radius, 0, Math.PI * 2);
       ctx.stroke();
+      if (impactWave.spokes) {
+        ctx.translate(impactWave.x, impactWave.y);
+        ctx.rotate((1 - alpha) * Math.PI * (impactWave.spin ?? 0));
+        for (let index = 0; index < impactWave.spokes; index += 1) {
+          const angle = (Math.PI * 2 * index) / impactWave.spokes;
+          const inner = impactWave.radius * 0.55;
+          const outer = impactWave.radius + 8;
+          ctx.beginPath();
+          ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+          ctx.lineTo(Math.cos(angle) * outer, Math.sin(angle) * outer);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
     }
     ctx.globalAlpha = 1;
 
@@ -1691,17 +3019,87 @@ export default function useGeoGuardGame() {
         ctx.fill();
         ctx.globalAlpha = 0.3 + (1 - progress) * 0.45;
         ctx.lineWidth = 3;
-        ctx.setLineDash(hazard.label === 'web' ? [4, 8] : [12, 8]);
+        if (hazard.label === 'web' || hazard.label === 'nest' || hazard.label === 'shade') ctx.setLineDash([4, 8]);
+        else if (hazard.label === 'brood') ctx.setLineDash([10, 6]);
+        else if (hazard.label === 'frost' || hazard.label === 'prison') ctx.setLineDash([18, 6]);
+        else if (hazard.label === 'gravity' || hazard.label === 'singularity' || hazard.label === 'horizon') ctx.setLineDash([3, 7]);
+        else if (hazard.label === 'star') ctx.setLineDash([2, 10]);
+        else if (hazard.label === 'mortar' || hazard.label === 'bunker') ctx.setLineDash([16, 10]);
+        else if (hazard.label === 'ember' || hazard.label === 'meteor' || hazard.label === 'dive') ctx.setLineDash([8, 6]);
+        else if (hazard.label === 'slag') ctx.setLineDash([14, 6]);
+        else if (hazard.label === 'beat') ctx.setLineDash([3, 11]);
+        else if (hazard.label === 'coin') ctx.setLineDash([6, 12]);
+        else if (hazard.label === 'spore' || hazard.label === 'garden' || hazard.label === 'poison') ctx.setLineDash([5, 9]);
+        else ctx.setLineDash([12, 8]);
         ctx.beginPath();
         ctx.arc(hazard.x, hazard.y, hazard.radius, 0, Math.PI * 2);
         ctx.stroke();
+        if (hazard.pulsesRemaining > 1) {
+          ctx.globalAlpha = 0.16 + (1 - progress) * 0.18;
+          ctx.beginPath();
+          ctx.arc(hazard.x, hazard.y, hazard.radius * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        const areaGlyph = getHazardGlyph(hazard);
+        if (areaGlyph) {
+          ctx.globalAlpha = 0.34 + (1 - progress) * 0.26;
+          ctx.fillStyle = hazard.color;
+          ctx.font = `bold ${Math.max(12, Math.round(hazard.radius * 0.22))}px system-ui, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(areaGlyph, hazard.x, hazard.y);
+        }
       } else {
         ctx.lineWidth = hazard.width * (0.7 + (1 - progress) * 0.5);
-        ctx.setLineDash([14, 10]);
+        if (hazard.label === 'formation' || hazard.label === 'wall') ctx.setLineDash([18, 8]);
+        else if (hazard.label === 'charge' || hazard.label === 'ram') ctx.setLineDash([24, 10]);
+        else if (hazard.label === 'mark' || hazard.label === 'slash' || hazard.label === 'hunt') ctx.setLineDash([8, 10]);
+        else if (hazard.label === 'refract' || hazard.label === 'lattice' || hazard.label === 'mirror') ctx.setLineDash([4, 6]);
+        else if (hazard.label === 'rail' || hazard.label === 'crosshair' || hazard.label === 'grid' || hazard.label === 'overload') ctx.setLineDash([2, 8]);
+        else if (hazard.label === 'coinline') ctx.setLineDash([10, 14]);
+        else if (hazard.label === 'brood') ctx.setLineDash([14, 6]);
+        else if (hazard.label === 'brand' || hazard.label === 'tempo') ctx.setLineDash([6, 10]);
+        else if (hazard.label === 'gate' || hazard.label === 'maze') ctx.setLineDash([20, 6]);
+        else if (hazard.label === 'vine') ctx.setLineDash([5, 7]);
+        else ctx.setLineDash([14, 10]);
         ctx.beginPath();
         ctx.moveTo(hazard.x, hazard.y);
         ctx.lineTo(hazard.x2, hazard.y2);
         ctx.stroke();
+        if (hazard.label === 'refract' || hazard.label === 'lattice') {
+          ctx.globalAlpha = 0.14 + (1 - progress) * 0.12;
+          ctx.lineWidth = Math.max(2, hazard.width * 0.26);
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(hazard.x, hazard.y);
+          ctx.lineTo(hazard.x2, hazard.y2);
+          ctx.stroke();
+        }
+        const dx = hazard.x2 - hazard.x;
+        const dy = hazard.y2 - hazard.y;
+        const angle = Math.atan2(dy, dx);
+        const headSize = Math.max(8, hazard.width * 0.8);
+        const glyph = getHazardGlyph(hazard);
+        ctx.save();
+        ctx.translate(hazard.x2, hazard.y2);
+        ctx.rotate(angle);
+        ctx.globalAlpha = 0.3 + (1 - progress) * 0.34;
+        ctx.fillStyle = hazard.color;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-headSize, headSize * 0.45);
+        ctx.lineTo(-headSize, -headSize * 0.45);
+        ctx.closePath();
+        ctx.fill();
+        if (glyph) {
+          ctx.translate(-Math.hypot(dx, dy) * 0.5, 0);
+          ctx.rotate(-angle);
+          ctx.font = `bold ${Math.max(11, Math.round(hazard.width * 1.15))}px system-ui, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(glyph, 0, 0);
+        }
+        ctx.restore();
       }
       ctx.restore();
     }
@@ -1788,11 +3186,16 @@ export default function useGeoGuardGame() {
     }
     ctx.globalAlpha = 1;
 
-    ctx.font = 'bold 14px system-ui, sans-serif';
     ctx.textAlign = 'center';
     for (const floatingText of state.floatingTexts) {
+      ctx.font = floatingText.font ?? 'bold 14px system-ui, sans-serif';
       ctx.fillStyle = floatingText.color;
       ctx.globalAlpha = floatingText.life / floatingText.maxLife;
+      if (floatingText.outlineColor) {
+        ctx.strokeStyle = floatingText.outlineColor;
+        ctx.lineWidth = 3;
+        ctx.strokeText(floatingText.text, floatingText.x, floatingText.y);
+      }
       ctx.fillText(floatingText.text, floatingText.x, floatingText.y);
     }
     ctx.globalAlpha = 1;
@@ -1972,8 +3375,10 @@ export default function useGeoGuardGame() {
     maxHealth,
     time,
     currentWave,
+    waveOverview,
     formattedTime: formatTime(time),
     waveMsg,
+    bossHud,
     initGame,
     beginTowerDrag,
     beginDebugEntityDrag,
