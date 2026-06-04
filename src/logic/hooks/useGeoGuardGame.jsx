@@ -296,6 +296,7 @@ const drawTowerUpgradeBadge = (ctx, tower, x, y) => {
 
 const drawBossBody = (ctx, enemy) => {
   const r = enemy.radius;
+  const phaseLevel = (enemy.currentPhaseIndex ?? 0) + 1;
   ctx.fillStyle = enemy.hitFlash > 0 ? '#ffffff' : enemy.color;
 
   if (enemy.form === 'twins') {
@@ -325,6 +326,20 @@ const drawBossBody = (ctx, enemy) => {
       ctx.lineTo(enemy.x + Math.cos(angle) * r * 1.18, enemy.y + Math.sin(angle) * r * 1.18);
       ctx.stroke();
     }
+    if (phaseLevel >= 3) {
+      ctx.strokeStyle = 'rgba(255,245,184,0.95)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, r * 0.94, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let index = 0; index < 4; index += 1) {
+        const angle = (Math.PI * 2 * index) / 4 + Math.PI / 8;
+        ctx.beginPath();
+        ctx.moveTo(enemy.x + Math.cos(angle) * r * 1.02, enemy.y + Math.sin(angle) * r * 1.02);
+        ctx.lineTo(enemy.x + Math.cos(angle) * r * 1.34, enemy.y + Math.sin(angle) * r * 1.34);
+        ctx.stroke();
+      }
+    }
     return;
   }
 
@@ -341,6 +356,16 @@ const drawBossBody = (ctx, enemy) => {
     ctx.beginPath();
     ctx.arc(enemy.x, enemy.y, r * 0.96, -Math.PI / 3, Math.PI / 2);
     ctx.stroke();
+    if (phaseLevel >= 3) {
+      ctx.strokeStyle = 'rgba(214,239,255,0.95)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(enemy.x - r * 0.08, enemy.y, r * 1.08, -Math.PI * 0.52, Math.PI * 0.68);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(enemy.x - r * 0.12, enemy.y, r * 0.78, -Math.PI * 0.46, Math.PI * 0.62);
+      ctx.stroke();
+    }
     return;
   }
 
@@ -374,6 +399,22 @@ const drawBossBody = (ctx, enemy) => {
     ctx.beginPath();
     ctx.arc(enemy.x + r * 0.78, enemy.y - r * 0.12, r * 0.12, 0, Math.PI * 2);
     ctx.fill();
+    if (phaseLevel >= 2) {
+      ctx.strokeStyle = 'rgba(255,214,102,0.78)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(enemy.x + r * 0.62, enemy.y - r * 0.52);
+      ctx.lineTo(enemy.x + r * 0.94, enemy.y - r * 0.9);
+      ctx.moveTo(enemy.x + r * 0.66, enemy.y + r * 0.52);
+      ctx.lineTo(enemy.x + r * 1.02, enemy.y + r * 0.9);
+      ctx.stroke();
+    }
+    if (phaseLevel >= 3) {
+      ctx.fillStyle = 'rgba(255,214,102,0.32)';
+      ctx.beginPath();
+      ctx.ellipse(enemy.x + r * 0.18, enemy.y, r * 0.56, r * 0.92, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
     return;
   }
 
@@ -395,6 +436,24 @@ const drawBossBody = (ctx, enemy) => {
         ctx.moveTo(enemy.x + side * r * 0.45, y);
         ctx.lineTo(enemy.x + side * r * 1.15, y + (leg - 1.5) * 5);
         ctx.stroke();
+      }
+    }
+    if (phaseLevel >= 2) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(enemy.x - r * 0.32, enemy.y - r * 0.14);
+      ctx.lineTo(enemy.x + r * 0.3, enemy.y + r * 0.1);
+      ctx.moveTo(enemy.x - r * 0.26, enemy.y + r * 0.18);
+      ctx.lineTo(enemy.x + r * 0.22, enemy.y - r * 0.2);
+      ctx.stroke();
+    }
+    if (phaseLevel >= 3) {
+      ctx.fillStyle = 'rgba(217,249,157,0.3)';
+      for (const side of [-1, 1]) {
+        ctx.beginPath();
+        ctx.arc(enemy.x + side * r * 0.34, enemy.y - r * 0.18, r * 0.12, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
     return;
@@ -420,6 +479,19 @@ const drawBossBody = (ctx, enemy) => {
       const angle = (Math.PI * 2 * index) / 3 + (enemy.currentPhaseIndex ?? 0) * 0.35;
       ctx.beginPath();
       ctx.arc(enemy.x + Math.cos(angle) * r * 0.9, enemy.y + Math.sin(angle) * r * 0.9, r * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (phaseLevel >= 2) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, r * 1.24, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    if (phaseLevel >= 3) {
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      ctx.beginPath();
+      ctx.arc(enemy.x, enemy.y, r * 0.16, 0, Math.PI * 2);
       ctx.fill();
     }
     return;
