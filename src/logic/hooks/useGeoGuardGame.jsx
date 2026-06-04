@@ -486,16 +486,16 @@ const drawBossBody = (ctx, enemy) => {
 const getHazardGlyph = (hazard) => {
   if (hazard.type === 'area') {
     if (['gravity', 'singularity', 'horizon', 'star'].includes(hazard.label)) return '◎';
-    if (['web', 'nest', 'brood', 'shade', 'spore', 'garden', 'poison', 'vine'].includes(hazard.label)) return '✳';
-    if (['frost', 'prison'].includes(hazard.label)) return '✦';
-    if (['mortar', 'bunker', 'meteor', 'ember', 'dive', 'slag'].includes(hazard.label)) return '✹';
+    if (['web', 'nest', 'brood', 'shade', 'spore', 'garden', 'poison', 'vine', 'silk'].includes(hazard.label)) return '✳';
+    if (['frost', 'prison', 'moon'].includes(hazard.label)) return '✦';
+    if (['mortar', 'bunker', 'meteor', 'ember', 'dive', 'slag', 'inferno', 'eclipse'].includes(hazard.label)) return '✹';
     if (['wall', 'gate'].includes(hazard.label)) return '□';
     if (['beat', 'coin'].includes(hazard.label)) return '◌';
   }
 
-  if (['charge', 'ram', 'hunt', 'slash'].includes(hazard.label)) return '>>';
-  if (['rail', 'crosshair', 'grid', 'overload', 'tempo'].includes(hazard.label)) return '||';
-  if (['refract', 'lattice', 'mirror'].includes(hazard.label)) return '<>';
+  if (['charge', 'ram', 'hunt', 'slash', 'solar', 'breath', 'strafe'].includes(hazard.label)) return '>>';
+  if (['rail', 'crosshair', 'grid', 'overload', 'tempo', 'orbit', 'lock'].includes(hazard.label)) return '||';
+  if (['refract', 'lattice', 'mirror', 'flare', 'shadow', 'crossfire', 'sunbolt', 'moonbolt'].includes(hazard.label)) return '<>';
   if (['formation', 'wall', 'gate', 'maze'].includes(hazard.label)) return '[]';
   if (['brand', 'coinline'].includes(hazard.label)) return '//';
   return '';
@@ -1923,8 +1923,8 @@ export default function useGeoGuardGame() {
       spawnImpactWave(boss.x, boss.y, { maxRadius: 118, color: boss.color, fillAlpha: 0.08 });
     }
     if (abilityName === 'twinBolt') {
-      queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, game.current.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, ownerBossUid: boss.uid });
-      queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7, ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, game.current.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, label: 'moonbolt', ownerBossUid: boss.uid });
+      queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7, label: 'sunbolt', ownerBossUid: boss.uid });
     }
     if (abilityName === 'twinSwap') {
       const angle = Math.random() * Math.PI * 2;
@@ -1933,13 +1933,22 @@ export default function useGeoGuardGame() {
       spawnAround(boss, 'PHASE', 2, boss.radius + 34, { ownerBossUid: boss.uid, summonCategory: 'swapEcho', maxActive: 4 });
       spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });
     }
-    if (abilityName === 'eclipsePulse') damageArea(boss.x, boss.y, 170, 20, { color: COLORS.enemyPhase, towerFactor: 0.8 });
+    if (abilityName === 'eclipsePulse') {
+      queueAreaHazard(boss.x, boss.y, {
+        radius: 170,
+        damage: 20,
+        delay: 0.68,
+        color: COLORS.enemyPhase,
+        label: 'eclipse',
+        ...ownership,
+      });
+    }
     if (abilityName === 'solarDash') {
       const angle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x);
       boss.dashTimer = 0.34;
       boss.dashVx = Math.cos(angle) * 620;
       boss.dashVy = Math.sin(angle) * 620;
-      queueLineHazard(boss, game.current.player, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, ...ownership });
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, label: 'solar', ...ownership });
       spawnImpactWave(boss.x, boss.y, { maxRadius: 52, color: boss.color, fillAlpha: 0.12 });
     }
     if (abilityName === 'flareLance') {
@@ -1948,7 +1957,7 @@ export default function useGeoGuardGame() {
         queueLineHazard(
           boss,
           { x: boss.x + Math.cos(baseAngle + offset) * 240, y: boss.y + Math.sin(baseAngle + offset) * 240 },
-          { width: offset === 0 ? 16 : 12, damage: offset === 0 ? 22 : 16, color: boss.color, delay: 0.6, length: 640, ...ownership }
+          { width: offset === 0 ? 16 : 12, damage: offset === 0 ? 22 : 16, color: boss.color, delay: 0.6, length: 640, label: 'flare', ...ownership }
         );
       }
     }
@@ -1965,7 +1974,7 @@ export default function useGeoGuardGame() {
       });
     }
     if (abilityName === 'shadowArc') {
-      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, ...ownership });
+      queueLineHazard(boss, game.current.player, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, label: 'shadow', ...ownership });
       queueAreaHazard(game.current.player.x + rand(-80, 80), game.current.player.y + rand(-80, 80), {
         radius: 76,
         damage: 14,
@@ -1980,15 +1989,15 @@ export default function useGeoGuardGame() {
     if (abilityName === 'twinCrossfire') {
       const partner = getEncounterPartner(boss);
       if (partner && boss.uid < partner.uid) {
-        queueLineHazard(boss, { x: game.current.player.x + 90, y: game.current.player.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, ...ownership });
-        queueLineHazard(partner, { x: game.current.player.x - 90, y: game.current.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, ...getBossOwnership(partner) });
+        queueLineHazard(boss, { x: game.current.player.x + 90, y: game.current.player.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, label: 'crossfire', ...ownership });
+        queueLineHazard(partner, { x: game.current.player.x - 90, y: game.current.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });
         spawnImpactWave(game.current.player.x, game.current.player.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
       }
     }
     if (abilityName === 'dragonBreath') {
-      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, ...ownership });
-      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ...ownership });
-      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, ...ownership });
+      queueLineHazard(boss, game.current.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, label: 'breath', ...ownership });
+      queueLineHazard(boss, { x: game.current.player.x + 120, y: game.current.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
+      queueLineHazard(boss, { x: game.current.player.x - 120, y: game.current.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
     }
     if (abilityName === 'dragonStrafe') {
       boss.bossState.strafeSide = boss.bossState.strafeSide === 'left' ? 'right' : 'left';
@@ -1998,7 +2007,7 @@ export default function useGeoGuardGame() {
         queueLineHazard(
           { x: boss.x + Math.cos(baseAngle + Math.PI / 2 * side) * 34, y: boss.y + Math.sin(baseAngle + Math.PI / 2 * side) * 34 },
           { x: game.current.player.x + Math.cos(baseAngle + offset) * 180, y: game.current.player.y + Math.sin(baseAngle + offset) * 180 },
-          { width: offset === 0 ? 18 : 12, damage: offset === 0 ? 24 : 16, color: COLORS.enemyBomber, delay: 0.7, length: 760, ...ownership }
+          { width: offset === 0 ? 18 : 12, damage: offset === 0 ? 24 : 16, color: COLORS.enemyBomber, delay: 0.7, length: 760, label: 'strafe', ...ownership }
         );
       }
     }
@@ -2013,7 +2022,7 @@ export default function useGeoGuardGame() {
           pulseInterval: 0.6,
           radiusStep: 14,
           color: COLORS.enemyBomber,
-          label: 'ember',
+          label: 'inferno',
           ...ownership,
         });
       }
@@ -2050,7 +2059,7 @@ export default function useGeoGuardGame() {
       boss.x = game.current.player.x + Math.cos(angle) * 140;
       boss.y = game.current.player.y + Math.sin(angle) * 120;
       spawnImpactWave(oldX, oldY, { maxRadius: 70, color: COLORS.enemyBomber, fillAlpha: 0.08 });
-      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, ...ownership });
+      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, label: 'diveTrail', ...ownership });
       queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });
     }
     if (abilityName === 'infernoRing') {
@@ -2093,7 +2102,7 @@ export default function useGeoGuardGame() {
           slowDuration: 2.2,
           delay: 0.55 + index * 0.1,
           color: COLORS.enemyBurrower,
-          label: 'web',
+          label: 'silk',
           ...ownership,
         });
       }
@@ -2183,7 +2192,7 @@ export default function useGeoGuardGame() {
         queueLineHazard(
           { x: boss.x + Math.cos(angle) * 86, y: boss.y + Math.sin(angle) * 86 },
           { x: boss.x - Math.cos(angle) * 160, y: boss.y - Math.sin(angle) * 160 },
-          { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.6, length: 560, ...ownership }
+          { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.6, length: 560, label: 'orbit', ...ownership }
         );
       }
     }
@@ -2191,7 +2200,7 @@ export default function useGeoGuardGame() {
       for (let index = 0; index < 4; index += 1) {
         const angle = (Math.PI * 2 * index) / 4;
         const source = { x: game.current.player.x + Math.cos(angle) * 180, y: game.current.player.y + Math.sin(angle) * 140 };
-        queueLineHazard(source, game.current.player, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - game.current.player.x, source.y - game.current.player.y), ...ownership });
+        queueLineHazard(source, game.current.player, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - game.current.player.x, source.y - game.current.player.y), label: 'lock', ...ownership });
       }
     }
     if (abilityName === 'singularity') {
@@ -3169,13 +3178,13 @@ export default function useGeoGuardGame() {
         ctx.fill();
         ctx.globalAlpha = 0.3 + (1 - progress) * 0.45;
         ctx.lineWidth = 3;
-        if (hazard.label === 'web' || hazard.label === 'nest' || hazard.label === 'shade') ctx.setLineDash([4, 8]);
+        if (hazard.label === 'web' || hazard.label === 'nest' || hazard.label === 'shade' || hazard.label === 'silk') ctx.setLineDash([4, 8]);
         else if (hazard.label === 'brood') ctx.setLineDash([10, 6]);
-        else if (hazard.label === 'frost' || hazard.label === 'prison') ctx.setLineDash([18, 6]);
+        else if (hazard.label === 'frost' || hazard.label === 'prison' || hazard.label === 'moon') ctx.setLineDash([18, 6]);
         else if (hazard.label === 'gravity' || hazard.label === 'singularity' || hazard.label === 'horizon') ctx.setLineDash([3, 7]);
         else if (hazard.label === 'star') ctx.setLineDash([2, 10]);
         else if (hazard.label === 'mortar' || hazard.label === 'bunker') ctx.setLineDash([16, 10]);
-        else if (hazard.label === 'ember' || hazard.label === 'meteor' || hazard.label === 'dive') ctx.setLineDash([8, 6]);
+        else if (hazard.label === 'ember' || hazard.label === 'meteor' || hazard.label === 'dive' || hazard.label === 'inferno' || hazard.label === 'eclipse') ctx.setLineDash([8, 6]);
         else if (hazard.label === 'slag') ctx.setLineDash([14, 6]);
         else if (hazard.label === 'beat') ctx.setLineDash([3, 11]);
         else if (hazard.label === 'coin') ctx.setLineDash([6, 12]);
@@ -3190,6 +3199,39 @@ export default function useGeoGuardGame() {
           ctx.arc(hazard.x, hazard.y, hazard.radius * 0.45, 0, Math.PI * 2);
           ctx.fill();
         }
+        if (hazard.label === 'web' || hazard.label === 'silk' || hazard.label === 'nest') {
+          ctx.globalAlpha = 0.18 + (1 - progress) * 0.16;
+          ctx.strokeStyle = hazard.color;
+          ctx.lineWidth = 1.4;
+          ctx.setLineDash([]);
+          for (let spoke = 0; spoke < 6; spoke += 1) {
+            const angle = (Math.PI * 2 * spoke) / 6;
+            ctx.beginPath();
+            ctx.moveTo(hazard.x, hazard.y);
+            ctx.lineTo(hazard.x + Math.cos(angle) * hazard.radius, hazard.y + Math.sin(angle) * hazard.radius);
+            ctx.stroke();
+          }
+        }
+        if (hazard.label === 'gravity' || hazard.label === 'singularity' || hazard.label === 'horizon') {
+          ctx.globalAlpha = 0.16 + (1 - progress) * 0.18;
+          ctx.strokeStyle = hazard.color;
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.arc(hazard.x, hazard.y, Math.max(12, hazard.radius * 0.32), 0, Math.PI * 2);
+          ctx.stroke();
+          if (hazard.label === 'singularity') {
+            ctx.beginPath();
+            ctx.arc(hazard.x, hazard.y, Math.max(8, hazard.radius * 0.18), 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        if (hazard.label === 'eclipse' || hazard.label === 'inferno') {
+          ctx.globalAlpha = 0.16 + (1 - progress) * 0.14;
+          ctx.beginPath();
+          ctx.arc(hazard.x, hazard.y, hazard.radius * 0.72, 0, Math.PI * 2);
+          ctx.stroke();
+        }
         const areaGlyph = getHazardGlyph(hazard);
         if (areaGlyph) {
           ctx.globalAlpha = 0.34 + (1 - progress) * 0.26;
@@ -3202,10 +3244,10 @@ export default function useGeoGuardGame() {
       } else {
         ctx.lineWidth = hazard.width * (0.7 + (1 - progress) * 0.5);
         if (hazard.label === 'formation' || hazard.label === 'wall') ctx.setLineDash([18, 8]);
-        else if (hazard.label === 'charge' || hazard.label === 'ram') ctx.setLineDash([24, 10]);
+        else if (hazard.label === 'charge' || hazard.label === 'ram' || hazard.label === 'solar' || hazard.label === 'breath' || hazard.label === 'strafe' || hazard.label === 'diveTrail') ctx.setLineDash([24, 10]);
         else if (hazard.label === 'mark' || hazard.label === 'slash' || hazard.label === 'hunt') ctx.setLineDash([8, 10]);
-        else if (hazard.label === 'refract' || hazard.label === 'lattice' || hazard.label === 'mirror') ctx.setLineDash([4, 6]);
-        else if (hazard.label === 'rail' || hazard.label === 'crosshair' || hazard.label === 'grid' || hazard.label === 'overload') ctx.setLineDash([2, 8]);
+        else if (hazard.label === 'refract' || hazard.label === 'lattice' || hazard.label === 'mirror' || hazard.label === 'flare' || hazard.label === 'shadow' || hazard.label === 'crossfire' || hazard.label === 'sunbolt' || hazard.label === 'moonbolt') ctx.setLineDash([4, 6]);
+        else if (hazard.label === 'rail' || hazard.label === 'crosshair' || hazard.label === 'grid' || hazard.label === 'overload' || hazard.label === 'orbit' || hazard.label === 'lock') ctx.setLineDash([2, 8]);
         else if (hazard.label === 'coinline') ctx.setLineDash([10, 14]);
         else if (hazard.label === 'brood') ctx.setLineDash([14, 6]);
         else if (hazard.label === 'brand' || hazard.label === 'tempo') ctx.setLineDash([6, 10]);
@@ -3219,6 +3261,24 @@ export default function useGeoGuardGame() {
         if (hazard.label === 'refract' || hazard.label === 'lattice') {
           ctx.globalAlpha = 0.14 + (1 - progress) * 0.12;
           ctx.lineWidth = Math.max(2, hazard.width * 0.26);
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.moveTo(hazard.x, hazard.y);
+          ctx.lineTo(hazard.x2, hazard.y2);
+          ctx.stroke();
+        }
+        if (hazard.label === 'crossfire' || hazard.label === 'orbit' || hazard.label === 'lock') {
+          const midX = (hazard.x + hazard.x2) * 0.5;
+          const midY = (hazard.y + hazard.y2) * 0.5;
+          ctx.globalAlpha = 0.2 + (1 - progress) * 0.22;
+          ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.arc(midX, midY, Math.max(8, hazard.width * 0.9), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        if (hazard.label === 'breath' || hazard.label === 'strafe') {
+          ctx.globalAlpha = 0.12 + (1 - progress) * 0.12;
+          ctx.lineWidth = Math.max(3, hazard.width * 1.5);
           ctx.setLineDash([]);
           ctx.beginPath();
           ctx.moveTo(hazard.x, hazard.y);
