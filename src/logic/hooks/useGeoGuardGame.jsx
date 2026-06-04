@@ -1222,6 +1222,8 @@ export default function useGeoGuardGame() {
         color: boss.color,
         hpRatio: Math.max(0, boss.hp / boss.maxHp),
         phase: boss.phases?.[boss.currentPhaseIndex]?.name ?? '',
+        phaseIndex: boss.currentPhaseIndex ?? 0,
+        phaseCount: boss.phases?.length ?? 0,
         enraged: Boolean(boss.bossState.partnerFallen),
       });
       groups.set(key, existing);

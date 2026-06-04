@@ -8,7 +8,9 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
       <div className="flex flex-col gap-1 w-32 md:w-48 bg-white/80 p-2 rounded-xl shadow-sm backdrop-blur-sm pointer-events-auto">
         <div className="flex justify-between text-sm font-bold text-gray-700">
           <span>HP</span>
-          <span>{health}/{maxHealth}</span>
+          <span>
+            {health}/{maxHealth}
+          </span>
         </div>
         <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
           <div className="h-full bg-red-500 transition-all duration-200" style={{ width: `${(health / maxHealth) * 100}%` }}></div>
@@ -35,19 +37,43 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                   <span>{group.members.length > 1 ? 'ENCOUNTER' : 'BOSS'}</span>
                 </div>
                 {group.summary ? <div className="mb-1.5 text-[11px] leading-4 text-slate-300">{group.summary}</div> : null}
-                {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">应对：{group.counterplay}</div> : null}
+                {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">应对: {group.counterplay}</div> : null}
                 <div className="flex flex-col gap-1.5">
-                  {group.members.map((member) => (
-                    <div key={member.id}>
-                      <div className="flex items-center justify-between text-xs text-slate-100 mb-1">
-                        <span>{member.name}</span>
-                        <span className={member.enraged ? 'text-amber-300' : 'text-slate-300'}>{member.enraged ? `${member.phase} · ENRAGED` : member.phase}</span>
+                  {group.members.map((member) => {
+                    const phaseIndex = member.phaseIndex ?? 0;
+                    const phaseCount = member.phaseCount ?? 0;
+                    const phaseLabel = member.enraged ? `${member.phase} · ENRAGED` : member.phase;
+                    return (
+                      <div key={member.id}>
+                        <div className="flex items-center justify-between text-xs text-slate-100 mb-1">
+                          <span>{member.name}</span>
+                          <span className={member.enraged ? 'text-amber-300' : 'text-slate-300'}>{phaseLabel}</span>
+                        </div>
+                        {phaseCount > 0 ? (
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1">
+                              {Array.from({ length: phaseCount }).map((_, index) => (
+                                <span
+                                  key={`${member.id}-phase-${index}`}
+                                  className="block h-1.5 w-5 rounded-full transition-all duration-150"
+                                  style={{
+                                    backgroundColor: index <= phaseIndex ? member.color : 'rgba(255,255,255,0.12)',
+                                    opacity: index === phaseIndex ? 1 : index < phaseIndex ? 0.58 : 1,
+                                  }}
+                                ></span>
+                              ))}
+                            </div>
+                            <span className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
+                              P{Math.min(phaseCount, phaseIndex + 1)}/{phaseCount}
+                            </span>
+                          </div>
+                        ) : null}
+                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
+                        </div>
                       </div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}
