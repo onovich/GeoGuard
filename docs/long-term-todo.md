@@ -1,0 +1,32 @@
+# GeoGuard Long-Term TODO
+
+This file is for later work that is intentionally not part of the current fast-iteration pass.
+
+## Tooling
+
+- Add a boss encounter editor or behavior-tree-style authoring tool for phase logic, follow-up chains, summon limits, and presentation metadata.
+- Add richer debug presets such as spawn-at-phase, common tower layouts, cooldown inspection, and step simulation.
+- Add automated regression coverage for wave flow, reward application, placement validation, and boss aftermath cleanup.
+
+## Architecture
+
+- Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules.
+- Move more authored encounter data into structured config instead of mixed hook logic.
+- Add a cleaner data layer for phase intent, counterplay text, and encounter presentation so tuning can stay mostly data-driven.
+
+## Content Expansion
+
+- Add more boss variants, elite encounters, and alternate wave compositions once the current roster balance is stable.
+- Explore master/minion or multi-node encounters beyond the current dual-boss support.
+- Add higher-difficulty remixes for existing bosses instead of only adding new bosses.
+
+## Presentation
+
+- Add dedicated audio cues for boss entrance, phase shifts, climax chains, and danger categories.
+- Continue lifting non-showcase bosses toward the presentation quality of Twins, Dragon, Spider Matriarch, and Astrolabe.
+- Revisit some legacy docs and bilingual text that still carry prototype-stage encoding or wording debt.
+
+## Tuning
+
+- Run deeper real-play balancing across waves 1-16 after enough iteration data accumulates.
+- Add late-game economy sinks, recovery options, or broader progression systems only after the current core loop is stable.

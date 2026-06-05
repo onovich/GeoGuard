@@ -761,22 +761,6 @@ const drawBossEncounterLinks = (ctx, enemies) => {
   }
 };
 
-const getBossPhaseCallout = (boss, activePhaseIndex) => {
-  if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
-    return activePhaseIndex >= 2 ? '双体封位进入终幕，交叉火线会更主动地收拢空间。' : '双子开始联动逼位，注意两体的交叉站位。';
-  }
-  if (boss.form === 'dragon') {
-    return activePhaseIndex >= 2 ? '龙翼开始封场，俯冲后的余焰会把安全区切碎。' : '空域在收紧，横切躲避会比后撤更稳。';
-  }
-  if (boss.form === 'spider') {
-    return activePhaseIndex >= 2 ? '巢域扩张到终幕密度，退路会被蛛网和孵化点一起压缩。' : '蜘蛛开始经营场地，优先留意网区和包围方向。';
-  }
-  if (boss.form === 'astrolabe') {
-    return activePhaseIndex >= 2 ? '奇点开始收束，牵引和锁线会把原本安全的角落变成陷阱。' : '轨道开始成形，提前给转向留空间。';
-  }
-  return activePhaseIndex >= 2 ? 'Boss 进入高压阶段，节奏和空间关系都在改变。' : 'Boss 的出招结构正在变化，准备切换应对节奏。';
-};
-
 const getBossPhaseHint = (boss, activePhaseIndex) => {
   const phaseTier = Math.max(0, Math.min(2, activePhaseIndex));
 
