@@ -37,6 +37,18 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                   <span>{group.members.length > 1 ? 'ENCOUNTER' : 'BOSS'}</span>
                 </div>
                 {group.summary ? <div className="mb-1.5 text-[11px] leading-4 text-slate-300">{group.summary}</div> : null}
+                {group.threats?.length ? (
+                  <div className="mb-1.5 flex flex-wrap gap-1">
+                    {group.threats.map((threat) => (
+                      <span
+                        key={`${group.id}-${threat}`}
+                        className="rounded-md border border-white/12 bg-white/6 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-slate-200"
+                      >
+                        {threat}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
                 {group.counterplay ? <div className="mb-1.5 text-[10px] leading-4 text-slate-400">Counter: {group.counterplay}</div> : null}
                 <div className="flex flex-col gap-1.5">
                   {group.members.map((member) => {
@@ -70,7 +82,7 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                             </span>
                           </div>
                         ) : null}
-                                                {member.phaseHint ? (
+                        {member.phaseHint ? (
                           <div
                             className="mb-1 inline-flex max-w-full rounded-md border px-1.5 py-0.5 text-[10px] uppercase tracking-[0.14em]"
                             style={{
