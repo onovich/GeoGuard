@@ -1,6 +1,6 @@
-import { BOSS_TYPES } from '../../data/gameConfig';
-import { WAVE_TABLE } from '../../data/waveTable';
-import { dist } from './gameMath';
+import { BOSS_TYPES } from '../../data/gameConfig.js';
+import { WAVE_TABLE } from '../../data/waveTable.js';
+import { dist } from './gameMath.js';
 
 export const getSpawnPosition = (camera, viewportWidth, viewportHeight) => {
   const angle = Math.random() * Math.PI * 2;

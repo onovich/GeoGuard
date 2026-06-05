@@ -1,4 +1,4 @@
-import { createInitialTowerCatalog } from '../../data/gameConfig';
+import { createInitialTowerCatalog } from '../../data/gameConfig.js';
 
 export const createPlayerState = () => ({
   x: 0,

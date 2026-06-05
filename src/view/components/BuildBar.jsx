@@ -1,9 +1,22 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
 
 export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag, towerTypes, setBuildBarRect, openBlueprintContextMenu }) {
   const containerRef = useRef(null);
   const pendingTouchRef = useRef(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [showLeftFade, setShowLeftFade] = useState(false);
+  const [showRightFade, setShowRightFade] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const mobileHint = useMemo(() => {
+    if (!isTouchDevice) {
+      return null;
+    }
+    if (isOverflowing) {
+      return 'Swipe to browse · drag up to build';
+    }
+    return 'Drag up from a card to build';
+  }, [isOverflowing, isTouchDevice]);
 
   const clearPendingTouch = () => {
     if (pendingTouchRef.current?.timer) {
@@ -26,92 +39,143 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
     return () => window.removeEventListener('resize', syncRect);
   }, [setBuildBarRect, towerTypes.length]);
 
+  useEffect(() => {
+    const syncOverflow = () => {
+      if (!containerRef.current) {
+        return;
+      }
+
+      const element = containerRef.current;
+      const overflow = element.scrollWidth - element.clientWidth > 6;
+      const left = element.scrollLeft > 8;
+      const right = element.scrollLeft + element.clientWidth < element.scrollWidth - 8;
+      setIsOverflowing(overflow);
+      setShowLeftFade(overflow && left);
+      setShowRightFade(overflow && right);
+    };
+
+    const syncTouchMode = () => {
+      setIsTouchDevice(window.matchMedia?.('(pointer: coarse)').matches ?? window.innerWidth < 768);
+    };
+
+    syncTouchMode();
+    syncOverflow();
+    window.addEventListener('resize', syncOverflow);
+    window.addEventListener('resize', syncTouchMode);
+    const element = containerRef.current;
+    element?.addEventListener('scroll', syncOverflow, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', syncOverflow);
+      window.removeEventListener('resize', syncTouchMode);
+      element?.removeEventListener('scroll', syncOverflow);
+    };
+  }, [towerTypes.length]);
+
   if (gameState !== 'PLAYING') {
     return null;
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg pointer-events-auto max-w-[92vw] overflow-x-auto"
-      style={{ touchAction: 'pan-x' }}
-    >
-      {towerTypes.map((tower) => (
-        <div
-          key={tower.id}
-          onMouseDown={(event) => {
-            if (event.button !== 0) return;
-            beginTowerDrag(tower.id, event.clientX, event.clientY);
-          }}
-          onContextMenu={(event) => {
-            event.preventDefault();
-            openBlueprintContextMenu(tower.id, event.clientX, event.clientY);
-          }}
-          onTouchStart={(event) => {
-            const touch = event.touches[0];
-            clearPendingTouch();
-            pendingTouchRef.current = {
-              towerId: tower.id,
-              startX: touch.clientX,
-              startY: touch.clientY,
-              activated: false,
-              timer: window.setTimeout(() => {
-                beginTowerDrag(tower.id, touch.clientX, touch.clientY);
-                pendingTouchRef.current = null;
-              }, 180),
-            };
-          }}
-          onTouchMove={(event) => {
-            if (!pendingTouchRef.current) {
-              return;
-            }
-
-            const touch = event.touches[0];
-            const dx = Math.abs(touch.clientX - pendingTouchRef.current.startX);
-            const dy = touch.clientY - pendingTouchRef.current.startY;
-
-            if (dy < -12 && dx < 18) {
-              beginTowerDrag(tower.id, touch.clientX, touch.clientY);
-              clearPendingTouch();
-              return;
-            }
-
-            if (dx > 10 || dy > 10) {
-              clearPendingTouch();
-            }
-          }}
-          onTouchEnd={() => {
-            clearPendingTouch();
-          }}
-          onTouchCancel={() => {
-            clearPendingTouch();
-          }}
-          className={`relative flex flex-col items-center p-2 rounded-xl cursor-grab active:cursor-grabbing transition-all border-2 min-w-[78px] ${money !== '∞' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'} ${dragTowerId === tower.id ? 'border-blue-500 bg-blue-50 scale-105' : 'border-transparent bg-white'}`}
-        >
-          <div className="w-10 h-10 mb-1 flex items-center justify-center rounded-lg shadow-inner" style={{ backgroundColor: tower.color }}>
-            {tower.shape === 'circle' && <div className="w-4 h-4 bg-white/80 rounded-full"></div>}
-            {tower.shape === 'square' && <div className="w-4 h-4 bg-white/80 rounded-sm"></div>}
-            {tower.shape === 'triangle' && <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-b-[14px] border-l-transparent border-r-transparent border-b-white/80"></div>}
+    <div className="absolute bottom-6 left-1/2 z-20 w-[min(92vw,920px)] -translate-x-1/2">
+      {mobileHint ? (
+        <div className="mb-2 flex justify-center pointer-events-none">
+          <div className="rounded-full bg-slate-900/82 px-3 py-1 text-[11px] font-bold tracking-[0.12em] text-white/90 shadow-lg backdrop-blur-sm">
+            {mobileHint}
           </div>
-          {tower.level > 0 && (
-            <div className="absolute top-1 right-1 flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-black text-amber-700 shadow-sm">
-              <span>UP</span>
-              <span>+{tower.level}</span>
-            </div>
-          )}
-          <span className="text-xs font-bold text-slate-700 text-center leading-tight">{tower.name}</span>
-          <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-            <div className="w-2 h-2 bg-emerald-400 rotate-45"></div> {tower.cost}
-          </span>
-          <span className={`text-[10px] font-semibold ${tower.level > 0 ? 'text-amber-600' : 'text-slate-400'}`}>Lv.{tower.level + 1}/4</span>
-
-          {dragTowerId === tower.id && (
-            <div className="absolute -top-10 whitespace-nowrap bg-slate-800 text-white text-xs px-2 py-1 rounded animate-fade-in-up">
-              {UI_COPY.buildHint}
-            </div>
-          )}
         </div>
-      ))}
+      ) : null}
+
+      <div className="relative">
+        {showLeftFade ? <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 rounded-l-2xl bg-gradient-to-r from-white/95 to-transparent" /> : null}
+        {showRightFade ? <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 rounded-r-2xl bg-gradient-to-l from-white/95 to-transparent" /> : null}
+
+        <div
+          ref={containerRef}
+          className="flex gap-3 overflow-x-auto rounded-2xl bg-white/80 p-3 shadow-lg backdrop-blur-md pointer-events-auto"
+          style={{ touchAction: 'pan-x' }}
+        >
+          {towerTypes.map((tower) => (
+            <div
+              key={tower.id}
+              onMouseDown={(event) => {
+                if (event.button !== 0) return;
+                beginTowerDrag(tower.id, event.clientX, event.clientY);
+              }}
+              onContextMenu={(event) => {
+                event.preventDefault();
+                openBlueprintContextMenu(tower.id, event.clientX, event.clientY);
+              }}
+              onTouchStart={(event) => {
+                const touch = event.touches[0];
+                clearPendingTouch();
+                pendingTouchRef.current = {
+                  towerId: tower.id,
+                  startX: touch.clientX,
+                  startY: touch.clientY,
+                  timer: window.setTimeout(() => {
+                    beginTowerDrag(tower.id, touch.clientX, touch.clientY);
+                    pendingTouchRef.current = null;
+                  }, 180),
+                };
+              }}
+              onTouchMove={(event) => {
+                if (!pendingTouchRef.current) {
+                  return;
+                }
+
+                const touch = event.touches[0];
+                const dx = Math.abs(touch.clientX - pendingTouchRef.current.startX);
+                const dy = touch.clientY - pendingTouchRef.current.startY;
+
+                if (dy < -12 && dx < 18) {
+                  beginTowerDrag(tower.id, touch.clientX, touch.clientY);
+                  clearPendingTouch();
+                  return;
+                }
+
+                if (dx > 10 || dy > 10) {
+                  clearPendingTouch();
+                }
+              }}
+              onTouchEnd={() => {
+                clearPendingTouch();
+              }}
+              onTouchCancel={() => {
+                clearPendingTouch();
+              }}
+              className={`relative flex min-w-[78px] flex-col items-center rounded-xl border-2 p-2 transition-all cursor-grab active:cursor-grabbing ${
+                typeof money === 'number' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'
+              } ${dragTowerId === tower.id ? 'scale-105 border-blue-500 bg-blue-50' : 'border-transparent bg-white'}`}
+            >
+              <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg shadow-inner" style={{ backgroundColor: tower.color }}>
+                {tower.shape === 'circle' && <div className="h-4 w-4 rounded-full bg-white/80"></div>}
+                {tower.shape === 'square' && <div className="h-4 w-4 rounded-sm bg-white/80"></div>}
+                {tower.shape === 'triangle' && <div className="h-0 w-0 border-b-[14px] border-l-[8px] border-r-[8px] border-b-white/80 border-l-transparent border-r-transparent"></div>}
+              </div>
+
+              {tower.level > 0 ? (
+                <div className="absolute right-1 top-1 flex items-center gap-1 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-black text-amber-700 shadow-sm">
+                  <span>UP</span>
+                  <span>+{tower.level}</span>
+                </div>
+              ) : null}
+
+              <span className="text-center text-xs font-bold leading-tight text-slate-700">{tower.name}</span>
+              <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                <div className="h-2 w-2 rotate-45 bg-emerald-400"></div> {tower.cost}
+              </span>
+              <span className={`text-[10px] font-semibold ${tower.level > 0 ? 'text-amber-600' : 'text-slate-400'}`}>Lv.{tower.level + 1}/4</span>
+
+              {dragTowerId === tower.id ? (
+                <div className="absolute -top-10 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white animate-fade-in-up">
+                  {UI_COPY.buildHint}
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
