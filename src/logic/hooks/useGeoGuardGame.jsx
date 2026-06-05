@@ -808,6 +808,32 @@ const getBossPhaseHint = (boss, activePhaseIndex) => {
   return phaseTier === 0 ? 'Setup' : phaseTier === 1 ? 'Pressure' : 'Burst';
 };
 
+const getBossPhaseCalloutText = (boss, activePhaseIndex) => {
+  if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
+    return activePhaseIndex >= 2
+      ? 'The twins are closing the arena together now. Crossfire patterns will collapse space faster.'
+      : 'The twins are beginning to sync up. Watch where the two bodies overlap their lanes.';
+  }
+  if (boss.form === 'dragon') {
+    return activePhaseIndex >= 2
+      ? 'The dragon is sealing the field. Dive aftermath will shred what used to be safe ground.'
+      : 'Air space is tightening. Lateral dodges will hold better than backing straight away.';
+  }
+  if (boss.form === 'spider') {
+    return activePhaseIndex >= 2
+      ? 'The nest is reaching endgame density. Webs and brood points will choke escape lanes together.'
+      : 'The matriarch is building territory now. Track web zones and encirclement angles first.';
+  }
+  if (boss.form === 'astrolabe') {
+    return activePhaseIndex >= 2
+      ? 'The singularity is starting to close. Pulls and lock lines will turn old safe corners into traps.'
+      : 'Orbital geometry is forming. Leave turning room before the gravity lines fully settle.';
+  }
+  return activePhaseIndex >= 2
+    ? 'This boss is entering its high-pressure phase. Tempo and space are both changing now.'
+    : 'The boss is changing its attack structure. Be ready to swap response patterns.';
+};
+
 const drawImpactWaveAccent = (ctx, impactWave, alpha) => {
   const progress = 1 - alpha;
   const accentColor = impactWave.accentColor ?? impactWave.color;
@@ -1346,8 +1372,8 @@ export default function useGeoGuardGame() {
       if (shouldAnnounce) {
         showWaveMessage(
           {
-            title: `${boss.encounterName ?? boss.name} 路 ${activePhase.name}`,
-            subtitle: getBossPhaseCallout(boss, activePhaseIndex),
+            title: `${boss.encounterName ?? boss.name} · ${activePhase.name}`,
+            subtitle: getBossPhaseCalloutText(boss, activePhaseIndex),
             tone: 'phase',
             accentColor: boss.color,
           },
