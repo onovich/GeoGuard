@@ -809,27 +809,102 @@ const getBossPhaseHint = (boss, activePhaseIndex) => {
 };
 
 const getBossPhaseCalloutText = (boss, activePhaseIndex) => {
-  if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
-    return activePhaseIndex >= 2
-      ? 'The twins are closing the arena together now. Crossfire patterns will collapse space faster.'
-      : 'The twins are beginning to sync up. Watch where the two bodies overlap their lanes.';
+  const phaseTier = Math.max(0, Math.min(2, activePhaseIndex));
+
+  const calloutsByForm = {
+    commander: [
+      'The commander is still testing the front. Respect the formation before greedily expanding.',
+      'The line is hardening now. Shield support will make the lane feel narrower.',
+      'The formation is committing to a breakthrough. Expect the push to arrive as one heavy beat.',
+    ],
+    hunter: [
+      'The hunter is probing for bad positioning. Stay mobile and wait for the overcommit.',
+      'The pursuit pattern is tightening. Feints and side pressure will punish planted play.',
+      'The hunter has shifted into execution range. Failed reads will be punished much faster now.',
+    ],
+    fortress: [
+      'The fortress is still a slow wall. Start the damage race before the lane collapses.',
+      'Armor and fortification are stacking up now. Endurance matters more than burst alone.',
+      'The wall is turning into a crush pattern. Surviving the advance is the fight now.',
+    ],
+    prism: [
+      'The prism is teaching its beam geometry. Watch intersections before you look for damage.',
+      'Mirror lines are multiplying. Safe angles will move even if the boss itself barely does.',
+      'Refraction is overloading the arena. Pattern reading matters more than holding one spot.',
+    ],
+    hive: [
+      'The hive is starting to claim territory. Deny fresh nest points before they snowball.',
+      'Swarm pressure is rising now. Letting the board state grow is the real loss condition.',
+      'The hive is ready to collapse the arena under numbers. Clear spawners before you tunnel the core.',
+    ],
+    frostJudge: [
+      'The judge is laying out slow fields first. Protect your spacing before the punish arrives.',
+      'Freeze marks are entering the pattern now. Stacked value will become a liability.',
+      'Judgment range has opened. One frozen pocket can cost the whole lane if you stay grouped.',
+    ],
+    railWarlord: [
+      'The warlord is establishing sight-lines. Clumped tower geometry is now a risk.',
+      'Suppression lanes are forming. React to targeting lines before they become a grid.',
+      'The kill lane is online. Linear defenses will get punished if they cannot break formation.',
+    ],
+    collector: [
+      'The collector is still stealing tempo, not just money. Protect your economy line early.',
+      'Escort runs are becoming more aggressive. A delayed response now costs future pacing too.',
+      'The repossession pattern is live. Letting the boss loop tax cycles will snowball the whole wave.',
+    ],
+    twinSun: [
+      'The twins are beginning to sync up. Watch where the two bodies overlap their lanes.',
+      'The pair is now forcing crossfire patterns. Positioning mistakes will compound quickly.',
+      'The twins are closing the arena together now. Crossfire patterns will collapse space faster.',
+    ],
+    twinMoon: [
+      'Moon pressure is entering the pattern. Watch for the body that restricts movement first.',
+      'Lockdown support is thickening now. Bad movement will feed the partner easier openings.',
+      'The lunar half is closing the trap with the sun twin. Escape lanes will vanish much faster.',
+    ],
+    dragon: [
+      'Air space is tightening. Lateral dodges will hold better than backing straight away.',
+      'The dragon is rewriting safe ground now. Breath and buffet windows will keep shifting the lane.',
+      'The dragon is sealing the field. Dive aftermath will shred what used to be safe ground.',
+    ],
+    spider: [
+      'The matriarch is building territory now. Track web zones and encirclement angles first.',
+      'Brood pressure is joining the webs. Exits will fail if you ignore body-blockers.',
+      'The nest is reaching endgame density. Webs and brood points will choke escape lanes together.',
+    ],
+    astrolabe: [
+      'Orbital geometry is forming. Leave turning room before the gravity lines fully settle.',
+      'The astrolabe is teaching displacement now. Old safe positions are becoming temporary.',
+      'The singularity is starting to close. Pulls and lock lines will turn old safe corners into traps.',
+    ],
+    forge: [
+      'The forge is still gathering fuel. Do not let the support wave become free armor.',
+      'Sacrifice timing is entering the fight now. Small enemies are no longer harmless background noise.',
+      'The forge is converting the arena into burst windows. Thin the fuel wave before the detonation comes.',
+    ],
+    conductor: [
+      'The conductor is setting the beat. Read the rhythm before you chase damage windows.',
+      'The pattern is syncopating now. Move for the next pulse before the current one resolves.',
+      'The finale pattern is opening. Treat the fight like timing, not chaos.',
+    ],
+    labyrinth: [
+      'The keeper is sketching routes now. Preserve at least one clean escape line.',
+      'Gate shifts are reshaping the arena. Familiar movement paths will stop being reliable.',
+      'The maze is compressing into dead ends. Bad geometry will become the real source of damage.',
+    ],
+    bloom: [
+      'The bloom is planting contamination lines. Leave infected edges before they mature.',
+      'Spread pressure is accelerating now. Propagation nodes matter more than the boss body alone.',
+      'The garden is entering attrition mode. Hesitation will let the arena decay around you.',
+    ],
+  };
+
+  const callouts = calloutsByForm[boss.form];
+  if (callouts?.[phaseTier]) {
+    return callouts[phaseTier];
   }
-  if (boss.form === 'dragon') {
-    return activePhaseIndex >= 2
-      ? 'The dragon is sealing the field. Dive aftermath will shred what used to be safe ground.'
-      : 'Air space is tightening. Lateral dodges will hold better than backing straight away.';
-  }
-  if (boss.form === 'spider') {
-    return activePhaseIndex >= 2
-      ? 'The nest is reaching endgame density. Webs and brood points will choke escape lanes together.'
-      : 'The matriarch is building territory now. Track web zones and encirclement angles first.';
-  }
-  if (boss.form === 'astrolabe') {
-    return activePhaseIndex >= 2
-      ? 'The singularity is starting to close. Pulls and lock lines will turn old safe corners into traps.'
-      : 'Orbital geometry is forming. Leave turning room before the gravity lines fully settle.';
-  }
-  return activePhaseIndex >= 2
+
+  return phaseTier >= 2
     ? 'This boss is entering its high-pressure phase. Tempo and space are both changing now.'
     : 'The boss is changing its attack structure. Be ready to swap response patterns.';
 };

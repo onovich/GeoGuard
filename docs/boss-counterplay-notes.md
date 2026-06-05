@@ -77,3 +77,13 @@ This note maps the first 16 real waves to their boss fantasy, the pressure they 
 - If a boss kills the player without the note's intended lesson being visible, the encounter is too noisy.
 - If the player can ignore the note's intended answer and still solve the fight by raw damage, the encounter is too flat.
 - If two adjacent waves teach the same lesson in nearly the same way, change the enemy composition before raising numbers.
+
+## Completion Read
+
+At this stage, the redesign is no longer blocked on missing systems. The remaining work is tuning quality:
+
+- smoothing difficulty spikes
+- reducing any boss that still feels like raw cooldown rotation
+- lifting the weakest presentation beats toward the showcase standard
+
+That means future work should be judged as balancing and refinement, not as unfinished encounter foundations.
