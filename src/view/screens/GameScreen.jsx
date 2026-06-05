@@ -33,8 +33,17 @@ export default function GameScreen() {
     setBuildBarRect,
     setDebugPanelRect,
     debugMode,
+    debugWaveFlow,
     debugOptions,
     setDebugOption,
+    debugWaveCheckpoints,
+    waveTable,
+    startDebugWave,
+    clearDebugField,
+    openDebugReward,
+    unlockAllBlueprints,
+    applyDebugLayout,
+    forceBossPhase,
     openBlueprintContextMenu,
     towerContextMenu,
     applyTowerContextAction,
@@ -56,7 +65,27 @@ export default function GameScreen() {
         bossHud={bossHud}
       />
       <StatusBanner waveMsg={waveMsg} />
-      <DebugSpawnPanel debugMode={debugMode} debugOptions={debugOptions} setDebugOption={setDebugOption} enemyTypes={enemyTypes} bossTypes={bossTypes} dragEntity={dragEntity} beginDebugEntityDrag={beginDebugEntityDrag} setDebugPanelRect={setDebugPanelRect} />
+      <DebugSpawnPanel
+        debugMode={debugMode}
+        debugWaveFlow={debugWaveFlow}
+        debugOptions={debugOptions}
+        setDebugOption={setDebugOption}
+        enemyTypes={enemyTypes}
+        bossTypes={bossTypes}
+        dragEntity={dragEntity}
+        beginDebugEntityDrag={beginDebugEntityDrag}
+        setDebugPanelRect={setDebugPanelRect}
+        currentWave={currentWave}
+        waveOverview={waveOverview}
+        debugWaveCheckpoints={debugWaveCheckpoints}
+        waveTable={waveTable}
+        startDebugWave={startDebugWave}
+        clearDebugField={clearDebugField}
+        openDebugReward={openDebugReward}
+        unlockAllBlueprints={unlockAllBlueprints}
+        applyDebugLayout={applyDebugLayout}
+        forceBossPhase={forceBossPhase}
+      />
       <BuildBar gameState={gameState} money={money} dragTowerId={dragTowerId} beginTowerDrag={beginTowerDrag} towerTypes={towerTypes} setBuildBarRect={setBuildBarRect} openBlueprintContextMenu={openBlueprintContextMenu} />
       <TowerContextMenu menu={towerContextMenu} applyTowerContextAction={applyTowerContextAction} closeTowerContextMenu={closeTowerContextMenu} />
       <WaveRewardOverlay rewardState={rewardState} applyRewardChoice={applyRewardChoice} />

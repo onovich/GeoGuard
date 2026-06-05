@@ -1,11 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, TOWER_LIBRARY, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
 import { getBossPresentation } from '../../data/bossPresentation';
+import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { canPlaceTowerOnField, createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
 import { createRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
 
 const DRAG_CANCEL_MARGIN = 18;
+const DEBUG_SANDBOX_OVERVIEW = {
+  label: 'Free Sandbox',
+  focus: 'Drag towers, enemies, and bosses onto the live map.',
+};
 
 const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
   x,
@@ -1260,6 +1265,7 @@ export default function useGeoGuardGame() {
   const [rewardState, setRewardState] = useState({ active: false, choices: [] });
   const [bossHud, setBossHud] = useState([]);
   const [debugOptions, setDebugOptions] = useState({ infiniteMoney: false, infiniteHealth: false });
+  const [debugWaveFlow, setDebugWaveFlow] = useState(false);
   const [towerContextMenu, setTowerContextMenu] = useState(null);
   const waveMessageTimeoutRef = useRef(null);
 
@@ -1343,6 +1349,57 @@ export default function useGeoGuardGame() {
 
   const syncHudMoney = () => setMoney(game.current.debugOptions.infiniteMoney ? '∞' : game.current.money);
   const syncHudHealth = () => setHealth(game.current.debugOptions.infiniteHealth ? game.current.player.maxHp : Math.max(0, Math.floor(game.current.player.hp)));
+
+  const createEmptyWaveState = () => ({
+    number: 0,
+    queue: [],
+    spawnInterval: 999,
+    spawnTimer: 0,
+    boss: null,
+    bossSpawned: true,
+    awaitingReward: false,
+    pendingRewardBossUid: null,
+    pendingRewardBossEncounterUid: null,
+  });
+
+  const resetCombatState = ({ clearTowers = false } = {}) => {
+    game.current.enemies = [];
+    if (clearTowers) {
+      game.current.towers = [];
+    }
+    game.current.projectiles = [];
+    game.current.drops = [];
+    game.current.particles = [];
+    game.current.impactWaves = [];
+    game.current.hazards = [];
+    game.current.floatingTexts = [];
+    game.current.wave.awaitingReward = false;
+    game.current.wave.pendingRewardBossUid = null;
+    game.current.wave.pendingRewardBossEncounterUid = null;
+    setRewardState({ active: false, choices: [] });
+    setBossHud([]);
+    setTowerContextMenu(null);
+    clearDragPlacement();
+  };
+
+  const enterDebugSandbox = ({ clearTowers = false, announce = false } = {}) => {
+    resetCombatState({ clearTowers });
+    game.current.debugWaveFlow = false;
+    game.current.wave = createEmptyWaveState();
+    setDebugWaveFlow(false);
+    setCurrentWave(0);
+    setWaveOverview(DEBUG_SANDBOX_OVERVIEW);
+    if (announce) {
+      showWaveMessage(
+        {
+          title: 'Sandbox Ready',
+          subtitle: 'Manual spawn mode is active again.',
+          tone: 'system',
+        },
+        1800
+      );
+    }
+  };
 
   const syncBossHud = () => {
     const bosses = game.current.enemies.filter((enemy) => enemy.isBoss);
@@ -1797,6 +1854,8 @@ export default function useGeoGuardGame() {
 
   const startWave = (waveNumber) => {
     const definition = createWaveDefinition(waveNumber);
+    game.current.debugWaveFlow = game.current.mode === 'debug';
+    setDebugWaveFlow(game.current.mode === 'debug');
     game.current.wave = {
       number: waveNumber,
       queue: [...definition.queue],
@@ -1831,20 +1890,22 @@ export default function useGeoGuardGame() {
       isMobile: window.innerWidth < 768,
       towerCatalog: initialCatalog,
       mode: isDebugMode ? 'debug' : 'normal',
+      debugWaveFlow: false,
       debugOptions: nextDebugOptions,
       money: isDebugMode ? 999999 : 20,
     };
     setDebugOptions(nextDebugOptions);
+    setDebugWaveFlow(false);
     setMoney(isDebugMode ? '∞' : 20);
     setHealth(100);
     setTime(0);
     setRewardState({ active: false, choices: [] });
     setBossHud([]);
-    setWaveOverview(isDebugMode ? { label: '自由测试', focus: '敌人与 Boss 由顶部面板手动拖拽生成' } : { label: '', focus: '' });
+    setWaveOverview(isDebugMode ? DEBUG_SANDBOX_OVERVIEW : { label: '', focus: '' });
     setDragTowerId(null);
     setDragEntity(null);
     setTowerContextMenu(null);
-    setCurrentWave(1);
+    setCurrentWave(isDebugMode ? 0 : 1);
     setGameState('PLAYING');
     if (isDebugMode) {
       showWaveMessage(
@@ -1855,17 +1916,7 @@ export default function useGeoGuardGame() {
         },
         2600
       );
-      game.current.wave = {
-        number: 0,
-        queue: [],
-        spawnInterval: 999,
-        spawnTimer: 0,
-        boss: null,
-        bossSpawned: true,
-        awaitingReward: false,
-        pendingRewardBossUid: null,
-        pendingRewardBossEncounterUid: null,
-      };
+      game.current.wave = createEmptyWaveState();
     } else {
       startWave(1);
     }
@@ -2034,61 +2085,103 @@ export default function useGeoGuardGame() {
   };
 
   const buildRewardChoices = (catalog) => {
+    const waveNumber = Math.max(1, game.current.wave.number || currentWave || 1);
     const choices = [];
+    const usedIds = new Set();
     const upgrades = shuffle(catalog.filter((tower) => tower.available && tower.level < tower.maxLevel));
     const locked = shuffle(catalog.filter((tower) => !tower.available));
+    const supportRewards = [];
 
-    for (const tower of upgrades.slice(0, 2)) {
+    if (game.current.player.hp < game.current.player.maxHp) {
+      const healAmount = Math.min(game.current.player.maxHp - game.current.player.hp, 18 + waveNumber * 3);
+      if (healAmount > 0) {
+        supportRewards.push({
+          id: 'support-repair',
+          type: 'support_repair',
+          amount: healAmount,
+          title: 'Field Repairs',
+          subtitle: `Restore ${healAmount} HP before the next wave`,
+          detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
+        });
+      }
+    }
+
+    if (!game.current.debugOptions.infiniteMoney && (game.current.money <= 70 || (locked.length === 0 && upgrades.length <= 2))) {
+      const grant = 40 + waveNumber * 10;
+      supportRewards.push({
+        id: 'support-money',
+        type: 'support_money',
+        amount: grant,
+        title: 'Supply Cache',
+        subtitle: `Gain ${grant} credits right now`,
+        detail: 'Take an instant economy bump instead of another tower-only reward.',
+      });
+    }
+
+    const addChoice = (choice) => {
+      if (!choice || usedIds.has(choice.id) || choices.length >= 3) {
+        return;
+      }
+      usedIds.add(choice.id);
+      choices.push(choice);
+    };
+
+    const createUpgradeChoice = (tower) => {
       const preview = upgradeTower(tower);
-      choices.push({
+      return {
         id: `upgrade-${tower.id}`,
         type: 'upgrade',
         towerId: tower.id,
         title: `升级 ${tower.name}`,
         subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
         detail: `${tower.cost} -> ${preview.cost}，${getTowerPreviewSummary(preview)}`,
-      });
-    }
+      };
+    };
+
+    const createUnlockChoice = (tower) => ({
+      id: `unlock-${tower.id}`,
+      type: 'unlock',
+      towerId: tower.id,
+      title: `解锁 ${tower.name}`,
+      subtitle: '加入可建造列表',
+      detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
+    });
 
     if (locked.length > 0) {
-      const tower = locked[0];
-      choices.push({
-        id: `unlock-${tower.id}`,
-        type: 'unlock',
-        towerId: tower.id,
-        title: `解锁 ${tower.name}`,
-        subtitle: '加入可建造列表',
-        detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
-      });
+      addChoice(createUnlockChoice(locked[0]));
     }
 
-    let upgradeIndex = 2;
-    let lockedIndex = 1;
-    while (choices.length < 3 && upgradeIndex < upgrades.length) {
-      const tower = upgrades[upgradeIndex];
-      const preview = upgradeTower(tower);
-      choices.push({
-        id: `upgrade-${tower.id}`,
-        type: 'upgrade',
-        towerId: tower.id,
-        title: `升级 ${tower.name}`,
-        subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
-        detail: `${tower.cost} -> ${preview.cost}，${getTowerPreviewSummary(preview)}`,
-      });
+    const reservedSupportSlots = supportRewards.length > 0 ? Math.min(2, supportRewards.length) : 0;
+    const preferredUpgradeCount = Math.max(1, 3 - (locked.length > 0 ? 1 : 0) - reservedSupportSlots);
+    let upgradeIndex = 0;
+    while (choices.length < 3 && upgradeIndex < preferredUpgradeCount && upgradeIndex < upgrades.length) {
+      addChoice(createUpgradeChoice(upgrades[upgradeIndex]));
       upgradeIndex += 1;
     }
 
-    while (choices.length < 3 && lockedIndex < locked.length) {
-      const tower = locked[lockedIndex];
-      choices.push({
-        id: `unlock-${tower.id}`,
-        type: 'unlock',
-        towerId: tower.id,
-        title: `解锁 ${tower.name}`,
-        subtitle: '加入可建造列表',
-        detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
+    for (const reward of supportRewards) {
+      addChoice(reward);
+    }
+
+    while (choices.length < 3 && upgradeIndex < upgrades.length) {
+      addChoice(createUpgradeChoice(upgrades[upgradeIndex]));
+      upgradeIndex += 1;
+    }
+
+    for (let lockedIndex = 1; choices.length < 3 && lockedIndex < locked.length; lockedIndex += 1) {
+      addChoice(createUnlockChoice(locked[lockedIndex]));
+    }
+
+    if (choices.length < 3 && !usedIds.has('support-money') && !game.current.debugOptions.infiniteMoney) {
+      const grant = 30 + waveNumber * 8;
+      addChoice({
+        id: 'support-money',
+        type: 'support_money',
+        amount: grant,
+        title: 'Supply Cache',
+        subtitle: `Gain ${grant} credits right now`,
+        detail: 'Take an instant economy bump instead of another tower-only reward.',
       });
-      lockedIndex += 1;
     }
 
     return choices.slice(0, 3);
@@ -2102,22 +2195,41 @@ export default function useGeoGuardGame() {
   };
 
   const applyRewardChoice = (choice) => {
-    const nextCatalog = towerCatalogRef.current.map((tower) => {
-      if (tower.id !== choice.towerId) {
-        return tower;
-      }
-      if (choice.type === 'unlock') {
-        return { ...tower, available: true };
-      }
-      return upgradeTower(tower);
-    });
+    let nextCatalog = towerCatalogRef.current;
+    if (choice.type === 'unlock' || choice.type === 'upgrade') {
+      nextCatalog = towerCatalogRef.current.map((tower) => {
+        if (tower.id !== choice.towerId) {
+          return tower;
+        }
+        if (choice.type === 'unlock') {
+          return { ...tower, available: true };
+        }
+        return upgradeTower(tower);
+      });
+      towerCatalogRef.current = nextCatalog;
+      setTowerCatalog(nextCatalog);
+    } else if (choice.type === 'support_money') {
+      game.current.money += choice.amount ?? 0;
+      syncHudMoney();
+    } else if (choice.type === 'support_repair') {
+      game.current.player.hp = Math.min(game.current.player.maxHp, game.current.player.hp + (choice.amount ?? 0));
+      syncHudHealth();
+    }
 
-    towerCatalogRef.current = nextCatalog;
-    setTowerCatalog(nextCatalog);
     setRewardState({ active: false, choices: [] });
+    if (game.current.mode === 'debug' && !game.current.debugWaveFlow) {
+      showWaveMessage(
+        {
+          title: 'Reward Applied',
+          subtitle: choice.title,
+          tone: 'system',
+        },
+        1600
+      );
+      return;
+    }
     startWave(currentWave + 1);
   };
-
   const setDebugOption = (key, value) => {
     const nextOptions = { ...game.current.debugOptions, [key]: value };
     game.current.debugOptions = nextOptions;
@@ -2132,6 +2244,139 @@ export default function useGeoGuardGame() {
     }
     syncHudMoney();
     syncHudHealth();
+  };
+
+  const unlockAllBlueprints = () => {
+    const nextCatalog = towerCatalogRef.current.map((tower) => ({ ...tower, available: true }));
+    towerCatalogRef.current = nextCatalog;
+    setTowerCatalog(nextCatalog);
+    showWaveMessage({ title: 'All Towers Unlocked', subtitle: 'Every blueprint is now available in the build bar.', tone: 'system' }, 1500);
+  };
+
+  const placeTowerDirect = (towerId, x, y) => {
+    const tower = getTowerById(towerId);
+    if (!tower) {
+      return;
+    }
+    game.current.towers.push({
+      ...cloneTower(tower),
+      uid: game.current.nextTowerUid++,
+      x,
+      y,
+      hp: tower.hp,
+      maxHp: tower.hp,
+      lastShoot: 0,
+    });
+    spawnParticle(x, y, tower.color, 12, 60);
+  };
+
+  const applyDebugLayout = (layoutId) => {
+    if (game.current.mode !== 'debug') {
+      return;
+    }
+
+    const player = game.current.player;
+    const layouts = {
+      balanced: [
+        ['SENTINEL', -120, -40],
+        ['BASIC', -40, -120],
+        ['CANNON', 0, 105],
+        ['FROST', 130, -35],
+        ['SNIPER', 210, -120],
+        ['RAPID', -210, 110],
+      ],
+      spread: [
+        ['RAIL', -260, -150],
+        ['SNIPER', 250, -140],
+        ['MORTAR', 0, -210],
+        ['BURST', -200, 170],
+        ['FROST', 0, 180],
+        ['CANNON', 210, 165],
+      ],
+      boss: [
+        ['SENTINEL', -150, 0],
+        ['SENTINEL', 150, 0],
+        ['CANNON', 0, 140],
+        ['FROST', 0, -145],
+        ['BURST', -210, 140],
+        ['RAIL', 220, -120],
+      ],
+    };
+
+    const layout = layouts[layoutId];
+    if (!layout) {
+      return;
+    }
+
+    game.current.towers = [];
+    for (const [towerId, offsetX, offsetY] of layout) {
+      placeTowerDirect(towerId, player.x + offsetX, player.y + offsetY);
+    }
+
+    showWaveMessage(
+      {
+        title: 'Layout Loaded',
+        subtitle: `${layoutId} preset applied`,
+        tone: 'system',
+      },
+      1500
+    );
+  };
+
+  const clearDebugField = ({ clearTowers = false, sandbox = false } = {}) => {
+    if (game.current.mode !== 'debug') {
+      return;
+    }
+    if (sandbox) {
+      enterDebugSandbox({ clearTowers, announce: true });
+      return;
+    }
+    resetCombatState({ clearTowers });
+    if (clearTowers) {
+      showWaveMessage({ title: 'Field Reset', subtitle: 'Enemies, hazards, and towers cleared.', tone: 'system' }, 1500);
+    } else {
+      showWaveMessage({ title: 'Field Cleared', subtitle: 'Enemies, hazards, and projectiles removed.', tone: 'system' }, 1500);
+    }
+  };
+
+  const startDebugWave = (waveNumber) => {
+    if (game.current.mode !== 'debug') {
+      return;
+    }
+    resetCombatState({ clearTowers: false });
+    startWave(waveNumber);
+  };
+
+  const openDebugReward = () => {
+    if (game.current.mode !== 'debug') {
+      return;
+    }
+    setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
+  };
+
+  const forceBossPhase = (phaseNumber) => {
+    if (game.current.mode !== 'debug') {
+      return;
+    }
+
+    const bosses = game.current.enemies.filter((enemy) => enemy.isBoss && enemy.phases?.length);
+    if (!bosses.length) {
+      showWaveMessage({ title: 'No Active Boss', subtitle: 'Drag in a boss or start a debug wave first.', tone: 'system' }, 1500);
+      return;
+    }
+
+    for (const boss of bosses) {
+      const nextPhaseIndex = Math.max(0, Math.min((boss.phases?.length ?? 1) - 1, phaseNumber - 1));
+      const previousPhaseIndex = boss.currentPhaseIndex ?? 0;
+      boss.currentPhaseIndex = nextPhaseIndex;
+      boss.abilityCooldowns = {};
+      const lowerBound = boss.phases[nextPhaseIndex].hpBelow;
+      const upperBound = nextPhaseIndex === 0 ? 1 : boss.phases[nextPhaseIndex - 1].hpBelow;
+      const targetRatio = nextPhaseIndex >= (boss.phases.length - 1) ? Math.max(0.18, lowerBound * 0.72) : (upperBound + lowerBound) * 0.5;
+      boss.hp = Math.max(1, Math.round(boss.maxHp * targetRatio));
+      triggerBossPhaseShift(boss, boss.phases[nextPhaseIndex], nextPhaseIndex, previousPhaseIndex === nextPhaseIndex ? -1 : previousPhaseIndex);
+    }
+    syncBossHud();
   };
 
   const changeTowerBlueprintLevel = (towerId, delta) => {
@@ -3660,7 +3905,7 @@ export default function useGeoGuardGame() {
       }
     }
 
-    if (state.mode !== 'debug') {
+    if (state.mode !== 'debug' || state.debugWaveFlow) {
       while (state.wave.queue.length > 0 && state.wave.spawnTimer >= state.wave.spawnInterval) {
         state.wave.spawnTimer -= state.wave.spawnInterval;
         const enemyKey = state.wave.queue.shift();
@@ -3783,7 +4028,7 @@ export default function useGeoGuardGame() {
           spawnAround(enemy, enemy.deathSpawn.type, enemy.deathSpawn.count, enemy.deathSpawn.spread);
         }
         state.enemies.splice(enemyIndex, 1);
-        if (enemy.isBoss && state.mode !== 'debug') {
+        if (enemy.isBoss && (state.mode !== 'debug' || state.debugWaveFlow)) {
           state.money += enemy.value;
           syncHudMoney();
           enemy.isDefeated = true;
@@ -4638,8 +4883,17 @@ export default function useGeoGuardGame() {
     setBuildBarRect,
     setDebugPanelRect,
     debugMode: game.current.mode === 'debug',
+    debugWaveFlow,
     debugOptions,
     setDebugOption,
+    debugWaveCheckpoints: WAVE_DEBUG_CHECKPOINTS,
+    waveTable: WAVE_TABLE,
+    startDebugWave,
+    clearDebugField,
+    openDebugReward,
+    unlockAllBlueprints,
+    applyDebugLayout,
+    forceBossPhase,
     openBlueprintContextMenu,
     towerContextMenu,
     applyTowerContextAction,

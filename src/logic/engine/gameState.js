@@ -53,5 +53,6 @@ export const createRuntimeState = () => ({
   difficultyMultiplier: 1,
   isMobile: false,
   mode: 'normal',
+  debugWaveFlow: false,
   debugOptions: { infiniteMoney: false, infiniteHealth: false },
 });

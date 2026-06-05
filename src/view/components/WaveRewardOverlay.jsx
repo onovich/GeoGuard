@@ -17,6 +17,22 @@ const REWARD_TYPE_STYLES = {
     accentClass: 'bg-sky-500',
     cta: 'Apply Upgrade',
   },
+  support_money: {
+    badge: 'SUPPLY',
+    badgeClass: 'bg-amber-500/12 text-amber-700 ring-1 ring-amber-500/20',
+    panelClass: 'border-amber-200/80 bg-amber-50/75 hover:border-amber-300 hover:bg-white',
+    glowClass: 'from-amber-400/18 via-amber-300/10 to-transparent',
+    accentClass: 'bg-amber-500',
+    cta: 'Take Resources',
+  },
+  support_repair: {
+    badge: 'RECOVERY',
+    badgeClass: 'bg-rose-500/12 text-rose-700 ring-1 ring-rose-500/20',
+    panelClass: 'border-rose-200/80 bg-rose-50/75 hover:border-rose-300 hover:bg-white',
+    glowClass: 'from-rose-400/18 via-rose-300/10 to-transparent',
+    accentClass: 'bg-rose-500',
+    cta: 'Recover Now',
+  },
 };
 
 export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
@@ -43,32 +59,32 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
             const rewardStyle = REWARD_TYPE_STYLES[choice.type] ?? REWARD_TYPE_STYLES.upgrade;
 
             return (
-            <button
-              key={choice.id}
-              onClick={() => applyRewardChoice(choice)}
-              className={`group relative overflow-hidden text-left rounded-2xl border transition-all shadow-sm p-4 md:p-4.5 min-h-[180px] md:min-h-[200px] hover:-translate-y-1 hover:shadow-lg ${rewardStyle.panelClass}`}
-            >
-              <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${rewardStyle.glowClass} opacity-80 transition-opacity group-hover:opacity-100`}></div>
-              <div className={`absolute inset-x-0 top-0 h-1 ${rewardStyle.accentClass}`}></div>
+              <button
+                key={choice.id}
+                onClick={() => applyRewardChoice(choice)}
+                className={`group relative overflow-hidden text-left rounded-2xl border transition-all shadow-sm p-4 md:p-4.5 min-h-[180px] md:min-h-[200px] hover:-translate-y-1 hover:shadow-lg ${rewardStyle.panelClass}`}
+              >
+                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${rewardStyle.glowClass} opacity-80 transition-opacity group-hover:opacity-100`}></div>
+                <div className={`absolute inset-x-0 top-0 h-1 ${rewardStyle.accentClass}`}></div>
 
-              <div className="relative flex h-full flex-col">
-                <div className="flex items-start justify-between gap-3">
-                  <div className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] md:text-xs font-bold tracking-[0.18em] ${rewardStyle.badgeClass}`}>
-                    {rewardStyle.badge}
+                <div className="relative flex h-full flex-col">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] md:text-xs font-bold tracking-[0.18em] ${rewardStyle.badgeClass}`}>
+                      {rewardStyle.badge}
+                    </div>
+                    <div className="text-xs font-black tracking-[0.2em] text-slate-300">0{index + 1}</div>
                   </div>
-                  <div className="text-xs font-black tracking-[0.2em] text-slate-300">0{index + 1}</div>
+
+                  <div className="mt-3 text-lg md:text-xl font-black text-slate-800 leading-tight">{choice.title}</div>
+                  <div className="mt-1.5 text-xs md:text-sm font-semibold text-slate-500">{choice.subtitle}</div>
+
+                  <div className="mt-3 rounded-xl bg-white/78 px-3 py-2.5 text-xs md:text-sm leading-5 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+                    {choice.detail}
+                  </div>
+
+                  <div className="mt-auto pt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">{rewardStyle.cta}</div>
                 </div>
-
-                <div className="mt-3 text-lg md:text-xl font-black text-slate-800 leading-tight">{choice.title}</div>
-                <div className="mt-1.5 text-xs md:text-sm font-semibold text-slate-500">{choice.subtitle}</div>
-
-                <div className="mt-3 rounded-xl bg-white/78 px-3 py-2.5 text-xs md:text-sm leading-5 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
-                  {choice.detail}
-                </div>
-
-                <div className="mt-auto pt-4 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">{rewardStyle.cta}</div>
-              </div>
-            </button>
+              </button>
             );
           })}
         </div>
