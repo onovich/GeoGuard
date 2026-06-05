@@ -792,6 +792,32 @@ const getBossPhaseHint = (boss, activePhaseIndex) => {
   return phaseTier === 0 ? 'Setup' : phaseTier === 1 ? 'Pressure' : 'Burst';
 };
 
+const getBossPhaseTone = (boss, activePhaseIndex) => {
+  const phaseTier = Math.max(0, Math.min(2, activePhaseIndex));
+  const tonesByForm = {
+    commander: ['#93c5fd', '#60a5fa', '#2563eb'],
+    hunter: ['#fca5a5', '#fb7185', '#e11d48'],
+    fortress: ['#cbd5e1', '#94a3b8', '#64748b'],
+    prism: ['#c4b5fd', '#a78bfa', '#7c3aed'],
+    hive: ['#86efac', '#4ade80', '#16a34a'],
+    frostJudge: ['#bfdbfe', '#93c5fd', '#38bdf8'],
+    railWarlord: ['#fda4af', '#fb7185', '#e11d48'],
+    collector: ['#fde68a', '#fbbf24', '#f59e0b'],
+    twinSun: ['#fde68a', '#fbbf24', '#f59e0b'],
+    twinMoon: ['#bfdbfe', '#93c5fd', '#60a5fa'],
+    dragon: ['#fdba74', '#fb923c', '#ea580c'],
+    spider: ['#bef264', '#a3e635', '#65a30d'],
+    astrolabe: ['#c4b5fd', '#a78bfa', '#8b5cf6'],
+    forge: ['#fdba74', '#f97316', '#c2410c'],
+    conductor: ['#f9a8d4', '#f472b6', '#db2777'],
+    labyrinth: ['#d8b4fe', '#c084fc', '#9333ea'],
+    bloom: ['#86efac', '#4ade80', '#22c55e'],
+  };
+
+  const tones = tonesByForm[boss.form];
+  return tones?.[phaseTier] ?? boss.color ?? '#ffffff';
+};
+
 const getBossPhaseCalloutText = (boss, activePhaseIndex) => {
   const phaseTier = Math.max(0, Math.min(2, activePhaseIndex));
 
@@ -1341,6 +1367,7 @@ export default function useGeoGuardGame() {
         phaseIndex: boss.currentPhaseIndex ?? 0,
         phaseCount: boss.phases?.length ?? 0,
         phaseHint: getBossPhaseHint(boss, boss.currentPhaseIndex ?? 0),
+        phaseTone: getBossPhaseTone(boss, boss.currentPhaseIndex ?? 0),
         enraged: Boolean(boss.bossState.partnerFallen),
       });
       groups.set(key, existing);
@@ -4074,6 +4101,7 @@ export default function useGeoGuardGame() {
         ctx.strokeRect(enemy.x - enemy.radius - 3, enemy.y - enemy.radius - 3, (enemy.radius + 3) * 2, (enemy.radius + 3) * 2);
         if (enemy.phases?.[enemy.currentPhaseIndex]) {
           const phaseHint = getBossPhaseHint(enemy, enemy.currentPhaseIndex ?? 0);
+          const phaseTone = getBossPhaseTone(enemy, enemy.currentPhaseIndex ?? 0);
           const phaseTextWidth = Math.max(38, enemy.phases[enemy.currentPhaseIndex].name.length * 13);
           ctx.fillStyle = enemy.bossState.phaseIntroTimer > 0 ? `${enemy.color}22` : 'rgba(255,255,255,0.92)';
           drawRoundRect(ctx, enemy.x - phaseTextWidth / 2, enemy.y - enemy.radius - 29, phaseTextWidth, 18, 9);
@@ -4087,13 +4115,13 @@ export default function useGeoGuardGame() {
           ctx.fillText(enemy.phases[enemy.currentPhaseIndex].name, enemy.x, enemy.y - enemy.radius - 16);
           if (phaseHint && (enemy.bossState.phaseIntroTimer > 0 || (enemy.currentPhaseIndex ?? 0) > 0)) {
             const hintWidth = Math.max(54, phaseHint.length * 7 + 14);
-            ctx.fillStyle = 'rgba(15,23,42,0.8)';
+            ctx.fillStyle = 'rgba(15,23,42,0.82)';
             drawRoundRect(ctx, enemy.x - hintWidth / 2, enemy.y - enemy.radius - 12, hintWidth, 13, 6);
             ctx.fill();
-            ctx.strokeStyle = enemy.color;
+            ctx.strokeStyle = phaseTone;
             ctx.lineWidth = 1;
             ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,0.88)';
+            ctx.fillStyle = phaseTone;
             ctx.font = 'bold 9px system-ui, sans-serif';
             ctx.fillText(phaseHint, enemy.x, enemy.y - enemy.radius - 5.5);
           }

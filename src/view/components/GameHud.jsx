@@ -43,6 +43,7 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                     const phaseIndex = member.phaseIndex ?? 0;
                     const phaseCount = member.phaseCount ?? 0;
                     const phaseLabel = member.enraged ? `${member.phase} · ENRAGED` : member.phase;
+                    const phaseTone = member.phaseTone ?? member.color;
 
                     return (
                       <div key={member.id}>
@@ -69,7 +70,18 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
                             </span>
                           </div>
                         ) : null}
-                        {member.phaseHint ? <div className="mb-1 text-[10px] uppercase tracking-[0.14em] text-slate-400">{member.phaseHint}</div> : null}
+                                                {member.phaseHint ? (
+                          <div
+                            className="mb-1 inline-flex max-w-full rounded-md border px-1.5 py-0.5 text-[10px] uppercase tracking-[0.14em]"
+                            style={{
+                              color: phaseTone,
+                              borderColor: `${phaseTone}55`,
+                              backgroundColor: `${phaseTone}14`,
+                            }}
+                          >
+                            {member.phaseHint}
+                          </div>
+                        ) : null}
                         <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
                         </div>
