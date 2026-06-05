@@ -22,26 +22,20 @@
 
 ## Current TODO
 
-1. Replace the provisional wave table with authored wave data.
-现在的波次由规则函数生成，适合验证循环，但还不是手工调优后的正式关卡表。后续应把每波敌人组合、Boss 类型、奖励节奏外提成显式数据配置。
+1. Split `useGeoGuardGame` further.
+Wave data, reward rules, tower progression rules, and some debug logic now live outside the hook, but the runtime orchestrator is still the largest engineering risk in the repo.
 
-2. Split useGeoGuardGame into smaller runtime modules.
-当前主 hook 已承担波次推进、奖励选择、触摸拖拽、投射物和敌人更新，体量仍偏大。下一步应把 wave progression、tower placement、combat resolution 分拆到 engine 或更细的 hooks 中。
+2. Expand regression coverage from rule checks into full flow checks.
+Current tests cover authored wave data, placement blocking, adaptive reward selection, and tower progression helpers. The next layer is whole-flow verification for boss death, reward resolution, and debug wave transitions.
 
-3. Add explicit boss UI.
-Boss 目前有提示文本和较粗的血条表现，但缺少单独的 Boss 名称区、常驻顶部血条或更强的阶段感表现。
+3. Keep lifting non-showcase bosses.
+The top-tier encounters are now memorable enough to set a bar. The remaining bosses still benefit from more distinct pacing, telegraph polish, and stronger final-phase identity.
 
-4. Revisit mobile input layering.
-手机端摇杆、塔栏横向滚动和拖拽建塔已能共存，但边界仍然较紧。后续可以考虑给塔栏加显式“拖出建造”手柄或在移动端显示可滚动提示。
+4. Finish real-play balancing across the full roster.
+The systems are broad enough now that balance has become a content problem rather than a feature problem. Towers, reward pacing, and late-wave pressure should be tuned together.
 
-5. Add automated regression coverage for placement rules.
-当前拖拽建塔、敌人占位检测、Boss 奖励升级都依赖手工验收。后续至少应为 wave generation、tower unlock/upgrade 和 placement validation 增加基础测试。
-
-6. Balance the expanded tower roster.
-新解锁的 6 种塔已经可用，但主要是功能与节奏打通，尚未完成正式数值平衡。应重点观察 Frost、Burst、Rail 三类塔是否过强或与基础塔重叠。
-
-7. Add mid-run recovery and late-game sinks.
-原始设计文档里提到的回血、长期资源消耗和更深成长仍未补全。后续可以在 Boss 奖励之外增加玩家被动升级、医疗掉落或功能型塔。
+5. Revisit long-run economy and recovery once balance stabilizes.
+Adaptive reward support now gives emergency money and repair options, but broader progression sinks and recovery systems should wait until core tuning settles.
 
 ## Known Risks
 
@@ -51,5 +45,5 @@ Boss 目前有提示文本和较粗的血条表现，但缺少单独的 Boss 名
 2. Touch behavior is sensitive to small threshold changes.
 BuildBar 里的触摸阈值和延时很容易出现“能滚不能拖”或“能拖不能滚”的回归。
 
-3. Reward choices are random but not yet seeded or weighted.
-当前 Boss 奖励是随机抽取升级/解锁选项，适合原型阶段，但不适合可重复平衡验证。
+3. Reward quality is better, but still not fully deterministic.
+Adaptive reward history now reduces repetition and adds situational support, but the system is still not seeded or authored enough for strict balance playback.

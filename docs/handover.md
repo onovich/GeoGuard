@@ -72,25 +72,23 @@ Available towers and upgrade levels live as runtime/template state rather than a
 ## Validation Status
 
 - npm run build passes locally.
+- npm test passes locally with coverage for wave data, placement rules, reward adaptation, and tower progression helpers.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 
 ## Recommended Next Steps
 
-1. Externalize wave definitions into explicit data.
-The current rule-generated waves are workable, but they are not yet a curated content table.
-
-2. Split useGeoGuardGame.
+1. Split useGeoGuardGame further.
 Recommended first cuts are wave progression, placement controller, combat resolver, and canvas renderer helpers.
 
-3. Add regression tests for progression and placement.
-At minimum, cover reward application, wave generation, unlock logic, and placement blocking.
+2. Expand regression tests from rule coverage into full progression flow.
+At minimum, cover reward application, wave completion, boss aftermath cleanup, and debug wave flow transitions.
 
-4. Add a stronger Boss UI layer.
-Consider a persistent top-of-screen boss bar and more readable reward timing transitions.
+3. Continue boss presentation parity.
+The showcase bosses are strong, but the rest of the roster can still be lifted toward the same standard.
 
-5. Review mobile UX after additional towers are unlocked.
-This remains the area most likely to regress when touch thresholds or layout change.
+4. Review mobile UX after additional towers are unlocked.
+Touch thresholds and the build-bar hinting are better now, but this remains the area most likely to regress.
 
 ## Practical Editing Guidance
 

@@ -6,6 +6,7 @@ import { WAVE_TABLE } from '../src/data/waveTable.js';
 import { canPlaceTowerOnField, createWaveDefinition } from '../src/logic/engine/gameRules.js';
 import { createRuntimeState } from '../src/logic/engine/gameState.js';
 import { buildRewardOfferPlan, createRewardHistory, recordRewardOffers, recordRewardPick } from '../src/logic/engine/rewardRules.js';
+import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../src/logic/engine/towerRules.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
   const catalog = createInitialTowerCatalog();
@@ -110,4 +111,28 @@ test('picked rewards are recorded separately from offered rewards', () => {
 
   assert.deepEqual(history.offeredKeys, []);
   assert.deepEqual(history.pickedKeys, ['unlock:FROST']);
+});
+
+test('tower rules rebuild blueprint stats deterministically by level', () => {
+  const baseTower = createInitialTowerCatalog().find((tower) => tower.id === 'BURST');
+  const levelTwo = buildTowerAtLevel(baseTower, 2);
+  const levelThree = upgradeTower(levelTwo);
+
+  assert.equal(levelTwo.level, 2);
+  assert.equal(levelThree.level, 3);
+  assert.ok(levelThree.damage > levelTwo.damage);
+  assert.ok(levelThree.range > levelTwo.range);
+  assert.ok(levelThree.cost > levelTwo.cost);
+  assert.ok(levelThree.burstCount >= levelTwo.burstCount);
+});
+
+test('tower preview summary surfaces the key derived stats', () => {
+  const baseTower = createInitialTowerCatalog().find((tower) => tower.id === 'RAIL');
+  const upgraded = buildTowerAtLevel(baseTower, 1);
+  const summary = getTowerPreviewSummary(upgraded);
+
+  assert.match(summary, /Cost/);
+  assert.match(summary, /Damage/);
+  assert.match(summary, /Range/);
+  assert.match(summary, /Pierce/);
 });

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, TOWER_LIBRARY, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
+import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
 import { getBossPresentation } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { canPlaceTowerOnField, createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
 import { buildRewardOfferPlan, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
+import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../engine/towerRules.js';
 import { createRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
 
@@ -204,54 +205,6 @@ const enrichBossTemplate = (bossTemplate) => ({
   ...bossTemplate,
   phases: getBossPhaseOverrides(bossTemplate),
 });
-
-const getTowerPreviewSummary = (tower) => {
-  const tags = [`价格 ${tower.cost}`, `伤害 ${tower.damage}`, `射程 ${tower.range}`];
-  if (tower.splash) tags.push(`爆炸 ${tower.splash}`);
-  if (tower.pierce) tags.push(`穿透 ${tower.pierce}`);
-  if (tower.slowRatio) tags.push('减速');
-  if (tower.burstCount) tags.push(`散射 ${tower.burstCount}`);
-  return tags.join(' / ');
-};
-
-const upgradeTowerStats = (tower) => {
-  return {
-    ...tower,
-    level: tower.level + 1,
-    cost: Math.round(tower.cost * 1.32),
-    damage: Math.max(tower.damage + 1, Math.round(tower.damage * 1.22)),
-    range: Math.round(tower.range * 1.08),
-    hp: Math.round(tower.hp * 1.16),
-    fireRate: Math.max(0.1, Number((tower.fireRate * 0.93).toFixed(2))),
-    splash: tower.splash ? Math.round(tower.splash * 1.14) : tower.splash,
-    pierce: tower.pierce ? tower.pierce + 1 : tower.pierce,
-    slowDuration: tower.slowDuration ? Number((tower.slowDuration * 1.12).toFixed(2)) : tower.slowDuration,
-    slowRatio: tower.slowRatio ? Math.max(0.25, Number((tower.slowRatio - 0.06).toFixed(2))) : tower.slowRatio,
-    burstCount: tower.burstCount && tower.level + 1 === 3 ? tower.burstCount + 1 : tower.burstCount,
-  };
-};
-
-const buildTowerAtLevel = (tower, level) => {
-  const baseTower = TOWER_LIBRARY[tower.id];
-  const maxLevel = tower.maxLevel ?? 3;
-  let nextTower = {
-    ...baseTower,
-    available: tower.available ?? true,
-    level: 0,
-    maxLevel,
-    sortOrder: tower.sortOrder,
-  };
-  const targetLevel = Math.max(0, Math.min(maxLevel, level));
-
-  for (let index = 0; index < targetLevel; index += 1) {
-    nextTower = upgradeTowerStats(nextTower);
-  }
-
-  return nextTower;
-};
-
-const upgradeTower = (tower) => buildTowerAtLevel(tower, (tower.level ?? 0) + 1);
-const downgradeTower = (tower) => buildTowerAtLevel(tower, (tower.level ?? 0) - 1);
 
 const drawTowerShape = (ctx, tower, x, y, color, alpha = 1) => {
   ctx.save();
