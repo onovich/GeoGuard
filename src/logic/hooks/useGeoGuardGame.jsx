@@ -2,10 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
 import { getBossPresentation } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
-import { canPlaceTowerOnField, createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
-import { buildRewardOfferPlan, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
-import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../engine/towerRules.js';
-import { createRuntimeState } from '../engine/gameState';
+import {
+  findOpenEnemySpawnPosition,
+  getBossRewardResolution,
+  getBossSummonSpawnCount,
+  hasPendingBossAftermath,
+  hasPendingEncounterAftermath,
+} from '../engine/bossFlowRules.js';
+import { getAreaDamageHits, getPulledPosition, isLineHazardHit, isTargetWithinArea, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
+import { createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
+import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
+import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
+import { applyRewardChoiceEffects, buildRewardOfferPlan, materializeRewardChoices, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
+import { buildTowerAtLevel } from '../engine/towerRules.js';
+import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
 
 const DRAG_CANCEL_MARGIN = 18;
@@ -1304,18 +1314,6 @@ export default function useGeoGuardGame() {
   const syncHudMoney = () => setMoney(game.current.debugOptions.infiniteMoney ? '∞' : game.current.money);
   const syncHudHealth = () => setHealth(game.current.debugOptions.infiniteHealth ? game.current.player.maxHp : Math.max(0, Math.floor(game.current.player.hp)));
 
-  const createEmptyWaveState = () => ({
-    number: 0,
-    queue: [],
-    spawnInterval: 999,
-    spawnTimer: 0,
-    boss: null,
-    bossSpawned: true,
-    awaitingReward: false,
-    pendingRewardBossUid: null,
-    pendingRewardBossEncounterUid: null,
-  });
-
   const resetCombatState = ({ clearTowers = false } = {}) => {
     game.current.enemies = [];
     if (clearTowers) {
@@ -1718,41 +1716,6 @@ export default function useGeoGuardGame() {
     return enemy;
   };
 
-  const getBossOwnedSummonCount = (bossUid, summonCategory) =>
-    game.current.enemies.filter((enemy) => enemy.summonedByBossUid === bossUid && (!summonCategory || enemy.summonCategory === summonCategory)).length;
-
-  const hasPendingBossAftermath = (bossUid) =>
-    game.current.enemies.some((enemy) => enemy.summonedByBossUid === bossUid) ||
-    game.current.hazards.some((hazard) => hazard.ownerBossUid === bossUid);
-
-  const hasPendingEncounterAftermath = (encounterUid) =>
-    game.current.enemies.some((enemy) => enemy.encounterUid === encounterUid || enemy.summonedByEncounterUid === encounterUid) ||
-    game.current.hazards.some((hazard) => hazard.ownerEncounterUid === encounterUid);
-
-  const findOpenEnemySpawnPosition = (source, enemyTemplate, baseRadius = 46) => {
-    const blockers = [...game.current.enemies, ...game.current.towers, game.current.player];
-    for (let ring = 0; ring < 4; ring += 1) {
-      const ringRadius = baseRadius + ring * (enemyTemplate.radius + 18);
-      const samples = 10 + ring * 4;
-      for (let index = 0; index < samples; index += 1) {
-        const angle = (Math.PI * 2 * index) / samples + Math.random() * 0.18;
-        const candidate = {
-          x: source.x + Math.cos(angle) * ringRadius,
-          y: source.y + Math.sin(angle) * ringRadius,
-        };
-        const overlaps = blockers.some((blocker) => dist(candidate, blocker) < enemyTemplate.radius + (blocker.radius ?? 12) + 10);
-        if (!overlaps) {
-          return candidate;
-        }
-      }
-    }
-
-    return {
-      x: source.x + rand(-18, 18),
-      y: source.y + rand(-18, 18),
-    };
-  };
-
   const spawnBossEncounterAt = (bossTemplate, x, y) => {
     if (bossTemplate.id === 'TWINS') {
       const encounterUid = game.current.nextBossEncounterUid++;
@@ -1810,17 +1773,7 @@ export default function useGeoGuardGame() {
     const definition = createWaveDefinition(waveNumber);
     game.current.debugWaveFlow = game.current.mode === 'debug';
     setDebugWaveFlow(game.current.mode === 'debug');
-    game.current.wave = {
-      number: waveNumber,
-      queue: [...definition.queue],
-      spawnInterval: definition.spawnInterval,
-      spawnTimer: 0,
-      boss: definition.boss,
-      bossSpawned: false,
-      awaitingReward: false,
-      pendingRewardBossUid: null,
-      pendingRewardBossEncounterUid: null,
-    };
+    game.current.wave = createWaveRuntimeState(waveNumber, definition);
     setCurrentWave(waveNumber);
     setWaveOverview({ label: definition.label ?? '', focus: definition.focus ?? '' });
     showWaveMessage(
@@ -1877,54 +1830,46 @@ export default function useGeoGuardGame() {
   };
 
   const evaluatePlacement = (tower, clientX, clientY) => {
-    const worldPoint = toWorldPoint(clientX, clientY, game.current.camera, window.innerWidth, window.innerHeight);
-    if (!tower) {
-      return { worldPoint, canPlace: false, invalidReason: UI_COPY.invalidPlacement };
-    }
-
-    if (!game.current.debugOptions.infiniteMoney && game.current.money < tower.cost) {
-      return { worldPoint, canPlace: false, invalidReason: UI_COPY.insufficientFunds };
-    }
-
-    if (!canPlaceTowerOnField(worldPoint, tower, game.current.player, game.current.towers, game.current.enemies)) {
-      return { worldPoint, canPlace: false, invalidReason: UI_COPY.invalidPlacement };
-    }
-
-    return { worldPoint, canPlace: true, invalidReason: null };
+    return evaluateTowerPlacement({
+      tower,
+      clientX,
+      clientY,
+      camera: game.current.camera,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      player: game.current.player,
+      towers: game.current.towers,
+      enemies: game.current.enemies,
+      money: game.current.money,
+      infiniteMoney: game.current.debugOptions.infiniteMoney,
+      invalidPlacementText: UI_COPY.invalidPlacement,
+      insufficientFundsText: UI_COPY.insufficientFunds,
+    });
   };
 
   const updateDragPlacement = (clientX, clientY, towerOverride) => {
     if (!game.current.dragPlacement.active) {
       return;
     }
-    const placementKind = game.current.dragPlacement.kind;
-    if (placementKind !== 'tower') {
-      const worldPoint = toWorldPoint(clientX, clientY, game.current.camera, window.innerWidth, window.innerHeight);
-      game.current.dragPlacement = {
-        ...game.current.dragPlacement,
-        pointerX: clientX,
-        pointerY: clientY,
-        worldX: worldPoint.x,
-        worldY: worldPoint.y,
-        canPlace: true,
-        invalidReason: null,
-      };
-      return;
-    }
-
     const tower = towerOverride ?? getTowerById(game.current.dragPlacement.towerId);
-    if (!tower) return;
+    if (game.current.dragPlacement.kind === 'tower' && !tower) return;
 
-    const placement = evaluatePlacement(tower, clientX, clientY);
-    game.current.dragPlacement = {
-      ...game.current.dragPlacement,
-      pointerX: clientX,
-      pointerY: clientY,
-      worldX: placement.worldPoint.x,
-      worldY: placement.worldPoint.y,
-      canPlace: placement.canPlace,
-      invalidReason: placement.invalidReason,
-    };
+    game.current.dragPlacement = updateDragPlacementState({
+      dragPlacement: game.current.dragPlacement,
+      clientX,
+      clientY,
+      camera: game.current.camera,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      tower,
+      player: game.current.player,
+      towers: game.current.towers,
+      enemies: game.current.enemies,
+      money: game.current.money,
+      infiniteMoney: game.current.debugOptions.infiniteMoney,
+      invalidPlacementText: UI_COPY.invalidPlacement,
+      insufficientFundsText: UI_COPY.insufficientFunds,
+    });
   };
 
   const clearDragPlacement = () => {
@@ -2050,57 +1995,7 @@ export default function useGeoGuardGame() {
       history: game.current.rewardHistory,
     });
 
-    return plan
-      .map((entry) => {
-        if (entry.type === 'support_money') {
-          return {
-            id: entry.id ?? 'support-money',
-            type: entry.type,
-            amount: entry.amount,
-            title: 'Supply Cache',
-            subtitle: `Gain ${entry.amount} credits right now`,
-            detail: 'Take an instant economy bump instead of another tower-only reward.',
-          };
-        }
-
-        if (entry.type === 'support_repair') {
-          return {
-            id: entry.id ?? 'support-repair',
-            type: entry.type,
-            amount: entry.amount,
-            title: 'Field Repairs',
-            subtitle: `Restore ${entry.amount} HP before the next wave`,
-            detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
-          };
-        }
-
-        const tower = catalog.find((candidate) => candidate.id === entry.towerId);
-        if (!tower) {
-          return null;
-        }
-
-        if (entry.type === 'unlock') {
-          return {
-            id: `unlock-${tower.id}`,
-            type: 'unlock',
-            towerId: tower.id,
-            title: `Unlock ${tower.name}`,
-            subtitle: 'Add this blueprint to the build bar',
-            detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
-          };
-        }
-
-        const preview = upgradeTower(tower);
-        return {
-          id: `upgrade-${tower.id}`,
-          type: 'upgrade',
-          towerId: tower.id,
-          title: `Upgrade ${tower.name}`,
-          subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
-          detail: `${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
-        };
-      })
-      .filter(Boolean);
+    return materializeRewardChoices(catalog, plan);
   };
 
   const openBossReward = () => {
@@ -2114,29 +2009,37 @@ export default function useGeoGuardGame() {
 
   const applyRewardChoice = (choice) => {
     game.current.rewardHistory = recordRewardPick(game.current.rewardHistory, choice);
-    let nextCatalog = towerCatalogRef.current;
-    if (choice.type === 'unlock' || choice.type === 'upgrade') {
-      nextCatalog = towerCatalogRef.current.map((tower) => {
-        if (tower.id !== choice.towerId) {
-          return tower;
-        }
-        if (choice.type === 'unlock') {
-          return { ...tower, available: true };
-        }
-        return upgradeTower(tower);
-      });
-      towerCatalogRef.current = nextCatalog;
-      setTowerCatalog(nextCatalog);
-    } else if (choice.type === 'support_money') {
-      game.current.money += choice.amount ?? 0;
+    const previousCatalog = towerCatalogRef.current;
+    const rewardResult = applyRewardChoiceEffects({
+      catalog: previousCatalog,
+      choice,
+      money: game.current.money,
+      hp: game.current.player.hp,
+      maxHp: game.current.player.maxHp,
+    });
+
+    if (rewardResult.catalog !== previousCatalog) {
+      towerCatalogRef.current = rewardResult.catalog;
+      setTowerCatalog(rewardResult.catalog);
+    }
+
+    if (rewardResult.money !== game.current.money) {
+      game.current.money = rewardResult.money;
       syncHudMoney();
-    } else if (choice.type === 'support_repair') {
-      game.current.player.hp = Math.min(game.current.player.maxHp, game.current.player.hp + (choice.amount ?? 0));
+    }
+
+    if (rewardResult.hp !== game.current.player.hp) {
+      game.current.player.hp = rewardResult.hp;
       syncHudHealth();
     }
 
     setRewardState({ active: false, choices: [] });
-    if (game.current.mode === 'debug' && !game.current.debugWaveFlow) {
+    const followUp = resolveRewardFollowUp({
+      mode: game.current.mode,
+      debugWaveFlow: game.current.debugWaveFlow,
+      currentWave,
+    });
+    if (followUp.type === 'debug-stay') {
       showWaveMessage(
         {
           title: 'Reward Applied',
@@ -2147,7 +2050,7 @@ export default function useGeoGuardGame() {
       );
       return;
     }
-    startWave(currentWave + 1);
+    startWave(followUp.waveNumber);
   };
   const setDebugOption = (key, value) => {
     const nextOptions = { ...game.current.debugOptions, [key]: value };
@@ -2346,37 +2249,39 @@ export default function useGeoGuardGame() {
   };
 
   const damageTarget = (target, amount) => {
-    if (target === game.current.player && game.current.debugOptions.infiniteHealth) {
-      return;
-    }
-    target.hp -= amount;
+    const damageResult = resolveTargetDamage({
+      targetHp: target.hp,
+      amount,
+      infiniteHealth: target === game.current.player && game.current.debugOptions.infiniteHealth,
+    });
+    target.hp = damageResult.hp;
   };
 
   const damageEnemy = (enemy, amount) => {
-    const phaseMultiplier = enemy.phased ? enemy.phase?.damageMultiplier ?? 0.25 : 1;
-    const armorMultiplier = enemy.armoredTimer > 0 ? 0.65 : 1;
-    let remainingDamage = amount * phaseMultiplier * armorMultiplier;
-
-    if (enemy.shield > 0) {
-      const shieldDamage = Math.min(enemy.shield, remainingDamage);
-      enemy.shield -= shieldDamage;
-      remainingDamage -= shieldDamage;
-    }
-
-    if (remainingDamage > 0) {
-      enemy.hp -= remainingDamage;
-    }
+    const damageResult = resolveEnemyDamage(enemy, amount);
+    enemy.hp = damageResult.hp;
+    enemy.shield = damageResult.shield;
   };
 
   const damageArea = (x, y, radius, amount, options = {}) => {
-    if (dist({ x, y }, game.current.player) <= radius + game.current.player.radius) {
+    const areaHits = getAreaDamageHits({
+      origin: { x, y },
+      radius,
+      player: game.current.player,
+      towers: game.current.towers,
+      amount,
+      towerFactor: options.towerFactor ?? 1,
+    });
+
+    if (areaHits.playerHit) {
       damageTarget(game.current.player, amount);
       syncHudHealth();
     }
 
-    for (const tower of game.current.towers) {
-      if (dist({ x, y }, tower) <= radius + tower.radius) {
-        damageTarget(tower, amount * (options.towerFactor ?? 1));
+    for (const hit of areaHits.towerHits) {
+      const tower = game.current.towers[hit.index];
+      if (tower) {
+        damageTarget(tower, hit.damage);
       }
     }
 
@@ -2387,15 +2292,22 @@ export default function useGeoGuardGame() {
     const enemyTemplate = ENEMY_TYPES[enemyKey];
     if (!enemyTemplate) return 0;
 
-    let remaining = count;
-    if (options.ownerBossUid && options.maxActive) {
-      const activeCount = getBossOwnedSummonCount(options.ownerBossUid, options.summonCategory ?? enemyKey);
-      remaining = Math.max(0, Math.min(count, options.maxActive - activeCount));
-    }
+    const remaining = getBossSummonSpawnCount({
+      enemies: game.current.enemies,
+      bossUid: options.ownerBossUid,
+      summonCategory: options.summonCategory ?? enemyKey,
+      requestedCount: count,
+      maxActive: options.maxActive,
+    });
 
     let spawned = 0;
     for (let index = 0; index < remaining; index += 1) {
-      const position = findOpenEnemySpawnPosition(source, enemyTemplate, radius + index * 6);
+      const position = findOpenEnemySpawnPosition({
+        source,
+        enemyTemplate,
+        blockers: [...game.current.enemies, ...game.current.towers, game.current.player],
+        baseRadius: radius + index * 6,
+      });
       spawnEnemyAt(enemyKey, position.x, position.y, {
         skipBurrowPosition: true,
         summonedByBossUid: options.ownerBossUid ?? null,
@@ -3824,21 +3736,23 @@ export default function useGeoGuardGame() {
       }
     }
 
-    if (state.mode !== 'debug' || state.debugWaveFlow) {
-      while (state.wave.queue.length > 0 && state.wave.spawnTimer >= state.wave.spawnInterval) {
-        state.wave.spawnTimer -= state.wave.spawnInterval;
-        const enemyKey = state.wave.queue.shift();
+    const waveTick = resolveWaveTick({
+      wave: state.wave,
+      dt,
+      enemyCount: state.enemies.length,
+      autoRun: shouldAutoRunWaveFlow({ mode: state.mode, debugWaveFlow: state.debugWaveFlow }),
+    });
+    state.wave = waveTick.wave;
+
+    for (const enemyKey of waveTick.spawnEnemyKeys) {
         const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
         spawnEnemyAt(enemyKey, spawnPosition.x, spawnPosition.y);
-      }
-      state.wave.spawnTimer += dt;
+    }
 
-      if (state.wave.queue.length === 0 && !state.wave.bossSpawned && state.enemies.length === 0) {
-        const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
-        spawnBossEncounterAt(state.wave.boss, spawnPosition.x, spawnPosition.y);
-        state.wave.bossSpawned = true;
-        showBossSpotlight(state.wave.boss);
-      }
+    if (waveTick.spawnBoss) {
+      const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
+      spawnBossEncounterAt(state.wave.boss, spawnPosition.x, spawnPosition.y);
+      showBossSpotlight(state.wave.boss);
     }
 
     for (let enemyIndex = state.enemies.length - 1; enemyIndex >= 0; enemyIndex -= 1) {
@@ -3951,19 +3865,19 @@ export default function useGeoGuardGame() {
           state.money += enemy.value;
           syncHudMoney();
           enemy.isDefeated = true;
-          if (enemy.encounterUid) {
-            const hasLivingEncounterBoss = state.enemies.some((candidate) => candidate.isBoss && candidate.encounterUid === enemy.encounterUid);
-            if (hasLivingEncounterBoss) {
-              enrageEncounterPartner(enemy);
-            } else if (hasPendingEncounterAftermath(enemy.encounterUid)) {
-              state.wave.awaitingReward = true;
-              state.wave.pendingRewardBossEncounterUid = enemy.encounterUid;
-            } else {
-              openBossReward();
-            }
-          } else if (hasPendingBossAftermath(enemy.uid)) {
+          const rewardResolution = getBossRewardResolution({
+            boss: enemy,
+            enemies: state.enemies,
+            hazards: state.hazards,
+          });
+          if (rewardResolution.action === 'enrage-partner') {
+            enrageEncounterPartner(enemy);
+          } else if (rewardResolution.action === 'await-encounter-aftermath') {
             state.wave.awaitingReward = true;
-            state.wave.pendingRewardBossUid = enemy.uid;
+            state.wave.pendingRewardBossEncounterUid = rewardResolution.encounterUid;
+          } else if (rewardResolution.action === 'await-boss-aftermath') {
+            state.wave.awaitingReward = true;
+            state.wave.pendingRewardBossUid = rewardResolution.bossUid;
           } else {
             openBossReward();
           }
@@ -3971,10 +3885,10 @@ export default function useGeoGuardGame() {
       }
     }
 
-    if (state.wave.pendingRewardBossUid && !rewardState.active && !hasPendingBossAftermath(state.wave.pendingRewardBossUid)) {
+    if (state.wave.pendingRewardBossUid && !rewardState.active && !hasPendingBossAftermath(state.enemies, state.hazards, state.wave.pendingRewardBossUid)) {
       openBossReward();
     }
-    if (state.wave.pendingRewardBossEncounterUid && !rewardState.active && !hasPendingEncounterAftermath(state.wave.pendingRewardBossEncounterUid)) {
+    if (state.wave.pendingRewardBossEncounterUid && !rewardState.active && !hasPendingEncounterAftermath(state.enemies, state.hazards, state.wave.pendingRewardBossEncounterUid)) {
       openBossReward();
     }
 
@@ -4091,21 +4005,21 @@ export default function useGeoGuardGame() {
       if (hazard.timer > 0) continue;
 
       if (hazard.type === 'area') {
-        const applyAreaEffect = (target) => {
-          if (dist(target, hazard) > hazard.radius + target.radius) return false;
-          damageTarget(target, hazard.damage);
-          if (hazard.pull) {
-            const angle = Math.atan2(hazard.y - target.y, hazard.x - target.x);
-            target.x += Math.cos(angle) * Math.min(hazard.pull * 0.18, hazard.radius * 0.35);
-            target.y += Math.sin(angle) * Math.min(hazard.pull * 0.18, hazard.radius * 0.35);
-          }
-          return true;
-        };
-
-        applyAreaEffect(state.player);
+        if (isTargetWithinArea(hazard, hazard.radius, state.player)) {
+          damageTarget(state.player, hazard.damage);
+          const pulledPlayerPosition = getPulledPosition({ target: state.player, hazard });
+          state.player.x = pulledPlayerPosition.x;
+          state.player.y = pulledPlayerPosition.y;
+        }
         syncHudHealth();
         for (const tower of state.towers) {
-          const towerHit = applyAreaEffect(tower);
+          const towerHit = isTargetWithinArea(hazard, hazard.radius, tower);
+          if (towerHit) {
+            damageTarget(tower, hazard.damage);
+            const pulledTowerPosition = getPulledPosition({ target: tower, hazard });
+            tower.x = pulledTowerPosition.x;
+            tower.y = pulledTowerPosition.y;
+          }
           if (towerHit && hazard.slowRatio) {
             tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, hazard.slowDuration ?? 1.4);
           }
@@ -4123,23 +4037,12 @@ export default function useGeoGuardGame() {
         continue;
       }
 
-      const lineLength = Math.hypot(hazard.x2 - hazard.x, hazard.y2 - hazard.y);
-      const lineDx = (hazard.x2 - hazard.x) / lineLength;
-      const lineDy = (hazard.y2 - hazard.y) / lineLength;
-      const hitLineTarget = (target) => {
-        const targetDx = target.x - hazard.x;
-        const targetDy = target.y - hazard.y;
-        const projection = Math.max(0, Math.min(lineLength, targetDx * lineDx + targetDy * lineDy));
-        const closest = { x: hazard.x + lineDx * projection, y: hazard.y + lineDy * projection };
-        return dist(target, closest) <= hazard.width + target.radius;
-      };
-
-      if (hitLineTarget(state.player)) {
+      if (isLineHazardHit({ hazard, target: state.player })) {
         damageTarget(state.player, hazard.damage);
         syncHudHealth();
       }
       for (const tower of state.towers) {
-        if (hitLineTarget(tower)) damageTarget(tower, hazard.damage);
+        if (isLineHazardHit({ hazard, target: tower })) damageTarget(tower, hazard.damage);
       }
       spawnImpactWave(hazard.x2, hazard.y2, { maxRadius: 36, color: hazard.color, fillAlpha: 0.08, life: 0.18 });
       state.hazards.splice(hazardIndex, 1);

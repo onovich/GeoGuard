@@ -23,6 +23,21 @@ Contains placement validation, wave generation rules, nearest-target logic, and 
 - src/logic/engine/gameState.js
 Defines the runtime state tree, including drag placement state, wave state, and tower catalog snapshots.
 
+- src/logic/engine/bossFlowRules.js
+Holds pure boss-flow helpers for summon caps, aftermath cleanup checks, spawn positioning, and reward-resolution branching.
+
+- src/logic/engine/combatRules.js
+Holds reusable combat math for target damage, enemy shield and phase damage resolution, area hits, pull offsets, and line-hazard hit tests.
+
+- src/logic/engine/progressionRules.js
+Holds wave-flow decisions such as reward follow-up behavior, auto-run gating, and per-tick queue or boss progression.
+
+- src/logic/engine/placementRules.js
+Holds pure placement-evaluation helpers for tower drag previews and non-tower drag state updates.
+
+- src/logic/engine/rewardRules.js
+Owns reward offer scoring plus pure reward card materialization and reward application effects.
+
 - src/logic/hooks/useGeoGuardGame.jsx
 This is the current gameplay orchestrator. It owns wave flow, boss reward flow, combat updates, touch/mouse input, drag placement, and canvas rendering.
 
@@ -72,23 +87,23 @@ Available towers and upgrade levels live as runtime/template state rather than a
 ## Validation Status
 
 - npm run build passes locally.
-- npm test passes locally with coverage for wave data, placement rules, reward adaptation, and tower progression helpers.
+- npm test passes locally with coverage for wave data, wave-state helpers, wave tick progression, reward follow-up rules, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 
 ## Recommended Next Steps
 
-1. Split useGeoGuardGame further.
-Recommended first cuts are wave progression, placement controller, combat resolver, and canvas renderer helpers.
+The immediate TODO pass is complete.
 
-2. Expand regression tests from rule coverage into full progression flow.
-At minimum, cover reward application, wave completion, boss aftermath cleanup, and debug wave flow transitions.
+Remaining work is now best treated as long-term backlog rather than missing implementation:
 
-3. Continue boss presentation parity.
-The showcase bosses are strong, but the rest of the roster can still be lifted toward the same standard.
+1. Continue deeper hook or renderer decomposition only when a future feature needs it.
 
-4. Review mobile UX after additional towers are unlocked.
-Touch thresholds and the build-bar hinting are better now, but this remains the area most likely to regress.
+2. Add browser-level or rendering-sensitive integration checks if the project later needs stricter release automation.
+
+3. Keep balancing and presentation work in the long-term backlog, especially non-showcase bosses and wave 1-16 pacing.
+
+4. Revisit mobile UX opportunistically whenever the build bar, tower count, or drag interaction changes again.
 
 ## Practical Editing Guidance
 

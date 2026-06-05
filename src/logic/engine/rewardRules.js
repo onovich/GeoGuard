@@ -1,3 +1,5 @@
+import { getTowerPreviewSummary, upgradeTower } from './towerRules.js';
+
 const OFFER_HISTORY_LIMIT = 8;
 const PICK_HISTORY_LIMIT = 6;
 
@@ -131,3 +133,84 @@ export const recordRewardPick = (history, choice) => ({
   offeredKeys: trimHistory(history?.offeredKeys ?? [], OFFER_HISTORY_LIMIT),
   pickedKeys: trimHistory([...(history?.pickedKeys ?? []), getOfferKey(choice)], PICK_HISTORY_LIMIT),
 });
+
+export const materializeRewardChoices = (catalog, plan) =>
+  plan
+    .map((entry) => {
+      if (entry.type === 'support_money') {
+        return {
+          id: entry.id ?? 'support-money',
+          type: entry.type,
+          amount: entry.amount,
+          title: 'Supply Cache',
+          subtitle: `Gain ${entry.amount} credits right now`,
+          detail: 'Take an instant economy bump instead of another tower-only reward.',
+        };
+      }
+
+      if (entry.type === 'support_repair') {
+        return {
+          id: entry.id ?? 'support-repair',
+          type: entry.type,
+          amount: entry.amount,
+          title: 'Field Repairs',
+          subtitle: `Restore ${entry.amount} HP before the next wave`,
+          detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
+        };
+      }
+
+      const tower = catalog.find((candidate) => candidate.id === entry.towerId);
+      if (!tower) {
+        return null;
+      }
+
+      if (entry.type === 'unlock') {
+        return {
+          id: `unlock-${tower.id}`,
+          type: 'unlock',
+          towerId: tower.id,
+          title: `Unlock ${tower.name}`,
+          subtitle: 'Add this blueprint to the build bar',
+          detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
+        };
+      }
+
+      const preview = upgradeTower(tower);
+      return {
+        id: `upgrade-${tower.id}`,
+        type: 'upgrade',
+        towerId: tower.id,
+        title: `Upgrade ${tower.name}`,
+        subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
+        detail: `${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
+      };
+    })
+    .filter(Boolean);
+
+export const applyRewardChoiceEffects = ({ catalog, choice, money, hp, maxHp }) => {
+  let nextCatalog = catalog;
+  let nextMoney = money;
+  let nextHp = hp;
+
+  if (choice.type === 'unlock' || choice.type === 'upgrade') {
+    nextCatalog = catalog.map((tower) => {
+      if (tower.id !== choice.towerId) {
+        return tower;
+      }
+      if (choice.type === 'unlock') {
+        return { ...tower, available: true };
+      }
+      return upgradeTower(tower);
+    });
+  } else if (choice.type === 'support_money') {
+    nextMoney += choice.amount ?? 0;
+  } else if (choice.type === 'support_repair') {
+    nextHp = Math.min(maxHp, hp + (choice.amount ?? 0));
+  }
+
+  return {
+    catalog: nextCatalog,
+    money: nextMoney,
+    hp: nextHp,
+  };
+};

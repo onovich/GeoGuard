@@ -16,6 +16,30 @@ export const createPlayerState = () => ({
   range: 200,
 });
 
+export const createEmptyWaveState = () => ({
+  number: 0,
+  queue: [],
+  spawnInterval: 999,
+  spawnTimer: 0,
+  boss: null,
+  bossSpawned: true,
+  awaitingReward: false,
+  pendingRewardBossUid: null,
+  pendingRewardBossEncounterUid: null,
+});
+
+export const createWaveRuntimeState = (waveNumber, definition) => ({
+  number: waveNumber,
+  queue: [...definition.queue],
+  spawnInterval: definition.spawnInterval,
+  spawnTimer: 0,
+  boss: definition.boss,
+  bossSpawned: false,
+  awaitingReward: false,
+  pendingRewardBossUid: null,
+  pendingRewardBossEncounterUid: null,
+});
+
 export const createRuntimeState = () => ({
   player: createPlayerState(),
   camera: { x: 0, y: 0, shakeTimer: 0, shakeDuration: 0, shakeStrength: 0, shakeSeed: 0 },
@@ -42,15 +66,7 @@ export const createRuntimeState = () => ({
   towerCatalog: createInitialTowerCatalog(),
   rewardHistory: createRewardHistory(),
   wave: {
-    number: 1,
-    queue: [],
-    spawnInterval: 0.9,
-    spawnTimer: 0,
-    boss: null,
-    bossSpawned: false,
-    awaitingReward: false,
-    pendingRewardBossUid: null,
-    pendingRewardBossEncounterUid: null,
+    ...createWaveRuntimeState(1, { queue: [], spawnInterval: 0.9, boss: null }),
   },
   difficultyMultiplier: 1,
   isMobile: false,

@@ -20,22 +20,13 @@
 6. Visual identity should stay geometric and low-noise.
 当前表现语言仍然是低饱和、几何化、轻阴影的扁平风格。新增塔、Boss、特效时优先用圆、圆角矩形、三角形和简单冲击波，不要引入高纹理、高噪点或写实特效。
 
-## Current TODO
+## Immediate Status
 
-1. Split `useGeoGuardGame` further.
-Wave data, reward rules, tower progression rules, and some debug logic now live outside the hook, but the runtime orchestrator is still the largest engineering risk in the repo.
+The fast-iteration TODO pass is complete.
 
-2. Expand regression coverage from rule checks into full flow checks.
-Current tests cover authored wave data, placement blocking, adaptive reward selection, and tower progression helpers. The next layer is whole-flow verification for boss death, reward resolution, and debug wave transitions.
-
-3. Keep lifting non-showcase bosses.
-The top-tier encounters are now memorable enough to set a bar. The remaining bosses still benefit from more distinct pacing, telegraph polish, and stronger final-phase identity.
-
-4. Finish real-play balancing across the full roster.
-The systems are broad enough now that balance has become a content problem rather than a feature problem. Towers, reward pacing, and late-wave pressure should be tuned together.
-
-5. Revisit long-run economy and recovery once balance stabilizes.
-Adaptive reward support now gives emergency money and repair options, but broader progression sinks and recovery systems should wait until core tuning settles.
+- `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, and wave progression.
+- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, and combat resolution.
+- The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper renderer or orchestrator cleanup, and optional tooling.
 
 ## Known Risks
 

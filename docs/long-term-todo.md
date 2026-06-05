@@ -6,7 +6,7 @@ This file is for later work that is intentionally not part of the current fast-i
 
 - Add a boss encounter editor or behavior-tree-style authoring tool for phase logic, follow-up chains, summon limits, and presentation metadata.
 - Add richer debug presets such as spawn-at-phase, common tower layouts, cooldown inspection, and step simulation.
-- Add automated regression coverage for wave flow, reward application, placement validation, and boss aftermath cleanup.
+- Add browser-level or rendering-sensitive integration coverage for the full reward modal lifecycle, visual transitions, and live input flows.
 
 ## Architecture
 
