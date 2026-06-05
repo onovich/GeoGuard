@@ -1,4 +1,5 @@
 import { createInitialTowerCatalog } from '../../data/gameConfig.js';
+import { createRewardHistory } from './rewardRules.js';
 
 export const createPlayerState = () => ({
   x: 0,
@@ -39,6 +40,7 @@ export const createRuntimeState = () => ({
   gameTime: 0,
   money: 20,
   towerCatalog: createInitialTowerCatalog(),
+  rewardHistory: createRewardHistory(),
   wave: {
     number: 1,
     queue: [],

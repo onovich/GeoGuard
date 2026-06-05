@@ -5,6 +5,7 @@ import { createInitialTowerCatalog } from '../src/data/gameConfig.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import { canPlaceTowerOnField, createWaveDefinition } from '../src/logic/engine/gameRules.js';
 import { createRuntimeState } from '../src/logic/engine/gameState.js';
+import { buildRewardOfferPlan, createRewardHistory, recordRewardOffers, recordRewardPick } from '../src/logic/engine/rewardRules.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
   const catalog = createInitialTowerCatalog();
@@ -54,4 +55,59 @@ test('runtime state enables debug wave flow flag separately from normal mode', (
   assert.equal(state.debugWaveFlow, false);
   assert.equal(state.wave.bossSpawned, false);
   assert.deepEqual(state.debugOptions, { infiniteMoney: false, infiniteHealth: false });
+  assert.deepEqual(state.rewardHistory, { offeredKeys: [], pickedKeys: [] });
+});
+
+test('reward plan includes a support option when player is under pressure', () => {
+  const catalog = createInitialTowerCatalog();
+  const rewards = buildRewardOfferPlan({
+    catalog,
+    waveNumber: 6,
+    money: 20,
+    hp: 52,
+    maxHp: 100,
+    infiniteMoney: false,
+    history: createRewardHistory(),
+  });
+
+  assert.equal(rewards.length, 3);
+  assert.ok(rewards.some((reward) => reward.type === 'support_repair' || reward.type === 'support_money'));
+  assert.ok(rewards.some((reward) => reward.type === 'unlock'));
+});
+
+test('reward history discourages immediately repeating the same upgrade offer', () => {
+  const catalog = createInitialTowerCatalog().map((tower) => ({ ...tower, available: true }));
+  const firstPlan = buildRewardOfferPlan({
+    catalog,
+    waveNumber: 9,
+    money: 120,
+    hp: 100,
+    maxHp: 100,
+    infiniteMoney: false,
+    history: createRewardHistory(),
+  });
+  const historyAfterOffer = recordRewardOffers(createRewardHistory(), firstPlan);
+  const firstUpgradeIds = firstPlan.filter((reward) => reward.type === 'upgrade').map((reward) => reward.towerId);
+
+  assert.ok(firstUpgradeIds.length > 0);
+
+  const secondPlan = buildRewardOfferPlan({
+    catalog,
+    waveNumber: 10,
+    money: 120,
+    hp: 100,
+    maxHp: 100,
+    infiniteMoney: false,
+    history: historyAfterOffer,
+  });
+  const secondUpgradeIds = secondPlan.filter((reward) => reward.type === 'upgrade').map((reward) => reward.towerId);
+
+  assert.ok(secondUpgradeIds.every((towerId) => !firstUpgradeIds.includes(towerId)));
+});
+
+test('picked rewards are recorded separately from offered rewards', () => {
+  const history = recordRewardPick(createRewardHistory(), { type: 'unlock', towerId: 'FROST' });
+
+  assert.deepEqual(history.offeredKeys, []);
+  assert.deepEqual(history.pickedKeys, ['unlock:FROST']);
 });

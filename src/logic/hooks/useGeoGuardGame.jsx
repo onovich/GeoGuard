@@ -3,6 +3,7 @@ import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, TOWER_LIBRARY
 import { getBossPresentation } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { canPlaceTowerOnField, createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
+import { buildRewardOfferPlan, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
 import { createRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
 
@@ -2086,115 +2087,80 @@ export default function useGeoGuardGame() {
 
   const buildRewardChoices = (catalog) => {
     const waveNumber = Math.max(1, game.current.wave.number || currentWave || 1);
-    const choices = [];
-    const usedIds = new Set();
-    const upgrades = shuffle(catalog.filter((tower) => tower.available && tower.level < tower.maxLevel));
-    const locked = shuffle(catalog.filter((tower) => !tower.available));
-    const supportRewards = [];
-
-    if (game.current.player.hp < game.current.player.maxHp) {
-      const healAmount = Math.min(game.current.player.maxHp - game.current.player.hp, 18 + waveNumber * 3);
-      if (healAmount > 0) {
-        supportRewards.push({
-          id: 'support-repair',
-          type: 'support_repair',
-          amount: healAmount,
-          title: 'Field Repairs',
-          subtitle: `Restore ${healAmount} HP before the next wave`,
-          detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
-        });
-      }
-    }
-
-    if (!game.current.debugOptions.infiniteMoney && (game.current.money <= 70 || (locked.length === 0 && upgrades.length <= 2))) {
-      const grant = 40 + waveNumber * 10;
-      supportRewards.push({
-        id: 'support-money',
-        type: 'support_money',
-        amount: grant,
-        title: 'Supply Cache',
-        subtitle: `Gain ${grant} credits right now`,
-        detail: 'Take an instant economy bump instead of another tower-only reward.',
-      });
-    }
-
-    const addChoice = (choice) => {
-      if (!choice || usedIds.has(choice.id) || choices.length >= 3) {
-        return;
-      }
-      usedIds.add(choice.id);
-      choices.push(choice);
-    };
-
-    const createUpgradeChoice = (tower) => {
-      const preview = upgradeTower(tower);
-      return {
-        id: `upgrade-${tower.id}`,
-        type: 'upgrade',
-        towerId: tower.id,
-        title: `升级 ${tower.name}`,
-        subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
-        detail: `${tower.cost} -> ${preview.cost}，${getTowerPreviewSummary(preview)}`,
-      };
-    };
-
-    const createUnlockChoice = (tower) => ({
-      id: `unlock-${tower.id}`,
-      type: 'unlock',
-      towerId: tower.id,
-      title: `解锁 ${tower.name}`,
-      subtitle: '加入可建造列表',
-      detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
+    const plan = buildRewardOfferPlan({
+      catalog,
+      waveNumber,
+      money: typeof money === 'number' ? money : game.current.money,
+      hp: game.current.player.hp,
+      maxHp: game.current.player.maxHp,
+      infiniteMoney: game.current.debugOptions.infiniteMoney,
+      history: game.current.rewardHistory,
     });
 
-    if (locked.length > 0) {
-      addChoice(createUnlockChoice(locked[0]));
-    }
+    return plan
+      .map((entry) => {
+        if (entry.type === 'support_money') {
+          return {
+            id: entry.id ?? 'support-money',
+            type: entry.type,
+            amount: entry.amount,
+            title: 'Supply Cache',
+            subtitle: `Gain ${entry.amount} credits right now`,
+            detail: 'Take an instant economy bump instead of another tower-only reward.',
+          };
+        }
 
-    const reservedSupportSlots = supportRewards.length > 0 ? Math.min(2, supportRewards.length) : 0;
-    const preferredUpgradeCount = Math.max(1, 3 - (locked.length > 0 ? 1 : 0) - reservedSupportSlots);
-    let upgradeIndex = 0;
-    while (choices.length < 3 && upgradeIndex < preferredUpgradeCount && upgradeIndex < upgrades.length) {
-      addChoice(createUpgradeChoice(upgrades[upgradeIndex]));
-      upgradeIndex += 1;
-    }
+        if (entry.type === 'support_repair') {
+          return {
+            id: entry.id ?? 'support-repair',
+            type: entry.type,
+            amount: entry.amount,
+            title: 'Field Repairs',
+            subtitle: `Restore ${entry.amount} HP before the next wave`,
+            detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
+          };
+        }
 
-    for (const reward of supportRewards) {
-      addChoice(reward);
-    }
+        const tower = catalog.find((candidate) => candidate.id === entry.towerId);
+        if (!tower) {
+          return null;
+        }
 
-    while (choices.length < 3 && upgradeIndex < upgrades.length) {
-      addChoice(createUpgradeChoice(upgrades[upgradeIndex]));
-      upgradeIndex += 1;
-    }
+        if (entry.type === 'unlock') {
+          return {
+            id: `unlock-${tower.id}`,
+            type: 'unlock',
+            towerId: tower.id,
+            title: `Unlock ${tower.name}`,
+            subtitle: 'Add this blueprint to the build bar',
+            detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
+          };
+        }
 
-    for (let lockedIndex = 1; choices.length < 3 && lockedIndex < locked.length; lockedIndex += 1) {
-      addChoice(createUnlockChoice(locked[lockedIndex]));
-    }
-
-    if (choices.length < 3 && !usedIds.has('support-money') && !game.current.debugOptions.infiniteMoney) {
-      const grant = 30 + waveNumber * 8;
-      addChoice({
-        id: 'support-money',
-        type: 'support_money',
-        amount: grant,
-        title: 'Supply Cache',
-        subtitle: `Gain ${grant} credits right now`,
-        detail: 'Take an instant economy bump instead of another tower-only reward.',
-      });
-    }
-
-    return choices.slice(0, 3);
+        const preview = upgradeTower(tower);
+        return {
+          id: `upgrade-${tower.id}`,
+          type: 'upgrade',
+          towerId: tower.id,
+          title: `Upgrade ${tower.name}`,
+          subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
+          detail: `${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
+        };
+      })
+      .filter(Boolean);
   };
 
   const openBossReward = () => {
     game.current.wave.awaitingReward = true;
     game.current.wave.pendingRewardBossUid = null;
     game.current.wave.pendingRewardBossEncounterUid = null;
-    setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
+    const choices = buildRewardChoices(towerCatalogRef.current);
+    game.current.rewardHistory = recordRewardOffers(game.current.rewardHistory, choices);
+    setRewardState({ active: true, choices });
   };
 
   const applyRewardChoice = (choice) => {
+    game.current.rewardHistory = recordRewardPick(game.current.rewardHistory, choice);
     let nextCatalog = towerCatalogRef.current;
     if (choice.type === 'unlock' || choice.type === 'upgrade') {
       nextCatalog = towerCatalogRef.current.map((tower) => {
