@@ -4,7 +4,6 @@ This file is for later work that is intentionally not part of the current fast-i
 
 ## Tooling
 
-- Add a boss encounter editor or behavior-tree-style authoring tool for phase logic, follow-up chains, summon limits, and presentation metadata.
 - Add richer debug presets such as spawn-at-phase, common tower layouts, cooldown inspection, and step simulation.
 - Add browser-level or rendering-sensitive integration coverage for the full reward modal lifecycle, visual transitions, and live input flows.
 
@@ -22,7 +21,6 @@ This file is for later work that is intentionally not part of the current fast-i
 
 ## Presentation
 
-- Add dedicated audio cues for boss entrance, phase shifts, climax chains, and danger categories.
 - Continue lifting non-showcase bosses toward the presentation quality of Twins, Dragon, Spider Matriarch, and Astrolabe.
 - Revisit some legacy docs and bilingual text that still carry prototype-stage encoding or wording debt.
 

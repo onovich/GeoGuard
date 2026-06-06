@@ -25,8 +25,9 @@
 The fast-iteration TODO pass is complete.
 
 - `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, and wave progression.
-- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, and combat resolution.
-- The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper renderer or orchestrator cleanup, and optional tooling.
+- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, boss authoring draft rules, and audio cue definitions.
+- A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
+- The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper renderer or orchestrator cleanup, and optional integration hardening.
 
 ## Known Risks
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import BossEditorPanel from './BossEditorPanel';
 
 const getEnemyTags = (enemy) => {
   const tags = [`HP ${enemy.hp}`, `SPD ${enemy.speed}`, `DMG ${enemy.damage}`];
@@ -78,6 +79,7 @@ export default function DebugSpawnPanel({
   unlockAllBlueprints,
   applyDebugLayout,
   forceBossPhase,
+  bossEditor,
 }) {
   const containerRef = useRef(null);
   const [expanded, setExpanded] = useState(true);
@@ -137,6 +139,9 @@ export default function DebugSpawnPanel({
             <button className={`rounded-md px-3 py-1 ${section === 'boss' ? 'bg-white shadow-sm' : ''}`} onClick={() => setSection('boss')}>
               Bosses
             </button>
+            <button className={`rounded-md px-3 py-1 ${section === 'author' ? 'bg-white shadow-sm' : ''}`} onClick={() => setSection('author')}>
+              Author
+            </button>
           </div>
         </div>
       </div>
@@ -189,17 +194,21 @@ export default function DebugSpawnPanel({
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-t border-slate-200 px-3 py-3">
-            {activeList.map((item) => (
-              <SpawnCard
-                key={item.id}
-                item={item}
-                kind={section === 'enemy' ? 'enemy' : 'boss'}
-                active={dragEntity?.kind === (section === 'enemy' ? 'enemy' : 'boss') && dragEntity?.id === item.id}
-                beginDebugEntityDrag={beginDebugEntityDrag}
-              />
-            ))}
-          </div>
+          {section === 'author' ? (
+            <BossEditorPanel bossTypes={bossTypes} bossEditor={bossEditor} />
+          ) : (
+            <div className="flex gap-2 overflow-x-auto border-t border-slate-200 px-3 py-3">
+              {activeList.map((item) => (
+                <SpawnCard
+                  key={item.id}
+                  item={item}
+                  kind={section === 'enemy' ? 'enemy' : 'boss'}
+                  active={dragEntity?.kind === (section === 'enemy' ? 'enemy' : 'boss') && dragEntity?.id === item.id}
+                  beginDebugEntityDrag={beginDebugEntityDrag}
+                />
+              ))}
+            </div>
+          )}
         </>
       ) : null}
     </div>

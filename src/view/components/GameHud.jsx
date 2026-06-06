@@ -1,4 +1,17 @@
-export default function GameHud({ gameState, health, maxHealth, money, formattedTime, currentWave, waveOverview, debugMode, bossHud = [] }) {
+export default function GameHud({
+  gameState,
+  health,
+  maxHealth,
+  money,
+  formattedTime,
+  currentWave,
+  waveOverview,
+  debugMode,
+  bossHud = [],
+  audioSettings,
+  setAudioEnabled,
+  setAudioVolume,
+}) {
   if (gameState !== 'PLAYING') {
     return null;
   }
@@ -107,9 +120,37 @@ export default function GameHud({ gameState, health, maxHealth, money, formatted
         ) : null}
       </div>
 
-      <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl shadow-sm backdrop-blur-sm pointer-events-auto">
-        <div className="w-4 h-4 bg-emerald-400 rotate-45 rounded-sm shadow-inner"></div>
-        <span className="text-xl font-bold text-slate-700">{money}</span>
+      <div className="flex flex-col gap-2 pointer-events-auto">
+        <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl shadow-sm backdrop-blur-sm">
+          <div className="w-4 h-4 bg-emerald-400 rotate-45 rounded-sm shadow-inner"></div>
+          <span className="text-xl font-bold text-slate-700">{money}</span>
+        </div>
+
+        <div className="min-w-[188px] rounded-xl bg-white/80 px-3 py-2 shadow-sm backdrop-blur-sm">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Audio</span>
+            <button
+              onClick={() => setAudioEnabled(!audioSettings.enabled)}
+              className={`rounded-md px-2.5 py-1 text-[11px] font-bold transition-colors ${
+                audioSettings.enabled ? 'bg-slate-900 text-white hover:bg-slate-950' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+              }`}
+            >
+              {audioSettings.enabled ? 'Sound On' : 'Muted'}
+            </button>
+          </div>
+          <div className="mt-2 flex items-center gap-2">
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={audioSettings.volume}
+              onChange={(event) => setAudioVolume(Number(event.target.value))}
+              className="w-full accent-slate-800"
+            />
+            <span className="w-10 text-right text-xs font-bold text-slate-500">{Math.round(audioSettings.volume * 100)}</span>
+          </div>
+        </div>
       </div>
     </div>
   );

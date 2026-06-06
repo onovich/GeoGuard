@@ -26,6 +26,9 @@ Defines the runtime state tree, including drag placement state, wave state, and 
 - src/logic/engine/bossFlowRules.js
 Holds pure boss-flow helpers for summon caps, aftermath cleanup checks, spawn positioning, and reward-resolution branching.
 
+- src/logic/engine/bossAuthoringRules.js
+Holds the boss editor authoring schema, ability catalog, default cooldowns, and import or export helpers for debug overrides.
+
 - src/logic/engine/combatRules.js
 Holds reusable combat math for target damage, enemy shield and phase damage resolution, area hits, pull offsets, and line-hazard hit tests.
 
@@ -38,11 +41,20 @@ Holds pure placement-evaluation helpers for tower drag previews and non-tower dr
 - src/logic/engine/rewardRules.js
 Owns reward offer scoring plus pure reward card materialization and reward application effects.
 
+- src/logic/audio/audioCueLibrary.js
+Defines the built-in synthesized sound cues for towers, rewards, boss entrances, phase shifts, and boss defeats.
+
 - src/logic/hooks/useGeoGuardGame.jsx
 This is the current gameplay orchestrator. It owns wave flow, boss reward flow, combat updates, touch/mouse input, drag placement, and canvas rendering.
 
+- src/logic/hooks/useGameAudio.js
+Owns the Web Audio runtime, cue playback, persistence for sound settings, and user-gesture audio resume handling.
+
 - src/view/components/BuildBar.jsx
 Owns the tower bar UI and the mobile gesture bridge for horizontal scrolling versus drag placement.
+
+- src/view/components/BossEditorPanel.jsx
+Renders the debug-only boss authoring lab with phase-tree editing, import or export JSON, and live spawn actions.
 
 - src/view/components/WaveRewardOverlay.jsx
 Renders the boss reward modal for upgrades and unlocks.
@@ -87,13 +99,13 @@ Available towers and upgrade levels live as runtime/template state rather than a
 ## Validation Status
 
 - npm run build passes locally.
-- npm test passes locally with coverage for wave data, wave-state helpers, wave tick progression, reward follow-up rules, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
+- npm test passes locally with coverage for wave data, wave-state helpers, wave tick progression, reward follow-up rules, boss authoring rules, audio cue definitions, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 
 ## Recommended Next Steps
 
-The immediate TODO pass is complete.
+The immediate TODO pass is complete, including the follow-up boss editor and audio pass.
 
 Remaining work is now best treated as long-term backlog rather than missing implementation:
 
@@ -103,7 +115,7 @@ Remaining work is now best treated as long-term backlog rather than missing impl
 
 3. Keep balancing and presentation work in the long-term backlog, especially non-showcase bosses and wave 1-16 pacing.
 
-4. Revisit mobile UX opportunistically whenever the build bar, tower count, or drag interaction changes again.
+4. Revisit mobile UX opportunistically whenever the build bar, tower count, drag interaction, or boss editor workflow changes again.
 
 ## Practical Editing Guidance
 

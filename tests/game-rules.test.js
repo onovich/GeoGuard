@@ -4,6 +4,13 @@ import assert from 'node:assert/strict';
 import { createInitialTowerCatalog } from '../src/data/gameConfig.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import {
+  applyBossEditorDraft,
+  buildBossEditorDraft,
+  parseBossEditorDraft,
+  serializeBossEditorDraft,
+} from '../src/logic/engine/bossAuthoringRules.js';
+import { AUDIO_CUES } from '../src/logic/audio/audioCueLibrary.js';
+import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
   getBossRewardResolution,
@@ -147,6 +154,76 @@ test('wave state helpers build empty and active wave runtime snapshots', () => {
   assert.equal(activeWave.number, 5);
   assert.equal(activeWave.spawnInterval, 0.75);
   assert.equal(activeWave.boss.id, 'DRAGON');
+});
+
+test('boss authoring draft can be built and applied back onto a boss template', () => {
+  const bossTemplate = {
+    id: 'TEST_BOSS',
+    name: 'Test Boss',
+    personality: 'steady',
+    hp: 300,
+    maxHp: 300,
+    phases: [
+      { name: 'Open', hpBelow: 1, abilities: ['summonFormation'] },
+      { name: 'Close', hpBelow: 0.4, abilities: ['commandRush'] },
+    ],
+  };
+  const draft = buildBossEditorDraft(bossTemplate);
+  draft.name = 'Edited Boss';
+  draft.phases[0].nodes[0].cooldown = 3.5;
+  draft.phases[1].nodes.push({
+    id: 'custom-node',
+    abilityId: 'shieldPulse',
+    cooldown: 8,
+    condition: 'panic button',
+    note: 'buy time',
+    enabled: true,
+  });
+
+  const applied = applyBossEditorDraft(bossTemplate, draft);
+
+  assert.equal(applied.name, 'Edited Boss');
+  assert.equal(applied.authoredTemplate, true);
+  assert.deepEqual(applied.phases[0].abilities, ['summonFormation']);
+  assert.equal(applied.phases[0].behaviorNodes[0].cooldown, 3.5);
+  assert.deepEqual(applied.phases[1].abilities, ['commandRush', 'shieldPulse']);
+});
+
+test('boss authoring draft survives serialize and parse round-trips', () => {
+  const fallbackBoss = {
+    id: 'TEST_BOSS',
+    name: 'Test Boss',
+    personality: 'steady',
+    phases: [{ name: 'Open', hpBelow: 1, abilities: ['summonFormation'] }],
+  };
+  const serialized = serializeBossEditorDraft({
+    bossId: 'TEST_BOSS',
+    name: 'Exported Boss',
+    personality: 'aggressive',
+    phases: [
+      {
+        id: 'phase-a',
+        name: 'Open',
+        hpBelow: 1,
+        nodes: [{ id: 'node-a', abilityId: 'summonFormation', cooldown: 5, condition: 'when ready', note: '', enabled: true }],
+      },
+    ],
+  });
+  const parsed = parseBossEditorDraft(serialized, fallbackBoss);
+
+  assert.equal(parsed.name, 'Exported Boss');
+  assert.equal(parsed.phases.length, 1);
+  assert.equal(parsed.phases[0].nodes[0].abilityId, 'summonFormation');
+  assert.equal(parsed.phases[0].nodes[0].cooldown, 5);
+});
+
+test('audio cue library exposes the core gameplay feedback cues', () => {
+  assert.ok(AUDIO_CUES.tower_place?.length > 0);
+  assert.ok(AUDIO_CUES.reward_open?.length > 0);
+  assert.ok(AUDIO_CUES.reward_pick?.length > 0);
+  assert.ok(AUDIO_CUES.boss_incoming?.length > 0);
+  assert.ok(AUDIO_CUES.boss_phase_shift?.length > 0);
+  assert.ok(AUDIO_CUES.boss_defeat?.length > 0);
 });
 
 test('reward follow-up keeps sandbox rewards local but advances normal wave flow', () => {

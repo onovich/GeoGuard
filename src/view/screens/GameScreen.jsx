@@ -20,6 +20,7 @@ export default function GameScreen() {
     formattedTime,
     waveMsg,
     bossHud,
+    audioSettings,
     initGame,
     towerTypes,
     enemyTypes,
@@ -36,6 +37,8 @@ export default function GameScreen() {
     debugWaveFlow,
     debugOptions,
     setDebugOption,
+    setAudioEnabled,
+    setAudioVolume,
     debugWaveCheckpoints,
     waveTable,
     startDebugWave,
@@ -44,6 +47,7 @@ export default function GameScreen() {
     unlockAllBlueprints,
     applyDebugLayout,
     forceBossPhase,
+    bossEditor,
     openBlueprintContextMenu,
     towerContextMenu,
     applyTowerContextAction,
@@ -63,6 +67,9 @@ export default function GameScreen() {
         waveOverview={waveOverview}
         debugMode={debugMode}
         bossHud={bossHud}
+        audioSettings={audioSettings}
+        setAudioEnabled={setAudioEnabled}
+        setAudioVolume={setAudioVolume}
       />
       <StatusBanner waveMsg={waveMsg} />
       <DebugSpawnPanel
@@ -85,6 +92,7 @@ export default function GameScreen() {
         unlockAllBlueprints={unlockAllBlueprints}
         applyDebugLayout={applyDebugLayout}
         forceBossPhase={forceBossPhase}
+        bossEditor={bossEditor}
       />
       <BuildBar gameState={gameState} money={money} dragTowerId={dragTowerId} beginTowerDrag={beginTowerDrag} towerTypes={towerTypes} setBuildBarRect={setBuildBarRect} openBlueprintContextMenu={openBlueprintContextMenu} />
       <TowerContextMenu menu={towerContextMenu} applyTowerContextAction={applyTowerContextAction} closeTowerContextMenu={closeTowerContextMenu} />

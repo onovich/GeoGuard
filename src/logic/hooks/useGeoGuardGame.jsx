@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
 import { getBossPresentation } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
+import { applyBossEditorDraft, BOSS_ABILITY_LIBRARY, buildBossEditorDraft, createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS, parseBossEditorDraft, serializeBossEditorDraft } from '../engine/bossAuthoringRules.js';
 import {
   findOpenEnemySpawnPosition,
   getBossRewardResolution,
@@ -17,6 +18,7 @@ import { applyRewardChoiceEffects, buildRewardOfferPlan, materializeRewardChoice
 import { buildTowerAtLevel } from '../engine/towerRules.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
 import { dist, drawRoundRect, formatTime, rand, toWorldPoint } from '../engine/gameMath';
+import useGameAudio from './useGameAudio.js';
 
 const DRAG_CANCEL_MARGIN = 18;
 const DEBUG_SANDBOX_OVERVIEW = {
@@ -215,6 +217,11 @@ const enrichBossTemplate = (bossTemplate) => ({
   ...bossTemplate,
   phases: getBossPhaseOverrides(bossTemplate),
 });
+
+const getBossEditorBaseTemplate = (bossId) => {
+  const bossTemplate = BOSS_TYPES[bossId];
+  return bossTemplate ? enrichBossTemplate(bossTemplate) : null;
+};
 
 const drawTowerShape = (ctx, tower, x, y, color, alpha = 1) => {
   ctx.save();
@@ -1212,6 +1219,7 @@ const drawLineHazardAccent = (ctx, hazard, progress) => {
 };
 
 export default function useGeoGuardGame() {
+  const { audioSettings, setAudioEnabled, setAudioVolume, playCue, resumeAudio } = useGameAudio();
   const canvasRef = useRef(null);
   const game = useRef(createRuntimeState());
   const towerCatalogRef = useRef(createInitialTowerCatalog());
@@ -1231,7 +1239,18 @@ export default function useGeoGuardGame() {
   const [debugOptions, setDebugOptions] = useState({ infiniteMoney: false, infiniteHealth: false });
   const [debugWaveFlow, setDebugWaveFlow] = useState(false);
   const [towerContextMenu, setTowerContextMenu] = useState(null);
+  const [bossEditorState, setBossEditorState] = useState(() => ({
+    selectedBossId: BOSS_ORDER[0],
+    useDraftOverrides: true,
+    drafts: Object.fromEntries(
+      BOSS_ORDER.map((bossId) => {
+        const bossTemplate = getBossEditorBaseTemplate(bossId);
+        return [bossId, bossTemplate ? buildBossEditorDraft(bossTemplate) : null];
+      })
+    ),
+  }));
   const waveMessageTimeoutRef = useRef(null);
+  const bossEditorNodeIdRef = useRef(1);
 
   towerCatalogRef.current = towerCatalog;
   game.current.towerCatalog = towerCatalog;
@@ -1252,6 +1271,48 @@ export default function useGeoGuardGame() {
     }
     setWaveMsg(nextMessage);
     waveMessageTimeoutRef.current = window.setTimeout(() => setWaveMsg(null), duration);
+  };
+
+  const ensureBossEditorDraftMap = (drafts, bossId) => {
+    if (drafts[bossId]) {
+      return drafts;
+    }
+
+    const bossTemplate = getBossEditorBaseTemplate(bossId);
+    if (!bossTemplate) {
+      return drafts;
+    }
+
+    return {
+      ...drafts,
+      [bossId]: buildBossEditorDraft(bossTemplate),
+    };
+  };
+
+  const patchSelectedBossDraft = (updater) => {
+    setBossEditorState((previous) => {
+      const drafts = ensureBossEditorDraftMap(previous.drafts, previous.selectedBossId);
+      const currentDraft = drafts[previous.selectedBossId];
+      return {
+        ...previous,
+        drafts: {
+          ...drafts,
+          [previous.selectedBossId]: updater(currentDraft),
+        },
+      };
+    });
+  };
+
+  const bossEditorDraft = bossEditorState.drafts[bossEditorState.selectedBossId] ?? buildBossEditorDraft(getBossEditorBaseTemplate(bossEditorState.selectedBossId));
+  const bossAbilityOptions = Object.values(BOSS_ABILITY_LIBRARY).sort((left, right) => left.label.localeCompare(right.label));
+
+  const applyDebugBossAuthoring = (bossTemplate) => {
+    if (game.current.mode !== 'debug' || !bossEditorState.useDraftOverrides || !bossTemplate?.id) {
+      return bossTemplate;
+    }
+
+    const draft = bossEditorState.drafts[bossTemplate.id];
+    return draft ? applyBossEditorDraft(bossTemplate, draft) : bossTemplate;
   };
 
   const spawnParticle = (x, y, color, count, speedBase = 50) => {
@@ -1394,6 +1455,7 @@ export default function useGeoGuardGame() {
   };
 
   const showBossSpotlight = (bossTemplate, options = {}) => {
+    void playCue('boss_incoming');
     const presentation = getBossPresentation(bossTemplate.id);
     const subtitleParts = [];
     if (presentation?.threats?.length) {
@@ -1422,6 +1484,7 @@ export default function useGeoGuardGame() {
   };
 
   const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex, previousPhaseIndex = -1) => {
+    void playCue('boss_phase_shift');
     boss.bossState.phaseIntroTimer = 1.15;
     boss.bossState.phaseIntroDuration = 1.15;
     addCameraShake(12 + activePhaseIndex * 2, previousPhaseIndex >= 0 ? 0.42 : 0.28);
@@ -1676,7 +1739,7 @@ export default function useGeoGuardGame() {
   };
 
   const createBossEnemy = (bossTemplate) => {
-    const enrichedBoss = enrichBossTemplate(bossTemplate);
+    const enrichedBoss = bossTemplate.authoredTemplate ? bossTemplate : enrichBossTemplate(bossTemplate);
     return {
       ...enrichedBoss,
       uid: game.current.nextEnemyUid++,
@@ -1754,28 +1817,32 @@ export default function useGeoGuardGame() {
   };
 
   const spawnBossAt = (bossId, x, y) => {
-    const bossTemplate = BOSS_TYPES[bossId];
+    const baseBossTemplate = BOSS_TYPES[bossId];
+    const bossTemplate = baseBossTemplate
+      ? applyDebugBossAuthoring({
+          ...baseBossTemplate,
+          maxHp: baseBossTemplate.hp,
+          isBoss: true,
+          enemyType: 'BOSS',
+        })
+      : null;
     if (!bossTemplate) {
       return null;
     }
 
-    const bosses = spawnBossEncounterAt({
-      ...bossTemplate,
-      maxHp: bossTemplate.hp,
-      isBoss: true,
-      enemyType: 'BOSS',
-    }, x, y);
+    const bosses = spawnBossEncounterAt(bossTemplate, x, y);
     showBossSpotlight(bossTemplate, { prefix: '测试 Boss', duration: 2600 });
     return bosses[0] ?? null;
   };
 
   const startWave = (waveNumber) => {
     const definition = createWaveDefinition(waveNumber);
+    const authoredDefinition = game.current.mode === 'debug' ? { ...definition, boss: applyDebugBossAuthoring(definition.boss) } : definition;
     game.current.debugWaveFlow = game.current.mode === 'debug';
     setDebugWaveFlow(game.current.mode === 'debug');
-    game.current.wave = createWaveRuntimeState(waveNumber, definition);
+    game.current.wave = createWaveRuntimeState(waveNumber, authoredDefinition);
     setCurrentWave(waveNumber);
-    setWaveOverview({ label: definition.label ?? '', focus: definition.focus ?? '' });
+    setWaveOverview({ label: authoredDefinition.label ?? '', focus: authoredDefinition.focus ?? '' });
     showWaveMessage(
       {
         title: `${UI_COPY.waveIncoming} ${waveNumber}`,
@@ -1787,6 +1854,8 @@ export default function useGeoGuardGame() {
   };
 
   const initGame = (options = {}) => {
+    void resumeAudio();
+    void playCue('ui_confirm');
     const isDebugMode = Boolean(options.debug);
     const initialCatalog = createInitialTowerCatalog().map((tower) => (isDebugMode ? { ...tower, available: true } : tower));
     const nextDebugOptions = { infiniteMoney: isDebugMode, infiniteHealth: isDebugMode };
@@ -1899,6 +1968,7 @@ export default function useGeoGuardGame() {
         spawnBossAt(entityId, worldX, worldY);
       } else {
         spawnEnemyAt(entityId, worldX, worldY, { skipBurrowPosition: true });
+        void playCue('ui_confirm');
       }
       spawnParticle(worldX, worldY, kind === 'boss' ? COLORS.boss : ENEMY_TYPES[entityId]?.color ?? COLORS.danger, kind === 'boss' ? 24 : 12, 70);
       clearDragPlacement();
@@ -1913,6 +1983,7 @@ export default function useGeoGuardGame() {
 
     const placement = evaluatePlacement(tower, clientX, clientY);
     if (!placement.canPlace) {
+      void playCue('ui_error');
       spawnFloatingText(placement.worldPoint.x, placement.worldPoint.y, placement.invalidReason, COLORS.danger);
       clearDragPlacement();
       return;
@@ -1931,6 +2002,7 @@ export default function useGeoGuardGame() {
       maxHp: tower.hp,
       lastShoot: 0,
     });
+    void playCue('tower_place');
     spawnParticle(placement.worldPoint.x, placement.worldPoint.y, tower.color, 15, 60);
     clearDragPlacement();
   };
@@ -1999,6 +2071,7 @@ export default function useGeoGuardGame() {
   };
 
   const openBossReward = () => {
+    void playCue('reward_open');
     game.current.wave.awaitingReward = true;
     game.current.wave.pendingRewardBossUid = null;
     game.current.wave.pendingRewardBossEncounterUid = null;
@@ -2008,6 +2081,7 @@ export default function useGeoGuardGame() {
   };
 
   const applyRewardChoice = (choice) => {
+    void playCue('reward_pick');
     game.current.rewardHistory = recordRewardPick(game.current.rewardHistory, choice);
     const previousCatalog = towerCatalogRef.current;
     const rewardResult = applyRewardChoiceEffects({
@@ -2069,6 +2143,7 @@ export default function useGeoGuardGame() {
   };
 
   const unlockAllBlueprints = () => {
+    void playCue('ui_confirm');
     const nextCatalog = towerCatalogRef.current.map((tower) => ({ ...tower, available: true }));
     towerCatalogRef.current = nextCatalog;
     setTowerCatalog(nextCatalog);
@@ -2173,7 +2248,139 @@ export default function useGeoGuardGame() {
     if (game.current.mode !== 'debug') {
       return;
     }
+    void playCue('reward_open');
     setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
+  };
+
+  const setBossEditorSelectedBossId = (bossId) => {
+    setBossEditorState((previous) => ({
+      ...previous,
+      selectedBossId: bossId,
+      drafts: ensureBossEditorDraftMap(previous.drafts, bossId),
+    }));
+  };
+
+  const setBossEditorUseDraftOverrides = (value) => {
+    setBossEditorState((previous) => ({
+      ...previous,
+      useDraftOverrides: value,
+    }));
+  };
+
+  const updateBossEditorIdentity = (patch) => {
+    patchSelectedBossDraft((currentDraft) => ({
+      ...currentDraft,
+      ...patch,
+    }));
+  };
+
+  const updateBossEditorPhase = (phaseIndex, patch) => {
+    patchSelectedBossDraft((currentDraft) => ({
+      ...currentDraft,
+      phases: currentDraft.phases.map((phase, index) => (index === phaseIndex ? { ...phase, ...patch } : phase)),
+    }));
+  };
+
+  const addBossEditorNode = (phaseIndex, abilityId = Object.keys(DEFAULT_BOSS_ABILITY_COOLDOWNS)[0]) => {
+    patchSelectedBossDraft((currentDraft) => ({
+      ...currentDraft,
+      phases: currentDraft.phases.map((phase, index) =>
+        index === phaseIndex
+          ? {
+              ...phase,
+              nodes: [
+                ...phase.nodes,
+                createBossBehaviorNode(abilityId, phaseIndex, phase.nodes.length, {
+                  id: `draft-node-${bossEditorNodeIdRef.current++}`,
+                }),
+              ],
+            }
+          : phase
+      ),
+    }));
+  };
+
+  const updateBossEditorNode = (phaseIndex, nodeId, patch) => {
+    patchSelectedBossDraft((currentDraft) => ({
+      ...currentDraft,
+      phases: currentDraft.phases.map((phase, index) =>
+        index === phaseIndex
+          ? {
+              ...phase,
+              nodes: phase.nodes.map((node) =>
+                node.id === nodeId
+                  ? {
+                      ...node,
+                      ...patch,
+                    }
+                  : node
+              ),
+            }
+          : phase
+      ),
+    }));
+  };
+
+  const removeBossEditorNode = (phaseIndex, nodeId) => {
+    patchSelectedBossDraft((currentDraft) => ({
+      ...currentDraft,
+      phases: currentDraft.phases.map((phase, index) =>
+        index === phaseIndex
+          ? {
+              ...phase,
+              nodes: phase.nodes.filter((node) => node.id !== nodeId),
+            }
+          : phase
+      ),
+    }));
+  };
+
+  const resetBossEditorDraft = () => {
+    const bossTemplate = getBossEditorBaseTemplate(bossEditorState.selectedBossId);
+    if (!bossTemplate) {
+      return;
+    }
+
+    setBossEditorState((previous) => ({
+      ...previous,
+      drafts: {
+        ...previous.drafts,
+        [previous.selectedBossId]: buildBossEditorDraft(bossTemplate),
+      },
+    }));
+  };
+
+  const importBossEditorDraft = (serializedDraft) => {
+    const bossTemplate = getBossEditorBaseTemplate(bossEditorState.selectedBossId);
+    if (!bossTemplate) {
+      return { ok: false, error: 'Unknown boss' };
+    }
+
+    try {
+      const parsedDraft = parseBossEditorDraft(serializedDraft, bossTemplate);
+      setBossEditorState((previous) => ({
+        ...previous,
+        drafts: {
+          ...previous.drafts,
+          [previous.selectedBossId]: {
+            ...parsedDraft,
+            bossId: previous.selectedBossId,
+          },
+        },
+      }));
+      return { ok: true };
+    } catch (error) {
+      return { ok: false, error: error instanceof Error ? error.message : 'Unable to parse boss draft' };
+    }
+  };
+
+  const spawnBossFromEditor = () => {
+    if (gameState !== 'PLAYING' || game.current.mode !== 'debug') {
+      return;
+    }
+
+    const distance = 180;
+    spawnBossAt(bossEditorState.selectedBossId, game.current.player.x + distance, game.current.player.y - 30);
   };
 
   const forceBossPhase = (phaseNumber) => {
@@ -3539,110 +3746,19 @@ export default function useGeoGuardGame() {
       boss.bossState.climaxAccentTimer = boss.form === 'dragon' ? 0.44 : boss.form === 'astrolabe' ? 0.56 : 0.62;
     }
 
-    for (const abilityName of activePhase.abilities) {
-      boss.abilityCooldowns[abilityName] = Math.max(0, (boss.abilityCooldowns[abilityName] ?? 0) - dt);
-      const cooldown = {
-        summonFormation: 6,
-        commandLine: 5.8,
-        shieldPulse: 8,
-        phalanxAdvance: 8.5,
-        commandRush: 7.2,
-        dashAtPlayer: 4.5,
-        markPrey: 5.2,
-        summonScouts: 7,
-        pincerRush: 6.8,
-        feintStrike: 8.2,
-        afterimageBurst: 9,
-        summonSiege: 7.5,
-        bastionMortar: 6.8,
-        fortify: 10,
-        shockRam: 8,
-        quake: 8,
-        bunkerRing: 10.5,
-        prismBeam: 4.2,
-        refractVolley: 6.2,
-        mirrorSummon: 8,
-        prismLattice: 8.8,
-        tripleBeam: 7,
-        mirrorStep: 8.4,
-        spawnHive: 8,
-        broodShift: 7.5,
-        hiveHeal: 9,
-        hivePulse: 7.2,
-        summonSwarm: 7,
-        hiveCollapse: 10.2,
-        frostRing: 5.8,
-        whiteout: 6.8,
-        freezeTower: 8.5,
-        glacialPrison: 8.8,
-        summonFrostGuards: 9,
-        coldSnap: 10.4,
-        railShot: 4,
-        crosshairBarrage: 6.5,
-        markTower: 7,
-        suppressiveGrid: 8.6,
-        overload: 6,
-        killLane: 9.2,
-        stealMoney: 5,
-        taxBeacon: 6.5,
-        paydaySweep: 7.8,
-        ransomBurst: 8,
-        repossess: 9,
-        twinOrbit: 9,
-        twinBolt: 3.8,
-        twinSwap: 7,
-        eclipsePulse: 8,
-        solarDash: 4.6,
-        flareLance: 7.5,
-        lunarSnare: 5.8,
-        shadowArc: 7.2,
-        twinCrossfire: 9,
-        dragonStrafe: 5.2,
-        emberWake: 6.2,
-        wingBuffet: 7.4,
-        dragonBreath: 4.8,
-        tailSweep: 6,
-        meteorRain: 9,
-        skyDive: 8.5,
-        infernoRing: 10.2,
-        webTrap: 4.5,
-        silkVolley: 6.4,
-        spawnSpiderlings: 7,
-        broodAmbush: 8.2,
-        webField: 9,
-        nestBloom: 10,
-        gravityWell: 5.5,
-        starfall: 6.5,
-        orbitalShots: 6.5,
-        orbitalLock: 8.4,
-        singularity: 10,
-        eventHorizon: 9.8,
-        forgeArmor: 8,
-        slagDrop: 6.6,
-        sacrificeMinions: 9,
-        brandLine: 7.4,
-        moltenBurst: 10,
-        forgeDetonation: 9.6,
-        conductLines: 4,
-        pulseMeasure: 5.5,
-        tempoShift: 7,
-        syncopate: 7.8,
-        finale: 10,
-        crescendo: 10.5,
-        raiseWalls: 7,
-        corridorClamp: 6.8,
-        gateSwap: 8,
-        mazeFold: 8.2,
-        mazeCrush: 10,
-        deadEnd: 10.2,
-        seedPods: 6,
-        blightRoots: 6.2,
-        poisonBloom: 5.5,
-        sporeBurst: 7.5,
-        gardenWake: 9,
-        creepingCanopy: 10.2,
-      }[abilityName] ?? 6;
+    const behaviorNodes =
+      activePhase.behaviorNodes?.length
+        ? activePhase.behaviorNodes.filter((node) => node.enabled !== false)
+        : activePhase.abilities.map((abilityName, nodeIndex) =>
+            createBossBehaviorNode(abilityName, activePhaseIndex, nodeIndex, {
+              cooldown: DEFAULT_BOSS_ABILITY_COOLDOWNS[abilityName] ?? 6,
+            })
+          );
 
+    for (const node of behaviorNodes) {
+      const abilityName = node.abilityId;
+      const cooldown = node.cooldown ?? DEFAULT_BOSS_ABILITY_COOLDOWNS[abilityName] ?? 6;
+      boss.abilityCooldowns[abilityName] = Math.max(0, (boss.abilityCooldowns[abilityName] ?? 0) - dt);
       if (boss.abilityCooldowns[abilityName] <= 0) {
         runBossAbility(boss, abilityName);
         boss.abilityCooldowns[abilityName] = cooldown;
@@ -3862,6 +3978,7 @@ export default function useGeoGuardGame() {
         }
         state.enemies.splice(enemyIndex, 1);
         if (enemy.isBoss && (state.mode !== 'debug' || state.debugWaveFlow)) {
+          void playCue('boss_defeat');
           state.money += enemy.value;
           syncHudMoney();
           enemy.isDefeated = true;
@@ -4452,7 +4569,10 @@ export default function useGeoGuardGame() {
     }
 
     if (state.dragPlacement.active && state.dragPlacement.kind !== 'tower') {
-      const entity = state.dragPlacement.kind === 'boss' ? BOSS_TYPES[state.dragPlacement.entityId] : ENEMY_TYPES[state.dragPlacement.entityId];
+      const entity =
+        state.dragPlacement.kind === 'boss'
+          ? applyDebugBossAuthoring(getBossEditorBaseTemplate(state.dragPlacement.entityId))
+          : ENEMY_TYPES[state.dragPlacement.entityId];
       if (entity) {
         ctx.save();
         ctx.globalAlpha = 0.72;
@@ -4563,6 +4683,7 @@ export default function useGeoGuardGame() {
     };
 
     const handlePointerDown = (event) => {
+      void resumeAudio();
       setTowerContextMenu(null);
       if (gameState !== 'PLAYING' || rewardState.active || game.current.dragPlacement.active) return;
       const isTouch = event.type.includes('touch');
@@ -4691,6 +4812,7 @@ export default function useGeoGuardGame() {
     formattedTime: formatTime(time),
     waveMsg,
     bossHud,
+    audioSettings,
     initGame,
     beginTowerDrag,
     beginDebugEntityDrag,
@@ -4699,7 +4821,7 @@ export default function useGeoGuardGame() {
     towerTypes: towerCatalog.filter((tower) => tower.available).sort((left, right) => left.sortOrder - right.sortOrder),
     allTowerTypes: [...towerCatalog].sort((left, right) => left.sortOrder - right.sortOrder),
     enemyTypes: ENEMY_ORDER.map((enemyId) => ENEMY_TYPES[enemyId]),
-    bossTypes: BOSS_ORDER.map((bossId) => BOSS_TYPES[bossId]),
+    bossTypes: BOSS_ORDER.map((bossId) => applyDebugBossAuthoring(getBossEditorBaseTemplate(bossId))),
     rewardState,
     applyRewardChoice,
     setBuildBarRect,
@@ -4708,6 +4830,8 @@ export default function useGeoGuardGame() {
     debugWaveFlow,
     debugOptions,
     setDebugOption,
+    setAudioEnabled,
+    setAudioVolume,
     debugWaveCheckpoints: WAVE_DEBUG_CHECKPOINTS,
     waveTable: WAVE_TABLE,
     startDebugWave,
@@ -4716,6 +4840,23 @@ export default function useGeoGuardGame() {
     unlockAllBlueprints,
     applyDebugLayout,
     forceBossPhase,
+    bossEditor: {
+      selectedBossId: bossEditorState.selectedBossId,
+      useDraftOverrides: bossEditorState.useDraftOverrides,
+      draft: bossEditorDraft,
+      abilityOptions: bossAbilityOptions,
+      setSelectedBossId: setBossEditorSelectedBossId,
+      setUseDraftOverrides: setBossEditorUseDraftOverrides,
+      updateIdentity: updateBossEditorIdentity,
+      updatePhase: updateBossEditorPhase,
+      addNode: addBossEditorNode,
+      updateNode: updateBossEditorNode,
+      removeNode: removeBossEditorNode,
+      resetDraft: resetBossEditorDraft,
+      importDraft: importBossEditorDraft,
+      exportDraft: serializeBossEditorDraft(bossEditorDraft),
+      spawnBossFromEditor,
+    },
     openBlueprintContextMenu,
     towerContextMenu,
     applyTowerContextAction,
