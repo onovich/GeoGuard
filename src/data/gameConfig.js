@@ -374,6 +374,7 @@ const BASE_BOSS_TYPES = {
 export const BOSS_TYPES = {};
 
 Object.entries(BASE_BOSS_TYPES).forEach(([key, boss]) => {
+  BOSS_TYPES[key] = boss;
   BOSS_TYPES[`${key}_T1`] = {
     ...boss,
     id: `${boss.id}_T1`,
