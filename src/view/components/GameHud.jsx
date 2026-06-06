@@ -17,16 +17,17 @@ export default function GameHud({
 }) {
   const [showControlsHint, setShowControlsHint] = useState(true);
   const [hintCountdown, setHintCountdown] = useState(4);
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
 
   useEffect(() => {
-    if (!showControlsHint || gameState !== 'PLAYING') return;
+    if (!showControlsHint || gameState !== 'PLAYING' || !isMobile) return;
     if (hintCountdown > 0) {
       const timer = setTimeout(() => setHintCountdown((c) => c - 1), 1000);
       return () => clearTimeout(timer);
     } else {
       setShowControlsHint(false);
     }
-  }, [showControlsHint, hintCountdown, gameState]);
+  }, [showControlsHint, hintCountdown, gameState, isMobile]);
 
   if (gameState !== 'PLAYING') {
     return null;
@@ -103,12 +104,12 @@ export default function GameHud({
       {showControlsHint && (
         <div className="absolute bottom-40 left-0 w-full flex justify-center pointer-events-none z-50">
           <div className="pointer-events-auto flex items-center gap-3 px-5 py-2 bg-yellow-400 text-slate-900 font-black rounded-full shadow-[0_4px_16px_rgba(250,204,21,0.5)] text-[11px] md:text-sm tracking-widest border-2 border-yellow-300">
-            <span>{/Mobi|Android|iPhone/i.test(navigator.userAgent) ? `📱 ${UI_COPY.controlsMobile}` : `💻 ${UI_COPY.controlsPc}`}</span>
+            <span>{isMobile ? `📱 ${UI_COPY.controlsMobile}` : `💻 ${UI_COPY.controlsPc}`}</span>
             <button 
               onClick={() => setShowControlsHint(false)}
               className="flex items-center justify-center rounded-full bg-slate-900/10 px-2.5 py-1 text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-900/20 active:scale-95 transition-all ml-2"
             >
-              知道了 ({hintCountdown}s)
+              {isMobile ? `知道了 (${hintCountdown}s)` : '我知道了'}
             </button>
           </div>
         </div>
