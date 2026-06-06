@@ -69,15 +69,15 @@ export default function GameHud({
                     return (
                       <div key={member.id}>
                         <div className="flex items-center justify-between text-[11px] text-slate-100 mb-0.5">
+                          <span>{member.name}</span>
                           <div className="flex items-center gap-1.5">
-                            <span>{member.name}</span>
+                            <span className={member.enraged ? 'text-amber-300 text-[10px]' : 'text-slate-300 text-[10px]'}>{phaseLabel}</span>
                             {phaseCount > 0 && (
                               <span className="text-[9px] uppercase tracking-wider text-slate-400 bg-slate-800/80 px-1 rounded">
                                 P{Math.min(phaseCount, phaseIndex + 1)}/{phaseCount}
                               </span>
                             )}
                           </div>
-                          <span className={member.enraged ? 'text-amber-300 text-[10px]' : 'text-slate-300 text-[10px]'}>{phaseLabel}</span>
                         </div>
                         <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
