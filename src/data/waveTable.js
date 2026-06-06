@@ -1,4 +1,4 @@
-export const WAVE_TABLE = [
+const BASE_WAVES = [
   {
     number: 1,
     bossId: 'COMMANDER',
@@ -219,4 +219,19 @@ export const WAVE_TABLE = [
   },
 ];
 
-export const WAVE_DEBUG_CHECKPOINTS = [1, 4, 8, 12, 16];
+export const WAVE_TABLE = [
+  ...BASE_WAVES.map((w, i) => ({
+    ...w,
+    number: i + 1,
+    spawnInterval: w.spawnInterval + 0.35,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 0.6)) })),
+    isWeakened: true,
+  })),
+  ...BASE_WAVES.map((w, i) => ({
+    ...w,
+    number: i + 17,
+    isWeakened: false,
+  }))
+];
+
+export const WAVE_DEBUG_CHECKPOINTS = [1, 4, 8, 12, 16, 20, 24, 28, 32];

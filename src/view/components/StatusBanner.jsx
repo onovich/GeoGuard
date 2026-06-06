@@ -49,14 +49,7 @@ export default function StatusBanner({ waveMsg }) {
       >
         {message.accentColor ? <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: message.accentColor }}></div> : null}
         <div className="relative pl-1">
-          <div className="flex items-center justify-between gap-3">
-            <div className={`text-[11px] font-black tracking-[0.22em] uppercase ${toneStyle.eyebrowClass}`}>{toneMeta.label}</div>
-            <div className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full px-2 text-[11px] font-black tracking-[0.18em] ${toneStyle.chipClass}`}>
-              {toneMeta.short}
-            </div>
-          </div>
           <div className="mt-1 text-2xl font-black leading-tight">{message.title}</div>
-          {message.subtitle ? <div className={`mt-1 text-sm leading-5 ${toneStyle.subtitleClass}`}>{message.subtitle}</div> : null}
         </div>
       </div>
     </div>

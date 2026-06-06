@@ -17,19 +17,11 @@ export default function OverlayScreen({ gameState, time, initGame }) {
           {gameState === 'START' ? '开始游戏' : '重新挑战'}
         </button>
 
-        {gameState === 'START' && (
+        {gameState === 'START' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
           <button onClick={() => initGame({ debug: true })} className="mt-3 w-full py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all active:translate-y-0">
             开发测试入口
           </button>
         )}
-
-        <div className="mt-6 text-xs text-slate-400 text-left bg-slate-50 p-4 rounded-xl">
-          <strong>控制说明：</strong>
-          <br />
-          {'💻 '}{UI_COPY.controlsPc}
-          <br />
-          {'📱 '}{UI_COPY.controlsMobile}
-        </div>
       </div>
     </div>
   );

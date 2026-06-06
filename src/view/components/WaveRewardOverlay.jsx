@@ -2,36 +2,36 @@ import { UI_COPY } from '../../data/gameConfig';
 
 const REWARD_TYPE_STYLES = {
   unlock: {
-    badge: 'NEW TOWER',
+    badge: '新防御塔',
     badgeClass: 'bg-emerald-500/12 text-emerald-700 ring-1 ring-emerald-500/20',
     panelClass: 'border-emerald-200/80 bg-emerald-50/70 hover:border-emerald-300 hover:bg-white',
     glowClass: 'from-emerald-400/18 via-emerald-300/10 to-transparent',
     accentClass: 'bg-emerald-500',
-    cta: 'Unlock Blueprint',
+    cta: '解锁蓝图',
   },
   upgrade: {
-    badge: 'UPGRADE',
+    badge: '属性提升',
     badgeClass: 'bg-sky-500/12 text-sky-700 ring-1 ring-sky-500/20',
     panelClass: 'border-sky-200/80 bg-sky-50/70 hover:border-sky-300 hover:bg-white',
     glowClass: 'from-sky-400/18 via-sky-300/10 to-transparent',
     accentClass: 'bg-sky-500',
-    cta: 'Apply Upgrade',
+    cta: '应用升级',
   },
   support_money: {
-    badge: 'SUPPLY',
+    badge: '物资补给',
     badgeClass: 'bg-amber-500/12 text-amber-700 ring-1 ring-amber-500/20',
     panelClass: 'border-amber-200/80 bg-amber-50/75 hover:border-amber-300 hover:bg-white',
     glowClass: 'from-amber-400/18 via-amber-300/10 to-transparent',
     accentClass: 'bg-amber-500',
-    cta: 'Take Resources',
+    cta: '获取物资',
   },
   support_repair: {
-    badge: 'RECOVERY',
+    badge: '紧急修复',
     badgeClass: 'bg-rose-500/12 text-rose-700 ring-1 ring-rose-500/20',
     panelClass: 'border-rose-200/80 bg-rose-50/75 hover:border-rose-300 hover:bg-white',
     glowClass: 'from-rose-400/18 via-rose-300/10 to-transparent',
     accentClass: 'bg-rose-500',
-    cta: 'Recover Now',
+    cta: '立即修复',
   },
 };
 
@@ -47,11 +47,6 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] md:text-xs font-bold tracking-[0.25em]">BOSS CLEAR</div>
           <h2 className="mt-3 text-2xl md:text-[28px] font-black text-slate-800">{UI_COPY.rewardTitle}</h2>
           <p className="mt-1.5 text-sm md:text-base text-slate-500 font-medium">{UI_COPY.rewardSubtitle}</p>
-        </div>
-
-        <div className="mb-3 flex items-center justify-between rounded-2xl bg-slate-100/80 px-4 py-2 text-[11px] font-semibold text-slate-500">
-          <span>Choose 1 reward</span>
-          <span>{rewardState.choices.length} options ready</span>
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">

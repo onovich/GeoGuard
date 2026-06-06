@@ -142,9 +142,9 @@ export const materializeRewardChoices = (catalog, plan) =>
           id: entry.id ?? 'support-money',
           type: entry.type,
           amount: entry.amount,
-          title: 'Supply Cache',
-          subtitle: `Gain ${entry.amount} credits right now`,
-          detail: 'Take an instant economy bump instead of another tower-only reward.',
+          title: '物资补给',
+          subtitle: `立即获取 ${entry.amount} 资金`,
+          detail: '获得一笔额外的资金，而不是选择防御塔。',
         };
       }
 
@@ -153,9 +153,9 @@ export const materializeRewardChoices = (catalog, plan) =>
           id: entry.id ?? 'support-repair',
           type: entry.type,
           amount: entry.amount,
-          title: 'Field Repairs',
-          subtitle: `Restore ${entry.amount} HP before the next wave`,
-          detail: 'Recover immediately and stabilize before the next pressure cycle begins.',
+          title: '紧急修复',
+          subtitle: `在下一波前恢复 ${entry.amount} 点生命值`,
+          detail: '立即恢复生命值，稳定防线。',
         };
       }
 
@@ -169,8 +169,8 @@ export const materializeRewardChoices = (catalog, plan) =>
           id: `unlock-${tower.id}`,
           type: 'unlock',
           towerId: tower.id,
-          title: `Unlock ${tower.name}`,
-          subtitle: 'Add this blueprint to the build bar',
+          title: `解锁 ${tower.name}`,
+          subtitle: '将该蓝图加入建造栏',
           detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
         };
       }
@@ -180,9 +180,9 @@ export const materializeRewardChoices = (catalog, plan) =>
         id: `upgrade-${tower.id}`,
         type: 'upgrade',
         towerId: tower.id,
-        title: `Upgrade ${tower.name}`,
-        subtitle: `Lv.${tower.level + 1} -> Lv.${preview.level + 1}`,
-        detail: `${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
+        title: `升级 ${tower.name}`,
+        subtitle: `等级 ${tower.level + 1} -> 等级 ${preview.level + 1}`,
+        detail: `造价: ${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
       };
     })
     .filter(Boolean);

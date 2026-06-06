@@ -99,8 +99,17 @@ export const createWaveDefinition = (waveNumber) => {
   const cycleNumber = Math.floor((waveNumber - 1) / WAVE_TABLE.length);
   const groups = scaleGroupsForCycle(recipe.groups, cycleNumber, waveNumber);
   const bossTemplate = BOSS_TYPES[recipe.bossId];
-  const hpScale = 1 + waveNumber * 0.07 + cycleNumber * 0.25;
-  const damageScale = 1 + cycleNumber * 0.12;
+  
+  const isWeak = recipe.isWeakened && cycleNumber === 0;
+  const originalWaveBase = isWeak ? waveNumber : waveNumber - 16;
+  
+  const hpScale = isWeak 
+    ? 0.4 + (originalWaveBase * 0.035) 
+    : 1 + (originalWaveBase * 0.07) + cycleNumber * 0.25;
+
+  const damageScale = isWeak 
+    ? 0.6 + (originalWaveBase * 0.015)
+    : 1 + cycleNumber * 0.12;
 
   return {
     number: waveNumber,
