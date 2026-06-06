@@ -16,7 +16,7 @@ export default function GameHud({
   setAudioVolume,
 }) {
   const [showControlsHint, setShowControlsHint] = useState(true);
-  const [hintCountdown, setHintCountdown] = useState(4);
+  const [hintCountdown, setHintCountdown] = useState(30);
   const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
 
   useEffect(() => {
