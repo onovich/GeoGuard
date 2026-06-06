@@ -2,9 +2,9 @@ export const dist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
 
 export const rand = (min, max) => Math.random() * (max - min) + min;
 
-export const toWorldPoint = (screenX, screenY, camera, viewportWidth, viewportHeight) => ({
-  x: screenX + camera.x - viewportWidth / 2,
-  y: screenY + camera.y - viewportHeight / 2,
+export const toWorldPoint = (screenX, screenY, camera, viewportWidth, viewportHeight, zoom = 1) => ({
+  x: (screenX - viewportWidth / 2) / zoom + camera.x,
+  y: (screenY - viewportHeight / 2) / zoom + camera.y,
 });
 
 export const formatTime = (time) => `${Math.floor(time / 60).toString().padStart(2, '0')}:${(time % 60).toString().padStart(2, '0')}`;

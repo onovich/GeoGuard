@@ -2007,7 +2007,7 @@ export default function useGeoGuardGame() {
     clearDragPlacement();
   };
 
-  const beginTowerDrag = (towerId, clientX, clientY) => {
+  const beginTowerDrag = (towerId, clientX, clientY, touchId = null) => {
     if (gameState !== 'PLAYING' || rewardState.active) {
       return;
     }
@@ -2027,6 +2027,7 @@ export default function useGeoGuardGame() {
       worldY: 0,
       canPlace: false,
       invalidReason: null,
+      touchId,
     };
     setDragTowerId(towerId);
     setDragEntity(null);
@@ -4687,25 +4688,65 @@ export default function useGeoGuardGame() {
       setTowerContextMenu(null);
       if (gameState !== 'PLAYING' || rewardState.active || game.current.dragPlacement.active) return;
       const isTouch = event.type.includes('touch');
-      const source = isTouch ? event.touches[0] : event;
-      const clientX = source.clientX;
-      const clientY = source.clientY;
-      if (isTouch && clientX < window.innerWidth / 2) {
-        game.current.joystick = { active: true, startX: clientX, startY: clientY, currentX: clientX, currentY: clientY, dirX: 0, dirY: 0 };
+      if (isTouch) {
+        for (let i = 0; i < event.touches.length; i++) {
+          const touch = event.touches[i];
+          if (touch.clientX < window.innerWidth / 2 && !game.current.joystick.active) {
+            game.current.joystick = { active: true, touchId: touch.identifier, startX: touch.clientX, startY: touch.clientY, currentX: touch.clientX, currentY: touch.clientY, dirX: 0, dirY: 0 };
+            break;
+          }
+        }
+      } else if (event.clientX < window.innerWidth / 2) {
+        game.current.joystick = { active: true, startX: event.clientX, startY: event.clientY, currentX: event.clientX, currentY: event.clientY, dirX: 0, dirY: 0 };
       }
     };
 
     const handlePointerMove = (event) => {
       const isTouch = event.type.includes('touch');
-      if (isTouch && !event.touches[0]) return;
-      const source = isTouch ? event.touches[0] : event;
-      const clientX = source.clientX;
-      const clientY = source.clientY;
-
       if ((game.current.joystick.active || game.current.dragPlacement.active) && event.cancelable) {
         event.preventDefault();
       }
 
+      if (isTouch) {
+        let dragTouch = null;
+        let joystickTouch = null;
+
+        for (let i = 0; i < event.touches.length; i++) {
+          const touch = event.touches[i];
+          if (game.current.joystick.active && touch.identifier === game.current.joystick.touchId) {
+            joystickTouch = touch;
+          } else if (game.current.dragPlacement.active && touch.identifier === game.current.dragPlacement.touchId) {
+            dragTouch = touch;
+          } else if (!game.current.joystick.active && !game.current.dragPlacement.active && i === 0) {
+            dragTouch = touch;
+          }
+        }
+
+        if (joystickTouch) {
+          game.current.joystick.currentX = joystickTouch.clientX;
+          game.current.joystick.currentY = joystickTouch.clientY;
+          const dx = joystickTouch.clientX - game.current.joystick.startX;
+          const dy = joystickTouch.clientY - game.current.joystick.startY;
+          const distance = Math.hypot(dx, dy);
+          const maxDistance = 50;
+          if (distance > 0) {
+            game.current.joystick.dirX = (dx / distance) * Math.min(distance / maxDistance, 1);
+            game.current.joystick.dirY = (dy / distance) * Math.min(distance / maxDistance, 1);
+          }
+        }
+
+        if (dragTouch) {
+          game.current.pointer.x = dragTouch.clientX;
+          game.current.pointer.y = dragTouch.clientY;
+          if (game.current.dragPlacement.active) {
+            updateDragPlacement(dragTouch.clientX, dragTouch.clientY);
+          }
+        }
+        return;
+      }
+
+      const clientX = event.clientX;
+      const clientY = event.clientY;
       game.current.pointer.x = clientX;
       game.current.pointer.y = clientY;
 
@@ -4730,12 +4771,25 @@ export default function useGeoGuardGame() {
 
     const handlePointerUp = (event) => {
       const isTouch = event.type.includes('touch');
-      const source = isTouch && event.changedTouches?.[0] ? event.changedTouches[0] : event;
-      const clientX = source?.clientX ?? game.current.pointer.x;
-      const clientY = source?.clientY ?? game.current.pointer.y;
+
+      if (isTouch) {
+        for (let i = 0; i < event.changedTouches.length; i++) {
+          const touch = event.changedTouches[i];
+          if (game.current.joystick.active && touch.identifier === game.current.joystick.touchId) {
+            game.current.joystick.active = false;
+            game.current.joystick.dirX = 0;
+            game.current.joystick.dirY = 0;
+            game.current.joystick.touchId = null;
+          }
+          if (game.current.dragPlacement.active && touch.identifier === game.current.dragPlacement.touchId) {
+            tryBuildDraggedTower(touch.clientX, touch.clientY);
+          }
+        }
+        return;
+      }
 
       if (game.current.dragPlacement.active) {
-        tryBuildDraggedTower(clientX, clientY);
+        tryBuildDraggedTower(event.clientX, event.clientY);
       }
 
       game.current.joystick.active = false;

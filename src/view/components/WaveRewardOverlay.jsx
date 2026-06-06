@@ -41,8 +41,8 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
   }
 
   return (
-    <div className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center px-4">
-      <div className="w-full max-w-3xl rounded-[24px] bg-white/95 shadow-2xl p-4 md:p-6">
+    <div className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+      <div className="w-full max-w-3xl rounded-[24px] bg-white/95 shadow-2xl p-4 md:p-6 my-auto">
         <div className="text-center mb-4 md:mb-5">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] md:text-xs font-bold tracking-[0.25em]">BOSS CLEAR</div>
           <h2 className="mt-3 text-2xl md:text-[28px] font-black text-slate-800">{UI_COPY.rewardTitle}</h2>
