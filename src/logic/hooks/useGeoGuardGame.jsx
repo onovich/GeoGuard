@@ -4677,12 +4677,12 @@ export default function useGeoGuardGame() {
       if (isTouch) {
         for (let i = 0; i < event.touches.length; i++) {
           const touch = event.touches[i];
-          if (touch.clientX < window.innerWidth / 2 && !game.current.joystick.active) {
+          if (!game.current.joystick.active) {
             game.current.joystick = { active: true, touchId: touch.identifier, startX: touch.clientX, startY: touch.clientY, currentX: touch.clientX, currentY: touch.clientY, dirX: 0, dirY: 0 };
             break;
           }
         }
-      } else if (event.clientX < window.innerWidth / 2) {
+      } else {
         game.current.joystick = { active: true, startX: event.clientX, startY: event.clientY, currentX: event.clientX, currentY: event.clientY, dirX: 0, dirY: 0 };
       }
     };

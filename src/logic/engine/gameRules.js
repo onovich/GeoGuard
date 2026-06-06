@@ -45,14 +45,9 @@ const scaleGroupsForCycle = (groups, cycleNumber, waveNumber) =>
     count: group.count + cycleNumber * (group.type === 'BASIC' ? 4 : 2) + Math.floor(waveNumber / 24),
   }));
 
-const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value, phaseCap) => {
-  let truncatedPhases = memberTemplate.phases;
-  if (truncatedPhases && phaseCap !== undefined) {
-    truncatedPhases = truncatedPhases.slice(0, phaseCap);
-  }
+const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value) => {
   return {
     ...memberTemplate,
-    phases: truncatedPhases,
     enemyType: 'BOSS',
     hp: Math.round(memberTemplate.hp * hpScale),
     maxHp: Math.round(memberTemplate.hp * hpScale),
@@ -62,18 +57,12 @@ const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value
   };
 };
 
-const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber, phaseCap) => {
+const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber) => {
   const totalValue = bossTemplate.value + waveNumber * 6;
-  
-  let truncatedPhases = bossTemplate.phases;
-  if (truncatedPhases && phaseCap !== undefined) {
-    truncatedPhases = truncatedPhases.slice(0, phaseCap);
-  }
 
   if (!bossTemplate.encounter?.members?.length) {
     return {
       ...bossTemplate,
-      phases: truncatedPhases,
       enemyType: 'BOSS',
       hp: Math.round(bossTemplate.hp * hpScale),
       maxHp: Math.round(bossTemplate.hp * hpScale),
@@ -90,12 +79,11 @@ const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber, phase
     const share = memberTemplate.valueShare ?? 1 / members.length;
     const memberValue = isLast ? remainingValue : Math.max(1, Math.round(totalValue * share));
     remainingValue -= memberValue;
-    return scaleBossMember(memberTemplate, hpScale, damageScale, waveNumber, memberValue, phaseCap);
+    return scaleBossMember(memberTemplate, hpScale, damageScale, waveNumber, memberValue);
   });
 
   return {
     ...bossTemplate,
-    phases: truncatedPhases,
     enemyType: 'BOSS',
     hp: scaledMembers.reduce((sum, member) => sum + member.hp, 0),
     maxHp: scaledMembers.reduce((sum, member) => sum + member.maxHp, 0),
@@ -119,17 +107,13 @@ export const createWaveDefinition = (waveNumber) => {
   const originalWaveBase = ((waveNumber - 1) % 16) + 1;
   
   let hpScale = 1.0;
-  let phaseCap = undefined;
 
   if (tier === 1) {
     hpScale = 0.35 + (originalWaveBase * 0.01);
-    phaseCap = 1;
   } else if (tier === 2) {
     hpScale = 0.60 + (originalWaveBase * 0.015);
-    phaseCap = 2;
   } else {
     hpScale = 1.0 + (originalWaveBase * 0.05) + cycleNumber * 0.25;
-    phaseCap = undefined;
   }
 
   const damageScale = tier === 1 ? 0.6 + (originalWaveBase * 0.015) : 1 + (tier - 2) * 0.12 + cycleNumber * 0.12;
@@ -140,7 +124,7 @@ export const createWaveDefinition = (waveNumber) => {
     focus: recipe.focus,
     spawnInterval: Math.max(0.32, recipe.spawnInterval - (tier - 1) * 0.08 - cycleNumber * 0.04),
     queue: interleaveGroups(groups),
-    boss: scaleBossTemplate(bossTemplate, hpScale, damageScale, waveNumber, phaseCap),
+    boss: scaleBossTemplate(bossTemplate, hpScale, damageScale, waveNumber),
   };
 };
 

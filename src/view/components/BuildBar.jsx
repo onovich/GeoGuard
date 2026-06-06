@@ -90,7 +90,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
                 openBlueprintContextMenu(tower.id, event.clientX, event.clientY);
               }}
               onTouchStart={(event) => {
-                const touch = event.touches[0];
+                const touch = event.changedTouches[0];
                 clearPendingTouch();
                 pendingTouchRef.current = {
                   towerId: tower.id,
@@ -108,7 +108,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
                   return;
                 }
 
-                const touch = event.touches[0];
+                const touch = event.changedTouches[0];
                 const dx = Math.abs(touch.clientX - pendingTouchRef.current.startX);
                 const dy = touch.clientY - pendingTouchRef.current.startY;
 

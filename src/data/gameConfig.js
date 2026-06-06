@@ -80,7 +80,7 @@ export const ENEMY_TYPES = {
 
 export const ENEMY_ORDER = ['BASIC', 'FAST', 'TANK', 'SHARD', 'SHIELD', 'MEDIC', 'BOMBER', 'JAMMER', 'PHASE', 'BURROWER', 'BEACON', 'SCOUT', 'SIEGE'];
 
-export const BOSS_TYPES = {
+const BASE_BOSS_TYPES = {
   COMMANDER: {
     id: 'COMMANDER',
     name: '方阵司令',
@@ -370,6 +370,25 @@ export const BOSS_TYPES = {
     ],
   },
 };
+
+export const BOSS_TYPES = {};
+
+Object.entries(BASE_BOSS_TYPES).forEach(([key, boss]) => {
+  BOSS_TYPES[`${key}_T1`] = {
+    ...boss,
+    id: `${boss.id}_T1`,
+    phases: boss.phases.slice(0, 1),
+  };
+  BOSS_TYPES[`${key}_T2`] = {
+    ...boss,
+    id: `${boss.id}_T2`,
+    phases: boss.phases.slice(0, 2),
+  };
+  BOSS_TYPES[`${key}_T3`] = {
+    ...boss,
+    id: `${boss.id}_T3`,
+  };
+});
 
 export const BOSS_ORDER = [
   'COMMANDER',

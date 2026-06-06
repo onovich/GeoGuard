@@ -227,6 +227,7 @@ export const WAVE_TABLE = [
     groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
     isWeakened: true,
     tier: 1,
+    bossId: w.bossId ? `${w.bossId}_T1` : undefined,
   })),
   ...BASE_WAVES.map((w, i) => ({
     ...w,
@@ -235,6 +236,7 @@ export const WAVE_TABLE = [
     groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
     isWeakened: true,
     tier: 2,
+    bossId: w.bossId ? `${w.bossId}_T2` : undefined,
   })),
   ...BASE_WAVES.map((w, i) => ({
     ...w,
@@ -242,6 +244,7 @@ export const WAVE_TABLE = [
     groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
     isWeakened: false,
     tier: 3,
+    bossId: w.bossId ? `${w.bossId}_T3` : undefined,
   }))
 ];
 
