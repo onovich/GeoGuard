@@ -391,7 +391,7 @@ export const BOSS_ORDER = [
 ];
 
 export const UI_COPY = {
-  startTitle: '吸血鬼塔防',
+  startTitle: '几何防线',
   gameOverTitle: '防线崩溃',
   startDescription: '移动角色自动射击。收集水晶，在地图上布置你的防御塔阵地。',
   controlsPc: '电脑：WASD/方向键移动，从底部拖拽塔卡到场地里建造。',
