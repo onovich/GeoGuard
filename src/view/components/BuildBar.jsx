@@ -8,15 +8,6 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
   const [showLeftFade, setShowLeftFade] = useState(false);
   const [showRightFade, setShowRightFade] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const mobileHint = useMemo(() => {
-    if (!isTouchDevice) {
-      return null;
-    }
-    if (isOverflowing) {
-      return 'Swipe to browse · drag up to build';
-    }
-    return 'Drag up from a card to build';
-  }, [isOverflowing, isTouchDevice]);
 
   const clearPendingTouch = () => {
     if (pendingTouchRef.current?.timer) {
@@ -78,21 +69,13 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
 
   return (
     <div className="absolute bottom-6 left-1/2 z-20 w-[min(92vw,920px)] -translate-x-1/2">
-      {mobileHint ? (
-        <div className="mb-2 flex justify-center pointer-events-none">
-          <div className="rounded-full bg-slate-900/82 px-3 py-1 text-[11px] font-bold tracking-[0.12em] text-white/90 shadow-lg backdrop-blur-sm">
-            {mobileHint}
-          </div>
-        </div>
-      ) : null}
-
       <div className="relative">
         {showLeftFade ? <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 rounded-l-2xl bg-gradient-to-r from-white/95 to-transparent" /> : null}
         {showRightFade ? <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 rounded-r-2xl bg-gradient-to-l from-white/95 to-transparent" /> : null}
 
         <div
           ref={containerRef}
-          className="flex gap-3 overflow-x-auto rounded-2xl bg-white/80 p-3 shadow-lg backdrop-blur-md pointer-events-auto"
+          className="flex gap-2 overflow-x-auto rounded-2xl bg-white/80 p-1.5 shadow-lg backdrop-blur-md pointer-events-auto"
           style={{ touchAction: 'pan-x' }}
         >
           {towerTypes.map((tower) => (
@@ -145,7 +128,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
               onTouchCancel={() => {
                 clearPendingTouch();
               }}
-              className={`relative flex min-w-[78px] flex-col items-center rounded-xl border-2 p-2 transition-all cursor-grab active:cursor-grabbing ${
+              className={`relative flex min-w-[72px] flex-col items-center rounded-xl border-2 p-1.5 transition-all cursor-grab active:cursor-grabbing ${
                 typeof money === 'number' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'
               } ${dragTowerId === tower.id ? 'scale-105 border-blue-500 bg-blue-50' : 'border-transparent bg-white'}`}
             >

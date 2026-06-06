@@ -224,14 +224,25 @@ export const WAVE_TABLE = [
     ...w,
     number: i + 1,
     spawnInterval: w.spawnInterval + 0.35,
-    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 0.6)) })),
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
     isWeakened: true,
+    tier: 1,
   })),
   ...BASE_WAVES.map((w, i) => ({
     ...w,
     number: i + 17,
+    spawnInterval: w.spawnInterval + 0.15,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
+    isWeakened: true,
+    tier: 2,
+  })),
+  ...BASE_WAVES.map((w, i) => ({
+    ...w,
+    number: i + 33,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
     isWeakened: false,
+    tier: 3,
   }))
 ];
 
-export const WAVE_DEBUG_CHECKPOINTS = [1, 4, 8, 12, 16, 20, 24, 28, 32];
+export const WAVE_DEBUG_CHECKPOINTS = [1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48];

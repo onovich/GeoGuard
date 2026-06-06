@@ -4285,8 +4285,6 @@ export default function useGeoGuardGame() {
         ctx.lineWidth = 3;
         ctx.strokeRect(enemy.x - enemy.radius - 3, enemy.y - enemy.radius - 3, (enemy.radius + 3) * 2, (enemy.radius + 3) * 2);
         if (enemy.phases?.[enemy.currentPhaseIndex]) {
-          const phaseHint = getBossPhaseHint(enemy, enemy.currentPhaseIndex ?? 0);
-          const phaseTone = getBossPhaseTone(enemy, enemy.currentPhaseIndex ?? 0);
           const phaseTextWidth = Math.max(38, enemy.phases[enemy.currentPhaseIndex].name.length * 13);
           ctx.fillStyle = enemy.bossState.phaseIntroTimer > 0 ? `${enemy.color}22` : 'rgba(255,255,255,0.92)';
           drawRoundRect(ctx, enemy.x - phaseTextWidth / 2, enemy.y - enemy.radius - 29, phaseTextWidth, 18, 9);
@@ -4298,18 +4296,6 @@ export default function useGeoGuardGame() {
           ctx.font = enemy.bossState.phaseIntroTimer > 0 ? 'bold 13px system-ui, sans-serif' : 'bold 12px system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(enemy.phases[enemy.currentPhaseIndex].name, enemy.x, enemy.y - enemy.radius - 16);
-          if (phaseHint && (enemy.bossState.phaseIntroTimer > 0 || (enemy.currentPhaseIndex ?? 0) > 0)) {
-            const hintWidth = Math.max(54, phaseHint.length * 7 + 14);
-            ctx.fillStyle = 'rgba(15,23,42,0.82)';
-            drawRoundRect(ctx, enemy.x - hintWidth / 2, enemy.y - enemy.radius - 12, hintWidth, 13, 6);
-            ctx.fill();
-            ctx.strokeStyle = phaseTone;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            ctx.fillStyle = phaseTone;
-            ctx.font = 'bold 9px system-ui, sans-serif';
-            ctx.fillText(phaseHint, enemy.x, enemy.y - enemy.radius - 5.5);
-          }
         }
       }
       if (enemy.hp < enemy.maxHp) {

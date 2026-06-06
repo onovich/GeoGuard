@@ -45,21 +45,35 @@ const scaleGroupsForCycle = (groups, cycleNumber, waveNumber) =>
     count: group.count + cycleNumber * (group.type === 'BASIC' ? 4 : 2) + Math.floor(waveNumber / 24),
   }));
 
-const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value) => ({
-  ...memberTemplate,
-  enemyType: 'BOSS',
-  hp: Math.round(memberTemplate.hp * hpScale),
-  maxHp: Math.round(memberTemplate.hp * hpScale),
-  damage: Math.round((memberTemplate.damage + waveNumber * 1.05) * damageScale),
-  value,
-  isBoss: true,
-});
+const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value, phaseCap) => {
+  let truncatedPhases = memberTemplate.phases;
+  if (truncatedPhases && phaseCap !== undefined) {
+    truncatedPhases = truncatedPhases.slice(0, phaseCap);
+  }
+  return {
+    ...memberTemplate,
+    phases: truncatedPhases,
+    enemyType: 'BOSS',
+    hp: Math.round(memberTemplate.hp * hpScale),
+    maxHp: Math.round(memberTemplate.hp * hpScale),
+    damage: Math.round((memberTemplate.damage + waveNumber * 1.05) * damageScale),
+    value,
+    isBoss: true,
+  };
+};
 
-const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber) => {
+const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber, phaseCap) => {
   const totalValue = bossTemplate.value + waveNumber * 6;
+  
+  let truncatedPhases = bossTemplate.phases;
+  if (truncatedPhases && phaseCap !== undefined) {
+    truncatedPhases = truncatedPhases.slice(0, phaseCap);
+  }
+
   if (!bossTemplate.encounter?.members?.length) {
     return {
       ...bossTemplate,
+      phases: truncatedPhases,
       enemyType: 'BOSS',
       hp: Math.round(bossTemplate.hp * hpScale),
       maxHp: Math.round(bossTemplate.hp * hpScale),
@@ -76,11 +90,12 @@ const scaleBossTemplate = (bossTemplate, hpScale, damageScale, waveNumber) => {
     const share = memberTemplate.valueShare ?? 1 / members.length;
     const memberValue = isLast ? remainingValue : Math.max(1, Math.round(totalValue * share));
     remainingValue -= memberValue;
-    return scaleBossMember(memberTemplate, hpScale, damageScale, waveNumber, memberValue);
+    return scaleBossMember(memberTemplate, hpScale, damageScale, waveNumber, memberValue, phaseCap);
   });
 
   return {
     ...bossTemplate,
+    phases: truncatedPhases,
     enemyType: 'BOSS',
     hp: scaledMembers.reduce((sum, member) => sum + member.hp, 0),
     maxHp: scaledMembers.reduce((sum, member) => sum + member.maxHp, 0),
@@ -100,24 +115,32 @@ export const createWaveDefinition = (waveNumber) => {
   const groups = scaleGroupsForCycle(recipe.groups, cycleNumber, waveNumber);
   const bossTemplate = BOSS_TYPES[recipe.bossId];
   
-  const isWeak = recipe.isWeakened && cycleNumber === 0;
-  const originalWaveBase = isWeak ? waveNumber : waveNumber - 16;
+  const tier = recipe.tier || 1;
+  const originalWaveBase = ((waveNumber - 1) % 16) + 1;
   
-  const hpScale = isWeak 
-    ? 0.4 + (originalWaveBase * 0.035) 
-    : 1 + (originalWaveBase * 0.07) + cycleNumber * 0.25;
+  let hpScale = 1.0;
+  let phaseCap = undefined;
 
-  const damageScale = isWeak 
-    ? 0.6 + (originalWaveBase * 0.015)
-    : 1 + cycleNumber * 0.12;
+  if (tier === 1) {
+    hpScale = 0.35 + (originalWaveBase * 0.01);
+    phaseCap = 1;
+  } else if (tier === 2) {
+    hpScale = 0.60 + (originalWaveBase * 0.015);
+    phaseCap = 2;
+  } else {
+    hpScale = 1.0 + (originalWaveBase * 0.05) + cycleNumber * 0.25;
+    phaseCap = undefined;
+  }
+
+  const damageScale = tier === 1 ? 0.6 + (originalWaveBase * 0.015) : 1 + (tier - 2) * 0.12 + cycleNumber * 0.12;
 
   return {
     number: waveNumber,
     label: recipe.label,
     focus: recipe.focus,
-    spawnInterval: Math.max(0.32, recipe.spawnInterval - cycleNumber * 0.04),
+    spawnInterval: Math.max(0.32, recipe.spawnInterval - (tier - 1) * 0.08 - cycleNumber * 0.04),
     queue: interleaveGroups(groups),
-    boss: scaleBossTemplate(bossTemplate, hpScale, damageScale, waveNumber),
+    boss: scaleBossTemplate(bossTemplate, hpScale, damageScale, waveNumber, phaseCap),
   };
 };
 
