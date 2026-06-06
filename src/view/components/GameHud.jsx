@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
 
 export default function GameHud({
@@ -16,6 +16,17 @@ export default function GameHud({
   setAudioVolume,
 }) {
   const [showControlsHint, setShowControlsHint] = useState(true);
+  const [hintCountdown, setHintCountdown] = useState(4);
+
+  useEffect(() => {
+    if (!showControlsHint || gameState !== 'PLAYING') return;
+    if (hintCountdown > 0) {
+      const timer = setTimeout(() => setHintCountdown((c) => c - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowControlsHint(false);
+    }
+  }, [showControlsHint, hintCountdown, gameState]);
 
   if (gameState !== 'PLAYING') {
     return null;
@@ -42,13 +53,13 @@ export default function GameHud({
           <span className="text-2xl font-black">{formattedTime}</span>
         </div>
         {bossHud.length > 0 ? (
-          <div className="w-[260px] md:w-[340px] bg-slate-900/78 text-white px-3 py-2 rounded-2xl shadow-lg backdrop-blur-sm">
+          <div className="w-[260px] md:w-[340px] bg-slate-900/78 text-white px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-sm">
             {bossHud.map((group) => (
-              <div key={group.id} className="mb-2 last:mb-0">
-                <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-slate-300 mb-1">
+              <div key={group.id} className="mb-1 last:mb-0">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.16em] text-slate-300 mb-0.5">
                   <span>{group.title}</span>
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-1">
                   {group.members.map((member) => {
                     const phaseIndex = member.phaseIndex ?? 0;
                     const phaseCount = member.phaseCount ?? 0;
@@ -57,18 +68,18 @@ export default function GameHud({
 
                     return (
                       <div key={member.id}>
-                        <div className="flex items-center justify-between text-xs text-slate-100 mb-1">
-                          <span>{member.name}</span>
-                          <span className={member.enraged ? 'text-amber-300' : 'text-slate-300'}>{phaseLabel}</span>
-                        </div>
-                        {phaseCount > 0 ? (
-                          <div className="mb-1 flex justify-end">
-                            <span className="text-[10px] uppercase tracking-[0.16em] text-slate-400">
-                              P{Math.min(phaseCount, phaseIndex + 1)}/{phaseCount}
-                            </span>
+                        <div className="flex items-center justify-between text-[11px] text-slate-100 mb-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <span>{member.name}</span>
+                            {phaseCount > 0 && (
+                              <span className="text-[9px] uppercase tracking-wider text-slate-400 bg-slate-800/80 px-1 rounded">
+                                P{Math.min(phaseCount, phaseIndex + 1)}/{phaseCount}
+                              </span>
+                            )}
                           </div>
-                        ) : null}
-                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                          <span className={member.enraged ? 'text-amber-300 text-[10px]' : 'text-slate-300 text-[10px]'}>{phaseLabel}</span>
+                        </div>
+                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full rounded-full transition-all duration-150" style={{ width: `${member.hpRatio * 100}%`, backgroundColor: member.color }}></div>
                         </div>
                       </div>
@@ -97,7 +108,7 @@ export default function GameHud({
               onClick={() => setShowControlsHint(false)}
               className="flex items-center justify-center rounded-full bg-slate-900/10 px-2.5 py-1 text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-900/20 active:scale-95 transition-all ml-2"
             >
-              我知道了
+              知道了 ({hintCountdown}s)
             </button>
           </div>
         </div>

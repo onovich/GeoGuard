@@ -109,9 +109,9 @@ export const createWaveDefinition = (waveNumber) => {
   let hpScale = 1.0;
 
   if (tier === 1) {
-    hpScale = 0.35 + (originalWaveBase * 0.01);
+    hpScale = 1.0 + (originalWaveBase * 0.03);
   } else if (tier === 2) {
-    hpScale = 0.60 + (originalWaveBase * 0.015);
+    hpScale = 1.0 + (originalWaveBase * 0.04);
   } else {
     hpScale = 1.0 + (originalWaveBase * 0.05) + cycleNumber * 0.25;
   }

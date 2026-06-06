@@ -42,7 +42,7 @@ export default function StatusBanner({ waveMsg }) {
   const toneMeta = TONE_META[message.tone] ?? TONE_META.system;
 
   return (
-    <div className="absolute top-[19%] left-1/2 z-20 w-[min(92vw,760px)] -translate-x-1/2 pointer-events-none">
+    <div className="absolute top-[13%] left-1/2 z-20 w-[min(92vw,760px)] -translate-x-1/2 pointer-events-none">
       <div
         className={`relative overflow-hidden rounded-3xl border px-5 py-4 backdrop-blur-md ${toneStyle.panelClass}`}
         style={message.accentColor ? { boxShadow: `0 18px 48px ${message.accentColor}33` } : undefined}

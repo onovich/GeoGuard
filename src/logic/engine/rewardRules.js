@@ -38,7 +38,7 @@ const buildSupportChoices = ({ waveNumber, money, hp, maxHp, infiniteMoney }) =>
   const missingHp = Math.max(0, maxHp - hp);
 
   if (missingHp > 0) {
-    const amount = Math.min(missingHp, 18 + waveNumber * 3);
+    const amount = Math.round(Math.min(missingHp, 18 + waveNumber * 3));
     supports.push({
       id: 'support-repair',
       type: 'support_repair',

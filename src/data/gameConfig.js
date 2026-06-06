@@ -415,7 +415,7 @@ export const UI_COPY = {
   gameOverTitle: '防线崩溃',
   startDescription: '移动角色自动射击。收集水晶，在地图上布置你的防御塔阵地。',
   controlsPc: '电脑：WASD/方向键移动，从底部拖拽塔卡到场地里建造。',
-  controlsMobile: '手机：左侧屏幕拖动摇杆移动，从底部拖拽塔卡到场地里建造。',
+  controlsMobile: '手机：长按屏幕任意位置拖动摇杆移动角色，从底部拖拽塔卡到场地里建造。',
   introBanner: '生存并建立你的防线',
   invalidPlacement: '位置无效',
   insufficientFunds: '资金不足',
