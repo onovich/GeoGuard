@@ -42,7 +42,7 @@ const interleaveGroups = (groups) => {
 const scaleGroupsForCycle = (groups, cycleNumber, waveNumber) =>
   groups.map((group) => ({
     ...group,
-    count: group.count + cycleNumber * (group.type === 'BASIC' ? 4 : 2) + Math.floor(waveNumber / 24),
+    count: group.count + cycleNumber * (group.type === 'BASIC' ? 4 : 2) + Math.floor(waveNumber / 12),
   }));
 
 const scaleBossMember = (memberTemplate, hpScale, damageScale, waveNumber, value) => {
@@ -104,19 +104,9 @@ export const createWaveDefinition = (waveNumber) => {
   const bossTemplate = BOSS_TYPES[recipe.bossId];
   
   const tier = recipe.tier || 1;
-  const originalWaveBase = ((waveNumber - 1) % 16) + 1;
   
-  let hpScale = 1.0;
-
-  if (tier === 1) {
-    hpScale = 1.0 + (originalWaveBase * 0.03);
-  } else if (tier === 2) {
-    hpScale = 1.0 + (originalWaveBase * 0.04);
-  } else {
-    hpScale = 1.0 + (originalWaveBase * 0.05) + cycleNumber * 0.25;
-  }
-
-  const damageScale = tier === 1 ? 0.6 + (originalWaveBase * 0.015) : 1 + (tier - 2) * 0.12 + cycleNumber * 0.12;
+  const hpScale = 1.0 + Math.pow(waveNumber, 1.2) * 0.06;
+  const damageScale = 0.6 + Math.pow(waveNumber, 1.1) * 0.02;
 
   return {
     number: waveNumber,

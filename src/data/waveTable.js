@@ -219,33 +219,39 @@ const BASE_WAVES = [
   },
 ];
 
+const TIER1_INDICES = [0, 3, 6, 9, 12, 15];
+const TIER2_INDICES = [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 14, 15];
+
+const TIER1_WAVES = TIER1_INDICES.map(i => BASE_WAVES[i]);
+const TIER2_WAVES = TIER2_INDICES.map(i => BASE_WAVES[i]);
+
 export const WAVE_TABLE = [
-  ...BASE_WAVES.map((w, i) => ({
+  ...TIER1_WAVES.map((w, i) => ({
     ...w,
     number: i + 1,
-    spawnInterval: w.spawnInterval + 0.35,
-    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
+    spawnInterval: w.spawnInterval + 0.2,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
     isWeakened: true,
     tier: 1,
     bossId: w.bossId ? `${w.bossId}_T1` : undefined,
   })),
-  ...BASE_WAVES.map((w, i) => ({
+  ...TIER2_WAVES.map((w, i) => ({
     ...w,
-    number: i + 17,
-    spawnInterval: w.spawnInterval + 0.15,
-    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
+    number: i + 1 + TIER1_WAVES.length,
+    spawnInterval: w.spawnInterval + 0.05,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
     isWeakened: true,
     tier: 2,
     bossId: w.bossId ? `${w.bossId}_T2` : undefined,
   })),
   ...BASE_WAVES.map((w, i) => ({
     ...w,
-    number: i + 33,
-    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 2)) })),
+    number: i + 1 + TIER1_WAVES.length + TIER2_WAVES.length,
+    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
     isWeakened: false,
     tier: 3,
     bossId: w.bossId ? `${w.bossId}_T3` : undefined,
   }))
 ];
 
-export const WAVE_DEBUG_CHECKPOINTS = [1, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48];
+export const WAVE_DEBUG_CHECKPOINTS = [1, 7, 13, 19, 25, 31];
