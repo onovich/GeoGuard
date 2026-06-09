@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { BOSS_TYPES, COLORS, ENEMY_TYPES, createInitialTowerCatalog } from '../src/data/gameConfig.js';
+import { BOSS_TYPES, COLORS, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../src/data/gameConfig.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import {
   applyBossEditorDraft,
@@ -81,6 +81,7 @@ import {
   openBossRewardRuntime,
 } from '../src/logic/engine/rewardFlowRuntime.js';
 import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../src/logic/engine/towerRules.js';
+import { createWaveStartMessage, startWaveRuntime } from '../src/logic/engine/waveFlowRuntime.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
   const catalog = createInitialTowerCatalog();
@@ -422,6 +423,42 @@ test('reward follow-up keeps sandbox rewards local but advances normal wave flow
   assert.deepEqual(resolveRewardFollowUp({ mode: 'debug', debugWaveFlow: false, currentWave: 7 }), { type: 'debug-stay' });
   assert.deepEqual(resolveRewardFollowUp({ mode: 'debug', debugWaveFlow: true, currentWave: 7 }), { type: 'start-next-wave', waveNumber: 8 });
   assert.deepEqual(resolveRewardFollowUp({ mode: 'normal', debugWaveFlow: false, currentWave: 7 }), { type: 'start-next-wave', waveNumber: 8 });
+});
+
+test('wave flow runtime starts waves and builds wave presentation state', () => {
+  const state = createRuntimeState();
+  const waveStart = startWaveRuntime({ state, waveNumber: 4 });
+  const definition = createWaveDefinition(4);
+
+  assert.equal(state.debugWaveFlow, false);
+  assert.equal(state.wave.number, 4);
+  assert.deepEqual(state.wave.queue, definition.queue);
+  assert.deepEqual(waveStart.waveOverview, {
+    label: definition.label,
+    focus: definition.focus,
+  });
+  assert.deepEqual(waveStart.waveMessage, createWaveStartMessage({ waveNumber: 4, definition }));
+  assert.equal(waveStart.waveMessage.title, `${UI_COPY.waveIncoming} 4`);
+  assert.equal(waveStart.waveMessage.tone, 'wave');
+  assert.ok(waveStart.waveMessage.subtitle.includes(definition.label));
+  assert.ok(waveStart.waveMessage.subtitle.includes(' \uFF5C '));
+  assert.ok(waveStart.waveMessage.subtitle.includes(definition.focus));
+});
+
+test('wave flow runtime applies debug boss authoring when starting debug waves', () => {
+  const state = createRuntimeState();
+  state.mode = 'debug';
+  const waveStart = startWaveRuntime({
+    state,
+    waveNumber: 5,
+    applyBossAuthoring: (boss) => ({ ...boss, debugAuthored: true }),
+  });
+
+  assert.equal(state.debugWaveFlow, true);
+  assert.equal(waveStart.debugWaveFlow, true);
+  assert.equal(state.wave.number, 5);
+  assert.equal(state.wave.boss.debugAuthored, true);
+  assert.equal(waveStart.authoredDefinition.boss.debugAuthored, true);
 });
 
 test('wave tick only auto-runs in normal or debug-wave-flow mode', () => {

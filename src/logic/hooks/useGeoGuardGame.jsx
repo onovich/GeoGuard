@@ -16,7 +16,7 @@ import {
 } from '../engine/encounterRuntime.js';
 import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
-import { createWaveDefinition, getSpawnPosition } from '../engine/gameRules';
+import { getSpawnPosition } from '../engine/gameRules';
 import { resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
 import {
@@ -42,7 +42,8 @@ import {
   getDebugFieldClearMessage,
   resetCombatRuntimeState,
 } from '../engine/debugFieldRuntime.js';
-import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
+import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
+import { startWaveRuntime } from '../engine/waveFlowRuntime.js';
 import { dist, formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
 import useBossEditorRuntime from './useBossEditorRuntime.js';
@@ -542,21 +543,15 @@ export default function useGeoGuardGame() {
   };
 
   const startWave = (waveNumber) => {
-    const definition = createWaveDefinition(waveNumber);
-    const authoredDefinition = game.current.mode === 'debug' ? { ...definition, boss: applyDebugBossAuthoring(definition.boss) } : definition;
-    game.current.debugWaveFlow = game.current.mode === 'debug';
-    setDebugWaveFlow(game.current.mode === 'debug');
-    game.current.wave = createWaveRuntimeState(waveNumber, authoredDefinition);
-    setCurrentWave(waveNumber);
-    setWaveOverview({ label: authoredDefinition.label ?? '', focus: authoredDefinition.focus ?? '' });
-    showWaveMessage(
-      {
-        title: `${UI_COPY.waveIncoming} ${waveNumber}`,
-        subtitle: definition.label && definition.focus ? `${definition.label} ｜ ${definition.focus}` : definition.label ?? definition.focus ?? '',
-        tone: 'wave',
-      },
-      2400
-    );
+    const waveStart = startWaveRuntime({
+      state: game.current,
+      waveNumber,
+      applyBossAuthoring: applyDebugBossAuthoring,
+    });
+    setDebugWaveFlow(waveStart.debugWaveFlow);
+    setCurrentWave(waveStart.currentWave);
+    setWaveOverview(waveStart.waveOverview);
+    showWaveMessage(waveStart.waveMessage, 2400);
   };
 
   const initGame = (options = {}) => {
