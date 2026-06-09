@@ -9,11 +9,10 @@ import { updatePlayerOffenseRuntime, updateTowerOffenseRuntime } from '../engine
 import { updateEnemyBehaviorRuntime } from '../engine/enemyBehaviorRuntime.js';
 import { settleEnemyDefeatRuntime, settlePendingBossRewardRuntime } from '../engine/enemyDefeatRuntime.js';
 import {
-  createBossEncounterRuntime,
-  createEnemyRuntimeEntityFromKey,
   getBossEditorBaseTemplate,
   getBossOwnership,
 } from '../engine/encounterRuntime.js';
+import { applyWaveSpawnPlanRuntime, spawnBossEncounterRuntimeAt, spawnEnemyRuntimeAt } from '../engine/entitySpawnRuntime.js';
 import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
@@ -494,31 +493,11 @@ export default function useGeoGuardGame() {
   };
 
   const spawnEnemyAt = (enemyKey, x, y, extras = {}) => {
-    const enemy = {
-      ...createEnemyRuntimeEntityFromKey({ enemyKey, uid: game.current.nextEnemyUid++ }),
-      x,
-      y,
-      ...extras,
-    };
-    if (enemy.burrow?.emergeNearPlayer && !extras.skipBurrowPosition) {
-      const angle = Math.random() * Math.PI * 2;
-      enemy.x = game.current.player.x + Math.cos(angle) * enemy.burrow.emergeNearPlayer;
-      enemy.y = game.current.player.y + Math.sin(angle) * enemy.burrow.emergeNearPlayer;
-    }
-    game.current.enemies.push(enemy);
-    return enemy;
+    return spawnEnemyRuntimeAt({ state: game.current, enemyKey, x, y, extras });
   };
 
   const spawnBossEncounterAt = (bossTemplate, x, y) => {
-    const bosses = createBossEncounterRuntime({
-      bossTemplate,
-      x,
-      y,
-      allocateEnemyUid: () => game.current.nextEnemyUid++,
-      allocateEncounterUid: () => game.current.nextBossEncounterUid++,
-    });
-    game.current.enemies.push(...bosses);
-    return bosses;
+    return spawnBossEncounterRuntimeAt({ state: game.current, bossTemplate, x, y });
   };
 
   const spawnBossAt = (bossId, x, y) => {
@@ -1176,13 +1155,9 @@ export default function useGeoGuardGame() {
       viewportHeight: window.innerHeight,
     });
 
-    for (const enemySpawn of waveSpawnPlan.enemySpawns) {
-      spawnEnemyAt(enemySpawn.enemyKey, enemySpawn.x, enemySpawn.y);
-    }
-
-    if (waveSpawnPlan.bossSpawn) {
-      spawnBossEncounterAt(waveSpawnPlan.bossSpawn.bossTemplate, waveSpawnPlan.bossSpawn.x, waveSpawnPlan.bossSpawn.y);
-      showBossSpotlight(waveSpawnPlan.bossSpawn.bossTemplate);
+    const waveSpawnResult = applyWaveSpawnPlanRuntime({ state, spawnPlan: waveSpawnPlan });
+    if (waveSpawnResult.bossSpotlightTemplate) {
+      showBossSpotlight(waveSpawnResult.bossSpotlightTemplate);
     }
 
     for (let enemyIndex = state.enemies.length - 1; enemyIndex >= 0; enemyIndex -= 1) {

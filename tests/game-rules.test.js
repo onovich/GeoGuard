@@ -31,6 +31,11 @@ import {
   getBossOwnership,
 } from '../src/logic/engine/encounterRuntime.js';
 import {
+  applyWaveSpawnPlanRuntime,
+  spawnBossEncounterRuntimeAt,
+  spawnEnemyRuntimeAt,
+} from '../src/logic/engine/entitySpawnRuntime.js';
+import {
   createDebugLayoutTowers,
   createPlacedTower,
   unlockAllTowerBlueprints,
@@ -333,6 +338,67 @@ test('encounter runtime builds single-boss and twin encounter entities', () => {
   assert.equal(twins[0].x, 246);
   assert.equal(twins[1].x, 354);
   assert.equal(twins[0].value + twins[1].value, BOSS_TYPES.TWINS.value);
+});
+
+test('entity spawn runtime writes enemies and bosses into state', () => {
+  const state = createRuntimeState();
+  state.player.x = 100;
+  state.player.y = 200;
+
+  const basic = spawnEnemyRuntimeAt({ state, enemyKey: 'BASIC', x: 20, y: 30 });
+
+  assert.equal(basic.uid, 1);
+  assert.equal(basic.x, 20);
+  assert.equal(basic.y, 30);
+  assert.equal(state.nextEnemyUid, 2);
+  assert.deepEqual(state.enemies, [basic]);
+
+  const burrower = spawnEnemyRuntimeAt({
+    state,
+    enemyKey: 'BURROWER',
+    x: 40,
+    y: 50,
+    random: () => 0,
+  });
+
+  assert.equal(burrower.uid, 2);
+  assert.equal(burrower.x, state.player.x + ENEMY_TYPES.BURROWER.burrow.emergeNearPlayer);
+  assert.equal(burrower.y, state.player.y);
+  assert.equal(state.nextEnemyUid, 3);
+
+  const bosses = spawnBossEncounterRuntimeAt({
+    state,
+    bossTemplate: BOSS_TYPES.TWINS,
+    x: 300,
+    y: 400,
+  });
+
+  assert.equal(bosses.length, 2);
+  assert.equal(bosses[0].uid, 3);
+  assert.equal(bosses[1].uid, 4);
+  assert.equal(bosses[0].encounterUid, 1);
+  assert.equal(state.nextEnemyUid, 5);
+  assert.equal(state.nextBossEncounterUid, 2);
+  assert.equal(state.enemies.length, 4);
+});
+
+test('entity spawn runtime applies wave spawn plans', () => {
+  const state = createRuntimeState();
+  const bossTemplate = BOSS_TYPES.COMMANDER;
+  const spawnResult = applyWaveSpawnPlanRuntime({
+    state,
+    spawnPlan: {
+      enemySpawns: [{ enemyKey: 'BASIC', x: 10, y: 20 }],
+      bossSpawn: { bossTemplate, x: 300, y: 400 },
+    },
+  });
+
+  assert.equal(spawnResult.enemies.length, 1);
+  assert.equal(spawnResult.enemies[0].uid, 1);
+  assert.equal(spawnResult.bosses.length, 1);
+  assert.equal(spawnResult.bosses[0].uid, 2);
+  assert.equal(spawnResult.bossSpotlightTemplate, bossTemplate);
+  assert.equal(state.enemies.length, 2);
 });
 
 const createBossAbilityTestContext = (stateOverrides = {}) => {
