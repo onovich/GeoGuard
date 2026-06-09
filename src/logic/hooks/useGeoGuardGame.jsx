@@ -7,7 +7,8 @@ import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engin
 import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../engine/bossHudRuntime.js';
 import {
   applyBossPhaseIntroRuntime,
-  createBossPhaseShiftPresentationPlan,
+  createBossClimaxAccentEffectPlan,
+  createBossPhaseShiftEffectPlan,
   getBossClimaxAccentCooldown,
   shouldTriggerBossClimaxAccent,
 } from '../engine/bossPhasePresentationRuntime.js';
@@ -48,7 +49,7 @@ import {
 } from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
 import { advanceWaveTickRuntime, createWaveSpawnPlan, startWaveRuntime } from '../engine/waveFlowRuntime.js';
-import { dist, formatTime, rand } from '../engine/gameMath';
+import { formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
 import useBossEditorRuntime from './useBossEditorRuntime.js';
 import useCanvasGameLoop from './useCanvasGameLoop.js';
@@ -233,221 +234,55 @@ export default function useGeoGuardGame() {
     camera.shakeSeed = Math.random() * Math.PI * 2;
   };
 
+  const emitBossVisualEffectPlan = (effectPlan) => {
+    if (!effectPlan) {
+      return;
+    }
+
+    for (const impactWave of effectPlan.impactWaves) {
+      spawnImpactWave(impactWave.x, impactWave.y, impactWave.options);
+    }
+
+    for (const particle of effectPlan.particles) {
+      spawnParticle(particle.x, particle.y, particle.color, particle.count, particle.speedBase);
+    }
+
+    for (const floatingText of effectPlan.floatingTexts) {
+      spawnFloatingText(floatingText.x, floatingText.y, floatingText.text, floatingText.color, floatingText.options);
+    }
+  };
+
   const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex, previousPhaseIndex = -1) => {
-    void playCue('boss_phase_shift');
-    const presentationPlan = createBossPhaseShiftPresentationPlan({
+    const effectPlan = createBossPhaseShiftEffectPlan({
       boss,
       activePhase,
       activePhaseIndex,
       previousPhaseIndex,
       getCalloutText: getBossPhaseCalloutText,
-    });
-    applyBossPhaseIntroRuntime({ boss, duration: presentationPlan.phaseIntro.duration });
-    addCameraShake(presentationPlan.cameraShake.strength, presentationPlan.cameraShake.duration);
-    spawnImpactWave(boss.x, boss.y, {
-      startRadius: boss.radius * 0.55,
-      maxRadius: boss.radius + 58 + activePhaseIndex * 12,
-      growth: 320,
-      life: 0.46,
-      color: boss.color,
-      lineWidth: 5,
-      fillAlpha: 0.12,
-      dash: [14, 8],
-      spokes: 5 + activePhaseIndex * 2,
-      spin: 0.7,
-    });
-    spawnImpactWave(boss.x, boss.y, {
-      startRadius: boss.radius * 0.3,
-      maxRadius: boss.radius + 28,
-      growth: 260,
-      life: 0.3,
-      color: '#ffffff',
-      lineWidth: 2,
-      fillAlpha: 0,
-      dash: [3, 9],
-      spokes: 0,
-      spin: -1,
-    });
-    spawnParticle(boss.x, boss.y, boss.color, 20 + activePhaseIndex * 6, 90 + activePhaseIndex * 20);
-    spawnFloatingText(boss.x, boss.y - boss.radius - 20, activePhase.name, boss.color, {
-      life: 1.05,
-      vy: -24,
-      font: 'bold 16px system-ui, sans-serif',
-      outlineColor: 'rgba(15,23,42,0.55)',
+      partner: getEncounterPartner(boss),
     });
 
-    if (presentationPlan.message) {
-      showWaveMessage(presentationPlan.message.waveMessage, presentationPlan.message.duration);
+    void playCue(effectPlan.cue);
+    applyBossPhaseIntroRuntime({ boss, duration: effectPlan.phaseIntro.duration });
+    addCameraShake(effectPlan.cameraShake.strength, effectPlan.cameraShake.duration);
+    emitBossVisualEffectPlan(effectPlan);
+    if (effectPlan.bossState.orbitalIndexDelta) {
+      boss.bossState.orbitalIndex = (boss.bossState.orbitalIndex ?? 0) + effectPlan.bossState.orbitalIndexDelta;
     }
 
-    if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
-      const partner = getEncounterPartner(boss);
-      if (partner) {
-        const midX = (boss.x + partner.x) * 0.5;
-        const midY = (boss.y + partner.y) * 0.5;
-        spawnImpactWave(partner.x, partner.y, {
-          startRadius: partner.radius * 0.4,
-          maxRadius: partner.radius + 36,
-          growth: 280,
-          life: 0.34,
-          color: partner.color,
-          lineWidth: 3,
-          fillAlpha: 0.08,
-          dash: [8, 8],
-          spokes: 4 + activePhaseIndex,
-        });
-        spawnImpactWave(midX, midY, {
-          startRadius: 10,
-          maxRadius: 62 + activePhaseIndex * 12,
-          growth: 260,
-          life: 0.4,
-          color: '#ffffff',
-          lineWidth: 2,
-          fillAlpha: 0.04,
-          dash: [4, 8],
-          spokes: 6,
-        });
-        spawnParticle(midX, midY, '#ffffff', 12 + activePhaseIndex * 4, 80);
-      }
-    }
-
-    if (boss.form === 'dragon') {
-      for (const offset of [-1, 1]) {
-        spawnImpactWave(boss.x - boss.radius * 0.45, boss.y + offset * boss.radius * 0.28, {
-          startRadius: 12,
-          maxRadius: boss.radius + 70 + activePhaseIndex * 16,
-          growth: 360,
-          life: 0.42,
-          color: offset === -1 ? '#ffd166' : '#ff9f43',
-          lineWidth: 3,
-          fillAlpha: 0.08,
-          dash: [10, 10],
-          spokes: 5 + activePhaseIndex,
-          spin: offset * 0.8,
-        });
-      }
-      spawnParticle(boss.x - boss.radius * 0.65, boss.y, '#ffd166', 10 + activePhaseIndex * 4, 120);
-    }
-
-    if (boss.form === 'spider') {
-      for (let index = 0; index < 6; index += 1) {
-        const angle = (Math.PI * 2 * index) / 6;
-        spawnImpactWave(boss.x + Math.cos(angle) * boss.radius * 1.4, boss.y + Math.sin(angle) * boss.radius * 1.1, {
-          startRadius: 6,
-          maxRadius: 30 + activePhaseIndex * 8,
-          growth: 220,
-          life: 0.3,
-          color: boss.color,
-          lineWidth: 2,
-          fillAlpha: 0.06,
-          dash: [3, 7],
-          spokes: 4,
-        });
-      }
-    }
-
-    if (boss.form === 'astrolabe') {
-      for (let ring = 0; ring < 3; ring += 1) {
-        spawnImpactWave(boss.x, boss.y, {
-          startRadius: boss.radius * (0.4 + ring * 0.18),
-          maxRadius: boss.radius + 42 + ring * 22 + activePhaseIndex * 10,
-          growth: 240 - ring * 22,
-          life: 0.48 + ring * 0.05,
-          color: ring === 1 ? '#ffffff' : boss.color,
-          lineWidth: ring === 1 ? 2 : 3,
-          fillAlpha: ring === 1 ? 0.02 : 0.06,
-          dash: ring === 1 ? [2, 8] : [5, 9],
-          spokes: 4 + ring + activePhaseIndex,
-          spin: ring % 2 === 0 ? 0.8 : -0.8,
-        });
-      }
-      boss.bossState.orbitalIndex = (boss.bossState.orbitalIndex ?? 0) + 1;
+    if (effectPlan.message) {
+      showWaveMessage(effectPlan.message.waveMessage, effectPlan.message.duration);
     }
   };
 
   const triggerBossClimaxAccent = (boss) => {
-    if (boss.currentPhaseIndex < (boss.phases?.length ?? 0) - 1) return;
-
-    if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
-      const partner = getEncounterPartner(boss);
-      if (partner) {
-        const midX = (boss.x + partner.x) * 0.5;
-        const midY = (boss.y + partner.y) * 0.5;
-        spawnImpactWave(midX, midY, {
-          startRadius: 18,
-          maxRadius: 84,
-          growth: 190,
-          life: 0.36,
-          color: '#ffffff',
-          lineWidth: 2,
-          fillAlpha: 0.04,
-          dash: [5, 9],
-          spokes: 8,
-          spin: 0.9,
-        });
-        if (dist(boss, partner) > 110) {
-          spawnParticle(midX, midY, boss.color, 8, 55);
-        }
-      }
-    }
-
-    if (boss.form === 'dragon') {
-      const retreatAngle = Math.atan2(game.current.player.y - boss.y, game.current.player.x - boss.x) + Math.PI;
-      for (let index = 0; index < 3; index += 1) {
-        spawnImpactWave(
-          boss.x + Math.cos(retreatAngle) * (28 + index * 20),
-          boss.y + Math.sin(retreatAngle) * (18 + index * 18),
-          {
-            startRadius: 10 + index * 3,
-            maxRadius: 34 + index * 12,
-            growth: 180,
-            life: 0.26 + index * 0.03,
-            color: index === 2 ? '#ffd166' : COLORS.enemyBomber,
-            lineWidth: 2,
-            fillAlpha: 0.08,
-            dash: [6, 8],
-            spokes: 4,
-          }
-        );
-      }
-      spawnParticle(boss.x - boss.radius * 0.6, boss.y, '#ffd166', 6, 70);
-    }
-
-    if (boss.form === 'spider') {
-      for (let spoke = 0; spoke < 4; spoke += 1) {
-        const angle = (Math.PI * 2 * spoke) / 4 + (boss.uid % 3) * 0.18;
-        spawnImpactWave(
-          boss.x + Math.cos(angle) * boss.radius * 1.45,
-          boss.y + Math.sin(angle) * boss.radius * 1.15,
-          {
-            startRadius: 6,
-            maxRadius: 28,
-            growth: 160,
-            life: 0.24,
-            color: boss.color,
-            lineWidth: 1.5,
-            fillAlpha: 0.05,
-            dash: [3, 8],
-            spokes: 3,
-          }
-        );
-      }
-    }
-
-    if (boss.form === 'astrolabe') {
-      spawnImpactWave(boss.x, boss.y, {
-        startRadius: boss.radius * 0.85,
-        maxRadius: boss.radius + 34,
-        growth: 120,
-        life: 0.34,
-        color: '#ffffff',
-        lineWidth: 2,
-        fillAlpha: 0.02,
-        dash: [2, 7],
-        spokes: 7,
-        spin: -1.1,
-      });
-    }
+    emitBossVisualEffectPlan(
+      createBossClimaxAccentEffectPlan({
+        boss,
+        partner: getEncounterPartner(boss),
+        player: game.current.player,
+      })
+    );
   };
 
   const getTowerById = (towerId) => towerCatalogRef.current.find((tower) => tower.id === towerId);

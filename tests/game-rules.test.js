@@ -13,6 +13,8 @@ import { runBossAbilityEffect } from '../src/logic/engine/bossAbilityRuntime.js'
 import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../src/logic/engine/bossHudRuntime.js';
 import {
   applyBossPhaseIntroRuntime,
+  createBossClimaxAccentEffectPlan,
+  createBossPhaseShiftEffectPlan,
   createBossPhaseShiftPresentationPlan,
   getBossClimaxAccentCooldown,
   shouldAnnounceBossPhaseShift,
@@ -441,6 +443,102 @@ test('boss phase presentation runtime plans phase announcements and cooldowns', 
   assert.equal(getBossClimaxAccentCooldown({ form: 'dragon' }), 0.44);
   assert.equal(getBossClimaxAccentCooldown({ form: 'astrolabe' }), 0.56);
   assert.equal(getBossClimaxAccentCooldown({ form: 'commander' }), 0.62);
+});
+
+test('boss phase presentation runtime plans visual effect commands', () => {
+  let nextEnemyUid = 1;
+  let nextEncounterUid = 1;
+  const allocateEnemyUid = () => nextEnemyUid++;
+  const allocateEncounterUid = () => nextEncounterUid++;
+  const [commander] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.COMMANDER,
+    x: 100,
+    y: 200,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+  const commanderPlan = createBossPhaseShiftEffectPlan({
+    boss: commander,
+    activePhase: commander.phases[1],
+    activePhaseIndex: 1,
+    previousPhaseIndex: 0,
+    getCalloutText: () => 'hold the line',
+  });
+
+  assert.equal(commanderPlan.cue, 'boss_phase_shift');
+  assert.deepEqual(commanderPlan.phaseIntro, { duration: 1.15 });
+  assert.deepEqual(commanderPlan.cameraShake, { strength: 14, duration: 0.42 });
+  assert.equal(commanderPlan.message.waveMessage.subtitle, 'hold the line');
+  assert.equal(commanderPlan.impactWaves.length, 2);
+  assert.deepEqual(commanderPlan.particles[0], {
+    x: commander.x,
+    y: commander.y,
+    color: commander.color,
+    count: 26,
+    speedBase: 110,
+  });
+  assert.equal(commanderPlan.floatingTexts[0].text, commander.phases[1].name);
+  assert.equal(createBossClimaxAccentEffectPlan({ boss: commander, player: { x: 0, y: 0 } }), null);
+
+  const [firstTwin, secondTwin] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.TWINS,
+    x: 300,
+    y: 400,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+  const twinPlan = createBossPhaseShiftEffectPlan({
+    boss: firstTwin,
+    activePhase: firstTwin.phases[1],
+    activePhaseIndex: 1,
+    previousPhaseIndex: 0,
+    partner: secondTwin,
+  });
+
+  assert.equal(twinPlan.impactWaves.length, 4);
+  assert.equal(twinPlan.particles.length, 2);
+  assert.equal(twinPlan.particles[1].color, '#ffffff');
+
+  const [astrolabe] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.ASTROLABE,
+    x: 500,
+    y: 600,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+  const astrolabePlan = createBossPhaseShiftEffectPlan({
+    boss: astrolabe,
+    activePhase: astrolabe.phases[2],
+    activePhaseIndex: 2,
+    previousPhaseIndex: 1,
+  });
+
+  assert.equal(astrolabePlan.impactWaves.length, 5);
+  assert.deepEqual(astrolabePlan.bossState, { orbitalIndexDelta: 1 });
+
+  const [dragon] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.DRAGON,
+    x: 700,
+    y: 800,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+  dragon.currentPhaseIndex = dragon.phases.length - 1;
+  const dragonClimaxPlan = createBossClimaxAccentEffectPlan({
+    boss: dragon,
+    player: { x: dragon.x + 10, y: dragon.y },
+  });
+
+  assert.equal(dragonClimaxPlan.impactWaves.length, 3);
+  assert.equal(dragonClimaxPlan.impactWaves[0].options.color, COLORS.enemyBomber);
+  assert.equal(dragonClimaxPlan.impactWaves[2].options.color, '#ffd166');
+  assert.deepEqual(dragonClimaxPlan.particles[0], {
+    x: dragon.x - dragon.radius * 0.6,
+    y: dragon.y,
+    color: '#ffd166',
+    count: 6,
+    speedBase: 70,
+  });
 });
 
 test('entity spawn runtime writes enemies and bosses into state', () => {
