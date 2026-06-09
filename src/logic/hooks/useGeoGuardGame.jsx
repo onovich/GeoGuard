@@ -5,6 +5,12 @@ import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { runBossAbilityEffect } from '../engine/bossAbilityRuntime.js';
 import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engine/bossAuthoringRules.js';
 import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../engine/bossHudRuntime.js';
+import {
+  applyBossPhaseIntroRuntime,
+  createBossPhaseShiftPresentationPlan,
+  getBossClimaxAccentCooldown,
+  shouldTriggerBossClimaxAccent,
+} from '../engine/bossPhasePresentationRuntime.js';
 import { updateDropRuntime, updateHazardRuntime, updateProjectileRuntime, updateTransientVisualRuntime } from '../engine/combatFrameRuntime.js';
 import { updatePlayerOffenseRuntime, updateTowerOffenseRuntime } from '../engine/combatOffenseRuntime.js';
 import { updateEnemyBehaviorRuntime } from '../engine/enemyBehaviorRuntime.js';
@@ -229,9 +235,15 @@ export default function useGeoGuardGame() {
 
   const triggerBossPhaseShift = (boss, activePhase, activePhaseIndex, previousPhaseIndex = -1) => {
     void playCue('boss_phase_shift');
-    boss.bossState.phaseIntroTimer = 1.15;
-    boss.bossState.phaseIntroDuration = 1.15;
-    addCameraShake(12 + activePhaseIndex * 2, previousPhaseIndex >= 0 ? 0.42 : 0.28);
+    const presentationPlan = createBossPhaseShiftPresentationPlan({
+      boss,
+      activePhase,
+      activePhaseIndex,
+      previousPhaseIndex,
+      getCalloutText: getBossPhaseCalloutText,
+    });
+    applyBossPhaseIntroRuntime({ boss, duration: presentationPlan.phaseIntro.duration });
+    addCameraShake(presentationPlan.cameraShake.strength, presentationPlan.cameraShake.duration);
     spawnImpactWave(boss.x, boss.y, {
       startRadius: boss.radius * 0.55,
       maxRadius: boss.radius + 58 + activePhaseIndex * 12,
@@ -264,24 +276,8 @@ export default function useGeoGuardGame() {
       outlineColor: 'rgba(15,23,42,0.55)',
     });
 
-    if (previousPhaseIndex >= 0) {
-      const shouldAnnounce =
-        !boss.encounterUid ||
-        boss.form === 'dragon' ||
-        boss.form === 'spider' ||
-        boss.form === 'astrolabe' ||
-        ((boss.form === 'twinSun' || boss.form === 'twinMoon') && boss.twinRole === 'sun');
-      if (shouldAnnounce) {
-        showWaveMessage(
-          {
-            title: `${boss.encounterName ?? boss.name} · ${activePhase.name}`,
-            subtitle: getBossPhaseCalloutText(boss, activePhaseIndex),
-            tone: 'phase',
-            accentColor: boss.color,
-          },
-          1700
-        );
-      }
+    if (presentationPlan.message) {
+      showWaveMessage(presentationPlan.message.waveMessage, presentationPlan.message.duration);
     }
 
     if (boss.form === 'twinSun' || boss.form === 'twinMoon') {
@@ -1052,9 +1048,9 @@ export default function useGeoGuardGame() {
       boss.bossState.climaxAccentTimer = 0.35;
     }
 
-    if (activePhaseIndex === boss.phases.length - 1 && boss.bossState.climaxAccentTimer <= 0) {
+    if (shouldTriggerBossClimaxAccent(boss) && boss.bossState.climaxAccentTimer <= 0) {
       triggerBossClimaxAccent(boss);
-      boss.bossState.climaxAccentTimer = boss.form === 'dragon' ? 0.44 : boss.form === 'astrolabe' ? 0.56 : 0.62;
+      boss.bossState.climaxAccentTimer = getBossClimaxAccentCooldown(boss);
     }
 
     const behaviorNodes =

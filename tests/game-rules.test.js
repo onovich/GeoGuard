@@ -11,6 +11,13 @@ import {
 } from '../src/logic/engine/bossAuthoringRules.js';
 import { runBossAbilityEffect } from '../src/logic/engine/bossAbilityRuntime.js';
 import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../src/logic/engine/bossHudRuntime.js';
+import {
+  applyBossPhaseIntroRuntime,
+  createBossPhaseShiftPresentationPlan,
+  getBossClimaxAccentCooldown,
+  shouldAnnounceBossPhaseShift,
+  shouldTriggerBossClimaxAccent,
+} from '../src/logic/engine/bossPhasePresentationRuntime.js';
 import { AUDIO_CUES } from '../src/logic/audio/audioCueLibrary.js';
 import {
   updateDropRuntime,
@@ -378,6 +385,61 @@ test('boss hud runtime groups encounters into stable hud view models', () => {
   assert.equal(hud[0].members[1].enraged, true);
   assert.equal(areBossHudSnapshotsEqual(hud, JSON.parse(JSON.stringify(hud))), true);
   assert.equal(areBossHudSnapshotsEqual(hud, [{ ...hud[0], members: [] }]), false);
+});
+
+test('boss phase presentation runtime plans phase announcements and cooldowns', () => {
+  let nextEnemyUid = 1;
+  let nextEncounterUid = 1;
+  const [commander] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.COMMANDER,
+    x: 100,
+    y: 200,
+    allocateEnemyUid: () => nextEnemyUid++,
+    allocateEncounterUid: () => nextEncounterUid++,
+  });
+  const activePhase = commander.phases[1];
+
+  applyBossPhaseIntroRuntime({ boss: commander });
+
+  assert.equal(commander.bossState.phaseIntroTimer, 1.15);
+  assert.equal(commander.bossState.phaseIntroDuration, 1.15);
+  assert.equal(shouldAnnounceBossPhaseShift({ boss: commander, previousPhaseIndex: -1 }), false);
+  assert.equal(shouldAnnounceBossPhaseShift({ boss: commander, previousPhaseIndex: 0 }), true);
+
+  const commanderPlan = createBossPhaseShiftPresentationPlan({
+    boss: commander,
+    activePhase,
+    activePhaseIndex: 1,
+    previousPhaseIndex: 0,
+    getCalloutText: (_boss, activePhaseIndex) => `callout-${activePhaseIndex}`,
+  });
+
+  assert.deepEqual(commanderPlan.phaseIntro, { duration: 1.15 });
+  assert.deepEqual(commanderPlan.cameraShake, { strength: 14, duration: 0.42 });
+  assert.equal(commanderPlan.message.duration, 1700);
+  assert.equal(commanderPlan.message.waveMessage.title, `${commander.name} · ${activePhase.name}`);
+  assert.equal(commanderPlan.message.waveMessage.subtitle, 'callout-1');
+  assert.equal(commanderPlan.message.waveMessage.tone, 'phase');
+  assert.equal(commanderPlan.message.waveMessage.accentColor, commander.color);
+
+  const [firstTwin, secondTwin] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.TWINS,
+    x: 300,
+    y: 400,
+    allocateEnemyUid: () => nextEnemyUid++,
+    allocateEncounterUid: () => nextEncounterUid++,
+  });
+
+  assert.equal(shouldAnnounceBossPhaseShift({ boss: firstTwin, previousPhaseIndex: 0 }), true);
+  assert.equal(shouldAnnounceBossPhaseShift({ boss: secondTwin, previousPhaseIndex: 0 }), false);
+
+  commander.currentPhaseIndex = commander.phases.length - 1;
+  assert.equal(shouldTriggerBossClimaxAccent(commander), true);
+  commander.currentPhaseIndex = 0;
+  assert.equal(shouldTriggerBossClimaxAccent(commander), false);
+  assert.equal(getBossClimaxAccentCooldown({ form: 'dragon' }), 0.44);
+  assert.equal(getBossClimaxAccentCooldown({ form: 'astrolabe' }), 0.56);
+  assert.equal(getBossClimaxAccentCooldown({ form: 'commander' }), 0.62);
 });
 
 test('entity spawn runtime writes enemies and bosses into state', () => {
@@ -1467,8 +1529,8 @@ test('debug boss runtime clamps phase targets and derives forced hp', () => {
   assert.equal(getForcedBossPhaseIndex(boss, 0), 0);
   assert.equal(getForcedBossPhaseIndex(boss, 2), 1);
   assert.equal(getForcedBossPhaseIndex(boss, 99), 2);
-  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 0 }), 1000);
-  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 1 }), 750);
+  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 0 }), 750);
+  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 1 }), 350);
   assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 2 }), 180);
 });
 
@@ -1503,6 +1565,23 @@ test('debug boss runtime forces active bosses and reports phase shift callbacks'
   assert.equal(calls[0].activePhase.name, 'End');
   assert.equal(calls[0].activePhaseIndex, 2);
   assert.equal(calls[0].previousPhaseIndex, 0);
+
+  const midPhaseBoss = {
+    uid: 'boss-2',
+    isBoss: true,
+    maxHp: 1000,
+    hp: 1000,
+    currentPhaseIndex: 0,
+    abilityCooldowns: { commandLine: 4 },
+    phases: [
+      { name: 'Open', hpBelow: 1 },
+      { name: 'Mid', hpBelow: 0.5 },
+      { name: 'End', hpBelow: 0.2 },
+    ],
+  };
+  forceBossPhaseRuntime({ enemies: [midPhaseBoss], phaseNumber: 2 });
+  assert.equal(midPhaseBoss.currentPhaseIndex, 1);
+  assert.equal(midPhaseBoss.hp, 350);
 
   const samePhaseCalls = [];
   forceBossPhaseRuntime({
