@@ -12,6 +12,12 @@ import {
 import { runBossAbilityEffect } from '../src/logic/engine/bossAbilityRuntime.js';
 import { AUDIO_CUES } from '../src/logic/audio/audioCueLibrary.js';
 import {
+  updateDropRuntime,
+  updateHazardRuntime,
+  updateProjectileRuntime,
+  updateTransientVisualRuntime,
+} from '../src/logic/engine/combatFrameRuntime.js';
+import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
   getBossRewardResolution,
@@ -548,6 +554,131 @@ test('combat rules detect line hazard hits along segments and endpoints', () => 
   assert.equal(isLineHazardHit({ hazard, target: { x: 50, y: 8, radius: 4 } }), true);
   assert.equal(isLineHazardHit({ hazard, target: { x: 108, y: 0, radius: 8 } }), true);
   assert.equal(isLineHazardHit({ hazard, target: { x: 50, y: 30, radius: 4 } }), false);
+});
+
+test('combat frame runtime resolves projectile hits and removes spent projectiles', () => {
+  const calls = {
+    floatingTexts: [],
+    particles: [],
+  };
+  const enemy = { x: 3, y: 0, radius: 10, hp: 50, hitFlash: 0, slowRatio: 1, slowTimer: 0 };
+  const state = {
+    enemies: [enemy],
+    projectiles: [
+      {
+        x: 0,
+        y: 0,
+        previousX: 0,
+        previousY: 0,
+        vx: 0,
+        vy: 0,
+        life: 1,
+        damage: 30,
+        color: '#fff',
+        radius: 5,
+        kind: 'basic',
+      },
+    ],
+  };
+
+  updateProjectileRuntime({
+    state,
+    dt: 0.1,
+    damageEnemy: (target, amount) => {
+      target.hp -= amount;
+    },
+    spawnFloatingText: (...args) => calls.floatingTexts.push(args),
+    spawnParticle: (...args) => calls.particles.push(args),
+    spawnImpactWave: () => {},
+  });
+
+  assert.equal(enemy.hp, 20);
+  assert.equal(enemy.hitFlash, 1);
+  assert.equal(state.projectiles.length, 0);
+  assert.deepEqual(calls.floatingTexts[0], [3, -15, 30, '#fff']);
+  assert.equal(calls.particles.length, 1);
+});
+
+test('combat frame runtime applies area hazards to player and towers', () => {
+  const calls = {
+    healthSyncs: 0,
+    waves: [],
+  };
+  const state = {
+    player: { x: 0, y: 0, radius: 10, hp: 100 },
+    towers: [{ x: 20, y: 0, radius: 10, hp: 80, frozenTimer: 0 }],
+    hazards: [
+      {
+        type: 'area',
+        x: 0,
+        y: 0,
+        radius: 40,
+        damage: 12,
+        timer: 0,
+        color: '#f00',
+        pulsesRemaining: 1,
+        pulseInterval: 0.5,
+        radiusStep: 0,
+        damageStep: 0,
+        slowRatio: 0.5,
+        slowDuration: 2,
+        pull: 20,
+      },
+    ],
+  };
+
+  updateHazardRuntime({
+    state,
+    dt: 0.1,
+    damageTarget: (target, amount) => {
+      target.hp -= amount;
+    },
+    spawnImpactWave: (...args) => calls.waves.push(args),
+    syncHudHealth: () => {
+      calls.healthSyncs += 1;
+    },
+  });
+
+  assert.equal(state.player.hp, 88);
+  assert.equal(state.towers[0].hp, 68);
+  assert.equal(state.towers[0].frozenTimer, 2);
+  assert.equal(state.hazards.length, 0);
+  assert.equal(calls.healthSyncs, 1);
+  assert.equal(calls.waves.length, 1);
+});
+
+test('combat frame runtime handles drops and transient visual cleanup', () => {
+  const state = {
+    player: { x: 0, y: 0, radius: 12 },
+    money: 5,
+    drops: [{ x: 0, y: 0, radius: 4, value: 7, magnetized: false }],
+    particles: [{ x: 0, y: 0, vx: 10, vy: 0, life: 0.05 }],
+    impactWaves: [{ radius: 2, maxRadius: 10, growth: 40, life: 0.05 }],
+    floatingTexts: [{ y: 20, vy: -10, life: 0.05 }],
+  };
+  let moneySyncs = 0;
+  let pulses = 0;
+
+  updateDropRuntime({
+    state,
+    dt: 0.1,
+    syncHudMoney: () => {
+      moneySyncs += 1;
+    },
+    pulsePlayerPickupRadius: () => {
+      pulses += 1;
+    },
+  });
+  updateTransientVisualRuntime({ state, dt: 0.1 });
+
+  assert.equal(state.money, 12);
+  assert.equal(state.drops.length, 0);
+  assert.equal(state.player.radius, 14);
+  assert.equal(moneySyncs, 1);
+  assert.equal(pulses, 1);
+  assert.equal(state.particles.length, 0);
+  assert.equal(state.impactWaves.length, 0);
+  assert.equal(state.floatingTexts.length, 0);
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {

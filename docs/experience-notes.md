@@ -29,6 +29,7 @@ The fast-iteration TODO pass is complete.
 - Canvas resize, input listeners, joystick updates, context-menu targeting, and the animation-frame loop now live in `src/logic/hooks/useCanvasGameLoop.js`.
 - Boss editor draft state, mutation handlers, import/export, and debug authoring overrides now live in `src/logic/hooks/useBossEditorRuntime.js`.
 - Boss ability effects now live in `src/logic/engine/bossAbilityRuntime.js`, with focused tests for hazard callbacks and money side effects.
+- Projectile hits, drop pickup, transient visual cleanup, and hazard settlement now live in `src/logic/engine/combatFrameRuntime.js`, with focused runtime callback tests.
 - Project validation is now available through `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd`, and the git workflow calls it before commits.
 - Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.

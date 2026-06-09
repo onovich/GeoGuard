@@ -61,7 +61,7 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, and Boss ability effects out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss ability effects, and combat-frame settlement out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
@@ -75,9 +75,12 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 *   **Boss Ability Runtime (`src/logic/engine/bossAbilityRuntime.js`)**:
     *   Owns the Boss ability effect table and receives runtime callbacks for hazards, summons, damage, HUD sync, and presentation effects.
     *   Added focused node:test coverage for command-line hazard output and Collector money-steal side effects.
+*   **Combat Frame Runtime (`src/logic/engine/combatFrameRuntime.js`)**:
+    *   Owns projectile hit settlement, drop pickup, transient visual cleanup, and area/line hazard settlement.
+    *   Added focused node:test coverage for projectile removal, hazard damage/freeze behavior, drop pickup, and transient cleanup.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
-    *   The gameplay hook is still the next major refactor target, especially for combat update flow and authored encounter orchestration.
+    *   The gameplay hook is still the next major refactor target, especially for enemy movement/AI, tower firing flow, and authored encounter orchestration.
 
 ---
 **Last Updated**: `2026-06-09`
