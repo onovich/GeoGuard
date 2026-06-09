@@ -5,6 +5,7 @@ import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { runBossAbilityEffect } from '../engine/bossAbilityRuntime.js';
 import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engine/bossAuthoringRules.js';
 import { updateDropRuntime, updateHazardRuntime, updateProjectileRuntime, updateTransientVisualRuntime } from '../engine/combatFrameRuntime.js';
+import { updatePlayerOffenseRuntime, updateTowerOffenseRuntime } from '../engine/combatOffenseRuntime.js';
 import {
   findOpenEnemySpawnPosition,
   getBossRewardResolution,
@@ -13,7 +14,7 @@ import {
   hasPendingEncounterAftermath,
 } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
-import { createWaveDefinition, findNearestTarget, getSpawnPosition } from '../engine/gameRules';
+import { createWaveDefinition, getSpawnPosition } from '../engine/gameRules';
 import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
 import { applyRewardChoiceEffects, buildRewardOfferPlan, materializeRewardChoices, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
@@ -30,25 +31,6 @@ const DEBUG_SANDBOX_OVERVIEW = {
   label: 'Free Sandbox',
   focus: 'Drag towers, enemies, and bosses onto the live map.',
 };
-
-const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
-  x,
-  y,
-  previousX: x,
-  previousY: y,
-  vx: Math.cos(angle) * speed,
-  vy: Math.sin(angle) * speed,
-  damage,
-  life: extras.life ?? 1.5,
-  color: extras.color ?? COLORS.projectile,
-  kind: extras.kind ?? 'basic',
-  radius: extras.radius ?? 4,
-  pierce: extras.pierce ?? 0,
-  splash: extras.splash,
-  slowRatio: extras.slowRatio,
-  slowDuration: extras.slowDuration,
-  hitEnemies: extras.hitEnemies,
-});
 
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
 
@@ -1290,16 +1272,6 @@ export default function useGeoGuardGame() {
     setTowerContextMenu(null);
   };
 
-  const getTowerFireRateFactor = (tower) => {
-    let factor = tower.frozenTimer > 0 ? 999 : 1;
-    for (const enemy of game.current.enemies) {
-      if (enemy.jamAura && dist(enemy, tower) <= enemy.jamAura.range) {
-        factor = Math.max(factor, enemy.jamAura.fireRateFactor);
-      }
-    }
-    return factor;
-  };
-
   const damageTarget = (target, amount) => {
     const damageResult = resolveTargetDamage({
       targetHp: target.hp,
@@ -1531,52 +1503,8 @@ export default function useGeoGuardGame() {
     state.camera.x += (state.player.x - state.camera.x) * 5 * dt;
     state.camera.y += (state.player.y - state.camera.y) * 5 * dt;
 
-    state.player.lastShoot += dt;
-    if (state.player.lastShoot >= state.player.shootCd) {
-      const target = findNearestTarget(state.player, state.enemies, state.player.range);
-      if (target) {
-        const angle = Math.atan2(target.y - state.player.y, target.x - state.player.x);
-        state.projectiles.push(createProjectile(state.player.x, state.player.y, angle, 400, state.player.damage, { kind: 'basic', radius: 4 }));
-        state.player.lastShoot = 0;
-      }
-    }
-
-    for (let towerIndex = state.towers.length - 1; towerIndex >= 0; towerIndex -= 1) {
-      const tower = state.towers[towerIndex];
-      tower.frozenTimer = Math.max(0, (tower.frozenTimer ?? 0) - dt);
-      tower.lastShoot += dt;
-      if (tower.hp <= 0) {
-        spawnParticle(tower.x, tower.y, tower.color, 30, 80);
-        state.towers.splice(towerIndex, 1);
-        continue;
-      }
-
-      if (tower.lastShoot >= tower.fireRate * getTowerFireRateFactor(tower)) {
-        const target = findNearestTarget(tower, state.enemies, tower.range);
-        if (target) {
-          const baseAngle = Math.atan2(target.y - tower.y, target.x - tower.x);
-          const burstCount = tower.burstCount ?? 1;
-          for (let index = 0; index < burstCount; index += 1) {
-            const offset = burstCount === 1 ? 0 : (index - (burstCount - 1) / 2) * (tower.spread ?? 0.12);
-            const projectileKind = tower.splash ? 'cannon' : tower.pierce ? 'sniper' : 'basic';
-            state.projectiles.push(
-              createProjectile(tower.x, tower.y, baseAngle + offset, tower.projectileSpeed ?? 500, tower.damage, {
-                splash: tower.splash,
-                pierce: tower.pierce || 0,
-                life: tower.projectileLife ?? 2,
-                color: tower.color,
-                kind: projectileKind,
-                radius: tower.splash ? 7 : tower.pierce ? 3 : 4,
-                slowRatio: tower.slowRatio,
-                slowDuration: tower.slowDuration,
-                hitEnemies: new Set(),
-              })
-            );
-          }
-          tower.lastShoot = 0;
-        }
-      }
-    }
+    updatePlayerOffenseRuntime({ state, dt });
+    updateTowerOffenseRuntime({ state, dt, spawnParticle });
 
     const waveTick = resolveWaveTick({
       wave: state.wave,

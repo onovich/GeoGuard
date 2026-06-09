@@ -18,6 +18,11 @@ import {
   updateTransientVisualRuntime,
 } from '../src/logic/engine/combatFrameRuntime.js';
 import {
+  getTowerFireRateFactor,
+  updatePlayerOffenseRuntime,
+  updateTowerOffenseRuntime,
+} from '../src/logic/engine/combatOffenseRuntime.js';
+import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
   getBossRewardResolution,
@@ -679,6 +684,61 @@ test('combat frame runtime handles drops and transient visual cleanup', () => {
   assert.equal(state.particles.length, 0);
   assert.equal(state.impactWaves.length, 0);
   assert.equal(state.floatingTexts.length, 0);
+});
+
+test('combat offense runtime fires player projectiles at nearest target', () => {
+  const state = {
+    player: { x: 0, y: 0, range: 120, damage: 9, shootCd: 0.5, lastShoot: 0.5 },
+    enemies: [
+      { x: 80, y: 0 },
+      { x: 30, y: 0 },
+    ],
+    projectiles: [],
+  };
+
+  updatePlayerOffenseRuntime({ state, dt: 0.1 });
+
+  assert.equal(state.player.lastShoot, 0);
+  assert.equal(state.projectiles.length, 1);
+  assert.equal(state.projectiles[0].damage, 9);
+  assert.equal(state.projectiles[0].kind, 'basic');
+  assert.equal(state.projectiles[0].vx, 400);
+  assert.equal(state.projectiles[0].vy, 0);
+});
+
+test('combat offense runtime fires tower bursts and removes dead towers', () => {
+  const particles = [];
+  const state = {
+    enemies: [{ x: 100, y: 0 }],
+    projectiles: [],
+    towers: [
+      { x: 0, y: 0, radius: 12, hp: 10, color: '#0af', range: 160, fireRate: 1, lastShoot: 1, damage: 20, burstCount: 3, spread: 0.2, projectileSpeed: 300, frozenTimer: 0 },
+      { x: 5, y: 5, radius: 12, hp: 0, color: '#999', fireRate: 1, lastShoot: 0, frozenTimer: 0 },
+    ],
+  };
+
+  updateTowerOffenseRuntime({
+    state,
+    dt: 0.1,
+    spawnParticle: (...args) => particles.push(args),
+  });
+
+  assert.equal(state.towers.length, 1);
+  assert.equal(particles.length, 1);
+  assert.equal(state.towers[0].lastShoot, 0);
+  assert.equal(state.projectiles.length, 3);
+  assert.equal(state.projectiles[0].kind, 'basic');
+  assert.ok(state.projectiles.every((projectile) => projectile.hitEnemies instanceof Set));
+});
+
+test('combat offense runtime applies frozen and jam fire-rate factors', () => {
+  const tower = { x: 0, y: 0, frozenTimer: 0 };
+  const state = {
+    enemies: [{ x: 20, y: 0, jamAura: { range: 30, fireRateFactor: 2.5 } }],
+  };
+
+  assert.equal(getTowerFireRateFactor(state, tower), 2.5);
+  assert.equal(getTowerFireRateFactor(state, { ...tower, frozenTimer: 0.1 }), 999);
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {
