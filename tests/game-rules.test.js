@@ -41,7 +41,10 @@ import { forceBossPhaseRuntime, getForcedBossPhaseHp, getForcedBossPhaseIndex } 
 import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
+  createDebugRewardState,
   enterDebugSandboxRuntime,
+  getDebugBossSpawnPoint,
+  getDebugFieldClearMessage,
   resetCombatRuntimeState,
 } from '../src/logic/engine/debugFieldRuntime.js';
 import {
@@ -1269,6 +1272,27 @@ test('debug field runtime enters sandbox wave state and applies debug options', 
   const healthOn = applyDebugOptionRuntime({ state, key: 'infiniteHealth', value: true });
   assert.equal(healthOn.infiniteHealth, true);
   assert.equal(state.player.hp, state.player.maxHp);
+});
+
+test('debug field runtime builds debug action presentation state', () => {
+  assert.deepEqual(getDebugFieldClearMessage({ clearTowers: false }), {
+    title: 'Field Cleared',
+    subtitle: 'Enemies, hazards, and projectiles removed.',
+    tone: 'system',
+  });
+  assert.deepEqual(getDebugFieldClearMessage({ clearTowers: true }), {
+    title: 'Field Reset',
+    subtitle: 'Enemies, hazards, and towers cleared.',
+    tone: 'system',
+  });
+
+  const choices = [{ id: 'reward-a' }, { id: 'reward-b' }];
+  assert.deepEqual(createDebugRewardState(choices), {
+    active: true,
+    choices,
+  });
+  assert.deepEqual(getDebugBossSpawnPoint({ player: { x: 400, y: 300 } }), { x: 580, y: 270 });
+  assert.deepEqual(getDebugBossSpawnPoint({ player: { x: 400, y: 300 }, distance: 90, yOffset: 20 }), { x: 490, y: 320 });
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {

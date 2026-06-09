@@ -24,7 +24,7 @@
 
 The fast-iteration TODO pass is complete.
 
-- `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, wave progression, encounter construction, debug field tools, debug tower tools, debug Boss phase forcing, enemy behavior, and enemy defeat settlement.
+- `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, wave progression, encounter construction, debug field/action tools, debug tower tools, debug Boss phase forcing, enemy behavior, and enemy defeat settlement.
 - Canvas drawing has moved into `src/view/canvas/canvasRenderer.js`, so the main hook now delegates scene rendering instead of owning the full draw tree.
 - Canvas resize, input listeners, joystick updates, context-menu targeting, and the animation-frame loop now live in `src/logic/hooks/useCanvasGameLoop.js`.
 - Boss editor draft state, mutation handlers, import/export, and debug authoring overrides now live in `src/logic/hooks/useBossEditorRuntime.js`.
@@ -36,9 +36,9 @@ The fast-iteration TODO pass is complete.
 - Boss phase enrichment, Boss editor base template lookup, normal enemy runtime defaults, Boss runtime defaults, ownership metadata, and single/twin Boss encounter construction now live in `src/logic/engine/encounterRuntime.js`, with focused construction tests.
 - Debug tower preset layouts, direct placed-tower creation, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes now live in `src/logic/engine/debugTowerRuntime.js`, with focused helper tests.
 - Debug Boss phase forcing, phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing now live in `src/logic/engine/debugBossRuntime.js`, with focused helper tests.
-- Debug combat-field clearing, sandbox wave reset, sandbox overview metadata, and infinite money/health option side effects now live in `src/logic/engine/debugFieldRuntime.js`, with focused helper tests.
+- Debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, debug reward state creation, editor Boss spawn positioning, and infinite money/health option side effects now live in `src/logic/engine/debugFieldRuntime.js`, with focused helper tests.
 - Project validation is now available through `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd`, and the git workflow calls it before commits.
-- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, encounter construction, debug field helpers, debug tower helpers, debug Boss phase forcing, enemy behavior callbacks, enemy defeat callbacks, boss authoring draft rules, and audio cue definitions.
+- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, encounter construction, debug field/action helpers, debug tower helpers, debug Boss phase forcing, enemy behavior callbacks, enemy defeat callbacks, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
 - The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper runtime cleanup, and optional integration hardening.
 

@@ -31,7 +31,10 @@ import { forceBossPhaseRuntime } from '../engine/debugBossRuntime.js';
 import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
+  createDebugRewardState,
   enterDebugSandboxRuntime,
+  getDebugBossSpawnPoint,
+  getDebugFieldClearMessage,
   resetCombatRuntimeState,
 } from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
@@ -878,11 +881,7 @@ export default function useGeoGuardGame() {
       return;
     }
     resetCombatState({ clearTowers });
-    if (clearTowers) {
-      showWaveMessage({ title: 'Field Reset', subtitle: 'Enemies, hazards, and towers cleared.', tone: 'system' }, 1500);
-    } else {
-      showWaveMessage({ title: 'Field Cleared', subtitle: 'Enemies, hazards, and projectiles removed.', tone: 'system' }, 1500);
-    }
+    showWaveMessage(getDebugFieldClearMessage({ clearTowers }), 1500);
   };
 
   const startDebugWave = (waveNumber) => {
@@ -898,7 +897,7 @@ export default function useGeoGuardGame() {
       return;
     }
     void playCue('reward_open');
-    setRewardState({ active: true, choices: buildRewardChoices(towerCatalogRef.current) });
+    setRewardState(createDebugRewardState(buildRewardChoices(towerCatalogRef.current)));
   };
 
   const spawnBossFromEditor = () => {
@@ -906,8 +905,8 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    const distance = 180;
-    spawnBossAt(bossEditor.selectedBossId, game.current.player.x + distance, game.current.player.y - 30);
+    const spawnPoint = getDebugBossSpawnPoint({ player: game.current.player });
+    spawnBossAt(bossEditor.selectedBossId, spawnPoint.x, spawnPoint.y);
   };
 
   const forceBossPhase = (phaseNumber) => {

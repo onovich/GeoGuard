@@ -5,6 +5,33 @@ export const DEBUG_SANDBOX_OVERVIEW = {
   focus: 'Drag towers, enemies, and bosses onto the live map.',
 };
 
+const DEBUG_FIELD_CLEAR_MESSAGES = {
+  reset: {
+    title: 'Field Reset',
+    subtitle: 'Enemies, hazards, and towers cleared.',
+    tone: 'system',
+  },
+  clear: {
+    title: 'Field Cleared',
+    subtitle: 'Enemies, hazards, and projectiles removed.',
+    tone: 'system',
+  },
+};
+
+export const getDebugFieldClearMessage = ({ clearTowers = false } = {}) => ({
+  ...(clearTowers ? DEBUG_FIELD_CLEAR_MESSAGES.reset : DEBUG_FIELD_CLEAR_MESSAGES.clear),
+});
+
+export const createDebugRewardState = (choices) => ({
+  active: true,
+  choices,
+});
+
+export const getDebugBossSpawnPoint = ({ player, distance = 180, yOffset = -30 }) => ({
+  x: player.x + distance,
+  y: player.y + yOffset,
+});
+
 export const resetCombatRuntimeState = ({ state, clearTowers = false }) => {
   state.enemies = [];
   if (clearTowers) {
