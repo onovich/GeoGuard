@@ -31,6 +31,13 @@ import {
   getBossOwnership,
 } from '../src/logic/engine/encounterRuntime.js';
 import {
+  createDebugLayoutTowers,
+  createPlacedTower,
+  unlockAllTowerBlueprints,
+  updatePlacedTowerLevel,
+  updateTowerBlueprintLevel,
+} from '../src/logic/engine/debugTowerRuntime.js';
+import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
   getBossRewardResolution,
@@ -1070,6 +1077,64 @@ test('enemy defeat runtime waits for boss aftermath before opening rewards', () 
   assert.deepEqual(pendingResult, { opened: true, source: 'boss' });
   assert.equal(calls.openedRewards, 1);
   assert.equal(state.wave.pendingRewardBossUid, null);
+});
+
+test('debug tower runtime unlocks all blueprints without mutating the catalog', () => {
+  const catalog = createInitialTowerCatalog();
+  const nextCatalog = unlockAllTowerBlueprints(catalog);
+
+  assert.equal(catalog.find((tower) => tower.id === 'RAPID').available, false);
+  assert.equal(nextCatalog.every((tower) => tower.available), true);
+  assert.notEqual(nextCatalog[0], catalog[0]);
+});
+
+test('debug tower runtime creates preset layout towers around the player', () => {
+  const catalog = unlockAllTowerBlueprints(createInitialTowerCatalog());
+  let nextUid = 50;
+
+  const towers = createDebugLayoutTowers({
+    layoutId: 'balanced',
+    catalog,
+    player: { x: 1000, y: 500 },
+    allocateTowerUid: () => nextUid++,
+  });
+
+  assert.equal(towers.length, 6);
+  assert.equal(towers[0].id, 'SENTINEL');
+  assert.equal(towers[0].uid, 50);
+  assert.equal(towers[0].x, 880);
+  assert.equal(towers[0].y, 460);
+  assert.equal(towers[0].hp, towers[0].maxHp);
+  assert.equal(towers[0].lastShoot, 0);
+  assert.equal(createDebugLayoutTowers({ layoutId: 'missing', catalog, player: { x: 0, y: 0 }, allocateTowerUid: () => 1 }), null);
+});
+
+test('debug tower runtime updates blueprint and placed tower levels safely', () => {
+  const catalog = createInitialTowerCatalog();
+  const nextCatalog = updateTowerBlueprintLevel({ catalog, towerId: 'BASIC', delta: 1 });
+
+  assert.equal(nextCatalog.find((tower) => tower.id === 'BASIC').level, 1);
+  assert.equal(nextCatalog.find((tower) => tower.id === 'CANNON').level, 0);
+
+  const baseTower = createPlacedTower({
+    tower: catalog.find((tower) => tower.id === 'BASIC'),
+    uid: 88,
+    x: 12,
+    y: 34,
+  });
+  baseTower.hp = 20;
+  const towers = [baseTower];
+  const result = updatePlacedTowerLevel({ towers, towerUid: 88, delta: 1 });
+
+  assert.equal(result.updated, true);
+  assert.equal(baseTower.uid, 88);
+  assert.equal(baseTower.x, 12);
+  assert.equal(baseTower.y, 34);
+  assert.equal(baseTower.level, 1);
+  assert.equal(baseTower.lastShoot, 0);
+  assert.ok(baseTower.maxHp >= 50);
+  assert.ok(baseTower.hp >= 20);
+  assert.deepEqual(updatePlacedTowerLevel({ towers, towerUid: 404, delta: 1 }), { updated: false, tower: null });
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {

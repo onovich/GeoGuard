@@ -20,7 +20,13 @@ import { createWaveDefinition, getSpawnPosition } from '../engine/gameRules';
 import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
 import { applyRewardChoiceEffects, buildRewardOfferPlan, materializeRewardChoices, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
-import { buildTowerAtLevel } from '../engine/towerRules.js';
+import {
+  createDebugLayoutTowers,
+  createPlacedTower,
+  unlockAllTowerBlueprints,
+  updatePlacedTowerLevel,
+  updateTowerBlueprintLevel,
+} from '../engine/debugTowerRuntime.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
 import { dist, formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
@@ -35,8 +41,6 @@ const DEBUG_SANDBOX_OVERVIEW = {
 };
 
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
-
-const cloneTower = (tower) => ({ ...tower });
 
 export default function useGeoGuardGame() {
   const { audioSettings, setAudioEnabled, setAudioVolume, playCue, resumeAudio } = useGameAudio();
@@ -698,15 +702,14 @@ export default function useGeoGuardGame() {
       game.current.money -= tower.cost;
     }
     syncHudMoney();
-    game.current.towers.push({
-      ...cloneTower(tower),
-      uid: game.current.nextTowerUid++,
-      x: placement.worldPoint.x,
-      y: placement.worldPoint.y,
-      hp: tower.hp,
-      maxHp: tower.hp,
-      lastShoot: 0,
-    });
+    game.current.towers.push(
+      createPlacedTower({
+        tower,
+        uid: game.current.nextTowerUid++,
+        x: placement.worldPoint.x,
+        y: placement.worldPoint.y,
+      })
+    );
     void playCue('tower_place');
     spawnParticle(placement.worldPoint.x, placement.worldPoint.y, tower.color, 15, 60);
     clearDragPlacement();
@@ -850,27 +853,10 @@ export default function useGeoGuardGame() {
 
   const unlockAllBlueprints = () => {
     void playCue('ui_confirm');
-    const nextCatalog = towerCatalogRef.current.map((tower) => ({ ...tower, available: true }));
+    const nextCatalog = unlockAllTowerBlueprints(towerCatalogRef.current);
     towerCatalogRef.current = nextCatalog;
     setTowerCatalog(nextCatalog);
     showWaveMessage({ title: 'All Towers Unlocked', subtitle: 'Every blueprint is now available in the build bar.', tone: 'system' }, 1500);
-  };
-
-  const placeTowerDirect = (towerId, x, y) => {
-    const tower = getTowerById(towerId);
-    if (!tower) {
-      return;
-    }
-    game.current.towers.push({
-      ...cloneTower(tower),
-      uid: game.current.nextTowerUid++,
-      x,
-      y,
-      hp: tower.hp,
-      maxHp: tower.hp,
-      lastShoot: 0,
-    });
-    spawnParticle(x, y, tower.color, 12, 60);
   };
 
   const applyDebugLayout = (layoutId) => {
@@ -878,42 +864,19 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    const player = game.current.player;
-    const layouts = {
-      balanced: [
-        ['SENTINEL', -120, -40],
-        ['BASIC', -40, -120],
-        ['CANNON', 0, 105],
-        ['FROST', 130, -35],
-        ['SNIPER', 210, -120],
-        ['RAPID', -210, 110],
-      ],
-      spread: [
-        ['RAIL', -260, -150],
-        ['SNIPER', 250, -140],
-        ['MORTAR', 0, -210],
-        ['BURST', -200, 170],
-        ['FROST', 0, 180],
-        ['CANNON', 210, 165],
-      ],
-      boss: [
-        ['SENTINEL', -150, 0],
-        ['SENTINEL', 150, 0],
-        ['CANNON', 0, 140],
-        ['FROST', 0, -145],
-        ['BURST', -210, 140],
-        ['RAIL', 220, -120],
-      ],
-    };
-
-    const layout = layouts[layoutId];
-    if (!layout) {
+    const towers = createDebugLayoutTowers({
+      layoutId,
+      catalog: towerCatalogRef.current,
+      player: game.current.player,
+      allocateTowerUid: () => game.current.nextTowerUid++,
+    });
+    if (!towers) {
       return;
     }
 
-    game.current.towers = [];
-    for (const [towerId, offsetX, offsetY] of layout) {
-      placeTowerDirect(towerId, player.x + offsetX, player.y + offsetY);
+    game.current.towers = towers;
+    for (const tower of towers) {
+      spawnParticle(tower.x, tower.y, tower.color, 12, 60);
     }
 
     showWaveMessage(
@@ -993,26 +956,13 @@ export default function useGeoGuardGame() {
   };
 
   const changeTowerBlueprintLevel = (towerId, delta) => {
-    const nextCatalog = towerCatalogRef.current.map((tower) => {
-      if (tower.id !== towerId) return tower;
-      return buildTowerAtLevel(tower, (tower.level ?? 0) + delta);
-    });
+    const nextCatalog = updateTowerBlueprintLevel({ catalog: towerCatalogRef.current, towerId, delta });
     towerCatalogRef.current = nextCatalog;
     setTowerCatalog(nextCatalog);
   };
 
   const changePlacedTowerLevel = (towerUid, delta) => {
-    const tower = game.current.towers.find((candidate) => candidate.uid === towerUid);
-    if (!tower) return;
-    const nextTower = buildTowerAtLevel(tower, (tower.level ?? 0) + delta);
-    Object.assign(tower, nextTower, {
-      uid: tower.uid,
-      x: tower.x,
-      y: tower.y,
-      hp: Math.min(nextTower.hp, Math.max(1, tower.hp + (nextTower.hp - tower.maxHp))),
-      maxHp: nextTower.hp,
-      lastShoot: tower.lastShoot,
-    });
+    updatePlacedTowerLevel({ towers: game.current.towers, towerUid, delta });
   };
 
   const openBlueprintContextMenu = (towerId, clientX, clientY) => {

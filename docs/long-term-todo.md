@@ -9,7 +9,7 @@ This file is for later work that is intentionally not part of the current fast-i
 
 ## Architecture
 
-- Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules, especially remaining debug/runtime wiring.
+- Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules, especially remaining debug field/wave/Boss phase wiring.
 - Move more authored encounter data into structured config instead of mixed hook logic.
 - Add a cleaner data layer for phase intent, counterplay text, and encounter presentation so tuning can stay mostly data-driven.
 
