@@ -61,6 +61,34 @@ export const createDebugLayoutTowers = ({ layoutId, catalog, player, allocateTow
     .filter(Boolean);
 };
 
+export const applyDebugTowerLayoutRuntime = ({ state, layoutId, catalog }) => {
+  const towers = createDebugLayoutTowers({
+    layoutId,
+    catalog,
+    player: state.player,
+    allocateTowerUid: () => state.nextTowerUid++,
+  });
+  if (!towers) {
+    return {
+      applied: false,
+      towers: [],
+      message: null,
+    };
+  }
+
+  state.towers = towers;
+  return {
+    applied: true,
+    towers,
+    message: {
+      title: 'Layout Loaded',
+      subtitle: `${layoutId} preset applied`,
+      tone: 'system',
+    },
+    messageDuration: 1500,
+  };
+};
+
 export const updateTowerBlueprintLevel = ({ catalog, towerId, delta }) =>
   catalog.map((tower) => {
     if (tower.id !== towerId) return tower;

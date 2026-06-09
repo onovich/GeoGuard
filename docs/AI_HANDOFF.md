@@ -106,8 +106,8 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Owns runtime insertion of enemies and Boss encounters, UID allocation, burrow spawn relocation, and wave spawn-plan application.
     *   Added focused node:test coverage for enemy insertion, burrow relocation, Boss encounter insertion, and applying wave spawn plans.
 *   **Debug Tower Runtime (`src/logic/engine/debugTowerRuntime.js`)**:
-    *   Owns debug tower preset layouts, direct placed-tower entity creation, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
-    *   Added focused node:test coverage for unlock-all, preset tower placement around the player, and safe blueprint/placed tower level updates.
+    *   Owns debug tower preset layouts, direct placed-tower entity creation, layout application into runtime state, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
+    *   Added focused node:test coverage for unlock-all, preset tower placement around the player, layout application state writes, and safe blueprint/placed tower level updates.
 *   **Debug Boss Runtime (`src/logic/engine/debugBossRuntime.js`)**:
     *   Owns debug Boss phase forcing, including phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing.
     *   Added focused node:test coverage for clamped phase targets, derived HP, cooldown reset, callback payloads, and no-active-boss behavior.

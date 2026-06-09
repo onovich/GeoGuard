@@ -57,7 +57,7 @@ Owns active Boss filtering, encounter grouping, Boss HUD view-model construction
 Owns Boss phase intro timer writes, phase announcement gating, phase announcement message plans, camera-shake plans, final-phase accent gating, and final-phase accent cooldowns.
 
 - src/logic/engine/debugTowerRuntime.js
-Owns debug tower preset layouts, direct placed-tower entity creation, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
+Owns debug tower preset layouts, direct placed-tower entity creation, layout application into runtime state, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
 
 - src/logic/engine/debugBossRuntime.js
 Owns debug Boss phase forcing helpers, including phase clamping, target HP derivation, cooldown reset, and phase-shift callback routing.
@@ -87,7 +87,7 @@ Owns runtime reward flow helpers for building reward choices from current state,
 Defines the built-in synthesized sound cues for towers, rewards, boss entrances, phase shifts, and boss defeats.
 
 - src/logic/hooks/useGeoGuardGame.jsx
-This is the current gameplay orchestrator. It owns wave spawn presentation side effects, reward UI presentation handoff, drag placement, remaining debug wave/UI orchestration, and Boss phase effect emission, while delegating canvas drawing, browser input, frame-loop wiring, Boss editor draft state, Boss template/entity/encounter construction, Boss HUD view-model construction, Boss phase presentation scheduling, entity spawn insertion, wave start/tick/spawn-plan helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior updates, enemy defeat settlement, and combat-frame settlement to narrower modules.
+This is the current gameplay orchestrator. It owns wave spawn presentation side effects, reward UI presentation handoff, drag placement, remaining debug wave/UI orchestration, debug layout particle emission, and Boss phase effect emission, while delegating canvas drawing, browser input, frame-loop wiring, Boss editor draft state, Boss template/entity/encounter construction, Boss HUD view-model construction, Boss phase presentation scheduling, entity spawn insertion, wave start/tick/spawn-plan helpers, reward flow helpers, debug field/action helpers, debug tower layout application, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior updates, enemy defeat settlement, and combat-frame settlement to narrower modules.
 
 - src/logic/hooks/useCanvasGameLoop.js
 Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, right-click tower targeting, and the requestAnimationFrame loop bridge.
@@ -151,7 +151,7 @@ Available towers and upgrade levels live as runtime/template state rather than a
 
 - `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd` runs `npm test` followed by `npm run build`.
 - npm run build passes locally.
-- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, Boss phase presentation scheduling, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug action presentation helpers, debug tower runtime helpers, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
+- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, Boss phase presentation scheduling, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug action presentation helpers, debug tower runtime helpers, debug tower layout application, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 

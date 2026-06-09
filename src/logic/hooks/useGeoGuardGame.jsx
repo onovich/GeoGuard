@@ -30,7 +30,7 @@ import {
   openBossRewardRuntime,
 } from '../engine/rewardFlowRuntime.js';
 import {
-  createDebugLayoutTowers,
+  applyDebugTowerLayoutRuntime,
   createPlacedTower,
   unlockAllTowerBlueprints,
   updatePlacedTowerLevel,
@@ -766,29 +766,20 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    const towers = createDebugLayoutTowers({
+    const layoutResult = applyDebugTowerLayoutRuntime({
+      state: game.current,
       layoutId,
       catalog: towerCatalogRef.current,
-      player: game.current.player,
-      allocateTowerUid: () => game.current.nextTowerUid++,
     });
-    if (!towers) {
+    if (!layoutResult.applied) {
       return;
     }
 
-    game.current.towers = towers;
-    for (const tower of towers) {
+    for (const tower of layoutResult.towers) {
       spawnParticle(tower.x, tower.y, tower.color, 12, 60);
     }
 
-    showWaveMessage(
-      {
-        title: 'Layout Loaded',
-        subtitle: `${layoutId} preset applied`,
-        tone: 'system',
-      },
-      1500
-    );
+    showWaveMessage(layoutResult.message, layoutResult.messageDuration);
   };
 
   const clearDebugField = ({ clearTowers = false, sandbox = false } = {}) => {

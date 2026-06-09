@@ -44,6 +44,7 @@ import {
   spawnEnemyRuntimeAt,
 } from '../src/logic/engine/entitySpawnRuntime.js';
 import {
+  applyDebugTowerLayoutRuntime,
   createDebugLayoutTowers,
   createPlacedTower,
   unlockAllTowerBlueprints,
@@ -1486,6 +1487,29 @@ test('debug tower runtime creates preset layout towers around the player', () =>
   assert.equal(towers[0].hp, towers[0].maxHp);
   assert.equal(towers[0].lastShoot, 0);
   assert.equal(createDebugLayoutTowers({ layoutId: 'missing', catalog, player: { x: 0, y: 0 }, allocateTowerUid: () => 1 }), null);
+
+  const state = createRuntimeState();
+  state.player.x = 1000;
+  state.player.y = 500;
+  state.nextTowerUid = 90;
+  const layoutResult = applyDebugTowerLayoutRuntime({ state, layoutId: 'boss', catalog });
+
+  assert.equal(layoutResult.applied, true);
+  assert.equal(layoutResult.towers.length, 6);
+  assert.equal(layoutResult.towers[0].uid, 90);
+  assert.equal(state.nextTowerUid, 96);
+  assert.equal(state.towers, layoutResult.towers);
+  assert.deepEqual(layoutResult.message, {
+    title: 'Layout Loaded',
+    subtitle: 'boss preset applied',
+    tone: 'system',
+  });
+  assert.equal(layoutResult.messageDuration, 1500);
+  assert.deepEqual(applyDebugTowerLayoutRuntime({ state, layoutId: 'missing', catalog }), {
+    applied: false,
+    towers: [],
+    message: null,
+  });
 });
 
 test('debug tower runtime updates blueprint and placed tower levels safely', () => {
