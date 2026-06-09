@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "initializedMarker": "codex-project-ops-workflow: initialized",
+  "initializedAt": "2026-06-09 22:40:50 +08:00",
+  "projectName": "GeoGuard",
+  "repoRoot": "D:/WebProjects/GeoGuard",
+  "validateSequence": [
+    "test",
+    "build"
+  ],
+  "operations": {
+    "envCheck": {
+      "commands": [
+        "node --version",
+        "npm --version"
+      ]
+    },
+    "restoreDeps": {
+      "commands": [
+        "npm install"
+      ]
+    },
+    "installDeps": {
+      "commands": [
+        "npm install"
+      ]
+    },
+    "build": {
+      "commands": [
+        "npm run build"
+      ]
+    },
+    "test": {
+      "commands": [
+        "npm test"
+      ]
+    },
+    "lint": {
+      "commands": []
+    },
+    "format": {
+      "commands": []
+    },
+    "typecheck": {
+      "commands": []
+    },
+    "structureCheck": {
+      "commands": []
+    },
+    "codegen": {
+      "commands": []
+    },
+    "docsCheck": {
+      "commands": []
+    },
+    "smoke": {
+      "urls": [
+        "http://127.0.0.1:5188/"
+      ],
+      "commands": []
+    },
+    "package": {
+      "commands": []
+    },
+    "releaseDryRun": {
+      "commands": []
+    }
+  },
+  "devServer": {
+    "startCommand": "node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5188 --strictPort",
+    "healthUrl": "http://127.0.0.1:5188/",
+    "readyText": "",
+    "startupTimeoutSeconds": 30,
+    "pidFile": ".codex/project-ops-devserver.pid"
+  },
+  "forbiddenPolicy": "Do not run destructive clean/reset/deploy commands unless the user explicitly asks."
+}

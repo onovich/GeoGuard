@@ -61,7 +61,7 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The first planned refactor passes moved rendering, browser loop/input wiring, and Boss editor draft state out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, and Boss ability effects out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
@@ -72,7 +72,12 @@ The first planned refactor passes moved rendering, browser loop/input wiring, an
     *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
 *   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
     *   Owns debug Boss editor draft state, ability options, authoring overrides, import/export, and panel mutation handlers.
-    *   The gameplay hook is still the next major refactor target, especially for Boss ability effects, combat update flow, and authored encounter orchestration.
+*   **Boss Ability Runtime (`src/logic/engine/bossAbilityRuntime.js`)**:
+    *   Owns the Boss ability effect table and receives runtime callbacks for hazards, summons, damage, HUD sync, and presentation effects.
+    *   Added focused node:test coverage for command-line hazard output and Collector money-steal side effects.
+*   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
+    *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
+    *   The gameplay hook is still the next major refactor target, especially for combat update flow and authored encounter orchestration.
 
 ---
 **Last Updated**: `2026-06-09`

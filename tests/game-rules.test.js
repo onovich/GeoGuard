@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { createInitialTowerCatalog } from '../src/data/gameConfig.js';
+import { COLORS, createInitialTowerCatalog } from '../src/data/gameConfig.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import {
   applyBossEditorDraft,
@@ -9,6 +9,7 @@ import {
   parseBossEditorDraft,
   serializeBossEditorDraft,
 } from '../src/logic/engine/bossAuthoringRules.js';
+import { runBossAbilityEffect } from '../src/logic/engine/bossAbilityRuntime.js';
 import { AUDIO_CUES } from '../src/logic/audio/audioCueLibrary.js';
 import {
   findOpenEnemySpawnPosition,
@@ -219,6 +220,86 @@ test('boss authoring draft survives serialize and parse round-trips', () => {
   assert.equal(parsed.phases.length, 1);
   assert.equal(parsed.phases[0].nodes[0].abilityId, 'summonFormation');
   assert.equal(parsed.phases[0].nodes[0].cooldown, 5);
+});
+
+const createBossAbilityTestContext = (stateOverrides = {}) => {
+  const calls = {
+    areaDamage: [],
+    areaHazards: [],
+    floatingTexts: [],
+    lineHazards: [],
+    spawns: [],
+    syncMoney: 0,
+  };
+  const state = {
+    player: { x: 120, y: 60, radius: 12 },
+    towers: [],
+    enemies: [],
+    hazards: [],
+    money: 50,
+    debugOptions: { infiniteMoney: false },
+    ...stateOverrides,
+  };
+
+  return {
+    calls,
+    state,
+    context: {
+      state,
+      spawnAround: (...args) => {
+        calls.spawns.push(args);
+        return 0;
+      },
+      queueLineHazard: (...args) => calls.lineHazards.push(args),
+      queueAreaHazard: (...args) => calls.areaHazards.push(args),
+      spawnImpactWave: () => {},
+      damageArea: (...args) => calls.areaDamage.push(args),
+      damageTarget: () => {},
+      spawnEnemyAt: (...args) => calls.spawns.push(args),
+      spawnFloatingText: (...args) => calls.floatingTexts.push(args),
+      syncHudMoney: () => {
+        calls.syncMoney += 1;
+      },
+      getBossOwnership: (boss) => ({ ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null }),
+      getEncounterPartner: () => null,
+    },
+  };
+};
+
+test('boss ability runtime queues command-line hazards through context callbacks', () => {
+  const { calls, context } = createBossAbilityTestContext();
+  const boss = {
+    uid: 'boss-1',
+    x: 0,
+    y: 0,
+    radius: 24,
+    currentPhaseIndex: 0,
+    phases: [{ abilities: ['commandLine'] }],
+  };
+
+  runBossAbilityEffect({ boss, abilityName: 'commandLine', ...context });
+
+  assert.equal(calls.lineHazards.length, 3);
+  assert.ok(calls.lineHazards.every(([, , options]) => options.ownerBossUid === 'boss-1'));
+  assert.ok(calls.lineHazards.every(([, , options]) => options.label === 'formation' && options.damage === 16));
+});
+
+test('boss ability runtime applies steal-money side effects through supplied state', () => {
+  const { calls, context, state } = createBossAbilityTestContext({ money: 20 });
+  const boss = {
+    uid: 'collector-1',
+    x: 5,
+    y: 8,
+    radius: 28,
+    currentPhaseIndex: 0,
+    phases: [{ abilities: ['stealMoney'] }],
+  };
+
+  runBossAbilityEffect({ boss, abilityName: 'stealMoney', ...context });
+
+  assert.equal(state.money, 8);
+  assert.equal(calls.syncMoney, 1);
+  assert.deepEqual(calls.floatingTexts[0], [5, -28, '-12', COLORS.enemyScout]);
 });
 
 test('audio cue library exposes the core gameplay feedback cues', () => {
