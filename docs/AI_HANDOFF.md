@@ -67,7 +67,7 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
     *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
 *   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
-    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave spawn side effects, reward UI presentation handoff, remaining debug wave/UI orchestration, and Boss behavior scheduling.
+    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave entity creation side effects, reward UI presentation handoff, remaining debug wave/UI orchestration, and Boss behavior scheduling.
 *   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
     *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
 *   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
@@ -94,8 +94,8 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Owns runtime reward choice building, Boss reward UI-state opening, offer or pick history recording, reward application flow, and post-choice wave follow-up resolution.
     *   Added focused node:test coverage for opening Boss rewards and applying choices in debug flow.
 *   **Wave Flow Runtime (`src/logic/engine/waveFlowRuntime.js`)**:
-    *   Owns wave-start state creation, debug Boss authoring application for wave bosses, wave overview/message construction, wave tick advancement, and enemy or Boss spawn-plan output.
-    *   Added focused node:test coverage for normal wave start state, debug-authored wave Boss start state, normal wave tick spawn plans, Boss spawn plans, and sandbox idle ticks.
+    *   Owns wave-start state creation, debug Boss authoring application for wave bosses, wave overview/message construction, wave tick advancement, enemy or Boss spawn-plan output, and spawn-position materialization.
+    *   Added focused node:test coverage for normal wave start state, debug-authored wave Boss start state, normal wave tick spawn plans, Boss spawn plans, deterministic spawn positions, and sandbox idle ticks.
 *   **Debug Tower Runtime (`src/logic/engine/debugTowerRuntime.js`)**:
     *   Owns debug tower preset layouts, direct placed-tower entity creation, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
     *   Added focused node:test coverage for unlock-all, preset tower placement around the player, and safe blueprint/placed tower level updates.

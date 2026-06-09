@@ -16,7 +16,6 @@ import {
 } from '../engine/encounterRuntime.js';
 import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
-import { getSpawnPosition } from '../engine/gameRules';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
 import {
   applyRewardChoiceRuntime,
@@ -42,7 +41,7 @@ import {
   resetCombatRuntimeState,
 } from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
-import { advanceWaveTickRuntime, startWaveRuntime } from '../engine/waveFlowRuntime.js';
+import { advanceWaveTickRuntime, createWaveSpawnPlan, startWaveRuntime } from '../engine/waveFlowRuntime.js';
 import { dist, formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
 import useBossEditorRuntime from './useBossEditorRuntime.js';
@@ -1170,16 +1169,20 @@ export default function useGeoGuardGame() {
     updateTowerOffenseRuntime({ state, dt, spawnParticle });
 
     const waveTick = advanceWaveTickRuntime({ state, dt });
+    const waveSpawnPlan = createWaveSpawnPlan({
+      waveTick,
+      camera: state.camera,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+    });
 
-    for (const enemyKey of waveTick.spawnEnemyKeys) {
-        const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
-        spawnEnemyAt(enemyKey, spawnPosition.x, spawnPosition.y);
+    for (const enemySpawn of waveSpawnPlan.enemySpawns) {
+      spawnEnemyAt(enemySpawn.enemyKey, enemySpawn.x, enemySpawn.y);
     }
 
-    if (waveTick.spawnBoss) {
-      const spawnPosition = getSpawnPosition(state.camera, window.innerWidth, window.innerHeight);
-      spawnBossEncounterAt(waveTick.bossTemplate, spawnPosition.x, spawnPosition.y);
-      showBossSpotlight(waveTick.bossTemplate);
+    if (waveSpawnPlan.bossSpawn) {
+      spawnBossEncounterAt(waveSpawnPlan.bossSpawn.bossTemplate, waveSpawnPlan.bossSpawn.x, waveSpawnPlan.bossSpawn.y);
+      showBossSpotlight(waveSpawnPlan.bossSpawn.bossTemplate);
     }
 
     for (let enemyIndex = state.enemies.length - 1; enemyIndex >= 0; enemyIndex -= 1) {

@@ -1,5 +1,5 @@
 import { UI_COPY } from '../../data/gameConfig.js';
-import { createWaveDefinition } from './gameRules.js';
+import { createWaveDefinition, getSpawnPosition } from './gameRules.js';
 import { createWaveRuntimeState } from './gameState.js';
 import { resolveWaveTick, shouldAutoRunWaveFlow } from './progressionRules.js';
 
@@ -48,5 +48,31 @@ export const advanceWaveTickRuntime = ({ state, dt }) => {
     spawnEnemyKeys: waveTick.spawnEnemyKeys,
     spawnBoss: waveTick.spawnBoss,
     bossTemplate: waveTick.spawnBoss ? state.wave.boss : null,
+  };
+};
+
+export const createWaveSpawnPlan = ({
+  waveTick,
+  camera,
+  viewportWidth,
+  viewportHeight,
+  resolveSpawnPosition = getSpawnPosition,
+}) => {
+  const getNextSpawnPosition = () => resolveSpawnPosition(camera, viewportWidth, viewportHeight);
+  const enemySpawns = waveTick.spawnEnemyKeys.map((enemyKey) => ({
+    enemyKey,
+    ...getNextSpawnPosition(),
+  }));
+  const bossSpawn =
+    waveTick.spawnBoss && waveTick.bossTemplate
+      ? {
+          bossTemplate: waveTick.bossTemplate,
+          ...getNextSpawnPosition(),
+        }
+      : null;
+
+  return {
+    enemySpawns,
+    bossSpawn,
   };
 };

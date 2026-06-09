@@ -63,7 +63,7 @@ Owns debug combat-field clearing, sandbox wave reset, sandbox overview metadata,
 Holds wave-flow decisions such as reward follow-up behavior, auto-run gating, and per-tick queue or boss progression.
 
 - src/logic/engine/waveFlowRuntime.js
-Owns wave-start and wave-tick runtime helpers for creating authored wave state, applying debug Boss authoring to wave bosses, building wave overview/message presentation state, advancing wave timers, and returning enemy or Boss spawn plans.
+Owns wave-start and wave-tick runtime helpers for creating authored wave state, applying debug Boss authoring to wave bosses, building wave overview/message presentation state, advancing wave timers, returning enemy or Boss spawn plans, and materializing spawn positions.
 
 - src/logic/engine/placementRules.js
 Holds pure placement-evaluation helpers for tower drag previews and non-tower drag state updates.
@@ -78,7 +78,7 @@ Owns runtime reward flow helpers for building reward choices from current state,
 Defines the built-in synthesized sound cues for towers, rewards, boss entrances, phase shifts, and boss defeats.
 
 - src/logic/hooks/useGeoGuardGame.jsx
-This is the current gameplay orchestrator. It owns wave spawn side effects, reward UI presentation handoff, drag placement, remaining debug wave/UI orchestration, and Boss phase scheduling, while delegating canvas drawing, browser input, frame-loop wiring, Boss editor draft state, Boss template/entity/encounter construction, wave start/tick helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior updates, enemy defeat settlement, and combat-frame settlement to narrower modules.
+This is the current gameplay orchestrator. It owns wave entity creation side effects, reward UI presentation handoff, drag placement, remaining debug wave/UI orchestration, and Boss phase scheduling, while delegating canvas drawing, browser input, frame-loop wiring, Boss editor draft state, Boss template/entity/encounter construction, wave start/tick/spawn-plan helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior updates, enemy defeat settlement, and combat-frame settlement to narrower modules.
 
 - src/logic/hooks/useCanvasGameLoop.js
 Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, right-click tower targeting, and the requestAnimationFrame loop bridge.
@@ -133,7 +133,7 @@ The left half of the screen is still reserved for joystick movement. The bottom 
 Data is separated into src/data, shared rules live in src/logic/engine, canvas drawing lives in src/view/canvas, and UI components live in src/view/components. However, useGeoGuardGame remains the dominant runtime integration point and is still large.
 
 2. Canvas rendering is now separated from runtime updates.
-The renderer still consumes the runtime state shape directly, but drawing code no longer lives inside useGeoGuardGame. Browser input, the frame loop, Boss editor draft state, Boss template/entity/encounter construction, wave start/tick helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior, enemy defeat settlement, and combat-frame settlement also live in narrower modules. Future refactors should focus more on remaining debug wave/UI orchestration and, separately, moving phase intent or counterplay text into structured data.
+The renderer still consumes the runtime state shape directly, but drawing code no longer lives inside useGeoGuardGame. Browser input, the frame loop, Boss editor draft state, Boss template/entity/encounter construction, wave start/tick/spawn-plan helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, player/tower offense, enemy behavior, enemy defeat settlement, and combat-frame settlement also live in narrower modules. Future refactors should focus more on remaining debug wave/UI orchestration and, separately, moving phase intent or counterplay text into structured data.
 
 3. The tower catalog is treated as progression state.
 Available towers and upgrade levels live as runtime/template state rather than as placed entities. This keeps reward resolution simple and avoids rewriting every placed tower after upgrades.
@@ -142,7 +142,7 @@ Available towers and upgrade levels live as runtime/template state rather than a
 
 - `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd` runs `npm test` followed by `npm run build`.
 - npm run build passes locally.
-- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug action presentation helpers, debug tower runtime helpers, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
+- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug action presentation helpers, debug tower runtime helpers, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 

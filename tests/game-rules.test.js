@@ -81,7 +81,12 @@ import {
   openBossRewardRuntime,
 } from '../src/logic/engine/rewardFlowRuntime.js';
 import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../src/logic/engine/towerRules.js';
-import { advanceWaveTickRuntime, createWaveStartMessage, startWaveRuntime } from '../src/logic/engine/waveFlowRuntime.js';
+import {
+  advanceWaveTickRuntime,
+  createWaveSpawnPlan,
+  createWaveStartMessage,
+  startWaveRuntime,
+} from '../src/logic/engine/waveFlowRuntime.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
   const catalog = createInitialTowerCatalog();
@@ -545,6 +550,58 @@ test('wave flow runtime advances wave ticks and writes back spawn state', () => 
   assert.equal(bossTick.spawnBoss, true);
   assert.deepEqual(bossTick.bossTemplate, { id: 'PRISM' });
   assert.equal(state.wave.bossSpawned, true);
+});
+
+test('wave flow runtime materializes spawn plans with deterministic positions', () => {
+  const camera = { x: 120, y: 80 };
+  const positions = [
+    { x: 10, y: 20 },
+    { x: 30, y: 40 },
+    { x: 50, y: 60 },
+  ];
+  const calls = [];
+  const resolveSpawnPosition = (cameraArg, viewportWidth, viewportHeight) => {
+    calls.push({ camera: cameraArg, viewportWidth, viewportHeight });
+    return positions[calls.length - 1];
+  };
+  const bossTemplate = { id: 'PRISM' };
+
+  const spawnPlan = createWaveSpawnPlan({
+    waveTick: {
+      spawnEnemyKeys: ['BASIC', 'FAST'],
+      spawnBoss: true,
+      bossTemplate,
+    },
+    camera,
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    resolveSpawnPosition,
+  });
+
+  assert.deepEqual(spawnPlan.enemySpawns, [
+    { enemyKey: 'BASIC', x: 10, y: 20 },
+    { enemyKey: 'FAST', x: 30, y: 40 },
+  ]);
+  assert.deepEqual(spawnPlan.bossSpawn, { bossTemplate, x: 50, y: 60 });
+  assert.deepEqual(calls, [
+    { camera, viewportWidth: 1280, viewportHeight: 720 },
+    { camera, viewportWidth: 1280, viewportHeight: 720 },
+    { camera, viewportWidth: 1280, viewportHeight: 720 },
+  ]);
+
+  const emptyBossPlan = createWaveSpawnPlan({
+    waveTick: {
+      spawnEnemyKeys: [],
+      spawnBoss: false,
+      bossTemplate,
+    },
+    camera,
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    resolveSpawnPosition,
+  });
+
+  assert.deepEqual(emptyBossPlan, { enemySpawns: [], bossSpawn: null });
 });
 
 test('wave tick leaves sandbox idle when auto-run is disabled', () => {
