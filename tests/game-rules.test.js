@@ -22,6 +22,7 @@ import {
   updatePlayerOffenseRuntime,
   updateTowerOffenseRuntime,
 } from '../src/logic/engine/combatOffenseRuntime.js';
+import { updateEnemyBehaviorRuntime } from '../src/logic/engine/enemyBehaviorRuntime.js';
 import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
@@ -739,6 +740,132 @@ test('combat offense runtime applies frozen and jam fire-rate factors', () => {
 
   assert.equal(getTowerFireRateFactor(state, tower), 2.5);
   assert.equal(getTowerFireRateFactor(state, { ...tower, frozenTimer: 0.1 }), 999);
+});
+
+const createEnemyBehaviorTestContext = (stateOverrides = {}) => {
+  const calls = {
+    areaDamage: [],
+    bossUpdates: [],
+    healthSyncs: 0,
+    particles: [],
+    spawns: [],
+    waves: [],
+  };
+  const state = {
+    gameTime: 0.1,
+    player: { x: 100, y: 0, radius: 12, hp: 100 },
+    towers: [],
+    enemies: [],
+    ...stateOverrides,
+  };
+
+  return {
+    calls,
+    state,
+    context: {
+      state,
+      spawnAround: (...args) => calls.spawns.push(args),
+      spawnImpactWave: (...args) => calls.waves.push(args),
+      updateBossBehavior: (...args) => calls.bossUpdates.push(args),
+      damageTarget: (target, amount) => {
+        target.hp -= amount;
+      },
+      damageArea: (...args) => calls.areaDamage.push(args),
+      spawnParticle: (...args) => calls.particles.push(args),
+      syncHudHealth: () => {
+        calls.healthSyncs += 1;
+      },
+    },
+  };
+};
+
+test('enemy behavior runtime keeps burrowed enemies paused until emergence', () => {
+  const enemy = {
+    x: 0,
+    y: 0,
+    radius: 10,
+    hp: 30,
+    hitFlash: 0,
+    slowTimer: 0,
+    slowRatio: 1,
+    burrowed: true,
+    burrowTimer: 0.5,
+    baseSpeed: 100,
+  };
+  const { calls, context } = createEnemyBehaviorTestContext({ enemies: [enemy] });
+
+  const result = updateEnemyBehaviorRuntime({ enemy, dt: 0.1, ...context });
+
+  assert.equal(result.continueLoop, true);
+  assert.equal(enemy.burrowed, true);
+  assert.equal(enemy.burrowTimer, 0.4);
+  assert.equal(enemy.x, 0);
+  assert.equal(calls.waves.length, 0);
+
+  enemy.burrowTimer = 0.05;
+  const emergeResult = updateEnemyBehaviorRuntime({ enemy, dt: 0.1, ...context });
+
+  assert.equal(emergeResult.continueLoop, false);
+  assert.equal(enemy.burrowed, false);
+  assert.equal(calls.waves.length, 1);
+});
+
+test('enemy behavior runtime moves enemies and applies contact damage', () => {
+  const enemy = {
+    x: 5,
+    y: 0,
+    radius: 10,
+    hp: 30,
+    hitFlash: 1,
+    slowTimer: 0,
+    slowRatio: 1,
+    baseSpeed: 0,
+    damage: 20,
+  };
+  const { calls, context, state } = createEnemyBehaviorTestContext({
+    player: { x: 0, y: 0, radius: 12, hp: 100 },
+    enemies: [enemy],
+  });
+
+  const result = updateEnemyBehaviorRuntime({ enemy, dt: 0.2, ...context });
+
+  assert.equal(result.continueLoop, false);
+  assert.equal(state.player.hp, 96);
+  assert.equal(calls.healthSyncs, 1);
+  assert.equal(calls.particles.length, 1);
+  assert.equal(enemy.hitFlash, 0);
+});
+
+test('enemy behavior runtime handles aura healing, summons, and fuse explosions', () => {
+  const ally = { x: 20, y: 0, radius: 8, hp: 5, maxHp: 20 };
+  const enemy = {
+    x: 0,
+    y: 0,
+    radius: 10,
+    hp: 30,
+    hitFlash: 0,
+    slowTimer: 0,
+    slowRatio: 1,
+    baseSpeed: 0,
+    damage: 0,
+    healAura: { range: 50, amount: 10 },
+    summon: { interval: 0.2, type: 'BASIC', count: 2 },
+    summonTimer: 0.1,
+    explode: { fuse: 1, radius: 40, damage: 12 },
+    fuseTimer: 0.05,
+  };
+  const { calls, context } = createEnemyBehaviorTestContext({
+    enemies: [enemy, ally],
+  });
+
+  updateEnemyBehaviorRuntime({ enemy, dt: 0.1, ...context });
+
+  assert.equal(ally.hp, 6);
+  assert.equal(calls.spawns.length, 1);
+  assert.equal(calls.spawns[0][1], 'BASIC');
+  assert.equal(calls.spawns[0][2], 2);
+  assert.equal(calls.areaDamage.length, 1);
+  assert.equal(enemy.hp, 0);
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {

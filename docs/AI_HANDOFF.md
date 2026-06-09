@@ -61,13 +61,13 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss ability effects, combat-frame settlement, and player/tower offense out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss ability effects, combat-frame settlement, player/tower offense, and enemy behavior out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
     *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
 *   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
-    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave flow, rewards, combat, debug tools, and Boss behavior.
+    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave flow, rewards, enemy death/reward settlement, debug tools, and Boss behavior scheduling.
 *   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
     *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
 *   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
@@ -81,9 +81,12 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 *   **Combat Offense Runtime (`src/logic/engine/combatOffenseRuntime.js`)**:
     *   Owns player auto-fire, tower firing cadence, projectile creation, burst spread, and frozen/jam fire-rate factors.
     *   Added focused node:test coverage for player projectile creation, tower burst firing/dead tower removal, and fire-rate modifiers.
+*   **Enemy Behavior Runtime (`src/logic/engine/enemyBehaviorRuntime.js`)**:
+    *   Owns per-enemy status timers, burrow/phase/aura/summon behavior, movement and target selection, contact damage, and explode fuse settlement.
+    *   Added focused node:test coverage for burrow pauses, movement/contact damage, aura healing, summons, and fuse explosions.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
-    *   The gameplay hook is still the next major refactor target, especially for enemy movement/AI and authored encounter orchestration.
+    *   The gameplay hook is still the next major refactor target, especially for enemy death/reward orchestration and authored encounter orchestration.
 
 ---
 **Last Updated**: `2026-06-09`
