@@ -74,6 +74,12 @@ import {
   recordRewardOffers,
   recordRewardPick,
 } from '../src/logic/engine/rewardRules.js';
+import {
+  applyRewardChoiceRuntime,
+  buildRuntimeRewardChoices,
+  getRewardAppliedMessage,
+  openBossRewardRuntime,
+} from '../src/logic/engine/rewardFlowRuntime.js';
 import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../src/logic/engine/towerRules.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
@@ -598,6 +604,58 @@ test('reward application updates catalog, money, and health without mutating unr
   assert.equal(upgraded.catalog.find((tower) => tower.id === 'BASIC').level, 1);
   assert.equal(supported.hp, 100);
   assert.equal(funded.money, 85);
+});
+
+test('reward flow runtime opens boss rewards and records offers', () => {
+  const state = createRuntimeState();
+  const catalog = createInitialTowerCatalog();
+  state.wave = createWaveRuntimeState(6, {
+    queue: [],
+    spawnInterval: 1,
+    boss: { id: 'HIVE' },
+  });
+  state.wave.awaitingReward = false;
+  state.wave.pendingRewardBossUid = 4;
+  state.wave.pendingRewardBossEncounterUid = 8;
+  state.money = 35;
+  state.player.hp = 62;
+
+  const directChoices = buildRuntimeRewardChoices({ state, catalog, currentWave: 6, hudMoney: 35 });
+  const rewardState = openBossRewardRuntime({ state, catalog, currentWave: 6, hudMoney: 35 });
+
+  assert.equal(state.wave.awaitingReward, true);
+  assert.equal(state.wave.pendingRewardBossUid, null);
+  assert.equal(state.wave.pendingRewardBossEncounterUid, null);
+  assert.deepEqual(rewardState, { active: true, choices: directChoices });
+  assert.equal(state.rewardHistory.offeredKeys.length, directChoices.length);
+});
+
+test('reward flow runtime applies choices and resolves debug follow-up', () => {
+  const state = createRuntimeState();
+  const catalog = createInitialTowerCatalog();
+  const choice = { type: 'support_money', amount: 75, title: 'Supply Drop' };
+  state.mode = 'debug';
+  state.debugWaveFlow = false;
+  state.money = 40;
+
+  const result = applyRewardChoiceRuntime({
+    state,
+    catalog,
+    choice,
+    currentWave: 7,
+  });
+
+  assert.equal(result.money, 115);
+  assert.equal(result.hp, state.player.hp);
+  assert.equal(result.catalog, catalog);
+  assert.deepEqual(result.rewardState, { active: false, choices: [] });
+  assert.deepEqual(result.followUp, { type: 'debug-stay' });
+  assert.deepEqual(state.rewardHistory.pickedKeys, ['support_money']);
+  assert.deepEqual(getRewardAppliedMessage(choice), {
+    title: 'Reward Applied',
+    subtitle: 'Supply Drop',
+    tone: 'system',
+  });
 });
 
 test('combat rules resolve player immunity and enemy shielded damage correctly', () => {

@@ -17,9 +17,14 @@ import {
 import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
 import { createWaveDefinition, getSpawnPosition } from '../engine/gameRules';
-import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
+import { resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
-import { applyRewardChoiceEffects, buildRewardOfferPlan, materializeRewardChoices, recordRewardOffers, recordRewardPick } from '../engine/rewardRules.js';
+import {
+  applyRewardChoiceRuntime,
+  buildRuntimeRewardChoices,
+  getRewardAppliedMessage,
+  openBossRewardRuntime,
+} from '../engine/rewardFlowRuntime.js';
 import {
   createDebugLayoutTowers,
   createPlacedTower,
@@ -756,41 +761,26 @@ export default function useGeoGuardGame() {
     updateDragPlacement(clientX, clientY);
   };
 
-  const buildRewardChoices = (catalog) => {
-    const waveNumber = Math.max(1, game.current.wave.number || currentWave || 1);
-    const plan = buildRewardOfferPlan({
-      catalog,
-      waveNumber,
-      money: typeof money === 'number' ? money : game.current.money,
-      hp: game.current.player.hp,
-      maxHp: game.current.player.maxHp,
-      infiniteMoney: game.current.debugOptions.infiniteMoney,
-      history: game.current.rewardHistory,
-    });
-
-    return materializeRewardChoices(catalog, plan);
-  };
-
   const openBossReward = () => {
     void playCue('reward_open');
-    game.current.wave.awaitingReward = true;
-    game.current.wave.pendingRewardBossUid = null;
-    game.current.wave.pendingRewardBossEncounterUid = null;
-    const choices = buildRewardChoices(towerCatalogRef.current);
-    game.current.rewardHistory = recordRewardOffers(game.current.rewardHistory, choices);
-    setRewardState({ active: true, choices });
+    setRewardState(
+      openBossRewardRuntime({
+        state: game.current,
+        catalog: towerCatalogRef.current,
+        currentWave,
+        hudMoney: money,
+      })
+    );
   };
 
   const applyRewardChoice = (choice) => {
     void playCue('reward_pick');
-    game.current.rewardHistory = recordRewardPick(game.current.rewardHistory, choice);
     const previousCatalog = towerCatalogRef.current;
-    const rewardResult = applyRewardChoiceEffects({
+    const rewardResult = applyRewardChoiceRuntime({
+      state: game.current,
       catalog: previousCatalog,
       choice,
-      money: game.current.money,
-      hp: game.current.player.hp,
-      maxHp: game.current.player.maxHp,
+      currentWave,
     });
 
     if (rewardResult.catalog !== previousCatalog) {
@@ -808,21 +798,10 @@ export default function useGeoGuardGame() {
       syncHudHealth();
     }
 
-    setRewardState({ active: false, choices: [] });
-    const followUp = resolveRewardFollowUp({
-      mode: game.current.mode,
-      debugWaveFlow: game.current.debugWaveFlow,
-      currentWave,
-    });
+    setRewardState(rewardResult.rewardState);
+    const followUp = rewardResult.followUp;
     if (followUp.type === 'debug-stay') {
-      showWaveMessage(
-        {
-          title: 'Reward Applied',
-          subtitle: choice.title,
-          tone: 'system',
-        },
-        1600
-      );
+      showWaveMessage(getRewardAppliedMessage(choice), 1600);
       return;
     }
     startWave(followUp.waveNumber);
@@ -897,7 +876,16 @@ export default function useGeoGuardGame() {
       return;
     }
     void playCue('reward_open');
-    setRewardState(createDebugRewardState(buildRewardChoices(towerCatalogRef.current)));
+    setRewardState(
+      createDebugRewardState(
+        buildRuntimeRewardChoices({
+          state: game.current,
+          catalog: towerCatalogRef.current,
+          currentWave,
+          hudMoney: money,
+        })
+      )
+    );
   };
 
   const spawnBossFromEditor = () => {
