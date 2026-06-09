@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { COLORS, createInitialTowerCatalog } from '../src/data/gameConfig.js';
+import { BOSS_TYPES, COLORS, ENEMY_TYPES, createInitialTowerCatalog } from '../src/data/gameConfig.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import {
   applyBossEditorDraft,
@@ -24,6 +24,12 @@ import {
 } from '../src/logic/engine/combatOffenseRuntime.js';
 import { updateEnemyBehaviorRuntime } from '../src/logic/engine/enemyBehaviorRuntime.js';
 import { settleEnemyDefeatRuntime, settlePendingBossRewardRuntime } from '../src/logic/engine/enemyDefeatRuntime.js';
+import {
+  createBossEncounterRuntime,
+  createEnemyRuntimeEntityFromKey,
+  getBossEditorBaseTemplate,
+  getBossOwnership,
+} from '../src/logic/engine/encounterRuntime.js';
 import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
@@ -233,6 +239,71 @@ test('boss authoring draft survives serialize and parse round-trips', () => {
   assert.equal(parsed.phases.length, 1);
   assert.equal(parsed.phases[0].nodes[0].abilityId, 'summonFormation');
   assert.equal(parsed.phases[0].nodes[0].cooldown, 5);
+});
+
+test('encounter runtime enriches boss editor templates with authored phase overrides', () => {
+  const commander = getBossEditorBaseTemplate('COMMANDER');
+
+  assert.equal(commander.id, 'COMMANDER');
+  assert.ok(commander.phases[0].abilities.includes('commandLine'));
+  assert.ok(commander.phases[1].abilities.includes('phalanxAdvance'));
+  assert.equal(getBossEditorBaseTemplate('UNKNOWN_BOSS'), null);
+});
+
+test('encounter runtime creates enemy entities with runtime-only state', () => {
+  const burrower = createEnemyRuntimeEntityFromKey({ enemyKey: 'BURROWER', uid: 77 });
+
+  assert.equal(burrower.uid, 77);
+  assert.equal(burrower.hp, ENEMY_TYPES.BURROWER.hp);
+  assert.equal(burrower.maxHp, ENEMY_TYPES.BURROWER.hp);
+  assert.equal(burrower.baseSpeed, ENEMY_TYPES.BURROWER.speed);
+  assert.equal(burrower.burrowed, true);
+  assert.equal(burrower.burrowTimer, ENEMY_TYPES.BURROWER.burrow.duration);
+  assert.equal(burrower.summonedByBossUid, null);
+  assert.equal(burrower.summonCategory, null);
+});
+
+test('encounter runtime builds single-boss and twin encounter entities', () => {
+  let nextEnemyUid = 10;
+  let nextEncounterUid = 3;
+  const allocateEnemyUid = () => nextEnemyUid++;
+  const allocateEncounterUid = () => nextEncounterUid++;
+
+  const [commander] = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.COMMANDER,
+    x: 100,
+    y: 200,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+
+  assert.equal(commander.uid, 10);
+  assert.equal(commander.x, 100);
+  assert.equal(commander.y, 200);
+  assert.equal(commander.isBoss, true);
+  assert.equal(commander.enemyType, 'BOSS');
+  assert.equal(commander.currentPhaseIndex, -1);
+  assert.deepEqual(getBossOwnership(commander), { ownerBossUid: 10, ownerEncounterUid: null });
+  assert.ok(commander.phases[0].abilities.includes('commandLine'));
+
+  const twins = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.TWINS,
+    x: 300,
+    y: 400,
+    allocateEnemyUid,
+    allocateEncounterUid,
+  });
+
+  assert.equal(twins.length, 2);
+  assert.equal(twins[0].uid, 11);
+  assert.equal(twins[1].uid, 12);
+  assert.equal(twins[0].encounterUid, 3);
+  assert.equal(twins[1].encounterUid, 3);
+  assert.equal(twins[0].twinRole, 'sun');
+  assert.equal(twins[1].twinRole, 'moon');
+  assert.equal(twins[0].x, 246);
+  assert.equal(twins[1].x, 354);
+  assert.equal(twins[0].value + twins[1].value, BOSS_TYPES.TWINS.value);
 });
 
 const createBossAbilityTestContext = (stateOverrides = {}) => {
