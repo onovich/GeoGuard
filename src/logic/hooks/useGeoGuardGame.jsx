@@ -28,6 +28,12 @@ import {
   updateTowerBlueprintLevel,
 } from '../engine/debugTowerRuntime.js';
 import { forceBossPhaseRuntime } from '../engine/debugBossRuntime.js';
+import {
+  DEBUG_SANDBOX_OVERVIEW,
+  applyDebugOptionRuntime,
+  enterDebugSandboxRuntime,
+  resetCombatRuntimeState,
+} from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
 import { dist, formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
@@ -36,11 +42,6 @@ import useCanvasGameLoop from './useCanvasGameLoop.js';
 import useGameAudio from './useGameAudio.js';
 
 const DRAG_CANCEL_MARGIN = 18;
-const DEBUG_SANDBOX_OVERVIEW = {
-  label: 'Free Sandbox',
-  focus: 'Drag towers, enemies, and bosses onto the live map.',
-};
-
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
 
 export default function useGeoGuardGame() {
@@ -154,19 +155,7 @@ export default function useGeoGuardGame() {
   const syncHudHealth = () => setHealth(game.current.debugOptions.infiniteHealth ? game.current.player.maxHp : Math.max(0, Math.floor(game.current.player.hp)));
 
   const resetCombatState = ({ clearTowers = false } = {}) => {
-    game.current.enemies = [];
-    if (clearTowers) {
-      game.current.towers = [];
-    }
-    game.current.projectiles = [];
-    game.current.drops = [];
-    game.current.particles = [];
-    game.current.impactWaves = [];
-    game.current.hazards = [];
-    game.current.floatingTexts = [];
-    game.current.wave.awaitingReward = false;
-    game.current.wave.pendingRewardBossUid = null;
-    game.current.wave.pendingRewardBossEncounterUid = null;
+    resetCombatRuntimeState({ state: game.current, clearTowers });
     setRewardState({ active: false, choices: [] });
     setBossHud([]);
     setTowerContextMenu(null);
@@ -175,11 +164,10 @@ export default function useGeoGuardGame() {
 
   const enterDebugSandbox = ({ clearTowers = false, announce = false } = {}) => {
     resetCombatState({ clearTowers });
-    game.current.debugWaveFlow = false;
-    game.current.wave = createEmptyWaveState();
-    setDebugWaveFlow(false);
-    setCurrentWave(0);
-    setWaveOverview(DEBUG_SANDBOX_OVERVIEW);
+    const sandboxState = enterDebugSandboxRuntime({ state: game.current });
+    setDebugWaveFlow(sandboxState.debugWaveFlow);
+    setCurrentWave(sandboxState.currentWave);
+    setWaveOverview(sandboxState.waveOverview);
     if (announce) {
       showWaveMessage(
         {
@@ -837,17 +825,8 @@ export default function useGeoGuardGame() {
     startWave(followUp.waveNumber);
   };
   const setDebugOption = (key, value) => {
-    const nextOptions = { ...game.current.debugOptions, [key]: value };
-    game.current.debugOptions = nextOptions;
+    const nextOptions = applyDebugOptionRuntime({ state: game.current, key, value });
     setDebugOptions(nextOptions);
-    if (key === 'infiniteMoney' && value) {
-      game.current.money = 999999;
-    } else if (key === 'infiniteMoney' && !value && game.current.money > 99999) {
-      game.current.money = 200;
-    }
-    if (key === 'infiniteHealth' && value) {
-      game.current.player.hp = game.current.player.maxHp;
-    }
     syncHudMoney();
     syncHudHealth();
   };

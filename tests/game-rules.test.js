@@ -39,6 +39,12 @@ import {
 } from '../src/logic/engine/debugTowerRuntime.js';
 import { forceBossPhaseRuntime, getForcedBossPhaseHp, getForcedBossPhaseIndex } from '../src/logic/engine/debugBossRuntime.js';
 import {
+  DEBUG_SANDBOX_OVERVIEW,
+  applyDebugOptionRuntime,
+  enterDebugSandboxRuntime,
+  resetCombatRuntimeState,
+} from '../src/logic/engine/debugFieldRuntime.js';
+import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
   getBossRewardResolution,
@@ -1197,6 +1203,72 @@ test('debug boss runtime forces active bosses and reports phase shift callbacks'
   assert.equal(samePhaseCalls[0].previousPhaseIndex, -1);
 
   assert.deepEqual(forceBossPhaseRuntime({ enemies: [], phaseNumber: 1 }), { updatedCount: 0 });
+});
+
+test('debug field runtime clears combat collections and pending rewards', () => {
+  const state = createRuntimeState();
+  state.enemies = [{ id: 'enemy' }];
+  state.towers = [{ id: 'tower' }];
+  state.projectiles = [{ id: 'projectile' }];
+  state.drops = [{ id: 'drop' }];
+  state.particles = [{ id: 'particle' }];
+  state.impactWaves = [{ id: 'wave' }];
+  state.hazards = [{ id: 'hazard' }];
+  state.floatingTexts = [{ id: 'text' }];
+  state.wave.awaitingReward = true;
+  state.wave.pendingRewardBossUid = 'boss-1';
+  state.wave.pendingRewardBossEncounterUid = 'enc-1';
+
+  resetCombatRuntimeState({ state, clearTowers: false });
+
+  assert.deepEqual(state.enemies, []);
+  assert.deepEqual(state.towers, [{ id: 'tower' }]);
+  assert.deepEqual(state.projectiles, []);
+  assert.deepEqual(state.drops, []);
+  assert.deepEqual(state.particles, []);
+  assert.deepEqual(state.impactWaves, []);
+  assert.deepEqual(state.hazards, []);
+  assert.deepEqual(state.floatingTexts, []);
+  assert.equal(state.wave.awaitingReward, false);
+  assert.equal(state.wave.pendingRewardBossUid, null);
+  assert.equal(state.wave.pendingRewardBossEncounterUid, null);
+
+  resetCombatRuntimeState({ state, clearTowers: true });
+  assert.deepEqual(state.towers, []);
+});
+
+test('debug field runtime enters sandbox wave state and applies debug options', () => {
+  const state = createRuntimeState();
+  state.debugWaveFlow = true;
+  state.wave = createWaveRuntimeState(5, {
+    queue: ['BASIC'],
+    spawnInterval: 0.5,
+    boss: { id: 'COMMANDER' },
+  });
+  state.money = 100000;
+  state.player.hp = 12;
+
+  const sandboxResult = enterDebugSandboxRuntime({ state });
+
+  assert.deepEqual(sandboxResult, {
+    currentWave: 0,
+    debugWaveFlow: false,
+    waveOverview: DEBUG_SANDBOX_OVERVIEW,
+  });
+  assert.equal(state.debugWaveFlow, false);
+  assert.deepEqual(state.wave, createEmptyWaveState());
+
+  const moneyOn = applyDebugOptionRuntime({ state, key: 'infiniteMoney', value: true });
+  assert.equal(moneyOn.infiniteMoney, true);
+  assert.equal(state.money, 999999);
+
+  const moneyOff = applyDebugOptionRuntime({ state, key: 'infiniteMoney', value: false });
+  assert.equal(moneyOff.infiniteMoney, false);
+  assert.equal(state.money, 200);
+
+  const healthOn = applyDebugOptionRuntime({ state, key: 'infiniteHealth', value: true });
+  assert.equal(healthOn.infiniteHealth, true);
+  assert.equal(state.player.hp, state.player.maxHp);
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {
