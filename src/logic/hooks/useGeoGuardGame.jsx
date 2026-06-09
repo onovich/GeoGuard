@@ -4,6 +4,7 @@ import { getBossPresentation } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { runBossAbilityEffect } from '../engine/bossAbilityRuntime.js';
 import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engine/bossAuthoringRules.js';
+import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../engine/bossHudRuntime.js';
 import { updateDropRuntime, updateHazardRuntime, updateProjectileRuntime, updateTransientVisualRuntime } from '../engine/combatFrameRuntime.js';
 import { updatePlayerOffenseRuntime, updateTowerOffenseRuntime } from '../engine/combatOffenseRuntime.js';
 import { updateEnemyBehaviorRuntime } from '../engine/enemyBehaviorRuntime.js';
@@ -187,42 +188,13 @@ export default function useGeoGuardGame() {
   };
 
   const syncBossHud = () => {
-    const bosses = game.current.enemies.filter((enemy) => enemy.isBoss);
-    const groups = new Map();
-    for (const boss of bosses) {
-      const key = boss.encounterUid ? `enc-${boss.encounterUid}` : `boss-${boss.uid}`;
-      const presentation = getBossPresentation(boss.encounterBossId ?? boss.id);
-      const existing = groups.get(key) ?? {
-        id: key,
-        title: boss.encounterName ?? boss.name,
-        summary: presentation?.summary ?? '',
-        threats: presentation?.threats ?? [],
-        counterplay: presentation?.counterplay ?? '',
-        members: [],
-      };
-      existing.members.push({
-        id: boss.uid,
-        name: boss.name,
-        color: boss.color,
-        hpRatio: Math.max(0, boss.hp / boss.maxHp),
-        phase: boss.phases?.[boss.currentPhaseIndex]?.name ?? '',
-        phaseIndex: boss.currentPhaseIndex ?? 0,
-        phaseCount: boss.phases?.length ?? 0,
-        phaseHint: getBossPhaseHint(boss, boss.currentPhaseIndex ?? 0),
-        phaseTone: getBossPhaseTone(boss, boss.currentPhaseIndex ?? 0),
-        enraged: Boolean(boss.bossState.partnerFallen),
-      });
-      groups.set(key, existing);
-    }
-
-    const nextHud = [...groups.values()].map((group) => ({
-      ...group,
-      members: group.members.sort((left, right) => left.id - right.id),
-    }));
+    const nextHud = buildBossHudRuntime({
+      enemies: game.current.enemies,
+      getPhaseHint: getBossPhaseHint,
+      getPhaseTone: getBossPhaseTone,
+    });
     setBossHud((previous) => {
-      const previousJson = JSON.stringify(previous);
-      const nextJson = JSON.stringify(nextHud);
-      return previousJson === nextJson ? previous : nextHud;
+      return areBossHudSnapshotsEqual(previous, nextHud) ? previous : nextHud;
     });
   };
 

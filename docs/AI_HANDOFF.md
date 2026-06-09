@@ -61,7 +61,7 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, entity spawn insertion, wave start/tick helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, Boss HUD view-model construction, entity spawn insertion, wave start/tick helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
@@ -90,6 +90,9 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 *   **Encounter Runtime (`src/logic/engine/encounterRuntime.js`)**:
     *   Owns Boss phase enrichment, Boss editor base template lookup, normal enemy runtime defaults, Boss runtime defaults, Boss ownership metadata, and single/twin Boss encounter construction.
     *   Added focused node:test coverage for phase overrides, enemy runtime initialization, single Boss spawning data, and twin encounter ownership/offset/value splits.
+*   **Boss HUD Runtime (`src/logic/engine/bossHudRuntime.js`)**:
+    *   Owns active Boss filtering, encounter grouping, HUD member sorting, presentation metadata lookup, and stable Boss HUD snapshot comparison.
+    *   Added focused node:test coverage for twin encounter HUD grouping, member ordering, phase hint/tone injection, enrage flags, and snapshot reuse.
 *   **Reward Flow Runtime (`src/logic/engine/rewardFlowRuntime.js`)**:
     *   Owns runtime reward choice building, Boss reward UI-state opening, offer or pick history recording, reward application flow, and post-choice wave follow-up resolution.
     *   Added focused node:test coverage for opening Boss rewards and applying choices in debug flow.
@@ -110,7 +113,7 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Added focused node:test coverage for clearing combat collections, preserving or clearing towers, sandbox reset, action helper outputs, and infinite money/health option side effects.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
-    *   The gameplay hook is still the next major refactor target, especially for remaining debug wave/UI wiring.
+    *   The gameplay hook is still the next major refactor target, especially for remaining Boss phase presentation effects and debug wave/UI wiring.
 
 ---
 **Last Updated**: `2026-06-10`

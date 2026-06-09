@@ -10,6 +10,7 @@ import {
   serializeBossEditorDraft,
 } from '../src/logic/engine/bossAuthoringRules.js';
 import { runBossAbilityEffect } from '../src/logic/engine/bossAbilityRuntime.js';
+import { areBossHudSnapshotsEqual, buildBossHudRuntime } from '../src/logic/engine/bossHudRuntime.js';
 import { AUDIO_CUES } from '../src/logic/audio/audioCueLibrary.js';
 import {
   updateDropRuntime,
@@ -338,6 +339,45 @@ test('encounter runtime builds single-boss and twin encounter entities', () => {
   assert.equal(twins[0].x, 246);
   assert.equal(twins[1].x, 354);
   assert.equal(twins[0].value + twins[1].value, BOSS_TYPES.TWINS.value);
+});
+
+test('boss hud runtime groups encounters into stable hud view models', () => {
+  let nextEnemyUid = 1;
+  let nextEncounterUid = 1;
+  const twins = createBossEncounterRuntime({
+    bossTemplate: BOSS_TYPES.TWINS,
+    x: 300,
+    y: 400,
+    allocateEnemyUid: () => nextEnemyUid++,
+    allocateEncounterUid: () => nextEncounterUid++,
+  });
+  twins[0].currentPhaseIndex = 1;
+  twins[0].hp = twins[0].maxHp * 0.75;
+  twins[1].currentPhaseIndex = 2;
+  twins[1].hp = twins[1].maxHp * 0.5;
+  twins[1].bossState.partnerFallen = true;
+
+  const hud = buildBossHudRuntime({
+    enemies: [{ isBoss: false }, twins[1], twins[0]],
+    getPhaseHint: (boss, activePhaseIndex) => `${boss.twinRole}:${activePhaseIndex}`,
+    getPhaseTone: (_boss, activePhaseIndex) => `tone-${activePhaseIndex}`,
+  });
+
+  assert.equal(hud.length, 1);
+  assert.equal(hud[0].id, 'enc-1');
+  assert.equal(hud[0].title, BOSS_TYPES.TWINS.name);
+  assert.deepEqual(hud[0].threats, ['Dual Sync', 'Crossfire', 'Enrage']);
+  assert.deepEqual(
+    hud[0].members.map((member) => member.id),
+    [1, 2]
+  );
+  assert.equal(hud[0].members[0].hpRatio, 0.75);
+  assert.equal(hud[0].members[0].phaseHint, 'sun:1');
+  assert.equal(hud[0].members[0].phaseTone, 'tone-1');
+  assert.equal(hud[0].members[1].hpRatio, 0.5);
+  assert.equal(hud[0].members[1].enraged, true);
+  assert.equal(areBossHudSnapshotsEqual(hud, JSON.parse(JSON.stringify(hud))), true);
+  assert.equal(areBossHudSnapshotsEqual(hud, [{ ...hud[0], members: [] }]), false);
 });
 
 test('entity spawn runtime writes enemies and bosses into state', () => {
