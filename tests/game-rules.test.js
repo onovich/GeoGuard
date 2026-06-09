@@ -58,6 +58,7 @@ import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
   clearDebugFieldPanelRuntime,
+  createDebugBossEditorSpawnPlan,
   createDebugUiResetState,
   createDebugRewardState,
   enterDebugSandboxPanelRuntime,
@@ -2015,6 +2016,37 @@ test('debug field runtime builds debug action presentation state', () => {
   });
   assert.deepEqual(getDebugBossSpawnPoint({ player: { x: 400, y: 300 } }), { x: 580, y: 270 });
   assert.deepEqual(getDebugBossSpawnPoint({ player: { x: 400, y: 300 }, distance: 90, yOffset: 20 }), { x: 490, y: 320 });
+  assert.deepEqual(
+    createDebugBossEditorSpawnPlan({
+      gameState: 'START',
+      mode: 'debug',
+      selectedBossId: 'COMMANDER',
+      player: { x: 400, y: 300 },
+    }),
+    { type: 'idle' }
+  );
+  assert.deepEqual(
+    createDebugBossEditorSpawnPlan({
+      gameState: 'PLAYING',
+      mode: 'normal',
+      selectedBossId: 'COMMANDER',
+      player: { x: 400, y: 300 },
+    }),
+    { type: 'idle' }
+  );
+  assert.deepEqual(
+    createDebugBossEditorSpawnPlan({
+      gameState: 'PLAYING',
+      mode: 'debug',
+      selectedBossId: 'COMMANDER',
+      player: { x: 400, y: 300 },
+    }),
+    {
+      type: 'spawn-boss',
+      bossId: 'COMMANDER',
+      spawnPoint: { x: 580, y: 270 },
+    }
+  );
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {

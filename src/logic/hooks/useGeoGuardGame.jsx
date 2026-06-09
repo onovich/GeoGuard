@@ -48,8 +48,8 @@ import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
   clearDebugFieldPanelRuntime,
+  createDebugBossEditorSpawnPlan,
   enterDebugSandboxPanelRuntime,
-  getDebugBossSpawnPoint,
   openDebugRewardPanelRuntime,
   resetDebugPanelCombatRuntime,
   startDebugWavePanelRuntime,
@@ -649,12 +649,18 @@ export default function useGeoGuardGame() {
   };
 
   const spawnBossFromEditor = () => {
-    if (gameState !== 'PLAYING' || game.current.mode !== 'debug') {
+    const spawnPlan = createDebugBossEditorSpawnPlan({
+      gameState,
+      mode: game.current.mode,
+      selectedBossId: bossEditor.selectedBossId,
+      player: game.current.player,
+    });
+
+    if (spawnPlan.type !== 'spawn-boss') {
       return;
     }
 
-    const spawnPoint = getDebugBossSpawnPoint({ player: game.current.player });
-    spawnBossAt(bossEditor.selectedBossId, spawnPoint.x, spawnPoint.y);
+    spawnBossAt(spawnPlan.bossId, spawnPlan.spawnPoint.x, spawnPlan.spawnPoint.y);
   };
 
   const forceBossPhase = (phaseNumber) => {

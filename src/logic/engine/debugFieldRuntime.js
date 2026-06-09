@@ -40,6 +40,25 @@ export const getDebugBossSpawnPoint = ({ player, distance = 180, yOffset = -30 }
   y: player.y + yOffset,
 });
 
+export const createDebugBossEditorSpawnPlan = ({
+  gameState,
+  mode,
+  selectedBossId,
+  player,
+  distance,
+  yOffset,
+}) => {
+  if (gameState !== 'PLAYING' || mode !== 'debug' || !selectedBossId) {
+    return { type: 'idle' };
+  }
+
+  return {
+    type: 'spawn-boss',
+    bossId: selectedBossId,
+    spawnPoint: getDebugBossSpawnPoint({ player, distance, yOffset }),
+  };
+};
+
 export const resetCombatRuntimeState = ({ state, clearTowers = false }) => {
   state.enemies = [];
   if (clearTowers) {
