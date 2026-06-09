@@ -7,13 +7,8 @@ import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engin
 import { updateDropRuntime, updateHazardRuntime, updateProjectileRuntime, updateTransientVisualRuntime } from '../engine/combatFrameRuntime.js';
 import { updatePlayerOffenseRuntime, updateTowerOffenseRuntime } from '../engine/combatOffenseRuntime.js';
 import { updateEnemyBehaviorRuntime } from '../engine/enemyBehaviorRuntime.js';
-import {
-  findOpenEnemySpawnPosition,
-  getBossRewardResolution,
-  getBossSummonSpawnCount,
-  hasPendingBossAftermath,
-  hasPendingEncounterAftermath,
-} from '../engine/bossFlowRules.js';
+import { settleEnemyDefeatRuntime, settlePendingBossRewardRuntime } from '../engine/enemyDefeatRuntime.js';
+import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
 import { createWaveDefinition, getSpawnPosition } from '../engine/gameRules';
 import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../engine/progressionRules.js';
@@ -1544,44 +1539,22 @@ export default function useGeoGuardGame() {
         continue;
       }
 
-      if (enemy.hp <= 0) {
-        spawnParticle(enemy.x, enemy.y, enemy.color, enemy.isBoss ? 18 : 8);
-        state.drops.push({ x: enemy.x, y: enemy.y, value: enemy.value, radius: 4 + enemy.value, color: COLORS.gem, magnetized: false });
-        if (enemy.deathSpawn) {
-          spawnAround(enemy, enemy.deathSpawn.type, enemy.deathSpawn.count, enemy.deathSpawn.spread);
-        }
-        state.enemies.splice(enemyIndex, 1);
-        if (enemy.isBoss && (state.mode !== 'debug' || state.debugWaveFlow)) {
+      settleEnemyDefeatRuntime({
+        state,
+        enemy,
+        enemyIndex,
+        spawnParticle,
+        spawnAround,
+        playBossDefeatCue: () => {
           void playCue('boss_defeat');
-          state.money += enemy.value;
-          syncHudMoney();
-          enemy.isDefeated = true;
-          const rewardResolution = getBossRewardResolution({
-            boss: enemy,
-            enemies: state.enemies,
-            hazards: state.hazards,
-          });
-          if (rewardResolution.action === 'enrage-partner') {
-            enrageEncounterPartner(enemy);
-          } else if (rewardResolution.action === 'await-encounter-aftermath') {
-            state.wave.awaitingReward = true;
-            state.wave.pendingRewardBossEncounterUid = rewardResolution.encounterUid;
-          } else if (rewardResolution.action === 'await-boss-aftermath') {
-            state.wave.awaitingReward = true;
-            state.wave.pendingRewardBossUid = rewardResolution.bossUid;
-          } else {
-            openBossReward();
-          }
-        }
-      }
+        },
+        syncHudMoney,
+        openBossReward,
+        enrageEncounterPartner,
+      });
     }
 
-    if (state.wave.pendingRewardBossUid && !rewardState.active && !hasPendingBossAftermath(state.enemies, state.hazards, state.wave.pendingRewardBossUid)) {
-      openBossReward();
-    }
-    if (state.wave.pendingRewardBossEncounterUid && !rewardState.active && !hasPendingEncounterAftermath(state.enemies, state.hazards, state.wave.pendingRewardBossEncounterUid)) {
-      openBossReward();
-    }
+    settlePendingBossRewardRuntime({ state, rewardActive: rewardState.active, openBossReward });
 
     state.bossHudTimer = (state.bossHudTimer ?? 0) + dt;
     if (state.bossHudTimer >= 0.12) {

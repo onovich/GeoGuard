@@ -24,7 +24,7 @@
 
 The fast-iteration TODO pass is complete.
 
-- `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, wave progression, and enemy behavior.
+- `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, wave progression, enemy behavior, and enemy defeat settlement.
 - Canvas drawing has moved into `src/view/canvas/canvasRenderer.js`, so the main hook now delegates scene rendering instead of owning the full draw tree.
 - Canvas resize, input listeners, joystick updates, context-menu targeting, and the animation-frame loop now live in `src/logic/hooks/useCanvasGameLoop.js`.
 - Boss editor draft state, mutation handlers, import/export, and debug authoring overrides now live in `src/logic/hooks/useBossEditorRuntime.js`.
@@ -32,8 +32,9 @@ The fast-iteration TODO pass is complete.
 - Projectile hits, drop pickup, transient visual cleanup, and hazard settlement now live in `src/logic/engine/combatFrameRuntime.js`, with focused runtime callback tests.
 - Player auto-fire, tower firing cadence, projectile creation, and frozen/jam fire-rate factors now live in `src/logic/engine/combatOffenseRuntime.js`, with focused runtime tests.
 - Enemy status timers, burrow/phase/aura/summon behavior, target selection, movement, contact damage, and explode fuse settlement now live in `src/logic/engine/enemyBehaviorRuntime.js`, with focused runtime callback tests.
+- Enemy death settlement, gem drops, death-spawn callbacks, boss-defeat money sync, boss reward resolution, and pending aftermath checks now live in `src/logic/engine/enemyDefeatRuntime.js`, with focused runtime callback tests.
 - Project validation is now available through `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd`, and the git workflow calls it before commits.
-- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, enemy behavior callbacks, boss authoring draft rules, and audio cue definitions.
+- Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, enemy behavior callbacks, enemy defeat callbacks, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
 - The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper runtime cleanup, and optional integration hardening.
 

@@ -23,6 +23,7 @@ import {
   updateTowerOffenseRuntime,
 } from '../src/logic/engine/combatOffenseRuntime.js';
 import { updateEnemyBehaviorRuntime } from '../src/logic/engine/enemyBehaviorRuntime.js';
+import { settleEnemyDefeatRuntime, settlePendingBossRewardRuntime } from '../src/logic/engine/enemyDefeatRuntime.js';
 import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
@@ -866,6 +867,138 @@ test('enemy behavior runtime handles aura healing, summons, and fuse explosions'
   assert.equal(calls.spawns[0][2], 2);
   assert.equal(calls.areaDamage.length, 1);
   assert.equal(enemy.hp, 0);
+});
+
+const createEnemyDefeatTestContext = (stateOverrides = {}) => {
+  const calls = {
+    cueCount: 0,
+    enrages: [],
+    moneySyncs: 0,
+    openedRewards: 0,
+    particles: [],
+    spawns: [],
+  };
+  const state = {
+    drops: [],
+    enemies: [],
+    hazards: [],
+    mode: 'normal',
+    money: 10,
+    wave: {
+      awaitingReward: false,
+      pendingRewardBossUid: null,
+      pendingRewardBossEncounterUid: null,
+    },
+    ...stateOverrides,
+  };
+
+  return {
+    calls,
+    state,
+    context: {
+      state,
+      spawnParticle: (...args) => calls.particles.push(args),
+      spawnAround: (...args) => calls.spawns.push(args),
+      playBossDefeatCue: () => {
+        calls.cueCount += 1;
+      },
+      syncHudMoney: () => {
+        calls.moneySyncs += 1;
+      },
+      openBossReward: () => {
+        calls.openedRewards += 1;
+        state.wave.awaitingReward = true;
+        state.wave.pendingRewardBossUid = null;
+        state.wave.pendingRewardBossEncounterUid = null;
+      },
+      enrageEncounterPartner: (...args) => calls.enrages.push(args),
+    },
+  };
+};
+
+test('enemy defeat runtime removes normal enemies, drops gems, and spawns death units', () => {
+  const enemy = {
+    x: 12,
+    y: 18,
+    hp: 0,
+    color: COLORS.enemyBasic,
+    value: 3,
+    deathSpawn: { type: 'BASIC', count: 2, spread: 44 },
+  };
+  const survivor = { hp: 20 };
+  const { calls, context, state } = createEnemyDefeatTestContext({
+    enemies: [survivor, enemy],
+  });
+
+  const result = settleEnemyDefeatRuntime({ enemy, enemyIndex: 1, ...context });
+
+  assert.deepEqual(result, { defeated: true, rewardAction: null });
+  assert.deepEqual(state.enemies, [survivor]);
+  assert.equal(state.drops.length, 1);
+  assert.equal(state.drops[0].value, 3);
+  assert.equal(state.drops[0].color, COLORS.gem);
+  assert.equal(calls.particles[0][3], 8);
+  assert.equal(calls.spawns[0][1], 'BASIC');
+  assert.equal(calls.openedRewards, 0);
+});
+
+test('enemy defeat runtime settles boss rewards immediately when aftermath is clear', () => {
+  const boss = {
+    uid: 'boss-1',
+    x: 0,
+    y: 0,
+    hp: 0,
+    isBoss: true,
+    color: COLORS.enemyTank,
+    value: 9,
+  };
+  const { calls, context, state } = createEnemyDefeatTestContext({
+    enemies: [boss],
+  });
+
+  const result = settleEnemyDefeatRuntime({ enemy: boss, enemyIndex: 0, ...context });
+
+  assert.deepEqual(result, { defeated: true, rewardAction: 'open-reward' });
+  assert.equal(state.enemies.length, 0);
+  assert.equal(state.money, 19);
+  assert.equal(boss.isDefeated, true);
+  assert.equal(calls.cueCount, 1);
+  assert.equal(calls.moneySyncs, 1);
+  assert.equal(calls.openedRewards, 1);
+});
+
+test('enemy defeat runtime waits for boss aftermath before opening rewards', () => {
+  const boss = {
+    uid: 'boss-1',
+    x: 0,
+    y: 0,
+    hp: 0,
+    isBoss: true,
+    color: COLORS.enemyTank,
+    value: 5,
+  };
+  const { calls, context, state } = createEnemyDefeatTestContext({
+    enemies: [boss],
+    hazards: [{ ownerBossUid: 'boss-1' }],
+  });
+
+  const result = settleEnemyDefeatRuntime({ enemy: boss, enemyIndex: 0, ...context });
+
+  assert.deepEqual(result, { defeated: true, rewardAction: 'await-boss-aftermath' });
+  assert.equal(state.wave.awaitingReward, true);
+  assert.equal(state.wave.pendingRewardBossUid, 'boss-1');
+  assert.equal(calls.openedRewards, 0);
+
+  state.hazards = [];
+  const pendingResult = settlePendingBossRewardRuntime({
+    state,
+    rewardActive: false,
+    openBossReward: context.openBossReward,
+  });
+
+  assert.deepEqual(pendingResult, { opened: true, source: 'boss' });
+  assert.equal(calls.openedRewards, 1);
+  assert.equal(state.wave.pendingRewardBossUid, null);
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {
