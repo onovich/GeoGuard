@@ -6,12 +6,13 @@ This file is for later work that is intentionally not part of the current fast-i
 
 - Add richer debug presets such as spawn-at-phase, common tower layouts, cooldown inspection, and step simulation.
 - Add browser-level or rendering-sensitive integration coverage for the full reward modal lifecycle, visual transitions, and live input flows.
+- Add a lightweight UI primitive conformance check if future UI work starts drifting away from `src/view/components/ui.jsx`.
 
 ## Architecture
 
 - Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules only when a future feature makes the next boundary obvious.
 - Move more authored encounter data into structured config instead of mixed hook logic.
-- Add a cleaner data layer for phase intent, counterplay text, and encounter presentation so tuning can stay mostly data-driven.
+- Keep expanding structured Boss presentation data when new encounters add phase-specific counterplay, callouts, or HUD semantics.
 
 ## Content Expansion
 
@@ -22,6 +23,7 @@ This file is for later work that is intentionally not part of the current fast-i
 ## Presentation
 
 - Continue lifting non-showcase bosses toward the presentation quality of Twins, Dragon, Spider Matriarch, and Astrolabe.
+- Keep new React UI on the shared design system primitives in `src/view/designSystem.js` and `src/view/components/ui.jsx`.
 - Revisit some legacy docs and bilingual text that still carry prototype-stage encoding or wording debt.
 
 ## Tuning

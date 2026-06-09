@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { BOSS_ORDER, BOSS_TYPES, COLORS, ENEMY_ORDER, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../../data/gameConfig';
-import { getBossPresentation } from '../../data/bossPresentation';
+import { getBossPresentation, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../data/bossPresentation';
 import { WAVE_DEBUG_CHECKPOINTS, WAVE_TABLE } from '../../data/waveTable';
 import { runBossAbilityEffect } from '../engine/bossAbilityRuntime.js';
 import { createBossBehaviorNode, DEFAULT_BOSS_ABILITY_COOLDOWNS } from '../engine/bossAuthoringRules.js';
@@ -57,7 +57,7 @@ import {
 import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
 import { advanceWaveTickRuntime, createWaveSpawnPlan, startWaveRuntime } from '../engine/waveFlowRuntime.js';
 import { formatTime, rand } from '../engine/gameMath';
-import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
+import { drawGameScene } from '../../view/canvas/canvasRenderer.js';
 import useBossEditorRuntime from './useBossEditorRuntime.js';
 import useCanvasGameLoop from './useCanvasGameLoop.js';
 import useGameAudio from './useGameAudio.js';

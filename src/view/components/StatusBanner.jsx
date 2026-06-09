@@ -1,3 +1,6 @@
+import { cx } from '../designSystem.js';
+import { Panel } from './ui.jsx';
+
 const TONE_STYLES = {
   boss: {
     panelClass: 'bg-slate-900/90 text-white border-white/10 shadow-[0_18px_48px_rgba(15,23,42,0.3)]',
@@ -25,13 +28,6 @@ const TONE_STYLES = {
   },
 };
 
-const TONE_META = {
-  boss: { label: 'Encounter', short: 'B' },
-  phase: { label: 'Phase Shift', short: 'P' },
-  wave: { label: 'Wave', short: 'W' },
-  system: { label: 'Status', short: 'i' },
-};
-
 export default function StatusBanner({ waveMsg }) {
   if (!waveMsg) {
     return null;
@@ -39,19 +35,19 @@ export default function StatusBanner({ waveMsg }) {
 
   const message = typeof waveMsg === 'string' ? { title: waveMsg, tone: 'system' } : waveMsg;
   const toneStyle = TONE_STYLES[message.tone] ?? TONE_STYLES.system;
-  const toneMeta = TONE_META[message.tone] ?? TONE_META.system;
 
   return (
     <div className="absolute top-[13%] left-1/2 z-20 w-[min(92vw,760px)] -translate-x-1/2 pointer-events-none">
-      <div
-        className={`relative overflow-hidden rounded-3xl border px-5 py-4 backdrop-blur-md ${toneStyle.panelClass}`}
+      <Panel
+        variant="card"
+        className={cx('relative overflow-hidden rounded-xl px-5 py-4 backdrop-blur-md', toneStyle.panelClass)}
         style={message.accentColor ? { boxShadow: `0 18px 48px ${message.accentColor}33` } : undefined}
       >
         {message.accentColor ? <div className="absolute inset-y-0 left-0 w-1" style={{ backgroundColor: message.accentColor }}></div> : null}
         <div className="relative pl-1">
           <div className="mt-1 text-2xl font-black leading-tight">{message.title}</div>
         </div>
-      </div>
+      </Panel>
     </div>
   );
 }

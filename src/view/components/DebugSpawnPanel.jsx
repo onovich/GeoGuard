@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import BossEditorPanel from './BossEditorPanel';
+import { Badge, Button, Panel, SectionHeading } from './ui.jsx';
+import { cx, ui } from '../designSystem.js';
 
 const getEnemyTags = (enemy) => {
   const tags = [`HP ${enemy.hp}`, `SPD ${enemy.speed}`, `DMG ${enemy.damage}`];
@@ -21,7 +23,7 @@ function SpawnCard({ item, kind, active, beginDebugEntityDrag }) {
 
   return (
     <div
-      className={`min-w-[152px] cursor-grab rounded-lg border bg-white px-3 py-2 shadow-sm active:cursor-grabbing ${active ? 'border-blue-500 ring-2 ring-blue-200' : 'border-slate-200'}`}
+      className={cx(ui.card.spawn, active ? 'border-blue-500 ring-2 ring-blue-200' : 'border-slate-200')}
       onMouseDown={(event) => {
         if (event.button !== 0) return;
         startDrag(event.clientX, event.clientY);
@@ -39,23 +41,6 @@ function SpawnCard({ item, kind, active, beginDebugEntityDrag }) {
         {kind === 'boss' ? `${item.personality} / ${item.phases.length} phases` : getEnemyTags(item)}
       </p>
     </div>
-  );
-}
-
-function ActionButton({ children, onClick, tone = 'default' }) {
-  const toneClass =
-    tone === 'primary'
-      ? 'bg-slate-900 text-white hover:bg-slate-950'
-      : tone === 'danger'
-        ? 'bg-rose-50 text-rose-700 hover:bg-rose-100'
-        : tone === 'accent'
-          ? 'bg-sky-50 text-sky-700 hover:bg-sky-100'
-          : 'bg-white text-slate-700 hover:bg-slate-50';
-
-  return (
-    <button className={`rounded-md border border-slate-200 px-3 py-1.5 text-xs font-bold transition-colors ${toneClass}`} onClick={onClick}>
-      {children}
-    </button>
   );
 }
 
@@ -108,19 +93,19 @@ export default function DebugSpawnPanel({
     : 'Manual spawns, manual rewards, infinite testing';
 
   return (
-    <div ref={containerRef} className="absolute left-1/2 top-3 z-30 w-[min(1120px,96vw)] -translate-x-1/2 rounded-xl border border-slate-200 bg-white/92 shadow-lg backdrop-blur-md pointer-events-auto">
+    <Panel ref={containerRef} variant="glassPanel" className="absolute left-1/2 top-3 z-30 w-[min(1120px,96vw)] -translate-x-1/2 pointer-events-auto">
       <div className="flex flex-wrap items-start justify-between gap-3 px-3 py-3">
         <div>
           <div className="flex items-center gap-2">
-            <button className="rounded-md bg-slate-800 px-3 py-1.5 text-xs font-black text-white" onClick={() => setExpanded((value) => !value)}>
+            <Button variant="primary" size="sm" className="font-black" onClick={() => setExpanded((value) => !value)}>
               {expanded ? 'Collapse' : 'Expand'}
-            </button>
+            </Button>
             <span className="text-sm font-black text-slate-700">Dev Test Field</span>
-            <span className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] ${debugWaveFlow ? 'bg-sky-100 text-sky-700' : 'bg-emerald-100 text-emerald-700'}`}>
+            <Badge variant={debugWaveFlow ? 'info' : 'success'}>
               {statusTitle}
-            </span>
+            </Badge>
           </div>
-          <div className="mt-1 text-xs font-medium text-slate-500">{statusDetail}</div>
+          <div className={cx('mt-1', ui.text.muted)}>{statusDetail}</div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-slate-600">
@@ -132,14 +117,14 @@ export default function DebugSpawnPanel({
             <input type="checkbox" checked={debugOptions.infiniteHealth} onChange={(event) => setDebugOption('infiniteHealth', event.target.checked)} />
             Infinite HP
           </label>
-          <div className="flex rounded-lg bg-slate-100 p-1">
-            <button className={`rounded-md px-3 py-1 ${section === 'enemy' ? 'bg-white shadow-sm' : ''}`} onClick={() => setSection('enemy')}>
+          <div className={ui.segment.group}>
+            <button className={cx(ui.segment.item, section === 'enemy' && ui.segment.active)} onClick={() => setSection('enemy')}>
               Enemies
             </button>
-            <button className={`rounded-md px-3 py-1 ${section === 'boss' ? 'bg-white shadow-sm' : ''}`} onClick={() => setSection('boss')}>
+            <button className={cx(ui.segment.item, section === 'boss' && ui.segment.active)} onClick={() => setSection('boss')}>
               Bosses
             </button>
-            <button className={`rounded-md px-3 py-1 ${section === 'author' ? 'bg-white shadow-sm' : ''}`} onClick={() => setSection('author')}>
+            <button className={cx(ui.segment.item, section === 'author' && ui.segment.active)} onClick={() => setSection('author')}>
               Author
             </button>
           </div>
@@ -149,48 +134,48 @@ export default function DebugSpawnPanel({
       {expanded ? (
         <>
           <div className="border-t border-slate-200 px-3 py-3">
-            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Quick Actions</div>
+            <SectionHeading className="mb-2">Quick Actions</SectionHeading>
             <div className="flex flex-wrap gap-2">
-              <ActionButton tone="primary" onClick={() => clearDebugField({ sandbox: true })}>
+              <Button variant="primary" onClick={() => clearDebugField({ sandbox: true })}>
                 Sandbox
-              </ActionButton>
-              <ActionButton onClick={() => clearDebugField()}>Clear Enemies</ActionButton>
-              <ActionButton tone="danger" onClick={() => clearDebugField({ clearTowers: true })}>
+              </Button>
+              <Button onClick={() => clearDebugField()}>Clear Enemies</Button>
+              <Button variant="danger" onClick={() => clearDebugField({ clearTowers: true })}>
                 Clear All
-              </ActionButton>
-              <ActionButton tone="accent" onClick={openDebugReward}>
+              </Button>
+              <Button variant="accent" onClick={openDebugReward}>
                 Open Reward
-              </ActionButton>
-              <ActionButton onClick={unlockAllBlueprints}>Unlock All Towers</ActionButton>
+              </Button>
+              <Button onClick={unlockAllBlueprints}>Unlock All Towers</Button>
             </div>
           </div>
 
           <div className="border-t border-slate-200 px-3 py-3">
-            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Wave Checkpoints</div>
+            <SectionHeading className="mb-2">Wave Checkpoints</SectionHeading>
             <div className="flex flex-wrap gap-2">
               {debugWaveCheckpoints.map((waveNumber) => (
-                <ActionButton key={waveNumber} onClick={() => startDebugWave(waveNumber)}>
+                <Button key={waveNumber} onClick={() => startDebugWave(waveNumber)}>
                   Wave {waveNumber}
-                </ActionButton>
+                </Button>
               ))}
             </div>
           </div>
 
           <div className="border-t border-slate-200 px-3 py-3">
-            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Tower Layouts</div>
+            <SectionHeading className="mb-2">Tower Layouts</SectionHeading>
             <div className="flex flex-wrap gap-2">
-              <ActionButton onClick={() => applyDebugLayout('balanced')}>Balanced</ActionButton>
-              <ActionButton onClick={() => applyDebugLayout('spread')}>Spread</ActionButton>
-              <ActionButton onClick={() => applyDebugLayout('boss')}>Boss Duel</ActionButton>
+              <Button onClick={() => applyDebugLayout('balanced')}>Balanced</Button>
+              <Button onClick={() => applyDebugLayout('spread')}>Spread</Button>
+              <Button onClick={() => applyDebugLayout('boss')}>Boss Duel</Button>
             </div>
           </div>
 
           <div className="border-t border-slate-200 px-3 py-3">
-            <div className="mb-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-400">Boss Phase Jump</div>
+            <SectionHeading className="mb-2">Boss Phase Jump</SectionHeading>
             <div className="flex flex-wrap gap-2">
-              <ActionButton onClick={() => forceBossPhase(1)}>Phase 1</ActionButton>
-              <ActionButton onClick={() => forceBossPhase(2)}>Phase 2</ActionButton>
-              <ActionButton onClick={() => forceBossPhase(3)}>Phase 3</ActionButton>
+              <Button onClick={() => forceBossPhase(1)}>Phase 1</Button>
+              <Button onClick={() => forceBossPhase(2)}>Phase 2</Button>
+              <Button onClick={() => forceBossPhase(3)}>Phase 3</Button>
             </div>
           </div>
 
@@ -211,6 +196,6 @@ export default function DebugSpawnPanel({
           )}
         </>
       ) : null}
-    </div>
+    </Panel>
   );
 }

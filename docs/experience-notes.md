@@ -20,6 +20,12 @@
 6. Visual identity should stay geometric and low-noise.
 当前表现语言仍然是低饱和、几何化、轻阴影的扁平风格。新增塔、Boss、特效时优先用圆、圆角矩形、三角形和简单冲击波，不要引入高纹理、高噪点或写实特效。
 
+7. React UI should start from project primitives.
+The shared UI layer now lives in `src/view/designSystem.js` and `src/view/components/ui.jsx`. When adding HUDs, overlays, panels, forms, menus, or reward cards, start from `Panel`, `Button`, `Badge`, `Field`, and the exported `ui` tokens before adding component-local Tailwind class clusters.
+
+8. Boss phase presentation belongs in data.
+Boss phase intent, HUD tone, phase-shift callout text, and Boss-level counterplay metadata now live in `src/data/bossPresentation.js`. Runtime and HUD code should consume those helpers instead of embedding presentation maps in canvas or hook code.
+
 ## Immediate Status
 
 The fast-iteration TODO pass is complete.
@@ -42,6 +48,8 @@ The fast-iteration TODO pass is complete.
 - Debug tower preset layouts, direct placed-tower creation, layout application into runtime state, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes now live in `src/logic/engine/debugTowerRuntime.js`, with focused helper tests.
 - Debug Boss phase forcing, phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing now live in `src/logic/engine/debugBossRuntime.js`, with focused helper tests.
 - Debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, panel UI reset plans, debug wave panel start flow, debug reward panel state, editor Boss spawn planning, and infinite money/health option side effects now live in `src/logic/engine/debugFieldRuntime.js`, with focused helper tests.
+- Shared React UI primitives and class tokens now live in `src/view/components/ui.jsx` and `src/view/designSystem.js`, with usage rules in `docs/ui-design-system.md`.
+- Boss phase intent/tone/callout presentation data now lives in `src/data/bossPresentation.js`, with focused tests covering structured phase presentation lookup.
 - Project validation is now available through `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd`, and the git workflow calls it before commits.
 - Regression coverage now reaches beyond stat rules into wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, Boss phase presentation scheduling and visual effect command planning, wave tick progression, reward follow-up, reward flow helpers, drag start/reset state helpers, drag commit plans, drag preview behavior, boss aftermath gating, combat resolution, encounter construction, debug field/action helpers, debug Boss editor spawn plans, debug panel action state plans, debug wave panel start flow, debug tower helpers, debug tower layout application, debug Boss phase forcing, enemy behavior callbacks, enemy defeat callbacks, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
@@ -57,3 +65,6 @@ BuildBar 里的触摸阈值和延时很容易出现“能滚不能拖”或“�
 
 3. Reward quality is better, but still not fully deterministic.
 Adaptive reward history now reduces repetition and adds situational support, but the system is still not seeded or authored enough for strict balance playback.
+
+4. UI drift can return if new panels bypass the design system.
+Use `docs/ui-design-system.md` as the default UI checklist before adding new component-local panel, button, badge, or form class sets.

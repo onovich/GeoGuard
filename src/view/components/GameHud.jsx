@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
+import { Button, Panel } from './ui.jsx';
 
 export default function GameHud({
   gameState,
@@ -36,7 +37,7 @@ export default function GameHud({
   return (
     <>
       <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start pointer-events-none">
-      <div className="flex flex-col gap-1 w-32 md:w-48 bg-white/80 p-2 rounded-xl shadow-sm backdrop-blur-sm pointer-events-auto">
+      <Panel variant="hud" className="flex flex-col gap-1 w-32 md:w-48 p-2 pointer-events-auto">
         <div className="flex justify-between text-sm font-bold text-gray-700">
           <span>HP</span>
           <span>
@@ -46,15 +47,15 @@ export default function GameHud({
         <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
           <div className="h-full bg-red-500 transition-all duration-200" style={{ width: `${(health / maxHealth) * 100}%` }}></div>
         </div>
-      </div>
+      </Panel>
 
       <div className="flex flex-col items-center gap-2 min-w-[220px]">
-        <div className="flex flex-col items-center text-slate-700 bg-white/80 px-6 py-2 rounded-2xl shadow-sm backdrop-blur-sm min-w-[130px]">
+        <Panel variant="hud" className="flex flex-col items-center text-slate-700 px-6 py-2 min-w-[130px]">
           <span className="text-xs font-bold tracking-[0.2em] text-slate-400">{debugMode ? 'TEST FIELD' : `WAVE ${currentWave}`}</span>
           <span className="text-2xl font-black">{formattedTime}</span>
-        </div>
+        </Panel>
         {bossHud.length > 0 ? (
-          <div className="w-[260px] md:w-[340px] bg-slate-900/78 text-white px-3 py-1.5 rounded-xl shadow-lg backdrop-blur-sm">
+          <Panel variant="darkHud" className="w-[260px] md:w-[340px] px-3 py-1.5">
             {bossHud.map((group) => (
               <div key={group.id} className="mb-1 last:mb-0">
                 <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.16em] text-slate-300 mb-0.5">
@@ -89,29 +90,31 @@ export default function GameHud({
                 </div>
               </div>
             ))}
-          </div>
+          </Panel>
         ) : null}
       </div>
 
       <div className="flex flex-col gap-2 pointer-events-auto">
-        <div className="flex items-center gap-2 bg-white/80 px-4 py-2 rounded-xl shadow-sm backdrop-blur-sm">
+        <Panel variant="hud" className="flex items-center gap-2 px-4 py-2">
           <div className="w-4 h-4 bg-emerald-400 rotate-45 rounded-sm shadow-inner"></div>
           <span className="text-xl font-bold text-slate-700">{money}</span>
-        </div>
+        </Panel>
 
       </div>
       </div>
       {showControlsHint && (
         <div className="absolute bottom-40 left-0 w-full flex justify-center pointer-events-none z-50">
-          <div className="pointer-events-auto flex items-center gap-3 px-5 py-2 bg-yellow-400 text-slate-900 font-black rounded-full shadow-[0_4px_16px_rgba(250,204,21,0.5)] text-[11px] md:text-sm tracking-widest border-2 border-yellow-300">
+          <Panel variant="card" className="pointer-events-auto flex items-center gap-3 rounded-full border-2 border-yellow-300 bg-yellow-400 px-5 py-2 text-[11px] font-black tracking-widest text-slate-900 shadow-[0_4px_16px_rgba(250,204,21,0.5)] md:text-sm">
             <span>{isMobile ? `📱 ${UI_COPY.controlsMobile}` : `💻 ${UI_COPY.controlsPc}`}</span>
-            <button 
+            <Button
+              variant="ghost"
+              size="xs"
               onClick={() => setShowControlsHint(false)}
-              className="flex items-center justify-center rounded-full bg-slate-900/10 px-2.5 py-1 text-[10px] md:text-xs font-bold text-slate-800 hover:bg-slate-900/20 active:scale-95 transition-all ml-2"
+              className="ml-2 rounded-full bg-slate-900/10 px-2.5 py-1 text-[10px] text-slate-800 hover:bg-slate-900/20 active:scale-95 md:text-xs"
             >
               {isMobile ? `知道了 (${hintCountdown}s)` : '我知道了'}
-            </button>
-          </div>
+            </Button>
+          </Panel>
         </div>
       )}
     </>

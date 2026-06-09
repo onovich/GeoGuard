@@ -1,4 +1,6 @@
 import { UI_COPY } from '../../data/gameConfig';
+import { cx, ui } from '../designSystem.js';
+import { Badge, Panel } from './ui.jsx';
 
 const REWARD_TYPE_STYLES = {
   unlock: {
@@ -42,9 +44,9 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
 
   return (
     <div className="absolute inset-0 z-40 bg-slate-900/35 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="w-full max-w-3xl rounded-[24px] bg-white/95 shadow-2xl p-4 md:p-6 my-auto">
+      <Panel variant="modalPanel" className="w-full max-w-3xl rounded-[24px] p-4 md:p-6 my-auto">
         <div className="text-center mb-4 md:mb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] md:text-xs font-bold tracking-[0.25em]">BOSS CLEAR</div>
+          <Badge className="gap-2 px-3 py-1 text-[10px] md:text-xs tracking-[0.25em]">BOSS CLEAR</Badge>
           <h2 className="mt-3 text-2xl md:text-[28px] font-black text-slate-800">{UI_COPY.rewardTitle}</h2>
           <p className="mt-1.5 text-sm md:text-base text-slate-500 font-medium">{UI_COPY.rewardSubtitle}</p>
         </div>
@@ -57,23 +59,27 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
               <button
                 key={choice.id}
                 onClick={() => applyRewardChoice(choice)}
-                className={`group relative overflow-hidden text-left rounded-2xl border transition-all shadow-sm p-4 md:p-4.5 min-h-[180px] md:min-h-[200px] hover:-translate-y-1 hover:shadow-lg ${rewardStyle.panelClass}`}
+                className={cx(
+                  ui.card.interactive,
+                  'group relative overflow-hidden text-left p-4 md:p-4.5 min-h-[180px] md:min-h-[200px] hover:-translate-y-1 hover:shadow-lg',
+                  rewardStyle.panelClass
+                )}
               >
                 <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${rewardStyle.glowClass} opacity-80 transition-opacity group-hover:opacity-100`}></div>
                 <div className={`absolute inset-x-0 top-0 h-1 ${rewardStyle.accentClass}`}></div>
 
                 <div className="relative flex h-full flex-col">
                   <div className="flex items-start justify-between gap-3">
-                    <div className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] md:text-xs font-bold tracking-[0.18em] ${rewardStyle.badgeClass}`}>
+                    <Badge className={`px-2.5 py-1 text-[10px] md:text-xs tracking-[0.18em] ${rewardStyle.badgeClass}`}>
                       {rewardStyle.badge}
-                    </div>
+                    </Badge>
                     <div className="text-xs font-black tracking-[0.2em] text-slate-300">0{index + 1}</div>
                   </div>
 
                   <div className="mt-3 text-lg md:text-xl font-black text-slate-800 leading-tight">{choice.title}</div>
                   <div className="mt-1.5 text-xs md:text-sm font-semibold text-slate-500">{choice.subtitle}</div>
 
-                  <div className="mt-3 rounded-xl bg-white/78 px-3 py-2.5 text-xs md:text-sm leading-5 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
+                  <div className="mt-3 rounded-lg bg-white/78 px-3 py-2.5 text-xs md:text-sm leading-5 text-slate-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)]">
                     {choice.detail}
                   </div>
 
@@ -83,7 +89,7 @@ export default function WaveRewardOverlay({ rewardState, applyRewardChoice }) {
             );
           })}
         </div>
-      </div>
+      </Panel>
     </div>
   );
 }

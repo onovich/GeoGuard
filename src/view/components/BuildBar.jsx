@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
+import { cx, ui } from '../designSystem.js';
+import { Panel } from './ui.jsx';
 
 export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag, towerTypes, setBuildBarRect, openBlueprintContextMenu }) {
   const containerRef = useRef(null);
@@ -73,9 +75,10 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
         {showLeftFade ? <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 rounded-l-2xl bg-gradient-to-r from-white/95 to-transparent" /> : null}
         {showRightFade ? <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 rounded-r-2xl bg-gradient-to-l from-white/95 to-transparent" /> : null}
 
-        <div
+        <Panel
           ref={containerRef}
-          className="flex gap-2 overflow-x-auto rounded-2xl bg-white/80 p-1.5 shadow-lg backdrop-blur-md pointer-events-auto"
+          variant="glassPanel"
+          className="flex gap-2 overflow-x-auto p-1.5 pointer-events-auto"
           style={{ touchAction: 'pan-x' }}
         >
           {towerTypes.map((tower) => (
@@ -128,9 +131,12 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
               onTouchCancel={() => {
                 clearPendingTouch();
               }}
-              className={`relative flex min-w-[72px] flex-col items-center rounded-xl border-2 p-1.5 transition-all cursor-grab active:cursor-grabbing ${
-                typeof money === 'number' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1'
-              } ${dragTowerId === tower.id ? 'scale-105 border-blue-500 bg-blue-50' : 'border-transparent bg-white'}`}
+              className={cx(
+                ui.card.interactive,
+                'relative flex min-w-[72px] flex-col items-center border-2 p-1.5 cursor-grab active:cursor-grabbing',
+                typeof money === 'number' && money < tower.cost ? 'opacity-60' : 'hover:-translate-y-1',
+                dragTowerId === tower.id ? 'scale-105 border-blue-500 bg-blue-50' : 'border-transparent bg-white'
+              )}
             >
               <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-lg shadow-inner" style={{ backgroundColor: tower.color }}>
                 {tower.shape === 'circle' && <div className="h-4 w-4 rounded-full bg-white/80"></div>}
@@ -158,7 +164,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
               ) : null}
             </div>
           ))}
-        </div>
+        </Panel>
       </div>
     </div>
   );

@@ -1,15 +1,12 @@
-import { getBossPresentation } from '../../data/bossPresentation.js';
+import { getBossPhaseHint, getBossPhaseTone, getBossPresentation } from '../../data/bossPresentation.js';
 
 export const getBossHudGroupId = (boss) => (boss.encounterUid ? `enc-${boss.encounterUid}` : `boss-${boss.uid}`);
-
-const getDefaultBossPhaseHint = (boss, activePhaseIndex) => boss.phases?.[activePhaseIndex]?.name ?? '';
-const getDefaultBossPhaseTone = (boss) => boss.color ?? '#ffffff';
 
 export const buildBossHudRuntime = ({
   enemies,
   getPresentation = getBossPresentation,
-  getPhaseHint = getDefaultBossPhaseHint,
-  getPhaseTone = getDefaultBossPhaseTone,
+  getPhaseHint = getBossPhaseHint,
+  getPhaseTone = getBossPhaseTone,
 }) => {
   const groups = new Map();
 

@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { BOSS_TYPES, COLORS, ENEMY_TYPES, UI_COPY, createInitialTowerCatalog } from '../src/data/gameConfig.js';
+import {
+  getBossPhaseCalloutText,
+  getBossPhaseHint,
+  getBossPhasePresentation,
+  getBossPhaseTone,
+} from '../src/data/bossPresentation.js';
 import { WAVE_TABLE } from '../src/data/waveTable.js';
 import {
   applyBossEditorDraft,
@@ -500,6 +506,28 @@ test('boss hud runtime groups encounters into stable hud view models', () => {
   assert.equal(hud[0].members[1].enraged, true);
   assert.equal(areBossHudSnapshotsEqual(hud, JSON.parse(JSON.stringify(hud))), true);
   assert.equal(areBossHudSnapshotsEqual(hud, [{ ...hud[0], members: [] }]), false);
+});
+
+test('boss phase presentation data exposes structured phase intent, tone, and counterplay', () => {
+  const commanderMid = getBossPhasePresentation({ form: 'commander', id: 'COMMANDER' }, 1);
+
+  assert.equal(commanderMid.intent, 'Shield Wall');
+  assert.equal(commanderMid.tone, '#60a5fa');
+  assert.equal(commanderMid.phaseTier, 1);
+  assert.equal(commanderMid.counterplay, 'Break the escort line first and keep sustained fire on the front.');
+  assert.deepEqual(commanderMid.threats, ['Advance', 'Shielding', 'Lane Pressure']);
+  assert.equal(getBossPhaseHint({ form: 'commander' }, 1), 'Shield Wall');
+  assert.equal(getBossPhaseTone({ form: 'commander' }, 2), '#2563eb');
+  assert.equal(
+    getBossPhaseCalloutText({ form: 'unknown' }, 2),
+    'This boss is entering its high-pressure phase. Tempo and space are both changing now.'
+  );
+
+  const dragonFinal = getBossPhasePresentation('dragon', 2);
+  assert.equal(dragonFinal.bossId, 'DRAGON');
+  assert.equal(dragonFinal.intent, 'Inferno Dive');
+  assert.equal(dragonFinal.tone, '#ea580c');
+  assert.equal(dragonFinal.callout, 'The dragon is sealing the field. Dive aftermath will shred what used to be safe ground.');
 });
 
 test('boss phase presentation runtime plans phase announcements and cooldowns', () => {

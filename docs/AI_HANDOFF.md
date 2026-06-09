@@ -65,7 +65,10 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
-    *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
+    *   Exports `drawGameScene()` and no longer owns Boss phase intent/tone/callout data.
+*   **Boss Presentation Data (`src/data/bossPresentation.js`)**:
+    *   Owns Boss summary/threat/counterplay metadata plus structured per-form phase presentation data.
+    *   Exports helpers for phase intent, phase tone, full phase presentation, and phase-shift callout text.
 *   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
     *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave spawn presentation side effects, reward UI presentation handoff, drag placement side-effect execution, debug layout particle emission, Boss effect plan execution, and Boss behavior scheduling.
 *   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
@@ -120,6 +123,19 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
     *   Deeper gameplay hook decomposition is now best treated as feature-driven cleanup rather than an immediate bridge extraction target.
+
+## 6. UI Design System & Presentation Data Pass
+
+The latest refactor added a reusable React UI layer and made Boss phase presentation data-driven.
+
+*   **Design System (`src/view/designSystem.js`, `src/view/components/ui.jsx`)**:
+    *   Added shared class tokens and primitives for panels, buttons, badges, section headings, fields, text inputs, textareas, selects, segmented controls, and repeated cards.
+    *   `GameHud`, `BuildBar`, `OverlayScreen`, `WaveRewardOverlay`, `TowerContextMenu`, `StatusBanner`, `DebugSpawnPanel`, and `BossEditorPanel` now consume those primitives or tokens.
+    *   Usage rules are documented in `docs/ui-design-system.md`.
+*   **Boss Phase Presentation (`src/data/bossPresentation.js`)**:
+    *   Phase intent, tone, callout, Boss summary, threats, and counterplay are now returned from data-layer helpers.
+    *   `bossHudRuntime` and `useGeoGuardGame` consume those helpers directly, while `canvasRenderer` remains drawing-only.
+    *   `tests/game-rules.test.js` includes focused assertions for structured phase presentation data.
 
 ---
 **Last Updated**: `2026-06-10`
