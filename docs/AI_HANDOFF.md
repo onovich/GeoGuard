@@ -61,13 +61,13 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, debug tower helpers, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, debug tower helpers, debug Boss phase forcing, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
     *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
 *   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
-    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave flow, reward UI flow, debug field/wave/Boss phase bridges, and Boss behavior scheduling.
+    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave flow, reward UI flow, debug field/wave bridges, and Boss behavior scheduling.
 *   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
     *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
 *   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
@@ -93,9 +93,12 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
 *   **Debug Tower Runtime (`src/logic/engine/debugTowerRuntime.js`)**:
     *   Owns debug tower preset layouts, direct placed-tower entity creation, unlock-all blueprint transforms, blueprint level changes, and placed tower level changes.
     *   Added focused node:test coverage for unlock-all, preset tower placement around the player, and safe blueprint/placed tower level updates.
+*   **Debug Boss Runtime (`src/logic/engine/debugBossRuntime.js`)**:
+    *   Owns debug Boss phase forcing, including phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing.
+    *   Added focused node:test coverage for clamped phase targets, derived HP, cooldown reset, callback payloads, and no-active-boss behavior.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
-    *   The gameplay hook is still the next major refactor target, especially for remaining debug field/wave/Boss phase wiring.
+    *   The gameplay hook is still the next major refactor target, especially for remaining debug field/wave wiring.
 
 ---
 **Last Updated**: `2026-06-09`

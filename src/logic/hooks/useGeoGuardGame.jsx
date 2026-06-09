@@ -27,6 +27,7 @@ import {
   updatePlacedTowerLevel,
   updateTowerBlueprintLevel,
 } from '../engine/debugTowerRuntime.js';
+import { forceBossPhaseRuntime } from '../engine/debugBossRuntime.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../engine/gameState';
 import { dist, formatTime, rand } from '../engine/gameMath';
 import { drawGameScene, getBossPhaseCalloutText, getBossPhaseHint, getBossPhaseTone } from '../../view/canvas/canvasRenderer.js';
@@ -935,23 +936,18 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    const bosses = game.current.enemies.filter((enemy) => enemy.isBoss && enemy.phases?.length);
-    if (!bosses.length) {
+    const phaseResult = forceBossPhaseRuntime({
+      enemies: game.current.enemies,
+      phaseNumber,
+      onPhaseShift: ({ boss, activePhase, activePhaseIndex, previousPhaseIndex }) => {
+        triggerBossPhaseShift(boss, activePhase, activePhaseIndex, previousPhaseIndex);
+      },
+    });
+    if (!phaseResult.updatedCount) {
       showWaveMessage({ title: 'No Active Boss', subtitle: 'Drag in a boss or start a debug wave first.', tone: 'system' }, 1500);
       return;
     }
 
-    for (const boss of bosses) {
-      const nextPhaseIndex = Math.max(0, Math.min((boss.phases?.length ?? 1) - 1, phaseNumber - 1));
-      const previousPhaseIndex = boss.currentPhaseIndex ?? 0;
-      boss.currentPhaseIndex = nextPhaseIndex;
-      boss.abilityCooldowns = {};
-      const lowerBound = boss.phases[nextPhaseIndex].hpBelow;
-      const upperBound = nextPhaseIndex === 0 ? 1 : boss.phases[nextPhaseIndex - 1].hpBelow;
-      const targetRatio = nextPhaseIndex >= (boss.phases.length - 1) ? Math.max(0.18, lowerBound * 0.72) : (upperBound + lowerBound) * 0.5;
-      boss.hp = Math.max(1, Math.round(boss.maxHp * targetRatio));
-      triggerBossPhaseShift(boss, boss.phases[nextPhaseIndex], nextPhaseIndex, previousPhaseIndex === nextPhaseIndex ? -1 : previousPhaseIndex);
-    }
     syncBossHud();
   };
 

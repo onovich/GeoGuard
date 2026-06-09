@@ -37,6 +37,7 @@ import {
   updatePlacedTowerLevel,
   updateTowerBlueprintLevel,
 } from '../src/logic/engine/debugTowerRuntime.js';
+import { forceBossPhaseRuntime, getForcedBossPhaseHp, getForcedBossPhaseIndex } from '../src/logic/engine/debugBossRuntime.js';
 import {
   findOpenEnemySpawnPosition,
   getBossOwnedSummonCount,
@@ -1135,6 +1136,67 @@ test('debug tower runtime updates blueprint and placed tower levels safely', () 
   assert.ok(baseTower.maxHp >= 50);
   assert.ok(baseTower.hp >= 20);
   assert.deepEqual(updatePlacedTowerLevel({ towers, towerUid: 404, delta: 1 }), { updated: false, tower: null });
+});
+
+test('debug boss runtime clamps phase targets and derives forced hp', () => {
+  const boss = {
+    maxHp: 1000,
+    phases: [
+      { name: 'Open', hpBelow: 1 },
+      { name: 'Mid', hpBelow: 0.5 },
+      { name: 'End', hpBelow: 0.2 },
+    ],
+  };
+
+  assert.equal(getForcedBossPhaseIndex(boss, 0), 0);
+  assert.equal(getForcedBossPhaseIndex(boss, 2), 1);
+  assert.equal(getForcedBossPhaseIndex(boss, 99), 2);
+  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 0 }), 1000);
+  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 1 }), 750);
+  assert.equal(getForcedBossPhaseHp({ boss, phaseIndex: 2 }), 180);
+});
+
+test('debug boss runtime forces active bosses and reports phase shift callbacks', () => {
+  const boss = {
+    uid: 'boss-1',
+    isBoss: true,
+    maxHp: 1000,
+    hp: 1000,
+    currentPhaseIndex: 0,
+    abilityCooldowns: { commandLine: 8 },
+    phases: [
+      { name: 'Open', hpBelow: 1 },
+      { name: 'Mid', hpBelow: 0.5 },
+      { name: 'End', hpBelow: 0.2 },
+    ],
+  };
+  const calls = [];
+
+  const result = forceBossPhaseRuntime({
+    enemies: [boss, { isBoss: false }, { isBoss: true, phases: [] }],
+    phaseNumber: 3,
+    onPhaseShift: (...args) => calls.push(...args),
+  });
+
+  assert.deepEqual(result, { updatedCount: 1 });
+  assert.equal(boss.currentPhaseIndex, 2);
+  assert.equal(boss.hp, 180);
+  assert.deepEqual(boss.abilityCooldowns, {});
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].boss, boss);
+  assert.equal(calls[0].activePhase.name, 'End');
+  assert.equal(calls[0].activePhaseIndex, 2);
+  assert.equal(calls[0].previousPhaseIndex, 0);
+
+  const samePhaseCalls = [];
+  forceBossPhaseRuntime({
+    enemies: [boss],
+    phaseNumber: 3,
+    onPhaseShift: (...args) => samePhaseCalls.push(...args),
+  });
+  assert.equal(samePhaseCalls[0].previousPhaseIndex, -1);
+
+  assert.deepEqual(forceBossPhaseRuntime({ enemies: [], phaseNumber: 1 }), { updatedCount: 0 });
 });
 
 test('tower rules rebuild blueprint stats deterministically by level', () => {
