@@ -81,7 +81,7 @@ import {
   openBossRewardRuntime,
 } from '../src/logic/engine/rewardFlowRuntime.js';
 import { buildTowerAtLevel, getTowerPreviewSummary, upgradeTower } from '../src/logic/engine/towerRules.js';
-import { createWaveStartMessage, startWaveRuntime } from '../src/logic/engine/waveFlowRuntime.js';
+import { advanceWaveTickRuntime, createWaveStartMessage, startWaveRuntime } from '../src/logic/engine/waveFlowRuntime.js';
 
 test('initial tower catalog exposes only the starting blueprints', () => {
   const catalog = createInitialTowerCatalog();
@@ -517,6 +517,36 @@ test('wave tick spawns queued enemies over time and promotes to boss only after 
   assert.equal(bossTickOpen.wave.bossSpawned, true);
 });
 
+test('wave flow runtime advances wave ticks and writes back spawn state', () => {
+  const state = createRuntimeState();
+  state.wave = createWaveRuntimeState(3, {
+    queue: ['BASIC'],
+    spawnInterval: 0.5,
+    boss: { id: 'PRISM' },
+  });
+  state.wave.spawnTimer = 0.5;
+  state.enemies = [{ id: 'blocking-enemy' }];
+
+  const enemyTick = advanceWaveTickRuntime({ state, dt: 0.1 });
+
+  assert.equal(enemyTick.autoRun, true);
+  assert.deepEqual(enemyTick.spawnEnemyKeys, ['BASIC']);
+  assert.equal(enemyTick.spawnBoss, false);
+  assert.deepEqual(state.wave.queue, []);
+  assert.equal(state.wave.spawnTimer, 0.1);
+
+  const blockedBossTick = advanceWaveTickRuntime({ state, dt: 0.1 });
+
+  assert.equal(blockedBossTick.spawnBoss, false);
+
+  state.enemies = [];
+  const bossTick = advanceWaveTickRuntime({ state, dt: 0.1 });
+
+  assert.equal(bossTick.spawnBoss, true);
+  assert.deepEqual(bossTick.bossTemplate, { id: 'PRISM' });
+  assert.equal(state.wave.bossSpawned, true);
+});
+
 test('wave tick leaves sandbox idle when auto-run is disabled', () => {
   const wave = createWaveRuntimeState(2, {
     queue: ['BASIC'],
@@ -533,6 +563,25 @@ test('wave tick leaves sandbox idle when auto-run is disabled', () => {
   assert.equal(tick.wave, wave);
   assert.deepEqual(tick.spawnEnemyKeys, []);
   assert.equal(tick.spawnBoss, false);
+});
+
+test('wave flow runtime keeps sandbox ticks idle when debug wave flow is off', () => {
+  const state = createRuntimeState();
+  state.mode = 'debug';
+  state.debugWaveFlow = false;
+  state.wave = createWaveRuntimeState(2, {
+    queue: ['BASIC'],
+    spawnInterval: 0.9,
+    boss: { id: 'HIVE' },
+  });
+
+  const tick = advanceWaveTickRuntime({ state, dt: 5 });
+
+  assert.equal(tick.autoRun, false);
+  assert.equal(tick.wave, state.wave);
+  assert.deepEqual(tick.spawnEnemyKeys, []);
+  assert.equal(tick.spawnBoss, false);
+  assert.deepEqual(state.wave.queue, ['BASIC']);
 });
 
 test('reward plan includes a support option when player is under pressure', () => {

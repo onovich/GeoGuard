@@ -1,6 +1,7 @@
 import { UI_COPY } from '../../data/gameConfig.js';
 import { createWaveDefinition } from './gameRules.js';
 import { createWaveRuntimeState } from './gameState.js';
+import { resolveWaveTick, shouldAutoRunWaveFlow } from './progressionRules.js';
 
 export const createWaveOverview = (definition) => ({
   label: definition.label ?? '',
@@ -28,5 +29,24 @@ export const startWaveRuntime = ({ state, waveNumber, applyBossAuthoring = (boss
     waveMessage: createWaveStartMessage({ waveNumber, definition }),
     definition,
     authoredDefinition,
+  };
+};
+
+export const advanceWaveTickRuntime = ({ state, dt }) => {
+  const autoRun = shouldAutoRunWaveFlow({ mode: state.mode, debugWaveFlow: state.debugWaveFlow });
+  const waveTick = resolveWaveTick({
+    wave: state.wave,
+    dt,
+    enemyCount: state.enemies.length,
+    autoRun,
+  });
+  state.wave = waveTick.wave;
+
+  return {
+    autoRun,
+    wave: state.wave,
+    spawnEnemyKeys: waveTick.spawnEnemyKeys,
+    spawnBoss: waveTick.spawnBoss,
+    bossTemplate: waveTick.spawnBoss ? state.wave.boss : null,
   };
 };
