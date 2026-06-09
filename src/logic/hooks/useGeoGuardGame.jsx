@@ -45,6 +45,7 @@ import {
   getDebugBossSpawnPoint,
   openDebugRewardPanelRuntime,
   resetDebugPanelCombatRuntime,
+  startDebugWavePanelRuntime,
 } from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
 import { advanceWaveTickRuntime, createWaveSpawnPlan, startWaveRuntime } from '../engine/waveFlowRuntime.js';
@@ -317,16 +318,20 @@ export default function useGeoGuardGame() {
     return bosses[0] ?? null;
   };
 
+  const applyWaveStartState = (waveStart) => {
+    setDebugWaveFlow(waveStart.debugWaveFlow);
+    setCurrentWave(waveStart.currentWave);
+    setWaveOverview(waveStart.waveOverview);
+    showWaveMessage(waveStart.waveMessage, 2400);
+  };
+
   const startWave = (waveNumber) => {
     const waveStart = startWaveRuntime({
       state: game.current,
       waveNumber,
       applyBossAuthoring: applyDebugBossAuthoring,
     });
-    setDebugWaveFlow(waveStart.debugWaveFlow);
-    setCurrentWave(waveStart.currentWave);
-    setWaveOverview(waveStart.waveOverview);
-    showWaveMessage(waveStart.waveMessage, 2400);
+    applyWaveStartState(waveStart);
   };
 
   const initGame = (options = {}) => {
@@ -629,8 +634,13 @@ export default function useGeoGuardGame() {
     if (game.current.mode !== 'debug') {
       return;
     }
-    resetCombatState({ clearTowers: false });
-    startWave(waveNumber);
+    const waveStart = startDebugWavePanelRuntime({
+      state: game.current,
+      waveNumber,
+      applyBossAuthoring: applyDebugBossAuthoring,
+    });
+    applyDebugUiResetState(waveStart);
+    applyWaveStartState(waveStart);
   };
 
   const openDebugReward = () => {

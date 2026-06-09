@@ -1,5 +1,6 @@
 import { createEmptyWaveState } from './gameState.js';
 import { buildRuntimeRewardChoices } from './rewardFlowRuntime.js';
+import { startWaveRuntime } from './waveFlowRuntime.js';
 
 export const DEBUG_SANDBOX_OVERVIEW = {
   label: 'Free Sandbox',
@@ -103,6 +104,20 @@ export const openDebugRewardPanelRuntime = ({ state, catalog, currentWave, hudMo
       hudMoney,
     })
   );
+
+export const startDebugWavePanelRuntime = ({ state, waveNumber, applyBossAuthoring }) => {
+  const uiResetState = resetDebugPanelCombatRuntime({ state, clearTowers: false });
+  const waveStart = startWaveRuntime({
+    state,
+    waveNumber,
+    applyBossAuthoring,
+  });
+
+  return {
+    ...uiResetState,
+    ...waveStart,
+  };
+};
 
 export const applyDebugOptionRuntime = ({ state, key, value }) => {
   const nextOptions = { ...state.debugOptions, [key]: value };

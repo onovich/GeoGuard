@@ -67,6 +67,7 @@ import {
   openDebugRewardPanelRuntime,
   resetDebugPanelCombatRuntime,
   resetCombatRuntimeState,
+  startDebugWavePanelRuntime,
 } from '../src/logic/engine/debugFieldRuntime.js';
 import {
   findOpenEnemySpawnPosition,
@@ -1824,6 +1825,36 @@ test('debug field runtime builds panel action state plans', () => {
 
   assert.equal(rewardState.active, true);
   assert.equal(rewardState.choices.length, 3);
+});
+
+test('debug field runtime starts debug wave panel flow after clearing combat state', () => {
+  const state = createRuntimeState();
+  state.mode = 'debug';
+  state.enemies = [{ id: 'enemy' }];
+  state.towers = [{ id: 'tower' }];
+  state.projectiles = [{ id: 'projectile' }];
+  state.wave.awaitingReward = true;
+
+  const waveStart = startDebugWavePanelRuntime({
+    state,
+    waveNumber: 7,
+    applyBossAuthoring: (boss) => ({ ...boss, debugAuthored: true }),
+  });
+
+  assert.deepEqual(waveStart.rewardState, { active: false, choices: [] });
+  assert.deepEqual(waveStart.bossHud, []);
+  assert.equal(waveStart.towerContextMenu, null);
+  assert.equal(waveStart.currentWave, 7);
+  assert.equal(waveStart.debugWaveFlow, true);
+  assert.equal(waveStart.waveOverview.label.length > 0, true);
+  assert.equal(waveStart.waveMessage.tone, 'wave');
+  assert.deepEqual(state.enemies, []);
+  assert.deepEqual(state.towers, [{ id: 'tower' }]);
+  assert.deepEqual(state.projectiles, []);
+  assert.equal(state.wave.number, 7);
+  assert.equal(state.wave.bossSpawned, false);
+  assert.equal(state.wave.awaitingReward, false);
+  assert.equal(state.wave.boss.debugAuthored, true);
 });
 
 test('debug field runtime enters sandbox wave state and applies debug options', () => {

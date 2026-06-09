@@ -67,7 +67,7 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
     *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
 *   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
-    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave spawn presentation side effects, reward UI presentation handoff, remaining debug wave/UI orchestration, Boss effect plan execution, and Boss behavior scheduling.
+    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave spawn presentation side effects, reward UI presentation handoff, remaining debug wave/UI orchestration callbacks, Boss effect plan execution, and Boss behavior scheduling.
 *   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
     *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
 *   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
@@ -112,11 +112,11 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Owns debug Boss phase forcing, including phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing.
     *   Added focused node:test coverage for clamped phase targets, derived HP, cooldown reset, callback payloads, and no-active-boss behavior.
 *   **Debug Field Runtime (`src/logic/engine/debugFieldRuntime.js`)**:
-    *   Owns debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, debug panel UI reset plans, debug reward state creation, editor Boss spawn positioning, and debug option side effects for infinite money or health.
-    *   Added focused node:test coverage for clearing combat collections, preserving or clearing towers, sandbox reset, action helper outputs, panel action state plans, and infinite money/health option side effects.
+    *   Owns debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, debug panel UI reset plans, debug wave panel start flow, debug reward state creation, editor Boss spawn positioning, and debug option side effects for infinite money or health.
+    *   Added focused node:test coverage for clearing combat collections, preserving or clearing towers, sandbox reset, action helper outputs, panel action state plans, debug wave panel start flow, and infinite money/health option side effects.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
-    *   The gameplay hook is still the next major refactor target, especially for remaining debug wave/UI wiring.
+    *   The gameplay hook is still the next major refactor target, especially for remaining small editor or drag bridge callbacks.
 
 ---
 **Last Updated**: `2026-06-10`
