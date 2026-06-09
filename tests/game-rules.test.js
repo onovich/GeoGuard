@@ -88,6 +88,7 @@ import { canPlaceTowerOnField, createWaveDefinition } from '../src/logic/engine/
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../src/logic/engine/gameState.js';
 import {
   createDebugEntityDragPlacementState,
+  createDragPlacementCommitPlan,
   createEmptyDragPlacementState,
   createTowerDragPlacementState,
   evaluateTowerPlacement,
@@ -251,6 +252,62 @@ test('drag placement updates entity drags without applying tower validation', ()
   assert.equal(nextDragPlacement.worldY, 0);
   assert.equal(nextDragPlacement.canPlace, true);
   assert.equal(nextDragPlacement.invalidReason, null);
+});
+
+test('drag placement commit plans cover cancel, entity, missing, rejected, and valid drops', () => {
+  const cancelPlan = createDragPlacementCommitPlan({
+    dragPlacement: createTowerDragPlacementState({ towerId: 'BASIC', clientX: 20, clientY: 20 }),
+    clientX: 95,
+    clientY: 205,
+    cancelRects: [{ left: 100, right: 220, top: 210, bottom: 260 }],
+    cancelMargin: 10,
+  });
+  assert.deepEqual(cancelPlan, { type: 'cancel' });
+
+  const entityPlan = createDragPlacementCommitPlan({
+    dragPlacement: { ...createDebugEntityDragPlacementState({ kind: 'enemy', entityId: 'FAST', clientX: 30, clientY: 40 }), worldX: 300, worldY: 180 },
+    clientX: 350,
+    clientY: 220,
+  });
+  assert.deepEqual(entityPlan, {
+    type: 'spawn-debug-entity',
+    kind: 'enemy',
+    entityId: 'FAST',
+    worldPoint: { x: 300, y: 180 },
+  });
+
+  const missingTowerPlan = createDragPlacementCommitPlan({
+    dragPlacement: createTowerDragPlacementState({ towerId: 'UNKNOWN', clientX: 10, clientY: 10 }),
+    clientX: 260,
+    clientY: 260,
+    tower: null,
+  });
+  assert.deepEqual(missingTowerPlan, { type: 'missing-tower' });
+
+  const rejectedPlan = createDragPlacementCommitPlan({
+    dragPlacement: createTowerDragPlacementState({ towerId: 'BASIC', clientX: 10, clientY: 10 }),
+    clientX: 300,
+    clientY: 280,
+    tower: { id: 'BASIC' },
+    placement: { canPlace: false, invalidReason: 'blocked', worldPoint: { x: 15, y: 18 } },
+  });
+  assert.deepEqual(rejectedPlan, {
+    type: 'reject-tower',
+    invalidReason: 'blocked',
+    worldPoint: { x: 15, y: 18 },
+  });
+
+  const validPlan = createDragPlacementCommitPlan({
+    dragPlacement: createTowerDragPlacementState({ towerId: 'BASIC', clientX: 10, clientY: 10 }),
+    clientX: 300,
+    clientY: 280,
+    tower: { id: 'BASIC' },
+    placement: { canPlace: true, invalidReason: null, worldPoint: { x: 20, y: 40 } },
+  });
+  assert.deepEqual(validPlan, {
+    type: 'place-tower',
+    worldPoint: { x: 20, y: 40 },
+  });
 });
 
 test('runtime state enables debug wave flow flag separately from normal mode', () => {

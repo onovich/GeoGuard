@@ -25,6 +25,7 @@ import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/b
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
 import {
   createDebugEntityDragPlacementState,
+  createDragPlacementCommitPlan,
   createEmptyDragPlacementState,
   createTowerDragPlacementState,
   evaluateTowerPlacement,
@@ -436,42 +437,48 @@ export default function useGeoGuardGame() {
 
   const tryBuildDraggedTower = (clientX, clientY) => {
     const cancelRects = [game.current.buildBarRect, game.current.debugPanelRect].filter(Boolean);
-    if (
-      cancelRects.some(
-        (rect) =>
-          clientX >= rect.left - DRAG_CANCEL_MARGIN &&
-          clientX <= rect.right + DRAG_CANCEL_MARGIN &&
-          clientY >= rect.top - DRAG_CANCEL_MARGIN &&
-          clientY <= rect.bottom + DRAG_CANCEL_MARGIN
-      )
-    ) {
+    const tower = game.current.dragPlacement.kind === 'tower' ? getTowerById(game.current.dragPlacement.towerId) : null;
+    const placement = tower ? evaluatePlacement(tower, clientX, clientY) : null;
+    const commitPlan = createDragPlacementCommitPlan({
+      dragPlacement: game.current.dragPlacement,
+      clientX,
+      clientY,
+      cancelRects,
+      cancelMargin: DRAG_CANCEL_MARGIN,
+      tower,
+      placement,
+    });
+
+    if (commitPlan.type === 'idle') {
+      return;
+    }
+
+    if (commitPlan.type === 'cancel') {
       clearDragPlacement();
       return;
     }
 
-    if (game.current.dragPlacement.kind === 'enemy' || game.current.dragPlacement.kind === 'boss') {
-      const { worldX, worldY, kind, entityId } = game.current.dragPlacement;
+    if (commitPlan.type === 'spawn-debug-entity') {
+      const { worldPoint, kind, entityId } = commitPlan;
       if (kind === 'boss') {
-        spawnBossAt(entityId, worldX, worldY);
+        spawnBossAt(entityId, worldPoint.x, worldPoint.y);
       } else {
-        spawnEnemyAt(entityId, worldX, worldY, { skipBurrowPosition: true });
+        spawnEnemyAt(entityId, worldPoint.x, worldPoint.y, { skipBurrowPosition: true });
         void playCue('ui_confirm');
       }
-      spawnParticle(worldX, worldY, kind === 'boss' ? COLORS.boss : ENEMY_TYPES[entityId]?.color ?? COLORS.danger, kind === 'boss' ? 24 : 12, 70);
+      spawnParticle(worldPoint.x, worldPoint.y, kind === 'boss' ? COLORS.boss : ENEMY_TYPES[entityId]?.color ?? COLORS.danger, kind === 'boss' ? 24 : 12, 70);
       clearDragPlacement();
       return;
     }
 
-    const tower = getTowerById(game.current.dragPlacement.towerId);
-    if (!tower) {
+    if (commitPlan.type === 'missing-tower') {
       clearDragPlacement();
       return;
     }
 
-    const placement = evaluatePlacement(tower, clientX, clientY);
-    if (!placement.canPlace) {
+    if (commitPlan.type === 'reject-tower') {
       void playCue('ui_error');
-      spawnFloatingText(placement.worldPoint.x, placement.worldPoint.y, placement.invalidReason, COLORS.danger);
+      spawnFloatingText(commitPlan.worldPoint.x, commitPlan.worldPoint.y, commitPlan.invalidReason, COLORS.danger);
       clearDragPlacement();
       return;
     }
@@ -484,12 +491,12 @@ export default function useGeoGuardGame() {
       createPlacedTower({
         tower,
         uid: game.current.nextTowerUid++,
-        x: placement.worldPoint.x,
-        y: placement.worldPoint.y,
+        x: commitPlan.worldPoint.x,
+        y: commitPlan.worldPoint.y,
       })
     );
     void playCue('tower_place');
-    spawnParticle(placement.worldPoint.x, placement.worldPoint.y, tower.color, 15, 60);
+    spawnParticle(commitPlan.worldPoint.x, commitPlan.worldPoint.y, tower.color, 15, 60);
     clearDragPlacement();
   };
 

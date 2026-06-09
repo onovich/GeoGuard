@@ -41,6 +41,57 @@ export const createDebugEntityDragPlacementState = ({ kind, entityId, clientX, c
   invalidReason: null,
 });
 
+const isPointInsideExpandedRect = ({ point, rect, margin }) =>
+  point.x >= rect.left - margin &&
+  point.x <= rect.right + margin &&
+  point.y >= rect.top - margin &&
+  point.y <= rect.bottom + margin;
+
+export const createDragPlacementCommitPlan = ({
+  dragPlacement,
+  clientX,
+  clientY,
+  cancelRects = [],
+  cancelMargin = 0,
+  tower = null,
+  placement = null,
+}) => {
+  if (!dragPlacement?.active) {
+    return { type: 'idle' };
+  }
+
+  const releasePoint = { x: clientX, y: clientY };
+  if (cancelRects.some((rect) => isPointInsideExpandedRect({ point: releasePoint, rect, margin: cancelMargin }))) {
+    return { type: 'cancel' };
+  }
+
+  if (dragPlacement.kind === 'enemy' || dragPlacement.kind === 'boss') {
+    return {
+      type: 'spawn-debug-entity',
+      kind: dragPlacement.kind,
+      entityId: dragPlacement.entityId,
+      worldPoint: { x: dragPlacement.worldX, y: dragPlacement.worldY },
+    };
+  }
+
+  if (!tower) {
+    return { type: 'missing-tower' };
+  }
+
+  if (!placement?.canPlace) {
+    return {
+      type: 'reject-tower',
+      worldPoint: placement?.worldPoint ?? { x: dragPlacement.worldX, y: dragPlacement.worldY },
+      invalidReason: placement?.invalidReason ?? dragPlacement.invalidReason,
+    };
+  }
+
+  return {
+    type: 'place-tower',
+    worldPoint: placement.worldPoint,
+  };
+};
+
 export const evaluateTowerPlacement = ({
   tower,
   clientX,
