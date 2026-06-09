@@ -23,7 +23,13 @@ import {
 import { applyWaveSpawnPlanRuntime, spawnBossEncounterRuntimeAt, spawnEnemyRuntimeAt } from '../engine/entitySpawnRuntime.js';
 import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from '../engine/bossFlowRules.js';
 import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../engine/combatRules.js';
-import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
+import {
+  createDebugEntityDragPlacementState,
+  createEmptyDragPlacementState,
+  createTowerDragPlacementState,
+  evaluateTowerPlacement,
+  updateDragPlacementState,
+} from '../engine/placementRules.js';
 import {
   applyRewardChoiceRuntime,
   getRewardAppliedMessage,
@@ -423,7 +429,7 @@ export default function useGeoGuardGame() {
   };
 
   const clearDragPlacement = () => {
-    game.current.dragPlacement = { active: false, kind: 'tower', entityId: null, towerId: null, pointerX: 0, pointerY: 0, worldX: 0, worldY: 0, canPlace: false, invalidReason: null };
+    game.current.dragPlacement = createEmptyDragPlacementState();
     setDragTowerId(null);
     setDragEntity(null);
   };
@@ -496,19 +502,7 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    game.current.dragPlacement = {
-      active: true,
-      kind: 'tower',
-      entityId: null,
-      towerId,
-      pointerX: clientX,
-      pointerY: clientY,
-      worldX: 0,
-      worldY: 0,
-      canPlace: false,
-      invalidReason: null,
-      touchId,
-    };
+    game.current.dragPlacement = createTowerDragPlacementState({ towerId, clientX, clientY, touchId });
     setDragTowerId(towerId);
     setDragEntity(null);
     updateDragPlacement(clientX, clientY, tower);
@@ -519,18 +513,7 @@ export default function useGeoGuardGame() {
       return;
     }
 
-    game.current.dragPlacement = {
-      active: true,
-      kind,
-      entityId,
-      towerId: null,
-      pointerX: clientX,
-      pointerY: clientY,
-      worldX: 0,
-      worldY: 0,
-      canPlace: true,
-      invalidReason: null,
-    };
+    game.current.dragPlacement = createDebugEntityDragPlacementState({ kind, entityId, clientX, clientY });
     setDragTowerId(null);
     setDragEntity({ kind, id: entityId });
     updateDragPlacement(clientX, clientY);

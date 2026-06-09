@@ -86,7 +86,13 @@ import {
 } from '../src/logic/engine/combatRules.js';
 import { canPlaceTowerOnField, createWaveDefinition } from '../src/logic/engine/gameRules.js';
 import { createEmptyWaveState, createRuntimeState, createWaveRuntimeState } from '../src/logic/engine/gameState.js';
-import { evaluateTowerPlacement, updateDragPlacementState } from '../src/logic/engine/placementRules.js';
+import {
+  createDebugEntityDragPlacementState,
+  createEmptyDragPlacementState,
+  createTowerDragPlacementState,
+  evaluateTowerPlacement,
+  updateDragPlacementState,
+} from '../src/logic/engine/placementRules.js';
 import { resolveRewardFollowUp, resolveWaveTick, shouldAutoRunWaveFlow } from '../src/logic/engine/progressionRules.js';
 import {
   applyRewardChoiceEffects,
@@ -177,6 +183,48 @@ test('tower placement evaluation reports insufficient funds and valid world coor
   assert.deepEqual(placement.worldPoint, { x: 110, y: 20 });
   assert.equal(placement.canPlace, false);
   assert.equal(placement.invalidReason, 'no-money');
+});
+
+test('drag placement helpers build initial drag states', () => {
+  assert.deepEqual(createEmptyDragPlacementState(), {
+    active: false,
+    kind: 'tower',
+    entityId: null,
+    towerId: null,
+    pointerX: 0,
+    pointerY: 0,
+    worldX: 0,
+    worldY: 0,
+    canPlace: false,
+    invalidReason: null,
+  });
+
+  assert.deepEqual(createTowerDragPlacementState({ towerId: 'BASIC', clientX: 42, clientY: 84, touchId: 7 }), {
+    active: true,
+    kind: 'tower',
+    entityId: null,
+    towerId: 'BASIC',
+    pointerX: 42,
+    pointerY: 84,
+    worldX: 0,
+    worldY: 0,
+    canPlace: false,
+    invalidReason: null,
+    touchId: 7,
+  });
+
+  assert.deepEqual(createDebugEntityDragPlacementState({ kind: 'boss', entityId: 'COMMANDER', clientX: 120, clientY: 160 }), {
+    active: true,
+    kind: 'boss',
+    entityId: 'COMMANDER',
+    towerId: null,
+    pointerX: 120,
+    pointerY: 160,
+    worldX: 0,
+    worldY: 0,
+    canPlace: true,
+    invalidReason: null,
+  });
 });
 
 test('drag placement updates entity drags without applying tower validation', () => {

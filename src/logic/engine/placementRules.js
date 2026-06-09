@@ -1,6 +1,46 @@
 import { canPlaceTowerOnField } from './gameRules.js';
 import { toWorldPoint } from './gameMath.js';
 
+export const createEmptyDragPlacementState = () => ({
+  active: false,
+  kind: 'tower',
+  entityId: null,
+  towerId: null,
+  pointerX: 0,
+  pointerY: 0,
+  worldX: 0,
+  worldY: 0,
+  canPlace: false,
+  invalidReason: null,
+});
+
+export const createTowerDragPlacementState = ({ towerId, clientX, clientY, touchId = null }) => ({
+  active: true,
+  kind: 'tower',
+  entityId: null,
+  towerId,
+  pointerX: clientX,
+  pointerY: clientY,
+  worldX: 0,
+  worldY: 0,
+  canPlace: false,
+  invalidReason: null,
+  touchId,
+});
+
+export const createDebugEntityDragPlacementState = ({ kind, entityId, clientX, clientY }) => ({
+  active: true,
+  kind,
+  entityId,
+  towerId: null,
+  pointerX: clientX,
+  pointerY: clientY,
+  worldX: 0,
+  worldY: 0,
+  canPlace: true,
+  invalidReason: null,
+});
+
 export const evaluateTowerPlacement = ({
   tower,
   clientX,
