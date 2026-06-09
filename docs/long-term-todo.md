@@ -9,7 +9,7 @@ This file is for later work that is intentionally not part of the current fast-i
 
 ## Architecture
 
-- Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules.
+- Continue splitting `src/logic/hooks/useGeoGuardGame.jsx` into narrower runtime modules, especially Boss ability effects, combat update flow, and authored encounter orchestration.
 - Move more authored encounter data into structured config instead of mixed hook logic.
 - Add a cleaner data layer for phase intent, counterplay text, and encounter presentation so tuning can stay mostly data-driven.
 
@@ -26,5 +26,5 @@ This file is for later work that is intentionally not part of the current fast-i
 
 ## Tuning
 
-- Run deeper real-play balancing across waves 1-16 after enough iteration data accumulates.
+- Run deeper real-play balancing across waves 1-18 after enough iteration data accumulates.
 - Add late-game economy sinks, recovery options, or broader progression systems only after the current core loop is stable.

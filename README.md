@@ -30,7 +30,7 @@ GeoGuard is a browser survival-defense prototype rebuilt from a Gemini-style sin
 
 ## Deployment
 
-- GitHub Pages deployment is configured through .github/workflows/deploy.yml and Vite base is set to /GeoGuard/.<br/>**GitHub Pages 部署已通过 .github/workflows/deploy.yml 配置完成，且 Vite 的 base 已设置为 /GeoGuard/。**
+- GitHub Pages deployment is configured through .github/workflows/deploy.yml, and Vite uses a relative ./ base so the same build can run under Pages, Bilibili TOY, or other static subpaths.<br/>**GitHub Pages 部署已通过 .github/workflows/deploy.yml 配置完成，且 Vite 使用相对路径 ./ 作为 base，因此同一份构建可以运行在 Pages、Bilibili TOY 或其他静态子路径下。**
 - After pushing to GitHub, set Settings -> Pages -> Source to GitHub Actions if the repository has not been configured yet.<br/>**推送到 GitHub 后，如果仓库尚未配置 Pages，需要在 Settings -> Pages -> Source 中切换为 GitHub Actions。**
 
 ## Origin

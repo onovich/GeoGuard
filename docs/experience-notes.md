@@ -25,14 +25,17 @@
 The fast-iteration TODO pass is complete.
 
 - `useGeoGuardGame` is still large, but its highest-risk rule layers are now split into engine helpers for tower progression, rewards, placement, boss flow, combat math, wave state, and wave progression.
+- Canvas drawing has moved into `src/view/canvas/canvasRenderer.js`, so the main hook now delegates scene rendering instead of owning the full draw tree.
+- Canvas resize, input listeners, joystick updates, context-menu targeting, and the animation-frame loop now live in `src/logic/hooks/useCanvasGameLoop.js`.
+- Boss editor draft state, mutation handlers, import/export, and debug authoring overrides now live in `src/logic/hooks/useBossEditorRuntime.js`.
 - Regression coverage now reaches beyond stat rules into wave tick progression, reward follow-up, drag preview behavior, boss aftermath gating, combat resolution, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
-- The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper renderer or orchestrator cleanup, and optional integration hardening.
+- The remaining work is no longer "missing core workflow" work. It belongs to the long-term backlog in [long-term-todo.md](D:/WebProjects/GeoGuard/docs/long-term-todo.md), where it is tracked as balancing, presentation lift, deeper runtime cleanup, and optional integration hardening.
 
 ## Known Risks
 
 1. useGeoGuardGame is still the highest-risk file for future edits.
-因为它同时包含输入、渲染、波次、建塔和战斗，后续在该文件做改动时要优先小步验证。
+因为它仍然同时包含波次、建塔、debug 桥接、Boss 行为和战斗，后续在该文件做改动时要优先小步验证。
 
 2. Touch behavior is sensitive to small threshold changes.
 BuildBar 里的触摸阈值和延时很容易出现“能滚不能拖”或“能拖不能滚”的回归。

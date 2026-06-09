@@ -53,18 +53,22 @@ test('initial tower catalog exposes only the starting blueprints', () => {
 
 test('wave definitions map to the authored table and scale on later cycles', () => {
   const wave1 = createWaveDefinition(1);
-  const wave16 = createWaveDefinition(16);
-  const wave17 = createWaveDefinition(17);
+  const lastAuthoredWaveNumber = WAVE_TABLE.length;
+  const lastAuthoredWave = createWaveDefinition(lastAuthoredWaveNumber);
+  const nextCycleWave = createWaveDefinition(lastAuthoredWaveNumber + 1);
 
-  assert.equal(WAVE_TABLE.length, 16);
+  assert.equal(WAVE_TABLE.length, 34);
+  assert.equal(WAVE_TABLE.filter((wave) => wave.tier === 1).length, 6);
+  assert.equal(WAVE_TABLE.filter((wave) => wave.tier === 2).length, 12);
+  assert.equal(WAVE_TABLE.filter((wave) => wave.tier === 3).length, 16);
   assert.equal(wave1.boss.id, WAVE_TABLE[0].bossId);
-  assert.equal(wave16.boss.id, WAVE_TABLE[15].bossId);
-  assert.equal(wave17.boss.id, WAVE_TABLE[0].bossId);
+  assert.equal(lastAuthoredWave.boss.id, WAVE_TABLE.at(-1).bossId);
+  assert.equal(nextCycleWave.boss.id, WAVE_TABLE[0].bossId);
   assert.equal(wave1.label, WAVE_TABLE[0].label);
-  assert.equal(wave16.focus, WAVE_TABLE[15].focus);
+  assert.equal(lastAuthoredWave.focus, WAVE_TABLE.at(-1).focus);
   assert.ok(wave1.queue.length > 0);
-  assert.ok(wave16.queue.length > wave1.queue.length);
-  assert.ok(wave17.boss.maxHp > wave1.boss.maxHp);
+  assert.ok(lastAuthoredWave.queue.length > wave1.queue.length);
+  assert.ok(nextCycleWave.boss.maxHp > wave1.boss.maxHp);
 });
 
 test('tower placement is blocked by player, towers, and enemies', () => {
@@ -370,10 +374,10 @@ test('reward choices materialize into UI-ready unlock, upgrade, and support card
 
   assert.equal(choices.length, 3);
   assert.equal(choices[0].type, 'unlock');
-  assert.match(choices[0].title, /Unlock/);
-  assert.match(choices[1].subtitle, /Lv\./);
-  assert.equal(choices[2].title, 'Supply Cache');
-  assert.match(choices[2].detail, /economy bump/i);
+  assert.match(choices[0].title, /解锁/);
+  assert.match(choices[1].subtitle, /等级/);
+  assert.equal(choices[2].title, '物资补给');
+  assert.match(choices[2].detail, /资金/);
 });
 
 test('reward application updates catalog, money, and health without mutating unrelated state', () => {
@@ -483,10 +487,10 @@ test('tower preview summary surfaces the key derived stats', () => {
   const upgraded = buildTowerAtLevel(baseTower, 1);
   const summary = getTowerPreviewSummary(upgraded);
 
-  assert.match(summary, /Cost/);
-  assert.match(summary, /Damage/);
-  assert.match(summary, /Range/);
-  assert.match(summary, /Pierce/);
+  assert.match(summary, /造价/);
+  assert.match(summary, /伤害/);
+  assert.match(summary, /射程/);
+  assert.match(summary, /穿透/);
 });
 
 test('boss summon rules cap active minions by owner and category', () => {

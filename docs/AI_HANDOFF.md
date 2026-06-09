@@ -19,17 +19,18 @@ The user requested a cleaner UI, specifically removing redundant English text an
     *   Translated CTA buttons and badge labels (e.g., `NEW TOWER` -> `新防御塔`, `UPGRADE` -> `属性提升`).
     *   Translated core terminology in rules (`Cost` -> `造价`, `Damage` -> `伤害`, `Supply Cache` -> `补给空投` etc.).
 
-## 2. Difficulty Curve Flattening (Wave x2)
+## 2. Difficulty Curve Flattening (Staged Onboarding)
 The user felt the initial curve was too steep (fighting hard bosses immediately from Wave 1).
 
 *   **Wave Table (`src/data/waveTable.js`)**:
-    *   Refactored the base 16-wave table to generate a 32-wave progression.
-    *   **Waves 1-16 (Weakened/Buffer Phase)**: Flaged with `isWeakened: true`. The enemy spawn interval is slower (`+0.35s`), and the base mob count is reduced to 60%.
-    *   **Waves 17-32 (Original Difficulty)**: Uses the original pacing and `isWeakened: false`.
+    *   Refactored the base 16-wave table into a staged 34-wave progression after the later compression pass.
+    *   **Waves 1-6 (Tier 1)**: Uses one-phase bosses, slower spawn intervals, and lighter encounter pacing.
+    *   **Waves 7-18 (Tier 2)**: Uses two-phase bosses with a moderate spawn interval bonus.
+    *   **Waves 19-34 (Tier 3)**: Uses the full 16-wave boss roster and full boss phase sets.
 *   **Game Rules (`src/logic/engine/gameRules.js`)**:
-    *   Updated `createWaveDefinition()` to respect the `isWeakened` flag.
-    *   For waves 1-16, Boss HP is scaled down (starts at ~0.43x) and Damage is scaled down (starts at ~0.61x).
-    *   This creates a smooth difficulty ramp over the first 16 waves, effectively doubling the game's length and providing a gentler onboarding curve.
+    *   `createWaveDefinition()` reads the staged table, applies tier-based spawn pacing, and keeps later cycles scaling upward.
+    *   Tiered boss IDs (`_T1`, `_T2`, `_T3`) control how many boss phases are active, so early waves teach mechanics before full encounters appear.
+    *   This creates a smoother onboarding curve while preserving the later full-strength 16-wave roster.
 
 ## 3. Boss Difficulty & Wave Rhythm Adjustments (Exponential Scaling & Stage Compression)
 The user noted that while early bosses were appropriately difficult, late-game bosses became too easy as the player's tower setup grew. They also wanted a fresh rhythm for boss stages and tweaked enemy spacing.
@@ -59,5 +60,19 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   Per the `SKILL.md` guidelines, we fell back to the **Browser UI Fallback**.
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
+## 5. Runtime Refactor Passes
+The first planned refactor passes moved rendering, browser loop/input wiring, and Boss editor draft state out of the main gameplay hook without changing UI behavior.
+
+*   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
+    *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
+    *   Exports `drawGameScene()` plus Boss phase presentation helpers used by the HUD and wave messages.
+*   **Gameplay Hook (`src/logic/hooks/useGeoGuardGame.jsx`)**:
+    *   Now delegates scene drawing to `drawGameScene()` and keeps runtime orchestration, wave flow, rewards, combat, debug tools, and Boss behavior.
+*   **Canvas Loop Hook (`src/logic/hooks/useCanvasGameLoop.js`)**:
+    *   Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, context-menu tower targeting, and the requestAnimationFrame bridge.
+*   **Boss Editor Runtime (`src/logic/hooks/useBossEditorRuntime.js`)**:
+    *   Owns debug Boss editor draft state, ability options, authoring overrides, import/export, and panel mutation handlers.
+    *   The gameplay hook is still the next major refactor target, especially for Boss ability effects, combat update flow, and authored encounter orchestration.
+
 ---
-**Last Updated**: `2026-06-07`
+**Last Updated**: `2026-06-09`

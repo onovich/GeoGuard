@@ -45,7 +45,16 @@ Owns reward offer scoring plus pure reward card materialization and reward appli
 Defines the built-in synthesized sound cues for towers, rewards, boss entrances, phase shifts, and boss defeats.
 
 - src/logic/hooks/useGeoGuardGame.jsx
-This is the current gameplay orchestrator. It owns wave flow, boss reward flow, combat updates, touch/mouse input, drag placement, and canvas rendering.
+This is the current gameplay orchestrator. It owns wave flow, boss reward flow, combat updates, drag placement, debug tools, and Boss behavior, while delegating canvas drawing, browser input, frame-loop wiring, and Boss editor draft state to narrower modules.
+
+- src/logic/hooks/useCanvasGameLoop.js
+Owns canvas resize, keyboard and pointer/touch event listeners, joystick updates, right-click tower targeting, and the requestAnimationFrame loop bridge.
+
+- src/logic/hooks/useBossEditorRuntime.js
+Owns the debug Boss editor draft state, ability option list, authoring overrides, import/export helpers, and panel mutation handlers.
+
+- src/view/canvas/canvasRenderer.js
+Owns canvas drawing helpers for towers, bosses, hazards, projectiles, particles, drag previews, joystick visuals, and Boss presentation hints used by the HUD.
 
 - src/logic/hooks/useGameAudio.js
 Owns the Web Audio runtime, cue playback, persistence for sound settings, and user-gesture audio resume handling.
@@ -88,10 +97,10 @@ The left half of the screen is still reserved for joystick movement. The bottom 
 ## Architecture Notes
 
 1. The project is partially split but not fully modular.
-Data is separated into src/data, shared rules live in src/logic/engine, and UI is split into src/view. However, useGeoGuardGame remains the dominant integration point and is still large.
+Data is separated into src/data, shared rules live in src/logic/engine, canvas drawing lives in src/view/canvas, and UI components live in src/view/components. However, useGeoGuardGame remains the dominant runtime integration point and is still large.
 
-2. Canvas rendering is tightly coupled to runtime state.
-Most gameplay objects are updated and rendered in the same hook. This is acceptable for the current prototype stage, but future work should continue moving isolated logic into engine functions.
+2. Canvas rendering is now separated from runtime updates.
+The renderer still consumes the runtime state shape directly, but drawing code no longer lives inside useGeoGuardGame. Browser input, the frame loop, and Boss editor draft state also live in smaller hooks. Future refactors should focus more on Boss ability effects and authored encounter data.
 
 3. The tower catalog is treated as progression state.
 Available towers and upgrade levels live as runtime/template state rather than as placed entities. This keeps reward resolution simple and avoids rewriting every placed tower after upgrades.
@@ -109,11 +118,11 @@ The immediate TODO pass is complete, including the follow-up boss editor and aud
 
 Remaining work is now best treated as long-term backlog rather than missing implementation:
 
-1. Continue deeper hook or renderer decomposition only when a future feature needs it.
+1. Continue deeper hook decomposition only when a future feature needs it, especially Boss ability effects, combat update flow, and authored encounter data.
 
 2. Add browser-level or rendering-sensitive integration checks if the project later needs stricter release automation.
 
-3. Keep balancing and presentation work in the long-term backlog, especially non-showcase bosses and wave 1-16 pacing.
+3. Keep balancing and presentation work in the long-term backlog, especially non-showcase bosses and wave 1-18 pacing.
 
 4. Revisit mobile UX opportunistically whenever the build bar, tower count, drag interaction, or boss editor workflow changes again.
 
@@ -126,3 +135,5 @@ Remaining work is now best treated as long-term backlog rather than missing impl
 3. If you change wave flow, verify the full sequence: wave spawn, boss spawn, boss death, reward modal, reward application, next wave start.
 
 4. If you touch useGeoGuardGame, prefer one small change and one immediate build or runtime validation rather than batching multiple unrelated edits.
+
+5. If you touch the Boss editor, validate both draft import/export and debug spawn behavior because authored overrides now flow through useBossEditorRuntime before reaching combat.
