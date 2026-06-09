@@ -1,4 +1,5 @@
 import { createEmptyWaveState } from './gameState.js';
+import { buildRuntimeRewardChoices } from './rewardFlowRuntime.js';
 
 export const DEBUG_SANDBOX_OVERVIEW = {
   label: 'Free Sandbox',
@@ -27,6 +28,12 @@ export const createDebugRewardState = (choices) => ({
   choices,
 });
 
+export const createDebugUiResetState = () => ({
+  rewardState: { active: false, choices: [] },
+  bossHud: [],
+  towerContextMenu: null,
+});
+
 export const getDebugBossSpawnPoint = ({ player, distance = 180, yOffset = -30 }) => ({
   x: player.x + distance,
   y: player.y + yOffset,
@@ -49,6 +56,11 @@ export const resetCombatRuntimeState = ({ state, clearTowers = false }) => {
   return state;
 };
 
+export const resetDebugPanelCombatRuntime = ({ state, clearTowers = false }) => {
+  resetCombatRuntimeState({ state, clearTowers });
+  return createDebugUiResetState();
+};
+
 export const enterDebugSandboxRuntime = ({ state }) => {
   state.debugWaveFlow = false;
   state.wave = createEmptyWaveState();
@@ -58,6 +70,39 @@ export const enterDebugSandboxRuntime = ({ state }) => {
     waveOverview: DEBUG_SANDBOX_OVERVIEW,
   };
 };
+
+export const enterDebugSandboxPanelRuntime = ({ state, clearTowers = false, announce = false }) => {
+  const uiResetState = resetDebugPanelCombatRuntime({ state, clearTowers });
+  const sandboxState = enterDebugSandboxRuntime({ state });
+  return {
+    ...uiResetState,
+    ...sandboxState,
+    message: announce
+      ? {
+          title: 'Sandbox Ready',
+          subtitle: 'Manual spawn mode is active again.',
+          tone: 'system',
+        }
+      : null,
+    messageDuration: 1800,
+  };
+};
+
+export const clearDebugFieldPanelRuntime = ({ state, clearTowers = false }) => ({
+  ...resetDebugPanelCombatRuntime({ state, clearTowers }),
+  message: getDebugFieldClearMessage({ clearTowers }),
+  messageDuration: 1500,
+});
+
+export const openDebugRewardPanelRuntime = ({ state, catalog, currentWave, hudMoney }) =>
+  createDebugRewardState(
+    buildRuntimeRewardChoices({
+      state,
+      catalog,
+      currentWave,
+      hudMoney,
+    })
+  );
 
 export const applyDebugOptionRuntime = ({ state, key, value }) => {
   const nextOptions = { ...state.debugOptions, [key]: value };

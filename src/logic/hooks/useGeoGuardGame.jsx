@@ -26,7 +26,6 @@ import { getAreaDamageHits, resolveEnemyDamage, resolveTargetDamage } from '../e
 import { evaluateTowerPlacement, updateDragPlacementState } from '../engine/placementRules.js';
 import {
   applyRewardChoiceRuntime,
-  buildRuntimeRewardChoices,
   getRewardAppliedMessage,
   openBossRewardRuntime,
 } from '../engine/rewardFlowRuntime.js';
@@ -41,11 +40,11 @@ import { forceBossPhaseRuntime } from '../engine/debugBossRuntime.js';
 import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
-  createDebugRewardState,
-  enterDebugSandboxRuntime,
+  clearDebugFieldPanelRuntime,
+  enterDebugSandboxPanelRuntime,
   getDebugBossSpawnPoint,
-  getDebugFieldClearMessage,
-  resetCombatRuntimeState,
+  openDebugRewardPanelRuntime,
+  resetDebugPanelCombatRuntime,
 } from '../engine/debugFieldRuntime.js';
 import { createEmptyWaveState, createRuntimeState } from '../engine/gameState';
 import { advanceWaveTickRuntime, createWaveSpawnPlan, startWaveRuntime } from '../engine/waveFlowRuntime.js';
@@ -168,29 +167,25 @@ export default function useGeoGuardGame() {
   const syncHudMoney = () => setMoney(game.current.debugOptions.infiniteMoney ? '∞' : game.current.money);
   const syncHudHealth = () => setHealth(game.current.debugOptions.infiniteHealth ? game.current.player.maxHp : Math.max(0, Math.floor(game.current.player.hp)));
 
-  const resetCombatState = ({ clearTowers = false } = {}) => {
-    resetCombatRuntimeState({ state: game.current, clearTowers });
-    setRewardState({ active: false, choices: [] });
-    setBossHud([]);
-    setTowerContextMenu(null);
+  const applyDebugUiResetState = (uiResetState) => {
+    setRewardState(uiResetState.rewardState);
+    setBossHud(uiResetState.bossHud);
+    setTowerContextMenu(uiResetState.towerContextMenu);
     clearDragPlacement();
   };
 
+  const resetCombatState = ({ clearTowers = false } = {}) => {
+    applyDebugUiResetState(resetDebugPanelCombatRuntime({ state: game.current, clearTowers }));
+  };
+
   const enterDebugSandbox = ({ clearTowers = false, announce = false } = {}) => {
-    resetCombatState({ clearTowers });
-    const sandboxState = enterDebugSandboxRuntime({ state: game.current });
+    const sandboxState = enterDebugSandboxPanelRuntime({ state: game.current, clearTowers, announce });
+    applyDebugUiResetState(sandboxState);
     setDebugWaveFlow(sandboxState.debugWaveFlow);
     setCurrentWave(sandboxState.currentWave);
     setWaveOverview(sandboxState.waveOverview);
-    if (announce) {
-      showWaveMessage(
-        {
-          title: 'Sandbox Ready',
-          subtitle: 'Manual spawn mode is active again.',
-          tone: 'system',
-        },
-        1800
-      );
+    if (sandboxState.message) {
+      showWaveMessage(sandboxState.message, sandboxState.messageDuration);
     }
   };
 
@@ -625,8 +620,9 @@ export default function useGeoGuardGame() {
       enterDebugSandbox({ clearTowers, announce: true });
       return;
     }
-    resetCombatState({ clearTowers });
-    showWaveMessage(getDebugFieldClearMessage({ clearTowers }), 1500);
+    const clearState = clearDebugFieldPanelRuntime({ state: game.current, clearTowers });
+    applyDebugUiResetState(clearState);
+    showWaveMessage(clearState.message, clearState.messageDuration);
   };
 
   const startDebugWave = (waveNumber) => {
@@ -643,14 +639,12 @@ export default function useGeoGuardGame() {
     }
     void playCue('reward_open');
     setRewardState(
-      createDebugRewardState(
-        buildRuntimeRewardChoices({
-          state: game.current,
-          catalog: towerCatalogRef.current,
-          currentWave,
-          hudMoney: money,
-        })
-      )
+      openDebugRewardPanelRuntime({
+        state: game.current,
+        catalog: towerCatalogRef.current,
+        currentWave,
+        hudMoney: money,
+      })
     );
   };
 

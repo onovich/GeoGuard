@@ -61,7 +61,7 @@ The user requested deploying the project to Bilibili TOY using the local `bili-t
     *   The latest static build was packaged to `D:\WebProjects\GeoGuard\.tmp\project.zip`, and the user was instructed to manually upload this package using the official Bilibili TOY web portal update process.
 
 ## 5. Runtime Refactor Passes
-The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, Boss HUD view-model construction, Boss phase presentation scheduling and visual effect planning, entity spawn insertion, wave start/tick helpers, reward flow helpers, debug field/action helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
+The planned refactor passes moved rendering, browser loop/input wiring, Boss editor draft state, Boss template/entity/encounter construction, Boss HUD view-model construction, Boss phase presentation scheduling and visual effect planning, entity spawn insertion, wave start/tick helpers, reward flow helpers, debug field/action/panel helpers, debug tower helpers, debug Boss phase forcing, Boss ability effects, combat-frame settlement, player/tower offense, enemy behavior, and enemy defeat settlement out of the main gameplay hook without changing UI behavior.
 
 *   **Canvas Renderer (`src/view/canvas/canvasRenderer.js`)**:
     *   Moved tower, boss, hazard, projectile, particle, drag-preview, joystick, and Boss presentation drawing helpers into a dedicated view-layer renderer.
@@ -112,8 +112,8 @@ The planned refactor passes moved rendering, browser loop/input wiring, Boss edi
     *   Owns debug Boss phase forcing, including phase target clamping, target HP derivation, cooldown reset, and phase-shift callback routing.
     *   Added focused node:test coverage for clamped phase targets, derived HP, cooldown reset, callback payloads, and no-active-boss behavior.
 *   **Debug Field Runtime (`src/logic/engine/debugFieldRuntime.js`)**:
-    *   Owns debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, debug reward state creation, editor Boss spawn positioning, and debug option side effects for infinite money or health.
-    *   Added focused node:test coverage for clearing combat collections, preserving or clearing towers, sandbox reset, action helper outputs, and infinite money/health option side effects.
+    *   Owns debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, debug panel UI reset plans, debug reward state creation, editor Boss spawn positioning, and debug option side effects for infinite money or health.
+    *   Added focused node:test coverage for clearing combat collections, preserving or clearing towers, sandbox reset, action helper outputs, panel action state plans, and infinite money/health option side effects.
 *   **Ops Workflow (`.codex/project-ops-workflow.json`, `docs/codex-ops-workflow.md`)**:
     *   `Validate.cmd` now runs `npm test` and `npm run build`, and the project git workflow invokes it before commits.
     *   The gameplay hook is still the next major refactor target, especially for remaining debug wave/UI wiring.

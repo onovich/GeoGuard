@@ -57,10 +57,15 @@ import { forceBossPhaseRuntime, getForcedBossPhaseHp, getForcedBossPhaseIndex } 
 import {
   DEBUG_SANDBOX_OVERVIEW,
   applyDebugOptionRuntime,
+  clearDebugFieldPanelRuntime,
+  createDebugUiResetState,
   createDebugRewardState,
+  enterDebugSandboxPanelRuntime,
   enterDebugSandboxRuntime,
   getDebugBossSpawnPoint,
   getDebugFieldClearMessage,
+  openDebugRewardPanelRuntime,
+  resetDebugPanelCombatRuntime,
   resetCombatRuntimeState,
 } from '../src/logic/engine/debugFieldRuntime.js';
 import {
@@ -1746,6 +1751,79 @@ test('debug field runtime clears combat collections and pending rewards', () => 
 
   resetCombatRuntimeState({ state, clearTowers: true });
   assert.deepEqual(state.towers, []);
+});
+
+test('debug field runtime builds panel action state plans', () => {
+  const state = createRuntimeState();
+  state.enemies = [{ id: 'enemy' }];
+  state.towers = [{ id: 'tower' }];
+  state.projectiles = [{ id: 'projectile' }];
+  state.wave.awaitingReward = true;
+
+  assert.deepEqual(createDebugUiResetState(), {
+    rewardState: { active: false, choices: [] },
+    bossHud: [],
+    towerContextMenu: null,
+  });
+
+  const resetResult = resetDebugPanelCombatRuntime({ state, clearTowers: false });
+
+  assert.deepEqual(resetResult, createDebugUiResetState());
+  assert.deepEqual(state.enemies, []);
+  assert.deepEqual(state.towers, [{ id: 'tower' }]);
+  assert.deepEqual(state.projectiles, []);
+  assert.equal(state.wave.awaitingReward, false);
+
+  state.enemies = [{ id: 'enemy-2' }];
+  state.towers = [{ id: 'tower-2' }];
+  const clearResult = clearDebugFieldPanelRuntime({ state, clearTowers: true });
+
+  assert.deepEqual(clearResult, {
+    ...createDebugUiResetState(),
+    message: {
+      title: 'Field Reset',
+      subtitle: 'Enemies, hazards, and towers cleared.',
+      tone: 'system',
+    },
+    messageDuration: 1500,
+  });
+  assert.deepEqual(state.enemies, []);
+  assert.deepEqual(state.towers, []);
+
+  state.debugWaveFlow = true;
+  state.wave = createWaveRuntimeState(4, {
+    queue: ['BASIC'],
+    spawnInterval: 0.5,
+    boss: { id: 'COMMANDER' },
+  });
+  state.enemies = [{ id: 'enemy-3' }];
+  const sandboxResult = enterDebugSandboxPanelRuntime({ state, clearTowers: false, announce: true });
+
+  assert.deepEqual(sandboxResult, {
+    ...createDebugUiResetState(),
+    currentWave: 0,
+    debugWaveFlow: false,
+    waveOverview: DEBUG_SANDBOX_OVERVIEW,
+    message: {
+      title: 'Sandbox Ready',
+      subtitle: 'Manual spawn mode is active again.',
+      tone: 'system',
+    },
+    messageDuration: 1800,
+  });
+  assert.deepEqual(state.enemies, []);
+  assert.equal(state.debugWaveFlow, false);
+  assert.deepEqual(state.wave, createEmptyWaveState());
+
+  const rewardState = openDebugRewardPanelRuntime({
+    state,
+    catalog: createInitialTowerCatalog(),
+    currentWave: 4,
+    hudMoney: 20,
+  });
+
+  assert.equal(rewardState.active, true);
+  assert.equal(rewardState.choices.length, 3);
 });
 
 test('debug field runtime enters sandbox wave state and applies debug options', () => {
