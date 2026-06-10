@@ -131,7 +131,8 @@ The latest refactor added a reusable React UI layer and made Boss phase presenta
 *   **Design System (`src/view/designSystem.js`, `src/view/components/ui.jsx`)**:
     *   Added shared class tokens and primitives for panels, buttons, badges, section headings, fields, text inputs, textareas, selects, segmented controls, and repeated cards.
     *   `GameHud`, `BuildBar`, `OverlayScreen`, `WaveRewardOverlay`, `TowerContextMenu`, `StatusBanner`, `DebugSpawnPanel`, and `BossEditorPanel` now consume those primitives or tokens.
-    *   Usage rules are documented in `docs/ui-design-system.md`.
+    *   Usage rules are documented in `docs/ui-design-system.md`, and `tests/ui-design-system.test.js` now guards the main component adoption points.
+    *   Visual smoke guidance lives in `docs/browser-smoke-checklist.md`.
 *   **Boss Phase Presentation (`src/data/bossPresentation.js`)**:
     *   Phase intent, tone, callout, Boss summary, threats, and counterplay are now returned from data-layer helpers.
     *   `bossHudRuntime` and `useGeoGuardGame` consume those helpers directly, while `canvasRenderer` remains drawing-only.

@@ -6,7 +6,6 @@ This file is for later work that is intentionally not part of the current fast-i
 
 - Add richer debug presets such as spawn-at-phase, common tower layouts, cooldown inspection, and step simulation.
 - Add browser-level or rendering-sensitive integration coverage for the full reward modal lifecycle, visual transitions, and live input flows.
-- Add a lightweight UI primitive conformance check if future UI work starts drifting away from `src/view/components/ui.jsx`.
 
 ## Architecture
 

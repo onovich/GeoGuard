@@ -34,4 +34,6 @@ npm test
 npm run build
 ```
 
-For visual changes, also run a local browser smoke and capture at least one screenshot of the start/debug flow.
+`npm test` includes a lightweight design-system conformance test that checks the main React UI surfaces use the shared primitives and avoid legacy one-off panel class clusters.
+
+For visual changes, also run [browser-smoke-checklist.md](D:/WebProjects/GeoGuard/docs/browser-smoke-checklist.md) and capture screenshots of the debug and Boss authoring flows.
