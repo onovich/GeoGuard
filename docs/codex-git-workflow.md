@@ -44,6 +44,8 @@ Run these before commit or push, in order:
 ```powershell
 C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd
 ```
+
+`Validate.cmd` starts with `npm run check:architecture`, so the git wrapper performs the architecture self-check before every commit/push workflow.
 ## Staging Policy
 
 ask each time

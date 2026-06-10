@@ -133,6 +133,11 @@ The latest refactor added a reusable React UI layer and made Boss phase presenta
     *   `GameHud`, `BuildBar`, `OverlayScreen`, `WaveRewardOverlay`, `TowerContextMenu`, `StatusBanner`, `DebugSpawnPanel`, and `BossEditorPanel` now consume those primitives or tokens.
     *   Usage rules are documented in `docs/ui-design-system.md`, and `tests/ui-design-system.test.js` now guards the main component adoption points.
     *   Visual smoke guidance lives in `docs/browser-smoke-checklist.md`.
+*   **Architecture Gate (`docs/refactor-architecture-checklist.md`, `tests/architecture-standards.test.js`, `.codex/hooks.json`)**:
+    *   The concise refactor checklist defines data, engine, hook, canvas, component, and screen boundaries.
+    *   `npm run check:architecture` runs the architecture and UI conformance tests.
+    *   Project Validate now runs structure check before tests/build, so the project git wrapper checks architecture before every commit.
+    *   Project Codex hooks include a GeoGuard Stop hook that runs the fast architecture check when relevant files changed.
 *   **Boss Phase Presentation (`src/data/bossPresentation.js`)**:
     *   Phase intent, tone, callout, Boss summary, threats, and counterplay are now returned from data-layer helpers.
     *   `bossHudRuntime` and `useGeoGuardGame` consume those helpers directly, while `canvasRenderer` remains drawing-only.

@@ -107,6 +107,9 @@ Defines shared UI class tokens and helper builders for surfaces, buttons, badges
 - src/view/components/ui.jsx
 Defines reusable React UI primitives used by HUDs, overlays, menus, debug panels, and editor forms.
 
+- docs/refactor-architecture-checklist.md
+Concise architecture self-check for refactors and commits. `npm run check:architecture` enforces the executable parts of this standard.
+
 - src/logic/hooks/useGameAudio.js
 Owns the Web Audio runtime, cue playback, persistence for sound settings, and user-gesture audio resume handling.
 
@@ -164,12 +167,13 @@ Available towers and upgrade levels live as runtime/template state rather than a
 
 ## Validation Status
 
-- `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd` runs `npm test` followed by `npm run build`.
+- `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd` runs `npm run check:architecture`, `npm test`, and `npm run build`.
 - npm run build passes locally.
-- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, structured Boss phase presentation data, UI design-system conformance, Boss phase presentation scheduling and visual effect command planning, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug Boss editor spawn plans, debug action presentation helpers, debug panel action state plans, debug wave panel start flow, debug tower runtime helpers, debug tower layout application, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag start/reset state helpers, drag commit plans, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
+- npm test passes locally with coverage for wave data, wave-state helpers, wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, structured Boss phase presentation data, architecture boundary conformance, UI design-system conformance, Boss phase presentation scheduling and visual effect command planning, wave tick progression, reward follow-up rules, reward flow runtime helpers, boss authoring rules, encounter runtime construction, debug field runtime helpers, debug Boss editor spawn plans, debug action presentation helpers, debug panel action state plans, debug wave panel start flow, debug tower runtime helpers, debug tower layout application, debug Boss phase forcing, boss ability runtime callbacks, combat-frame runtime callbacks, combat offense runtime callbacks, enemy behavior runtime callbacks, enemy defeat runtime callbacks, audio cue definitions, placement rules, drag start/reset state helpers, drag commit plans, drag preview updates, reward adaptation/application, combat resolution, tower progression helpers, and boss flow rules.
 - GitHub Pages workflow is configured and deployed through GitHub Actions.
 - Current published site uses the repository Pages path under the configured domain.
 - Browser smoke guidance for visual checks lives in [browser-smoke-checklist.md](D:/WebProjects/GeoGuard/docs/browser-smoke-checklist.md).
+- Project Codex hooks are installed in `.codex/hooks.json`; the GeoGuard architecture Stop hook runs the fast architecture check when relevant files changed.
 
 ## Recommended Next Steps
 
@@ -199,22 +203,24 @@ Remaining work is now best treated as long-term backlog rather than missing impl
 
 5. If you add or edit React UI, start from `src/view/components/ui.jsx` and `src/view/designSystem.js`; update [ui-design-system.md](D:/WebProjects/GeoGuard/docs/ui-design-system.md) if a reusable pattern changes.
 
-6. If you touch the Boss editor, validate both draft import/export and debug spawn behavior because authored overrides now flow through useBossEditorRuntime before reaching combat.
+6. If you refactor architecture boundaries, start from [refactor-architecture-checklist.md](D:/WebProjects/GeoGuard/docs/refactor-architecture-checklist.md) and run `npm run check:architecture`.
 
-7. If you touch Boss abilities, use the focused boss ability runtime tests plus the ops Validate wrapper before doing a browser smoke.
+7. If you touch the Boss editor, validate both draft import/export and debug spawn behavior because authored overrides now flow through useBossEditorRuntime before reaching combat.
 
-8. If you touch projectile, hazard, drop, particle, impact-wave, or floating-text behavior, use the combat-frame runtime tests plus the ops Validate wrapper before doing a browser smoke.
+8. If you touch Boss abilities, use the focused boss ability runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-9. If you touch player or tower firing, use the combat offense runtime tests plus the ops Validate wrapper before doing a browser smoke.
+9. If you touch projectile, hazard, drop, particle, impact-wave, or floating-text behavior, use the combat-frame runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-10. If you touch enemy status timers, movement, targeting, contact damage, summons, or explode behavior, use the enemy behavior runtime tests plus the ops Validate wrapper before doing a browser smoke.
+10. If you touch player or tower firing, use the combat offense runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-11. If you touch enemy death, drops, death-spawns, boss defeat money, boss reward opening, or pending boss aftermath checks, use the enemy defeat runtime tests plus the ops Validate wrapper before doing a browser smoke.
+11. If you touch enemy status timers, movement, targeting, contact damage, summons, or explode behavior, use the enemy behavior runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-12. If you touch Boss template enrichment, runtime entity defaults, Boss ownership metadata, or twin encounter construction, use the encounter runtime tests plus the ops Validate wrapper before doing a browser smoke.
+12. If you touch enemy death, drops, death-spawns, boss defeat money, boss reward opening, or pending boss aftermath checks, use the enemy defeat runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-13. If you touch debug tower presets, unlock-all behavior, direct tower creation, or tower level adjustment from context menus, use the debug tower runtime tests plus the ops Validate wrapper before doing a browser smoke.
+13. If you touch Boss template enrichment, runtime entity defaults, Boss ownership metadata, or twin encounter construction, use the encounter runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-14. If you touch debug Boss phase forcing, phase HP derivation, or phase-shift callback routing, use the debug Boss runtime tests plus the ops Validate wrapper before doing a browser smoke.
+14. If you touch debug tower presets, unlock-all behavior, direct tower creation, or tower level adjustment from context menus, use the debug tower runtime tests plus the ops Validate wrapper before doing a browser smoke.
 
-15. If you touch debug field clearing, sandbox reset, sandbox overview, or infinite money/health side effects, use the debug field runtime tests plus the ops Validate wrapper before doing a browser smoke.
+15. If you touch debug Boss phase forcing, phase HP derivation, or phase-shift callback routing, use the debug Boss runtime tests plus the ops Validate wrapper before doing a browser smoke.
+
+16. If you touch debug field clearing, sandbox reset, sandbox overview, or infinite money/health side effects, use the debug field runtime tests plus the ops Validate wrapper before doing a browser smoke.

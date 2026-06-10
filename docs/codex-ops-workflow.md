@@ -36,11 +36,12 @@ C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\ReleaseDry
 
 ## Validate Sequence
 
-test, build
+structureCheck, test, build
 
 Configured validation commands:
 
 ```powershell
+npm run check:architecture
 npm test
 npm run build
 ```

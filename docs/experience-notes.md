@@ -26,6 +26,9 @@ The shared UI layer now lives in `src/view/designSystem.js` and `src/view/compon
 8. Boss phase presentation belongs in data.
 Boss phase intent, HUD tone, phase-shift callout text, and Boss-level counterplay metadata now live in `src/data/bossPresentation.js`. Runtime and HUD code should consume those helpers instead of embedding presentation maps in canvas or hook code.
 
+9. Refactor standards need an executable gate.
+The concise standard is `docs/refactor-architecture-checklist.md`. Its enforceable boundary rules live in `tests/architecture-standards.test.js`, and `npm run check:architecture` is part of the project Validate sequence used before commits.
+
 ## Immediate Status
 
 The fast-iteration TODO pass is complete.
@@ -50,6 +53,7 @@ The fast-iteration TODO pass is complete.
 - Debug combat-field clearing, sandbox wave reset, sandbox overview metadata, action presentation helpers, panel UI reset plans, debug wave panel start flow, debug reward panel state, editor Boss spawn planning, and infinite money/health option side effects now live in `src/logic/engine/debugFieldRuntime.js`, with focused helper tests.
 - Shared React UI primitives and class tokens now live in `src/view/components/ui.jsx` and `src/view/designSystem.js`, with usage rules in `docs/ui-design-system.md` and conformance coverage in `tests/ui-design-system.test.js`.
 - Boss phase intent/tone/callout presentation data now lives in `src/data/bossPresentation.js`, with focused tests covering structured phase presentation lookup.
+- Architecture boundary rules now have a concise checklist in `docs/refactor-architecture-checklist.md`, an executable check in `tests/architecture-standards.test.js`, and a project Codex Stop hook for fast feedback.
 - Project validation is now available through `C:\Users\Administrator\.codex\skills\project-ops-workflow\scripts\ops\Validate.cmd`, and the git workflow calls it before commits.
 - Regression coverage now reaches beyond stat rules into wave-start helpers, wave tick runtime helpers, wave spawn-plan helpers, entity spawn insertion, Boss HUD view-model construction, Boss phase presentation scheduling and visual effect command planning, wave tick progression, reward follow-up, reward flow helpers, drag start/reset state helpers, drag commit plans, drag preview behavior, boss aftermath gating, combat resolution, encounter construction, debug field/action helpers, debug Boss editor spawn plans, debug panel action state plans, debug wave panel start flow, debug tower helpers, debug tower layout application, debug Boss phase forcing, enemy behavior callbacks, enemy defeat callbacks, boss authoring draft rules, and audio cue definitions.
 - A debug-only boss authoring lab and a built-in synthesized audio layer are now part of the shipped toolset for fast iteration.
