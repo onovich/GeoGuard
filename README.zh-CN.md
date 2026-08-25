@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-[在线试玩](https://blog.onovich.com/GeoGuard/)
+[在线试玩](https://game.onovich.com/GeoGuard/)
 
 GeoGuard 是一个浏览器生存塔防游戏。玩家需要在几何战场中移动、收集资源，并在敌潮逼近时建立防御塔网络。
 
