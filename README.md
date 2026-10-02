@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-[Play online](https://blog.onovich.com/GeoGuard/)
+[Play online](https://game.onovich.com/GeoGuard/)
 
 GeoGuard is a browser survival-defense game about moving through a geometric battlefield, collecting resources, and building a tower network while enemy waves close in.
 
