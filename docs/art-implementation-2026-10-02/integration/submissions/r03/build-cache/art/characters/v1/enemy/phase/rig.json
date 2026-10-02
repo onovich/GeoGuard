@@ -1,0 +1,379 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:PHASE",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    232
+  ],
+  "collisionCenterPx": [
+    128,
+    142
+  ],
+  "collisionRadiusPx": 99,
+  "referenceRuntimeRadius": 10,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1连体弯滴幽灵尾，尾末2尖瓣；1长黑脸窗2白眼；0肢体",
+  "organCounts": {
+    "continuousGhostTail": 1,
+    "tailTips": 2,
+    "blackFaceWindow": 1,
+    "whiteEyes": 2,
+    "limbs": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        232
+      ]
+    },
+    {
+      "id": "continuous-body-tail",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        181
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tail-tip-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        183,
+        222
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "tail-tip-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        228,
+        216
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "face-window",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        94,
+        108
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        83,
+        90
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        97,
+        89
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S06",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S06",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S06",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S06",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "PHASE_DASH": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+          "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e",
+          "row": 1,
+          "column": 4,
+          "label": "PHASE BODY",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S06",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/phase/source.svg",
+  "bodyResource": "art/characters/v1/enemy/phase/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/phase/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:PHASE"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/05-phase-burrower.png",
+      "sha256": "e75ad0c2e80226086ff995478e708636314900323c6a79a013a13f304616c47e"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 48.75,
+    "y": 32.75,
+    "width": 182.5,
+    "height": 201.5
+  },
+  "iconSourceViewBox": [
+    33.25,
+    26.75,
+    213.5,
+    213.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 51,
+    "y": 40,
+    "width": 180,
+    "height": 188,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/phase/body.png"
+}

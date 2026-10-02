@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "status": "PROPOSED_NOT_EXECUTED",
+  "products": {
+    "fileCount": 880,
+    "fingerprint": "f353ca072173dfb8e63f4b06506f0e4ad345cecc276fab8bfedf163d18ec3ac6",
+    "source": "latest primary instruction; not rehashed by this preparation"
+  },
+  "tooling": {
+    "rootQaFiles": 36,
+    "rootQaMjs": 33,
+    "qaSkillsMjs": 5,
+    "artTestFiles": 3,
+    "manifest": "qa-tools-and-tests.json"
+  },
+  "recommendedAfterFinalDispatch": [
+    {
+      "scope": "architecture and UI design-system",
+      "command": "C:/Users/Administrator/.codex/skills/project-ops-workflow/scripts/ops/StructureCheck.cmd",
+      "underlying": "npm run check:architecture",
+      "executionStatus": "NOT_RUN_PENDING_DISPATCH"
+    },
+    {
+      "scope": "new art/QA serializer, pinned contracts, final input/RAF validity/skill observer tests only",
+      "command": "node --test tests/art-baseline-contract.test.js tests/art-final-preparation.test.js tests/art-snapshot.test.js",
+      "executionStatus": "NOT_RUN_PENDING_DISPATCH",
+      "excludes": "core gameplay/numeric/boss simulation suite"
+    },
+    {
+      "scope": "syntax only, no imports or browser execution",
+      "command": "node --check <each exact path in syntaxPaths>",
+      "syntaxPaths": [
+        "scripts/art-validation/browser-page.mjs",
+        "scripts/art-validation/browser-runner.mjs",
+        "scripts/art-validation/capture-final-lock.mjs",
+        "scripts/art-validation/common.mjs",
+        "scripts/art-validation/compare-behavior.mjs",
+        "scripts/art-validation/create-final-contacts.mjs",
+        "scripts/art-validation/export-baseline.mjs",
+        "scripts/art-validation/final-browser-page.mjs",
+        "scripts/art-validation/final-browser.mjs",
+        "scripts/art-validation/final-inputs.mjs",
+        "scripts/art-validation/final-lock.mjs",
+        "scripts/art-validation/final-performance.mjs",
+        "scripts/art-validation/final-session.mjs",
+        "scripts/art-validation/final-skill-observer.mjs",
+        "scripts/art-validation/final-ui-checks.mjs",
+        "scripts/art-validation/freeze-logic.mjs",
+        "scripts/art-validation/prepare-final.mjs",
+        "scripts/art-validation/projectile-boundaries.mjs",
+        "scripts/art-validation/protected-audit.mjs",
+        "scripts/art-validation/resource-contract.mjs",
+        "scripts/art-validation/review-final-preparation.mjs",
+        "scripts/art-validation/run-crossfire-performance.mjs",
+        "scripts/art-validation/run-final-function-matrix.mjs",
+        "scripts/art-validation/run-final-hit-boundary.mjs",
+        "scripts/art-validation/run-final-normal-reward.mjs",
+        "scripts/art-validation/run-final-performance.mjs",
+        "scripts/art-validation/run-final-resource-recovery.mjs",
+        "scripts/art-validation/run-final-skills.mjs",
+        "scripts/art-validation/run-final-ui-supplement.mjs",
+        "scripts/art-validation/scene-kit.mjs",
+        "scripts/art-validation/seal-logic-r03.mjs",
+        "scripts/art-validation/snapshot.mjs",
+        "scripts/art-validation/ui-flow.mjs",
+        "docs/art-implementation-2026-10-02/qa-skills/audit-existing.mjs",
+        "docs/art-implementation-2026-10-02/qa-skills/audit-runs.mjs",
+        "docs/art-implementation-2026-10-02/qa-skills/prepare.mjs",
+        "docs/art-implementation-2026-10-02/qa-skills/run-skills.mjs",
+        "docs/art-implementation-2026-10-02/qa-skills/seal-preparation.mjs"
+      ],
+      "executionStatus": "NOT_RUN_PENDING_DISPATCH"
+    },
+    {
+      "scope": "frozen production bundling, does not exercise QA docs tools",
+      "command": "C:/Users/Administrator/.codex/skills/project-ops-workflow/scripts/ops/Build.cmd",
+      "underlying": "npm run build",
+      "executionStatus": "NOT_RUN_PENDING_DISPATCH"
+    }
+  ],
+  "reusedEvidence": "Core numeric regression from root-approved QA r03 plus approved frozen visual/performance/skills/function/resource evidence; no repeat simulation/browser/performance",
+  "existingDefaultValidation": {
+    "wrapper": "C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Validate.cmd",
+    "opsWrapper": "C:/Users/Administrator/.codex/skills/project-ops-workflow/scripts/ops/Validate.cmd",
+    "sequence": [
+      "npm run check:architecture",
+      "npm test (= node --test)",
+      "npm run build"
+    ],
+    "testDiscoversCoreNumeric": true
+  },
+  "commitImplication": "After root explicitly dispatches reuse-core+targeted-final-checks, use Commit.cmd -SkipValidation with the matching evidence packet so default wrapper does not rerun full npm test. Without this dispatch, do not execute checks or local commit. A separately requested full npm test is possible but not proposed under current no-core-repeat instruction.",
+  "testsDoNotProve": "Targeted Node tests and syntax parse do not prove QA-skills95 runtime coverage or screenshots. Those require root-reviewed final owner packets; current preparation cannot replace them."
+}

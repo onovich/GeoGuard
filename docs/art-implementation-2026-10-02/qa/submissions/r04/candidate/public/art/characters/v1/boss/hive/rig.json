@@ -1,0 +1,515 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:HIVE",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    232
+  ],
+  "collisionCenterPx": [
+    128,
+    139
+  ],
+  "collisionRadiusPx": 106,
+  "referenceRuntimeRadius": 29,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1三层巢腹；2顶耳5裙瓣；3固定圆巢口上1下2；2闭眼槽；OPEN不融合底两口",
+  "organCounts": {
+    "layeredHiveBody": 1,
+    "bodyLayers": 3,
+    "topEars": 2,
+    "skirtLobes": 5,
+    "nestApertures": 3,
+    "upperApertures": 1,
+    "lowerApertures": 2,
+    "closedEyeSlots": 2
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        232
+      ]
+    },
+    {
+      "id": "ear-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        96,
+        51
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "ear-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        161,
+        51
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        108,
+        90
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        147,
+        90
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "aperture-upper",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        122
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "aperture-lower-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        77,
+        172
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "aperture-lower-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        180,
+        172
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "skirt-1",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        34,
+        211
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-2",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        72,
+        215
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-3",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        125,
+        217
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-4",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        174,
+        216
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-5",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        223,
+        211
+      ],
+      "embeddedContour": true
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S16",
+        "B03/H01",
+        "B04/M03",
+        "B04/M05"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B04/M03",
+        "B04/M05"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B04/M03",
+        "B04/M05"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B04/M03",
+        "B04/M05"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "NEST": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M03",
+        "B04/M05"
+      ],
+      "notes": null
+    },
+    "HATCH": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SWARM": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+          "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01",
+        "B04/M03"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/hive/source.svg",
+  "bodyResource": "art/characters/v1/boss/hive/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/hive/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:HIVE"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/hive-production.png",
+      "sha256": "cedb869d659d47e289605840e201d1eee13119ce42cbb6792c614bf4bf7e4e0c"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 4.75,
+    "y": 23.75,
+    "width": 248.5,
+    "height": 210.5
+  },
+  "iconSourceViewBox": [
+    -1.25,
+    -1.25,
+    260.5,
+    260.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 14,
+    "y": 30,
+    "width": 228,
+    "height": 199,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/boss/hive/body.png"
+}

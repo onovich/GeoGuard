@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:FAST",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    228
+  ],
+  "collisionCenterPx": [
+    128,
+    161
+  ],
+  "collisionRadiusPx": 105,
+  "referenceRuntimeRadius": 8,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "前倾圆身；2长后倾耳、2后足、1侧软瓣；2眼1短椭圆口",
+  "organCounts": {
+    "body": 1,
+    "longRearEars": 2,
+    "rearFeet": 2,
+    "sideLobe": 1,
+    "eyes": 2,
+    "ovalMouth": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        228
+      ]
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        85,
+        228
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        177,
+        228
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "ear-far",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        153,
+        123
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "ear-near",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        136,
+        130
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "ear-far-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        77,
+        43
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "ear-near-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        24,
+        99
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "side-flap",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        84,
+        180
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        181,
+        171
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        210,
+        165
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        199,
+        187
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "RUN": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 4,
+          "label": "RUN / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+          "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f",
+          "row": 1,
+          "column": 4,
+          "label": "RUN / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/fast/source.svg",
+  "bodyResource": "art/characters/v1/enemy/fast/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/fast/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:FAST"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/01-fast-tank.png",
+      "sha256": "f82cdc95cf7a5c0ec11147847615e3752866ceff1e93c2651cbfcabf8e251d5f"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 13.75,
+    "y": 31.75,
+    "width": 227.5,
+    "height": 199.5
+  },
+  "iconSourceViewBox": [
+    7.75,
+    11.75,
+    239.5,
+    239.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 18,
+    "y": 35,
+    "width": 215,
+    "height": 194,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/fast/body.png"
+}

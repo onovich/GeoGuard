@@ -1,0 +1,37 @@
+{
+  "status": "proposal_not_approved_not_runtime",
+  "owner": "characters",
+  "version": 1,
+  "alignmentWithIntegrationDraft": {
+    "authority": "docs/art-implementation-2026-10-02/integration/submissions/r01/module-api.md, read while still a draft; final approval pending",
+    "publicEntry": "src/view/art/characters/index.js",
+    "publicExports": ["CHARACTER_ART_SCHEMA_VERSION", "characterManifest", "resolveCharacterArtId", "getCharacterIcon", "loadCharacterArt", "drawCharacter", "getCharacterAnchors"],
+    "drawSignature": "drawCharacter(ctx, actor, frame, assets) -> {drawn, reason?}",
+    "anchorSignature": "getCharacterAnchors(actor, frame) -> {root, collisionCenter, muzzles, parts, bounds} | null",
+    "internalProposalBelow": "drawCharacterBody and sampleCharacterPose are private implementation details; adapt frame names to approved Actor/Frame DTO",
+    "requirementsAcceptedInPrinciple": ["no engine imports or raw entity refs", "world coordinates under existing ctx camera/DPR", "BASE_URL-safe resource URIs", "no window/document/Image on module import", "unknown artId returns null/unsupported", "no mutually dependent characters/world modules", "quality full/reduced", "pause freezes game clock", "no new dependency", "failure reports missing resources instead of silently claiming replacement complete"]
+  },
+  "proposedOwnedPaths": ["src/view/art/characters/**", "public/art/characters/**"],
+  "integrationOwnedPaths": ["src/view/canvas/canvasRenderer.js", "src/view/screens/GameScreen.jsx", "src/view/components/BuildBar.jsx", "src/logic/**", "src/data/**"],
+  "exports": {
+    "drawCharacterBody": {
+      "signature": "drawCharacterBody(ctx, frame) -> {rootWorld, collisionCenterWorld, faceWorld, mountWorld, muzzlesWorld, bodyBoundsWorld}",
+      "frame": {"identity": "tower:BASIC etc, resolved by integrator", "worldCenter": "existing entity.x/y", "visualScale": "fixed per identity neutral-fit", "pose": "approved named pose with 0..1 progress", "direction": "right/left/up and residual aim", "aimAngle": "visual radians only", "phaseIndex": "existing runtime phase index", "alpha": "opacity; no status or HP drawing", "visualTime": "gameTime; freeze during pause", "uid": "view cache identity; never written to entity"},
+      "mustNotDraw": ["shadow", "projectile", "muzzle flash", "independent summon", "hazard", "HP", "level badge", "world text", "effect-only status aura"],
+      "mustNotMutate": ["ctx state outside save/restore", "entity", "logic position/radius", "timers", "money", "projectile origin", "cooldowns"]
+    },
+    "getCharacterAnchors": {"signature": "getCharacterAnchors(frame) -> same anchor geometry without drawing", "numericAnchorStatus": "measured_from_final_editable_source_after_contract_approval"},
+    "sampleCharacterPose": {"signature": "sampleCharacterPose(identity, namedState, progress) -> stable local part transforms", "rules": ["fixed root", "face and soft organs share body space", "rigid launcher does not inherit body scale", "mirror rig and all P/M before residual aim"]}
+  },
+  "manifest": {"sourceCanvas": "identity-fixed width/height", "root": "measured x/y", "collisionCenter": "neutral fixed offset", "outlineWidth": "source units", "faceAnchors": "per identity local joints", "parts": "named parent joint and soft/rigid class", "launcher": "P, all M, forward axis, projection and occlusion variants", "anatomyCounts": "coverage.json organCounts", "poseSources": "all exact approved source file/row/column/state/SHA", "trim": "retain sourceOffset; never recenter frame", "palette": "approved shared tokens supplied by integration owner"},
+  "integrationRequests": [
+    {"id": "CHAR-API", "requirement": "Approve shared draw/anchors API and immutable frame fields; return anchors consumed by independent effects."},
+    {"id": "CHAR-SCALE", "requirement": "Approve neutral visual-size fit and fixed C-R offset; keep current logical radius/collision/projectile origins."},
+    {"id": "CHAR-EVENT", "requirement": "Provide view-only shot/trigger/defeat snapshot events or reliable update-to-render transitions; no added logical cooldown/state."},
+    {"id": "CHAR-AIM", "requirement": "Provide visual target angle/direction preserving existing nearest-target choice; clockwise/canvas angle convention and complete occlusion policy."},
+    {"id": "CHAR-LAYERS", "requirement": "Confirm external shadows/status/hit masks/health/badges/effects ownership; root-relative bounds API for layer placement."},
+    {"id": "CHAR-PALETTE", "requirement": "Supply shared brown/sage/coral/honey/cream tokens and source-scale outline spec."},
+    {"id": "CHAR-ICON", "requirement": "UI requests static neutral 48/64/96px icon outputs from the same approved body; no separate generic icon."}
+  ],
+  "unapprovedAssumptions": ["Path2D is the preferred runtime source", "512 source units optional; existing per-group source proposals not measurements", "SVG remains editable handoff source", "transparent PNG only static/cache optional", "no new dependency required"]
+}

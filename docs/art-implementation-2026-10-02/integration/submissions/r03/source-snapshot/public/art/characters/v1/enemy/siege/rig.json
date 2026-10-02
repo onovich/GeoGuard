@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:SIEGE",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    234
+  ],
+  "collisionCenterPx": [
+    128,
+    174
+  ],
+  "collisionRadiusPx": 116,
+  "referenceRuntimeRadius": 17,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "低宽主体；1大额板2拳臂2脚；2眼在额板下1嘴",
+  "organCounts": {
+    "lowBody": 1,
+    "foreheadPlate": 1,
+    "fistArms": 2,
+    "feet": 2,
+    "eyes": 2,
+    "mouth": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        234
+      ]
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        79,
+        234
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        177,
+        234
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "forehead-plate",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        130
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "fist-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        68,
+        177
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "fist-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        188,
+        177
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        111,
+        196
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        145,
+        196
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        216
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRIKE_TOWER": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+          "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc",
+          "row": 1,
+          "column": 4,
+          "label": "STRIKE BODY",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/siege/source.svg",
+  "bodyResource": "art/characters/v1/enemy/siege/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/siege/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:SIEGE"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/06-scout-siege.png",
+      "sha256": "1e7a75799e914a10f1ca7667cef56873fcc78af8a909ec8ea568d32db31cc9fc"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 14.75,
+    "y": 92.75,
+    "width": 226.5,
+    "height": 139.5
+  },
+  "iconSourceViewBox": [
+    8.75,
+    43.25,
+    238.5,
+    238.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 15,
+    "y": 92,
+    "width": 226,
+    "height": 140,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/siege/body.png"
+}

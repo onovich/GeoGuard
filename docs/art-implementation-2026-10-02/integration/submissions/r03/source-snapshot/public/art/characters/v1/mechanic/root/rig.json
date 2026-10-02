@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "artId": "mechanic:ROOT",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    228
+  ],
+  "collisionCenterPx": [
+    128,
+    149
+  ],
+  "collisionRadiusPx": 103,
+  "referenceRuntimeRadius": 13,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1根垫3指芽；0眼口脚；子根各同三芽",
+  "organCounts": {
+    "rootMat": 1,
+    "fingerBuds": 3,
+    "eyes": 0,
+    "mouth": 0,
+    "feet": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        228
+      ]
+    },
+    {
+      "id": "finger-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        52,
+        125
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-center",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        78
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        194,
+        126
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "root-mat",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        209
+      ],
+      "embeddedContour": true
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored fragments"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "INTACT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 1,
+          "column": 1,
+          "label": "INTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M02",
+        "B04/M07"
+      ],
+      "notes": null
+    },
+    "TRIGGER": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 1,
+          "column": 2,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M02",
+        "B04/M07"
+      ],
+      "notes": null
+    },
+    "BROKEN": {
+      "status": "produced_pending_review",
+      "pose": "broken",
+      "clip": "broken",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 1,
+          "column": 3,
+          "label": "BROKEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M02",
+        "B04/M07"
+      ],
+      "notes": null
+    },
+    "FADE": {
+      "status": "produced_pending_review",
+      "pose": "fade",
+      "clip": "fade",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 1,
+          "column": 4,
+          "label": "FADE",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M02",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/mechanic/root/source.svg",
+  "bodyResource": "art/characters/v1/mechanic/root/body.svg",
+  "icon": {
+    "src": "art/characters/v1/mechanic/root/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "mechanic:ROOT"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+      "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 14.75,
+    "y": 41.75,
+    "width": 211.5,
+    "height": 189.5
+  },
+  "iconSourceViewBox": [
+    8.75,
+    24.75,
+    223.5,
+    223.5
+  ]
+}

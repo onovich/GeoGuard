@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "artId": "mechanic:COURIER",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    226
+  ],
+  "collisionCenterPx": [
+    128,
+    151
+  ],
+  "collisionRadiusPx": 105,
+  "referenceRuntimeRadius": 13,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1圆身1上长耳2脚；1背袋1薄荷钻；1U眼槽；掉货为独立钻",
+  "organCounts": {
+    "body": 1,
+    "longUpperEar": 1,
+    "feet": 2,
+    "backBag": 1,
+    "mintDiamond": 1,
+    "uEyeSlot": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        226
+      ]
+    },
+    {
+      "id": "upper-ear",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        147,
+        78
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "back-bag",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        61,
+        163
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mint-diamond",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        62,
+        162
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "u-eye-slot",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        198,
+        151
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        111,
+        226
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        176,
+        226
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored fragments"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "INTACT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 2,
+          "column": 1,
+          "label": "INTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M08"
+      ],
+      "notes": null
+    },
+    "TRIGGER": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 2,
+          "column": 2,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M08"
+      ],
+      "notes": null
+    },
+    "BROKEN": {
+      "status": "produced_pending_review",
+      "pose": "broken",
+      "clip": "broken",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 2,
+          "column": 3,
+          "label": "BROKEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M08"
+      ],
+      "notes": null
+    },
+    "FADE": {
+      "status": "produced_pending_review",
+      "pose": "fade",
+      "clip": "fade",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 2,
+          "column": 4,
+          "label": "FADE",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M05",
+        "B04/M08"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/mechanic/courier/source.svg",
+  "bodyResource": "art/characters/v1/mechanic/courier/body.svg",
+  "icon": {
+    "src": "art/characters/v1/mechanic/courier/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "mechanic:COURIER"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+      "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 17.75,
+    "y": 44.75,
+    "width": 217.5,
+    "height": 185.5
+  },
+  "iconSourceViewBox": [
+    11.75,
+    22.75,
+    229.5,
+    229.5
+  ]
+}

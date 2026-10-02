@@ -1,0 +1,79 @@
+import { STARTING_MONEY, createInitialTowerCatalog } from '../../data/gameConfig.js';
+import { createRewardHistory } from './rewardRules.js';
+
+export const createPlayerState = () => ({
+  x: 0,
+  y: 0,
+  vx: 0,
+  vy: 0,
+  speed: 180,
+  radius: 12,
+  hp: 100,
+  maxHp: 100,
+  lastShoot: 0,
+  shootCd: 0.5,
+  damage: 8,
+  range: 200,
+  slowTimer: 0,
+  slowRatio: 1,
+  controlGraceTimer: 0,
+});
+
+export const createEmptyWaveState = () => ({
+  number: 0,
+  queue: [],
+  spawnInterval: 999,
+  spawnTimer: 0,
+  boss: null,
+  bossSpawned: true,
+  awaitingReward: false,
+  pendingRewardBossUid: null,
+  pendingRewardBossEncounterUid: null,
+});
+
+export const createWaveRuntimeState = (waveNumber, definition) => ({
+  number: waveNumber,
+  queue: [...definition.queue],
+  spawnInterval: definition.spawnInterval,
+  spawnTimer: 0,
+  boss: definition.boss,
+  bossSpawned: false,
+  awaitingReward: false,
+  pendingRewardBossUid: null,
+  pendingRewardBossEncounterUid: null,
+});
+
+export const createRuntimeState = () => ({
+  player: createPlayerState(),
+  camera: { x: 0, y: 0, shakeTimer: 0, shakeDuration: 0, shakeStrength: 0, shakeSeed: 0 },
+  keys: { w: false, a: false, s: false, d: false },
+  joystick: { active: false, startX: 0, startY: 0, currentX: 0, currentY: 0, dirX: 0, dirY: 0 },
+  pointer: { x: 0, y: 0, active: false },
+  dragPlacement: { active: false, kind: 'tower', entityId: null, towerId: null, pointerX: 0, pointerY: 0, worldX: 0, worldY: 0, canPlace: false, invalidReason: null },
+  buildBarRect: null,
+  debugPanelRect: null,
+  enemies: [],
+  towers: [],
+  projectiles: [],
+  drops: [],
+  particles: [],
+  impactWaves: [],
+  hazards: [],
+  floatingTexts: [],
+  nextTowerUid: 1,
+  nextEnemyUid: 1,
+  nextBossEncounterUid: 1,
+  lastTime: 0,
+  gameTime: 0,
+  money: STARTING_MONEY,
+  towerCatalog: createInitialTowerCatalog(),
+  rewardHistory: createRewardHistory(),
+  wave: {
+    ...createWaveRuntimeState(1, { queue: [], spawnInterval: 0.9, boss: null }),
+  },
+  difficultyMultiplier: 1,
+  isMobile: false,
+  mode: 'normal',
+  debugWaveFlow: false,
+  debugOptions: { infiniteMoney: false, infiniteHealth: false },
+});

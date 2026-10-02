@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:BASIC",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    142
+  ],
+  "collisionRadiusPx": 91,
+  "referenceRuntimeRadius": 10,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "单圆团；5肉芽固定12/2/4/8/10点；2脚固定5/7点；2眼1圆口；不增减外肉芽和脚",
+  "organCounts": {
+    "body": 1,
+    "buds": 5,
+    "feet": 2,
+    "eyes": 2,
+    "roundMouth": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "bud-12",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        62
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-2",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        202,
+        117
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-4",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        201,
+        190
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-8",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        51,
+        189
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-10",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        52,
+        117
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        91,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        165,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        109,
+        139
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        149,
+        139
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        165
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "same_body_plus_independent_feedback",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+          "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/basic/source.svg",
+  "bodyResource": "art/characters/v1/enemy/basic/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/basic/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:BASIC"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/basic-root-lock.png",
+      "sha256": "93d5ff8d8cf8f8efc991fba81ef1a4018d8e5817cbee4599d834981d583dbd38"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 26.75,
+    "y": 38.75,
+    "width": 201.5,
+    "height": 183.5
+  },
+  "iconSourceViewBox": [
+    20.75,
+    23.75,
+    213.5,
+    213.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 31,
+    "y": 40,
+    "width": 193,
+    "height": 183,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/basic/body.png"
+}

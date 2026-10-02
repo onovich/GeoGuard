@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "artId": "tower:MORTAR",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    148
+  ],
+  "collisionRadiusPx": 85,
+  "referenceRuntimeRadius": 18,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "宽圆主体；1后上三角软芽、2脚；1近侧眼+1小颊点；1微笑线；1上斜大杯嘴",
+  "organCounts": {
+    "body": 1,
+    "rearTriangleBud": 1,
+    "feet": 2,
+    "eyes": 1,
+    "cheekDot": 1,
+    "smile": 1,
+    "slantedCup": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "triangle-bud",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        49,
+        105
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "eye",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        86,
+        152
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "cheek-dot",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        90,
+        173
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "smile",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        158,
+        183
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        81,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        175,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "launcher",
+      "parent": "body",
+      "class": "rigid",
+      "pivotPx": [
+        171,
+        123
+      ]
+    }
+  ],
+  "muzzles": [
+    {
+      "id": "M1",
+      "partId": "launcher",
+      "positionPx": [
+        197.664907774301,
+        103.55822298790511
+      ],
+      "axisRadians": 0,
+      "visibleProjectionAxisRadians": -0.63,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    }
+  ],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "pivotPx": [
+        171,
+        123
+      ],
+      "projection": "rigid authored launcher at supported upward angle",
+      "projectedAxisRadians": -0.88,
+      "angleRange": [
+        -0.15,
+        0.15
+      ]
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "DIR_LEFT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "left",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "DIR_UP": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "up",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "DIR_RIGHT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "right",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON"
+      ],
+      "notes": null
+    },
+    "LV1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 0,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 1,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 2,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV4": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 3,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+          "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340",
+          "row": "上排MORTAR",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P06",
+        "R01/HIT_CANNON",
+        "B02/S12"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/tower/mortar/source.svg",
+  "bodyResource": "art/characters/v1/tower/mortar/body.svg",
+  "icon": {
+    "src": "art/characters/v1/tower/mortar/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "tower:MORTAR"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/mortar-frost-fixed-root.png",
+      "sha256": "dc6022d49b4abca4be009a907c280be92294416e4ef15930f68ea8c3ed9f6340"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 28.75,
+    "y": 71.24345365228524,
+    "width": 198.3842013551124,
+    "height": 153.00654634771476
+  },
+  "iconSourceViewBox": [
+    22.75,
+    42.55462614858642,
+    210.3842013551124,
+    210.3842013551124
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 34,
+    "y": 77,
+    "width": 188,
+    "height": 146,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/tower/mortar/body.png"
+}

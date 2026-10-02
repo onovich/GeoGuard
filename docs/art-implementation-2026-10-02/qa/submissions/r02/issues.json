@@ -1,0 +1,35 @@
+{
+  "issues": [
+    {
+      "id": "QA-B001",
+      "severity": "P1",
+      "owner": "integration",
+      "origin": "fixed_pre_art_baseline",
+      "status": "open_primary_routing_required",
+      "title": "Twin encounter Canvas render throws because dist is undefined",
+      "source": "baseline/node_modules/geoguard-baseline/src/view/canvas/canvasRenderer.js",
+      "line": 493,
+      "trigger": {
+        "scene": "boss",
+        "bossId": "TWINS",
+        "seed": 20261001,
+        "viewportVariants": [
+          "960x720",
+          "1280x720",
+          "1440x900"
+        ]
+      },
+      "actual": "ReferenceError: dist is not defined in drawBossEncounterLinks; renderer aborts before finishing scene",
+      "expected": "Twin linking and both bodies draw without exception",
+      "evidence": [
+        "browser-baseline-fixed-02/report.json",
+        "browser-baseline-fixed-02/boss-960x720-error.png",
+        "browser-baseline-fixed-02/boss-1280x720-error.png",
+        "browser-baseline-fixed-02/boss-1440x900-error.png"
+      ],
+      "sourceModifiedByQA": false,
+      "candidateStatus": "not_evaluated_waiting_for_frozen_candidate",
+      "regressionAttribution": "not introduced by this art replacement; independently reproduced against immutable baseline"
+    }
+  ]
+}

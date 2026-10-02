@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:VOID_CONDUCTOR",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    242
+  ],
+  "collisionCenterPx": [
+    128,
+    144
+  ],
+  "collisionRadiusPx": 114,
+  "referenceRuntimeRadius": 29,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1长袍黑脸窗2白眼；2长手臂各3圆指；3裙瓣；OPEN臂不融入裙",
+  "organCounts": {
+    "longRobe": 1,
+    "blackFaceWindow": 1,
+    "whiteEyes": 2,
+    "longArms": 2,
+    "roundFingersPerHand": 3,
+    "skirtLobes": 3
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        242
+      ]
+    },
+    {
+      "id": "robe-crown",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        70
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "arm-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        100,
+        139
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "arm-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        156,
+        139
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "hand-forearm-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        34,
+        116
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "hand-forearm-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        222,
+        116
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "finger-left-1",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        28,
+        48
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-left-2",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        47,
+        39
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-left-3",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        65,
+        53
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-right-1",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        228,
+        48
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-right-2",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        209,
+        39
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "finger-right-3",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        191,
+        53
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        63,
+        229
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-center",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        234
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "skirt-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        192,
+        229
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "face-window",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        137
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        119,
+        111
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        136,
+        111
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S16",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "PULSE_MEASURE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "SYNCOPATE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02"
+      ],
+      "notes": null
+    },
+    "CRESCENDO": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01"
+      ],
+      "notes": null
+    },
+    "TWO_BEAT": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02",
+        "B04/M03"
+      ],
+      "notes": null
+    },
+    "FINALE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+          "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/void_conductor/source.svg",
+  "bodyResource": "art/characters/v1/boss/void_conductor/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/void_conductor/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:VOID_CONDUCTOR"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+      "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 15.75,
+    "y": 30.75,
+    "width": 224.5,
+    "height": 209.5
+  },
+  "iconSourceViewBox": [
+    9.75,
+    17.25,
+    236.5,
+    236.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 17,
+    "y": 33,
+    "width": 222,
+    "height": 208,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/boss/void_conductor/body.png"
+}

@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:SHARD",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    224
+  ],
+  "collisionCenterPx": [
+    128,
+    150
+  ],
+  "collisionRadiusPx": 106,
+  "referenceRuntimeRadius": 9,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "3滴瓣固定三叶连体；中央1黑口1白牙；各瓣2短刻线；分裂后3独立SPLINTER是子实体非肢体",
+  "organCounts": {
+    "connectedDropLobes": 3,
+    "mouth": 1,
+    "tooth": 1,
+    "marksPerLobe": 2,
+    "independentDeathSplinters": 3
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        224
+      ]
+    },
+    {
+      "id": "lobe-top",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        89
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "lobe-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        68,
+        175
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "lobe-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        185,
+        175
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        146
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SPLIT_3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+          "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3",
+          "row": 1,
+          "column": 4,
+          "label": "PRE-SPLIT BODY",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B04/M04",
+        "B04/M09",
+        "B04/M11"
+      ],
+      "notes": "pre-split body only; independent SPLINTER body resource registered separately"
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/shard/source.svg",
+  "bodyResource": "art/characters/v1/enemy/shard/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/shard/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:SHARD"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/02-shard-splinter.png",
+      "sha256": "f85cc18a19fed5edce5382d5f42ed16a7bb0e96e7426dacfd1d935d6592ec2d3"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 11.75,
+    "y": 37.75,
+    "width": 231.5,
+    "height": 190.5
+  },
+  "iconSourceViewBox": [
+    5.75,
+    11.25,
+    243.5,
+    243.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 18,
+    "y": 37,
+    "width": 220,
+    "height": 189,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/shard/body.png"
+}

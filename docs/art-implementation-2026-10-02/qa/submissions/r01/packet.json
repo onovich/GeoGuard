@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "owner": "qa",
+  "revision": "r01",
+  "submittedAt": "2026-10-02T12:38:07.135Z",
+  "status": "plan_submitted_awaiting_primary_authorization",
+  "scope": "Read-only investigation and independently enumerated execution plan; no gameplay verification or QA implementation.",
+  "primaryReviewRequired": true,
+  "writeBoundary": "docs/art-implementation-2026-10-02/qa/submissions/r01",
+  "readyLocation": "docs/art-implementation-2026-10-02/qa/submissions/r01/READY.json",
+  "ownerLevelReadyWritten": false,
+  "ownerLevelReadyOmissionReason": "Explicit current-turn write scope allows only qa/submissions/r01; coordination owner/READY rule cannot expand that boundary.",
+  "files": [
+    {
+      "path": "action-coverage.json",
+      "bytes": 861987,
+      "sha256": "f609131480322b7f12581847d217b13e4cf4129fe3f38d00852483ecd5bf3a33"
+    },
+    {
+      "path": "desktop-coverage.json",
+      "bytes": 51989,
+      "sha256": "02efb786901d61c507b2c5fd88c41186553f5c6c304082470f124898c87edb75"
+    },
+    {
+      "path": "interface-requests.md",
+      "bytes": 2861,
+      "sha256": "c1e00ef694f4816c9c121c5764025b572e96c72c134e17ed8864cfa939cf4a8a"
+    },
+    {
+      "path": "plan-verification.json",
+      "bytes": 13208,
+      "sha256": "05154518dc0b80ce75c1960683e7fe0ce5a1d083b958c9cc67cf60a3dc8f9c20"
+    },
+    {
+      "path": "plan.md",
+      "bytes": 16251,
+      "sha256": "3162927080f6fe3e63220ce750efe6dde78f72df832222458fdf0836572fd50c"
+    },
+    {
+      "path": "skill-coverage.json",
+      "bytes": 354193,
+      "sha256": "494d44199d540acf70fc059fcb7df8712251585876386bde1263d75cb2514637"
+    },
+    {
+      "path": "source-observation.json",
+      "bytes": 16779,
+      "sha256": "5b84de24238ccd883e8c3140b7180df9bc6e28baeb2677979b2c4daf188c5d9a"
+    }
+  ],
+  "coverage": {
+    "identities": 48,
+    "actions": 375,
+    "skills": 95,
+    "defaultPhaseAbilityCases": 180,
+    "twinSurvivorRoles": 2,
+    "towerRigs": 9,
+    "mechanics": 7,
+    "desktopRequirements": 30,
+    "uiFineRequirements": 48,
+    "requiredViewports": [
+      "960x720",
+      "1280x720",
+      "1440x900"
+    ],
+    "additionalViewports": [
+      "1920x1080"
+    ],
+    "conditionalMuzzleOriginSuite": "C16"
+  },
+  "checksExecuted": [
+    {
+      "name": "375 unique keys exactly match anatomy-lock",
+      "result": "pass"
+    },
+    {
+      "name": "48 identities,95 skills,30 desktop requirements",
+      "result": "pass"
+    },
+    {
+      "name": "default phase abilities are in approved skill list",
+      "result": "pass",
+      "phaseCases": 180
+    },
+    {
+      "name": "body and skill-effect source references exist and match recorded SHA256",
+      "result": "pass",
+      "bodyReferenceRows": 419,
+      "skillEffectReferenceRows": 362,
+      "uniqueReferences": 31
+    },
+    {
+      "name": "seven formal desktop image hashes and 48 UI fine requirements",
+      "result": "pass",
+      "formalDesktopImages": 7,
+      "uiFineRequirements": 48
+    }
+  ],
+  "checksNotRun": [
+    "npm test",
+    "npm run check:architecture",
+    "npm run build",
+    "browser UI",
+    "screenshots",
+    "visual image review",
+    "continuous-animation review",
+    "performance",
+    "asset fault injection",
+    "baseline/candidate gameplay simulation"
+  ],
+  "runtimeApproval": "not_requested_at_plan_stage_and_not_granted",
+  "dependencies": [
+    {
+      "id": "baseline",
+      "status": "awaiting_primary_approved_immutable_release"
+    },
+    {
+      "id": "integration-contract",
+      "status": "awaiting_primary_approved_render_and_projectile_origin_contract"
+    },
+    {
+      "id": "qa-implementation-authorization",
+      "status": "awaiting_primary_authorization",
+      "plannedOwnership": [
+        "tests/art-*.test.js",
+        "scripts/art-validation/"
+      ]
+    },
+    {
+      "id": "interface-requests",
+      "path": "interface-requests.md",
+      "status": "submitted_for_primary_routing"
+    }
+  ],
+  "knownLimitations": [
+    "Current hashes are shared-workspace observations, not authoritative baseline.",
+    "No public deterministic game snapshot/step API observed; QA harness and full-game UI evidence must remain distinct.",
+    "Project does not resolve Playwright/Puppeteer; available browser capture/fault-injection capability unverified.",
+    "No screenshots, game tests, build, performance sample, network fault, or baseline/candidate simulation executed.",
+    "No artwork was visually inspected by QA in this planning submission.",
+    "Only r01 READY published; owner-level READY requires primary routing or expanded authorization."
+  ],
+  "primarySteeringApplied": [
+    "Required desktop 960x720,1280x720,1440x900;1920x1080 additional.",
+    "Projectile generation position may change under approved contract; dedicated close-range/hit/pierce/lifetime boundary suite required; core damage/count/AI/numeric rules remain protected."
+  ],
+  "immutableAfterReady": true
+}

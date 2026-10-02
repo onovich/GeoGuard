@@ -1,0 +1,539 @@
+{
+  "schemaVersion": 1,
+  "artId": "tower:SENTINEL",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    145
+  ],
+  "collisionRadiusPx": 92,
+  "referenceRuntimeRadius": 17,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "圆主体；2顶芽、2脚、2圆肩垫；1宽眼槽有1亮点；1短管",
+  "organCounts": {
+    "body": 1,
+    "topBuds": 2,
+    "feet": 2,
+    "roundShoulderPads": 2,
+    "eyeSlot": 1,
+    "eyeHighlight": 1,
+    "shortTube": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "bud-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        104,
+        67
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        135,
+        67
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "shoulder-near",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        62,
+        158
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "shoulder-far",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        198,
+        151
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-slot",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        146,
+        132
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-highlight",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        147,
+        134
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        94,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        162,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "launcher",
+      "parent": "body",
+      "class": "rigid",
+      "pivotPx": [
+        189,
+        151
+      ]
+    }
+  ],
+  "muzzles": [
+    {
+      "id": "M1",
+      "partId": "launcher",
+      "positionPx": [
+        214,
+        151
+      ],
+      "axisRadians": 0,
+      "visibleProjectionAxisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    }
+  ],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "pivotPx": [
+        189,
+        151
+      ],
+      "projection": "rigid authored launcher at supported upward angle",
+      "projectedAxisRadians": -1.5707963267948966,
+      "angleRange": [
+        -0.15,
+        0.15
+      ]
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_LEFT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "left",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_UP": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "up",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_RIGHT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "right",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "LV1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 0,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 1,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 2,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV4": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 3,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+          "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38",
+          "row": "唯一主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P10",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/tower/sentinel/source.svg",
+  "bodyResource": "art/characters/v1/tower/sentinel/body.svg",
+  "icon": {
+    "src": "art/characters/v1/tower/sentinel/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "tower:SENTINEL"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/sentinel-fixed-root.png",
+      "sha256": "6812a8ed5c734e0b5f79a952f6c2cde70c0ec3848f585c378136a6919e5f9a38"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 27.75,
+    "y": 45.75,
+    "width": 198.5,
+    "height": 176.5
+  },
+  "iconSourceViewBox": [
+    21.75,
+    28.75,
+    210.5,
+    210.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 27,
+    "y": 51,
+    "width": 199,
+    "height": 172,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/tower/sentinel/body.png"
+}

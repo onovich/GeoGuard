@@ -1,0 +1,925 @@
+{
+  "frame": 146,
+  "dt": 0.016666666666666666,
+  "snapshot": {
+    "schemaVersion": 1,
+    "control": {
+      "manual": true,
+      "seed": 20261001,
+      "rngState": 4292499397,
+      "rngCalls": 204,
+      "pendingTimers": 0,
+      "droppedEvents": 0
+    },
+    "semantic": {
+      "gameState": "PLAYING",
+      "paused": false,
+      "rewardState": {
+        "active": false,
+        "choices": []
+      },
+      "state": {
+        "player": {
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "speed": 180,
+          "radius": 12,
+          "hp": 100,
+          "maxHp": 100,
+          "lastShoot": 2.4333333333333296,
+          "shootCd": 0.5,
+          "damage": 8,
+          "range": 200,
+          "slowTimer": 0,
+          "slowRatio": 1,
+          "controlGraceTimer": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 0,
+          "shakeTimer": 0,
+          "shakeDuration": 0,
+          "shakeStrength": 0,
+          "shakeSeed": 5.684477371562339
+        },
+        "keys": {
+          "w": false,
+          "a": false,
+          "s": false,
+          "d": false
+        },
+        "joystick": {
+          "active": false,
+          "startX": 0,
+          "startY": 0,
+          "currentX": 0,
+          "currentY": 0,
+          "dirX": 0,
+          "dirY": 0,
+          "touchId": null
+        },
+        "pointer": {
+          "x": 211,
+          "y": 40,
+          "active": false
+        },
+        "dragPlacement": {
+          "active": false,
+          "kind": "tower",
+          "entityId": null,
+          "towerId": null,
+          "pointerX": 0,
+          "pointerY": 0,
+          "worldX": 0,
+          "worldY": 0,
+          "canPlace": false,
+          "invalidReason": null
+        },
+        "enemies": [
+          {
+            "id": "FORTRESS",
+            "name": "重装堡垒",
+            "form": "fortress",
+            "baseEnemy": "TANK",
+            "color": "#8e44ad",
+            "personality": "笨重、不可阻挡",
+            "hp": 217,
+            "speed": 42,
+            "damage": 24,
+            "radius": 34,
+            "value": 42,
+            "phases": [
+              {
+                "name": "推城",
+                "hpBelow": 1,
+                "abilities": [
+                  "summonSiege",
+                  "bastionMortar"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "summonSiege-0-0",
+                    "abilityId": "summonSiege",
+                    "cooldown": 7.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "bastionMortar-0-1",
+                    "abilityId": "bastionMortar",
+                    "cooldown": 6.8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "重甲",
+                "hpBelow": 0.5,
+                "abilities": [
+                  "summonSiege",
+                  "bastionMortar",
+                  "fortify",
+                  "shockRam"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "summonSiege-1-0",
+                    "abilityId": "summonSiege",
+                    "cooldown": 7.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "bastionMortar-1-1",
+                    "abilityId": "bastionMortar",
+                    "cooldown": 6.8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "fortify-1-2",
+                    "abilityId": "fortify",
+                    "cooldown": 10,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "shockRam-1-3",
+                    "abilityId": "shockRam",
+                    "cooldown": 8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "崩垒",
+                "hpBelow": 0.2,
+                "abilities": [
+                  "summonSiege",
+                  "fortify",
+                  "shockRam",
+                  "quake",
+                  "bunkerRing"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "summonSiege-2-0",
+                    "abilityId": "summonSiege",
+                    "cooldown": 7.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "fortify-2-1",
+                    "abilityId": "fortify",
+                    "cooldown": 10,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "shockRam-2-2",
+                    "abilityId": "shockRam",
+                    "cooldown": 8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "quake-2-3",
+                    "abilityId": "quake",
+                    "cooldown": 8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "bunkerRing-2-4",
+                    "abilityId": "bunkerRing",
+                    "cooldown": 10.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              }
+            ],
+            "maxHp": 620,
+            "isBoss": true,
+            "enemyType": "BOSS",
+            "summary": "",
+            "authoredTemplate": true,
+            "uid": 1,
+            "baseSpeed": 42,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "currentPhaseIndex": 1,
+            "abilityCooldowns": {
+              "summonSiege": 7.5,
+              "bastionMortar": 0,
+              "fortify": 0.18333333333333363,
+              "shockRam": 0.7833333333333362
+            },
+            "bossState": {
+              "actionMode": "recover",
+              "phaseIntroTimer": 0,
+              "actionTimer": 1.8,
+              "castAbility": "summonSiege",
+              "phaseIntroDuration": 1.15,
+              "combatClockManaged": true,
+              "combatTime": 2.4333333333333296,
+              "abilityCursor": 1,
+              "lockedTarget": {
+                "x": 0,
+                "y": 0,
+                "radius": 12
+              },
+              "lockedPlayerPoint": {
+                "x": 0,
+                "y": 0,
+                "radius": 12
+              },
+              "castOrigin": {
+                "x": 291.4043606161546,
+                "y": -7.668535805688265,
+                "radius": 34,
+                "uid": 1
+              },
+              "windupDuration": 1
+            },
+            "isDefeated": false,
+            "x": 291.4043606161546,
+            "y": -7.668535805688265,
+            "dashTimer": 0,
+            "armoredTimer": 0,
+            "damageTakenMultiplier": 1.6
+          },
+          {
+            "id": "SIEGE",
+            "name": "攻城块",
+            "color": "#7f1d1d",
+            "hp": 96,
+            "speed": 52,
+            "damage": 8,
+            "radius": 17,
+            "value": 6,
+            "targetMode": "tower",
+            "towerDamageFactor": 2.6,
+            "uid": 2,
+            "maxHp": 96,
+            "baseSpeed": 52,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "siege",
+            "x": 371.3708336727074,
+            "y": -5.352680262782117,
+            "skipBurrowPosition": true
+          },
+          {
+            "id": "SIEGE",
+            "name": "攻城块",
+            "color": "#7f1d1d",
+            "hp": 96,
+            "speed": 52,
+            "damage": 8,
+            "radius": 17,
+            "value": 6,
+            "targetMode": "tower",
+            "towerDamageFactor": 2.6,
+            "uid": 3,
+            "maxHp": 96,
+            "baseSpeed": 52,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "siege",
+            "x": 352.4682960624255,
+            "y": 52.88884019272881,
+            "skipBurrowPosition": true
+          }
+        ],
+        "towers": [],
+        "projectiles": [],
+        "drops": [],
+        "particles": [],
+        "impactWaves": [],
+        "hazards": [],
+        "floatingTexts": [],
+        "nextTowerUid": 1,
+        "nextEnemyUid": 4,
+        "nextBossEncounterUid": 1,
+        "gameTime": 2.4333333333333296,
+        "money": 999999,
+        "towerCatalog": [
+          {
+            "id": "BASIC",
+            "name": "速射塔",
+            "summary": "稳定对单火力。",
+            "cost": 15,
+            "color": "#3498db",
+            "radius": 14,
+            "range": 180,
+            "fireRate": 0.3,
+            "damage": 6,
+            "hp": 50,
+            "shape": "circle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 0
+          },
+          {
+            "id": "CANNON",
+            "name": "榴弹炮",
+            "summary": "范围爆炸，清理怪群。",
+            "cost": 40,
+            "color": "#e67e22",
+            "radius": 16,
+            "range": 140,
+            "fireRate": 1.5,
+            "damage": 15,
+            "splash": 60,
+            "hp": 80,
+            "shape": "square",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 1
+          },
+          {
+            "id": "SNIPER",
+            "name": "穿透塔",
+            "summary": "高伤穿透，专打后排。",
+            "cost": 80,
+            "color": "#9b59b6",
+            "radius": 14,
+            "range": 350,
+            "fireRate": 2,
+            "damage": 35,
+            "pierce": 3,
+            "hp": 40,
+            "shape": "triangle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 2
+          },
+          {
+            "id": "RAPID",
+            "name": "链锯塔",
+            "summary": "极高射速，适合近距压制。",
+            "cost": 28,
+            "color": "#16a085",
+            "radius": 13,
+            "range": 155,
+            "fireRate": 0.12,
+            "damage": 3,
+            "hp": 42,
+            "shape": "circle",
+            "projectileSpeed": 560,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 3
+          },
+          {
+            "id": "MORTAR",
+            "name": "迫击塔",
+            "summary": "超大范围爆炸，但装填缓慢。",
+            "cost": 72,
+            "color": "#d35400",
+            "radius": 18,
+            "range": 260,
+            "fireRate": 2.3,
+            "damage": 24,
+            "splash": 92,
+            "hp": 68,
+            "shape": "square",
+            "projectileSpeed": 420,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 4
+          },
+          {
+            "id": "FROST",
+            "name": "霜冻塔",
+            "summary": "造成减速，帮助阵线控场。",
+            "cost": 55,
+            "color": "#5dade2",
+            "radius": 15,
+            "range": 190,
+            "fireRate": 0.85,
+            "damage": 7,
+            "hp": 74,
+            "shape": "square",
+            "slowRatio": 0.55,
+            "slowDuration": 1.4,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 5
+          },
+          {
+            "id": "RAIL",
+            "name": "磁轨塔",
+            "summary": "超长射程和高穿透。",
+            "cost": 98,
+            "color": "#7d3c98",
+            "radius": 14,
+            "range": 430,
+            "fireRate": 1.65,
+            "damage": 26,
+            "pierce": 5,
+            "hp": 38,
+            "shape": "triangle",
+            "projectileSpeed": 700,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 6
+          },
+          {
+            "id": "BURST",
+            "name": "散射塔",
+            "summary": "扇形连射，近距压制。",
+            "cost": 66,
+            "color": "#c0392b",
+            "radius": 16,
+            "range": 165,
+            "fireRate": 0.95,
+            "damage": 8,
+            "hp": 64,
+            "shape": "triangle",
+            "burstCount": 4,
+            "spread": 0.18,
+            "projectileSpeed": 460,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 7
+          },
+          {
+            "id": "SENTINEL",
+            "name": "哨戒塔",
+            "summary": "耐久更高，适合前线。",
+            "cost": 52,
+            "color": "#117864",
+            "radius": 17,
+            "range": 175,
+            "fireRate": 0.55,
+            "damage": 11,
+            "hp": 108,
+            "shape": "circle",
+            "projectileSpeed": 520,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 8
+          }
+        ],
+        "rewardHistory": {
+          "offeredKeys": [],
+          "pickedKeys": []
+        },
+        "wave": {
+          "number": 0,
+          "queue": [],
+          "spawnInterval": 999,
+          "spawnTimer": 0,
+          "boss": null,
+          "bossSpawned": true,
+          "awaitingReward": false,
+          "pendingRewardBossUid": null,
+          "pendingRewardBossEncounterUid": null
+        },
+        "difficultyMultiplier": 1,
+        "isMobile": false,
+        "mode": "debug",
+        "debugWaveFlow": false,
+        "debugOptions": {
+          "infiniteMoney": true,
+          "infiniteHealth": true
+        },
+        "bossHudTimer": 0.03333333333333333
+      },
+      "events": [
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:FORTRESS",
+          "targetKey": "run0/enemy/2",
+          "childKeys": [
+            "run0/enemy/2"
+          ],
+          "position": {
+            "x": 371.3708336727074,
+            "y": -5.352680262782117
+          },
+          "radius": 17,
+          "time": 2.4333333333333296,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:FORTRESS",
+          "targetKey": "run0/enemy/3",
+          "childKeys": [
+            "run0/enemy/3"
+          ],
+          "position": {
+            "x": 352.4682960624255,
+            "y": 52.88884019272881
+          },
+          "radius": 17,
+          "time": 2.4333333333333296,
+          "type": "summon-success"
+        }
+      ]
+    },
+    "presentation": {
+      "epoch": 15,
+      "events": [
+        {
+          "sourceKey": "15/boss/1",
+          "sourceArtId": "boss:FORTRESS",
+          "targetKey": "15/enemy/2",
+          "childKeys": [
+            "15/enemy/2"
+          ],
+          "position": {
+            "x": 371.3708336727074,
+            "y": -5.352680262782117
+          },
+          "radius": 17,
+          "eventId": "15/event/1",
+          "epoch": 15,
+          "time": 2.4333333333333296,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "15/boss/1",
+          "sourceArtId": "boss:FORTRESS",
+          "targetKey": "15/enemy/3",
+          "childKeys": [
+            "15/enemy/3"
+          ],
+          "position": {
+            "x": 352.4682960624255,
+            "y": 52.88884019272881
+          },
+          "radius": 17,
+          "eventId": "15/event/2",
+          "epoch": 15,
+          "time": 2.4333333333333296,
+          "type": "summon-success"
+        }
+      ],
+      "actors": [
+        {
+          "key": "15/hero/player",
+          "artId": "hero:PLAYER",
+          "domain": "hero",
+          "x": 0,
+          "y": 0,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 2.4333333333333296,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 100,
+          "maxHp": 100,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "15/boss/1",
+          "artId": "boss:FORTRESS",
+          "domain": "boss",
+          "x": 291.4043606161546,
+          "y": -7.668535805688265,
+          "radius": 34,
+          "referenceRadius": 34,
+          "facing": "left",
+          "aimAngle": 3.1152829363368713,
+          "pose": "recover",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 217,
+          "maxHp": 620,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": true,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": {
+            "phaseIndex": 1,
+            "phaseCount": 3,
+            "castAbility": "summonSiege",
+            "actionMode": "recover",
+            "actionTimer": 1.8,
+            "windupDuration": 1,
+            "phaseName": "重甲",
+            "phaseIntroTimer": 0
+          },
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "15/enemy/2",
+          "artId": "enemy:SIEGE",
+          "domain": "enemy",
+          "x": 371.3708336727074,
+          "y": -5.352680262782117,
+          "radius": 17,
+          "referenceRadius": 17,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 96,
+          "maxHp": 96,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "15/enemy/3",
+          "artId": "enemy:SIEGE",
+          "domain": "enemy",
+          "x": 352.4682960624255,
+          "y": 52.88884019272881,
+          "radius": 17,
+          "referenceRadius": 17,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 96,
+          "maxHp": 96,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "retired": [],
+      "errors": [],
+      "actorCacheSize": 4
+    },
+    "eventLog": [
+      {
+        "sourceKey": "15/boss/1",
+        "sourceArtId": "boss:FORTRESS",
+        "targetKey": "15/enemy/2",
+        "childKeys": [
+          "15/enemy/2"
+        ],
+        "position": {
+          "x": 371.3708336727074,
+          "y": -5.352680262782117
+        },
+        "radius": 17,
+        "eventId": "15/event/1",
+        "epoch": 15,
+        "time": 2.4333333333333296,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "15/boss/1",
+        "sourceArtId": "boss:FORTRESS",
+        "targetKey": "15/enemy/3",
+        "childKeys": [
+          "15/enemy/3"
+        ],
+        "position": {
+          "x": 352.4682960624255,
+          "y": 52.88884019272881
+        },
+        "radius": 17,
+        "eventId": "15/event/2",
+        "epoch": 15,
+        "time": 2.4333333333333296,
+        "type": "summon-success"
+      }
+    ],
+    "art": {
+      "status": "ready",
+      "errors": [],
+      "drawErrors": [],
+      "fallbackArtIds": [],
+      "availableIds": [
+        "tower:BASIC",
+        "tower:CANNON",
+        "tower:SNIPER",
+        "tower:RAPID",
+        "tower:MORTAR",
+        "tower:FROST",
+        "tower:RAIL",
+        "tower:BURST",
+        "tower:SENTINEL",
+        "hero:PLAYER",
+        "enemy:BASIC",
+        "enemy:FAST",
+        "enemy:TANK",
+        "enemy:SHARD",
+        "enemy:SPLINTER",
+        "enemy:SHIELD",
+        "enemy:MEDIC",
+        "enemy:BOMBER",
+        "enemy:JAMMER",
+        "enemy:PHASE",
+        "enemy:BURROWER",
+        "enemy:BEACON",
+        "enemy:SCOUT",
+        "enemy:SIEGE",
+        "boss:COMMANDER",
+        "boss:HUNTER",
+        "boss:FORTRESS",
+        "boss:PRISM",
+        "boss:HIVE",
+        "boss:FROST_JUDGE",
+        "boss:RAIL_WARLORD",
+        "boss:COLLECTOR",
+        "boss:TWINS_SUN",
+        "boss:TWINS_MOON",
+        "boss:DRAGON",
+        "boss:SPIDER_MATRIARCH",
+        "boss:ASTROLABE",
+        "boss:BLOOD_FORGE",
+        "boss:VOID_CONDUCTOR",
+        "boss:LABYRINTH_KEEPER",
+        "boss:NIGHTMARE_BLOOM",
+        "mechanic:NEST",
+        "mechanic:WEB",
+        "mechanic:ROOT",
+        "mechanic:WALL",
+        "mechanic:SEAL",
+        "mechanic:RETICLE",
+        "mechanic:COURIER"
+      ]
+    },
+    "geometry": {
+      "buildBarRect": null,
+      "debugPanelRect": {
+        "left": 160,
+        "right": 1280,
+        "top": 12,
+        "bottom": 88
+      }
+    }
+  },
+  "inputTrace": [
+    {
+      "frame": 0,
+      "operation": "DEV reset",
+      "seed": 20261001,
+      "mode": "debug"
+    },
+    {
+      "frame": 0,
+      "operation": "GUI boss drag",
+      "label": "重装堡垒",
+      "screen": [
+        1100,
+        440
+      ]
+    },
+    {
+      "frame": 0,
+      "operation": "GUI button",
+      "label": "Phase 2"
+    },
+    {
+      "frame": 86,
+      "operation": "GUI pause Escape"
+    },
+    {
+      "frame": 86,
+      "operation": "GUI resume Escape"
+    }
+  ]
+}

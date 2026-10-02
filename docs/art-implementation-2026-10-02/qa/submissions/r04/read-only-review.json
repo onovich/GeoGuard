@@ -1,0 +1,92 @@
+{
+  "observedAt": "2026-10-02T14:31:30.926Z",
+  "characterPacketSha256": "29b0c819836463d6712e26b13947953ad50b61b49347d97c0a1ff75d7ef542c3",
+  "characterFilesVerified": 569,
+  "observations": [
+    {
+      "path": "src/logic/hooks/useGeoGuardGame.jsx",
+      "sha256": "5ce59201ec1bd9d359ef23bc640460b7fa01c4394b95abbc48086ee921c9fc6c",
+      "status": "read_only_observation_not_final_fingerprint"
+    },
+    {
+      "path": "src/view/art/integration/presentationRuntime.js",
+      "sha256": "220e8618108a2ade06af5bf5756b042b5fbc521f6dbf69fbd00eee27a90813ce",
+      "status": "read_only_observation_not_final_fingerprint"
+    },
+    {
+      "path": "src/view/art/integration/assetRegistry.js",
+      "sha256": "7faa80f2c88d7bccf5f2ff0c34018e70610fa698c1eb156e52249db0b53a462a",
+      "status": "read_only_observation_not_final_fingerprint"
+    },
+    {
+      "path": "src/view/art/characters/index.js",
+      "sha256": "70233fa9b8d33888303bd0a7b787d7ce468085f4043576ab1f6301680e5b3f89",
+      "status": "read_only_observation_not_final_fingerprint"
+    }
+  ],
+  "hitSourceReview": {
+    "hookCallsOriginalDamageThenPresentationCopy": true,
+    "captureHitExcerpt": "const captureHit = safe((state, enemy, projectile = null) => {\n    ensure(state);\n    if (enemy.hp <= 0) killedByHit.add(enemy);\n    const sourceArtId = projectile?.sourceArtId ?? null;\n    emit(state, 'hit', { targetKey: keyFor(enemy), position: copyPoint(enemy), sourceArtId,\n      sourceKey: sourceArtId && projectile.sourceUid != null ? `${epoch}/${sourceArtId.startsWith('hero:') ? 'hero' : 'tower'}/${projectile.sourceUid}` : null,\n      shotIndex: projectile?.shotIndex ?? 0, projectileKind: projectile?.kind ?? null,\n      angle: projectile ? Math.atan2(projectile.vy, projectile.vx) : 0,\n      projectileKey: projectile ? objectKey(projectile, 'projectile') : null });\n  });\n  ",
+    "conclusion": "Current source copies sourceArtId/sourceKey/shotIndex/kind/angle/projectile identity string and target coordinates into the hit event. No raw projectile is stored in that event. WeakMap identity lookup remains internal.",
+    "limit": "No final frozen production hook runtime or shared-reference graph test has run yet."
+  },
+  "resources": {
+    "implementation": "Canvas character bodies are editable vector data, not externally decoded bitmap bodies; DOM icons use BASE_URL-aware URLs.",
+    "plannedChecks": "48 actual icon requests/decode plus vector load/abort; do not mislabel unused body PNG fetch failures as game body-loading failures."
+  },
+  "syntax": [
+    {
+      "path": "scripts/art-validation/final-browser-page.mjs",
+      "sha256": "8994cd638374e48cc1a30000cf9b76fbf99e992cf1645cb7c65f1c47f315fee3",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-browser.mjs",
+      "sha256": "12b3fdb041972b0960c5a8ce55fd23617834a4a33249ed3f91804abbb83b7336",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-inputs.mjs",
+      "sha256": "a0484301d6de1e5d2392c9f0e2a2066b04f1854c3b73af133ad10bc7a80a482c",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-lock.mjs",
+      "sha256": "687ea37a78b3f1617cee9e3fcd28f496b25ffd1a81bf4dfe2d20d6e2705a512f",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-performance.mjs",
+      "sha256": "556e2baea718c06d2fa9d6fae3bb311d2b3ffc139132dd1a07c079e44cad63e0",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-skill-observer.mjs",
+      "sha256": "6876207250c67f43085d5c2cd25741ce891652cdc1a99efb155f75a71dd7a52f",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/final-ui-checks.mjs",
+      "sha256": "88ced26ccb191a3f03a50d31a3a5b5024e91e235f72ac2bfc77e603d66d598f1",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/prepare-final.mjs",
+      "sha256": "8feadb7983d073a7b277aa4c840b7bb1198612841863d3c7763de66ff4e445ef",
+      "exitCode": 0
+    },
+    {
+      "path": "scripts/art-validation/review-final-preparation.mjs",
+      "sha256": "a66dd6423bc6b4331464536668a478d3197ff5700b008304aa764176e6383fbc",
+      "exitCode": 0
+    }
+  ],
+  "observedToolTests": {
+    "command": "node --test tests/art-final-preparation.test.js",
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "scope": "pure QA adapter/observer negative controls, no candidate gameplay/browser execution"
+  },
+  "finalBrowserRuns": 0
+}

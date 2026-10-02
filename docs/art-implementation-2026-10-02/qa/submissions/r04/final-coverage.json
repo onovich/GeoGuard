@@ -1,0 +1,91 @@
+{
+  "status": "ready_for_review_non_skill_scope",
+  "sourceFingerprint": "f353ca072173dfb8e63f4b06506f0e4ad345cecc276fab8bfedf163d18ec3ac6",
+  "logic": {
+    "evidence": "../r03/packet.json",
+    "cases": 96,
+    "frames": 155520,
+    "differences": 0,
+    "projectileCases": 82,
+    "repeated": false
+  },
+  "characters": {
+    "captures": 4056,
+    "exactKeys": 375,
+    "identities": 48,
+    "reviewedContactCells": 548,
+    "evidence": "contacts/independent-review.json",
+    "sampleEvidence": "runs/characters-dpr1/samples.jsonl"
+  },
+  "desktop": {
+    "resourceCombinations": 12,
+    "coreGuiCombinations": 12,
+    "evidence": "runs/function-matrix/report.json",
+    "covered": [
+      "normal start/build/cancel/overlap/insufficient",
+      "1.25 inverse placement",
+      "pause/resume",
+      "I06 reset-return-to-bar",
+      "I07 twin ghost/two member identity"
+    ],
+    "extended": "runs/ui-supplement-03/report.json",
+    "extendedAcceptedRecords": "nine-card-real-wheel-* and camera-resize-context only; whole report includes expected headless blur/old harness failure"
+  },
+  "rewards": {
+    "normal": "runs/normal-reward-02/report.json",
+    "normalPositions": 3,
+    "normalNextWave": 2,
+    "counts123": "runs/ui-rewards-01/report.json",
+    "support": "runs/support-rewards-02/report.json",
+    "types": [
+      "unlock",
+      "upgrade",
+      "support_money",
+      "support_repair"
+    ],
+    "normalDeathRestart": true
+  },
+  "resources": {
+    "faults": 6,
+    "evidence": "runs/resource-recovery/report.json"
+  },
+  "hook": {
+    "moduleCases": 4,
+    "actualHookCases": 4,
+    "evidence": "runs/hit-boundary-02/report.json",
+    "scope": "BASIC/CANNON/SNIPER/BURST original damage callback and captured event source; graph isolation + original projectile mutation + reset"
+  },
+  "performance": {
+    "qualification": "performance-qualification.json",
+    "acceptedSamples": 8,
+    "extraRejectedHistoricalSamples": 3,
+    "crossfireP95ms": 16.8,
+    "directOldNewRatio": null
+  },
+  "skills": {
+    "owner": "qa-skills",
+    "status": "external_review_pending",
+    "raw": "runs/actual-skills-02/report.json",
+    "actualPhaseCombinationsCaptured": 175,
+    "expectedDefaultPhaseCombinations": 180,
+    "missingDefaultPhaseKeys": [
+      "C04-TWINS-sun-P2-flareLance",
+      "C04-TWINS-sun-P2-twinCrossfire",
+      "C04-TWINS-sun-P3-flareLance",
+      "C04-TWINS-sun-P3-twinCrossfire",
+      "C04-TWINS-sun-P3-eclipsePulse"
+    ],
+    "survivorCases": "external owner supplements",
+    "poseCapturesDoNotCertifyDispatch": true,
+    "instantExecuteMayTransitionDirectlyToRecover": true
+  },
+  "limitations": [
+    "Headless page focus transfer did not emit real blur; no independent real window blur certification. Actual pause/reset/end blocking is covered.",
+    "12 resource combinations and 12 core GUI combinations are not 12 complete end-to-end campaigns. Extended flows are targeted cases.",
+    "All 4056 PNGs captured; 548 contact cells actually inspected cover 375 keys, 48 runtime identities and selected risk transitions. Not all 4056 visually reviewed.",
+    "Old/new density distributions fail equivalence screening: no direct regression ratio; enemy/Boss/hazard-only old/new samples remain scoped evidence.",
+    "Icon failure recovery is document reload after network restoration, not automatic in-place retry; no separate warm-cache timing claim.",
+    "95-skill final certification is delegated to qa-skills and requires its separate root-approved packet. This packet does not approve 95 skills or whole candidate."
+  ],
+  "newConfirmedProductBugs": []
+}

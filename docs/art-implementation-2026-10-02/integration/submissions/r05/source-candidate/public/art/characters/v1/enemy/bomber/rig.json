@@ -1,0 +1,447 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:BOMBER",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    232
+  ],
+  "collisionCenterPx": [
+    128,
+    145
+  ],
+  "collisionRadiusPx": 100,
+  "referenceRuntimeRadius": 11,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "圆主体；1弯引信芽、2鼓腮臂2脚；2眉眼槽1口1舌",
+  "organCounts": {
+    "body": 1,
+    "bentFuseBud": 1,
+    "cheekArms": 2,
+    "feet": 2,
+    "browEyeSlots": 2,
+    "mouth": 1,
+    "tongue": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        232
+      ]
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        94,
+        232
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        162,
+        232
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "bent-fuse-bud",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        124,
+        71
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "fuse-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        167,
+        45
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "cheek-arm-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        75,
+        147
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "cheek-arm-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        181,
+        147
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-slot-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        107,
+        126
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-slot-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        149,
+        126
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        150
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tongue",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        150
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "INFLATE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 4,
+          "label": "INFLATE / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B04/M10"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+          "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9",
+          "row": 1,
+          "column": 4,
+          "label": "INFLATE / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B04/M10",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/bomber/source.svg",
+  "bodyResource": "art/characters/v1/enemy/bomber/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/bomber/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:BOMBER"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/04-bomber-jammer.png",
+      "sha256": "eac7f32bde0daba1c1e48c371e2ce17dd855f3d13a1c719e73a57b0fc428bed9"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 24.75,
+    "y": 31.75,
+    "width": 206.5,
+    "height": 198.5
+  },
+  "iconSourceViewBox": [
+    18.75,
+    21.75,
+    218.5,
+    218.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 29,
+    "y": 33,
+    "width": 198,
+    "height": 198,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/bomber/body.png"
+}

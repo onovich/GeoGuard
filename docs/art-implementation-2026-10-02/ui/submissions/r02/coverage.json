@@ -1,0 +1,920 @@
+{
+  "schemaVersion": 1,
+  "owner": "ui",
+  "revision": "r02",
+  "requirementCount": 48,
+  "sourceMap": "docs/art-direction/sticker-bible-2026-10-01/scene-ui-2026-10-02/ui/submissions/r02/requirements-map.json",
+  "requirements": [
+    {
+      "id": "CARD-ORDER",
+      "board": "DUI01",
+      "cells": "A/B/C",
+      "requirement": "按available与sortOrder展示九塔，C仅审阅展开",
+      "binding": "towerTypes/id/available/sortOrder",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "CARD-PRIMARY",
+      "board": "DUI01",
+      "cells": "A/B/C/D",
+      "requirement": "身份与费用一级，等级类别间隔二级",
+      "binding": "name/cost/level/splash/pierce/slowRatio/burstCount/fireRate",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "CARD-LEVELS",
+      "board": "DUI01",
+      "cells": "C",
+      "requirement": "真实混合Lv1..4与UP徽，不是实例收费升级",
+      "binding": "level/maxLevel",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "CARD-LOW-FUNDS",
+      "board": "DUI01",
+      "cells": "A/B/C；production-notes",
+      "requirement": "money60的不足卡仍深字可抓",
+      "binding": "money<cost; beginTowerDrag",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "SCROLL-START",
+      "board": "DUI01",
+      "cells": "A",
+      "requirement": "六全卡＋下一露边、可见水平thumb左端",
+      "binding": "scrollWidth/clientWidth/scrollLeft",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "SCROLL-END",
+      "board": "DUI01",
+      "cells": "B",
+      "requirement": "右端到哨戒塔、前卡裁边、thumb右端",
+      "binding": "scrollLeft+clientWidth; SENTINEL",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "SCROLL-MOUSE",
+      "board": "DUI01",
+      "cells": "A/B；production-notes",
+      "requirement": "鼠标拖原生水平滑块；无竖轮转换承诺",
+      "binding": "overflow-x-auto; no onWheel",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "SCROLL-SMALL",
+      "board": "DUI01",
+      "cells": "D",
+      "requirement": "960桌面五全卡＋下一露边，卡不缩成微图标",
+      "binding": "viewport/layout targets",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "CARD-NAME-WRAP",
+      "board": "DUI01",
+      "cells": "production-notes",
+      "requirement": "真实三字名称；更长动态name两行预留，不编新塔名",
+      "binding": "name",
+      "evidenceKind": "spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "HOVER-CONTENT",
+      "board": "DUI02",
+      "cells": "A",
+      "requirement": "已存在title完整伤害7/间隔0.28/射程194",
+      "binding": "summary/damage/fireRate/range",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "HOVER-LAYER",
+      "board": "DUI02",
+      "cells": "A；production-notes",
+      "requirement": "卡上鼠标、下沿说明；原生位置由浏览器，图为锚点目标",
+      "binding": "title/hover design",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-START",
+      "board": "DUI02",
+      "cells": "B/C/D",
+      "requirement": "左键起拖，selected卡+ghost+指针",
+      "binding": "beginTowerDrag/dragTowerId/dragPlacement.active",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-VALID",
+      "board": "DUI02",
+      "cells": "B",
+      "requirement": "ghost进入危盘与射程重叠、与NEST身体分离、check有效",
+      "binding": "canPlace/worldX/worldY; hazards not placement input",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "ui-boundary-implemented-world-character-joint-acceptance-pending",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-INVALID",
+      "board": "DUI02",
+      "cells": "C",
+      "requirement": "实体塔与ghost重叠，X＋位置无效",
+      "binding": "canPlaceTowerOnField/invalidReason",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-FUNDS",
+      "board": "DUI02",
+      "cells": "D",
+      "requirement": "money8仍可起拖成本20，!＋资金不足",
+      "binding": "money/cost; funds-first evaluateTowerPlacement",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-CANCEL",
+      "board": "DUI02",
+      "cells": "E",
+      "requirement": "整栏外扩18px，回栏释放清拖不扣费",
+      "binding": "buildBarRect/cancelMargin/createDragPlacementCommitPlan",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-COMMIT",
+      "board": "DUI02",
+      "cells": "B/C/D/E/F；production-notes",
+      "requirement": "释放复核，仅成功扣费；失败/取消清ghost",
+      "binding": "tryBuildDraggedTower/createPlacedTower",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DRAG-INTERRUPT",
+      "board": "DUI02",
+      "cells": "F",
+      "requirement": "暂停/奖励清拖",
+      "binding": "paused/rewardState.active",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/BuildBar.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "game-input-telemetry.json",
+        "component-scroll-end-960x720.png"
+      ],
+      "status": "pause-interrupt-real-game-verified-reward-clear-existing-rule-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "WORLD-SEMANTICS",
+      "board": "DUI02",
+      "cells": "B/C/D/F；production-notes",
+      "requirement": "ghost/细sage射程/filled coral危盘，非椭圆/空心环",
+      "binding": "range/hazard.owner/center/radius",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "ui-boundary-implemented-world-character-joint-acceptance-pending",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "HIVE-ALL-HUD",
+      "board": "DUI02",
+      "cells": "A/B/C/D/E",
+      "requirement": "全五格名称/HP/phase/action/完整counterplay",
+      "binding": "bossHud[].members[]/counterplay",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "HIVE-ACTION",
+      "board": "DUI02",
+      "cells": "A/E；B/C/D",
+      "requirement": "A/E无盘恢复；B/C/D存活盘攻击",
+      "binding": "getBossActionLabel/hasLiveAttack",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-SINGLE",
+      "board": "DUI03",
+      "cells": "A",
+      "requirement": "小头像紧凑HIVE与完整长对策",
+      "binding": "name/hpRatio/phase/phaseIndex/count/actionLabel/counterplay",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-TWIN-SOL",
+      "board": "DUI03",
+      "cells": "B/C",
+      "requirement": "曜子独立名/HP/灼线P2/3/蓄力动作",
+      "binding": "TWIN_SOL/member fields",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "fields-verified-portraits-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-TWIN-LUNA",
+      "board": "DUI03",
+      "cells": "B/C",
+      "requirement": "蚀子独立名/HP/锁域P2/3/恢复动作",
+      "binding": "TWIN_LUNA/member fields",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "fields-verified-portraits-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-LONG-COUNTERPLAY",
+      "board": "DUI03",
+      "cells": "B/C",
+      "requirement": "全文两行，不tab/折叠/总血条",
+      "binding": "group.counterplay",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-SMALL-DESKTOP",
+      "board": "DUI03",
+      "cells": "C；production-notes",
+      "requirement": "960桌面同成员字段，长对策换行",
+      "binding": "same bossHud array; viewport target",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BOSS-CONDITIONAL",
+      "board": "DUI03",
+      "cells": "production-notes",
+      "requirement": "幸存enraged/护卫>0/exposed按实际条件，无第三成员",
+      "binding": "enraged/guardCount/exposed",
+      "evidenceKind": "spec",
+      "implementation": [
+        "src/view/components/GameHud.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-single-960x720.png",
+        "component-twins-960x720.png",
+        "component-survivor-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-ONE",
+      "board": "DUI03",
+      "cells": "D；rule-evidence",
+      "requirement": "实际单物资302，居中不补空槽",
+      "binding": "choices.length=1/support_money amount",
+      "evidenceKind": "visual+derived",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-TWO",
+      "board": "DUI03",
+      "cells": "E；rule-evidence",
+      "requirement": "修复玩家50＋物资302，两列，无第三占位",
+      "binding": "choices.length=2/support_repair/player.hp",
+      "evidenceKind": "visual+derived",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-THREE",
+      "board": "DUI03",
+      "cells": "F；rule-evidence",
+      "requirement": "解锁FROST55/物资360/升级BASIC补5三项",
+      "binding": "choices.length=3/type/towerId/amount",
+      "evidenceKind": "visual+derived",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-LONG-TEXT",
+      "board": "DUI03",
+      "cells": "F",
+      "requirement": "长标题与关键detail重排，数值不重复造价",
+      "binding": "choice.title/subtitle/detail",
+      "evidenceKind": "visual",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-FUTURE",
+      "board": "DUI03",
+      "cells": "F；production-notes",
+      "requirement": "仅强化未来建造，已有塔保持原等级，规则一次",
+      "binding": "applyRewardChoiceEffects catalog; createPlacedTower",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-CLICK",
+      "board": "DUI03",
+      "cells": "D/E/F；production-notes",
+      "requirement": "整卡选择一次，CTA同操作，无确认/刷新/跳过",
+      "binding": "applyRewardChoice/resolveRewardFollowUp",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "REWARD-OVERFLOW",
+      "board": "DUI03",
+      "cells": "production-notes",
+      "requirement": "小电脑三列同宽，长文自然换行，矮窗纵向可达",
+      "binding": "modal/grid/overflow-y-auto",
+      "evidenceKind": "spec",
+      "implementation": [
+        "src/view/components/WaveRewardOverlay.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-reward-one-960x720.png",
+        "component-reward-two-960x720.png",
+        "component-reward-three-960x720.png"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "CANONICAL-PLAYER-BOSS",
+      "board": "DUI02/DUI03",
+      "cells": "all；element-map",
+      "requirement": "单叶无脸无肢PLAYER；正确HIVE/NEST与日/月肖像",
+      "binding": "canonical approved sources",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "ui-boundary-implemented-world-character-joint-acceptance-pending",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "BACKGROUND-AUTHORITY",
+      "board": "all",
+      "cells": "production-notes/element-map",
+      "requirement": "最终BG r02，UI地面上下文",
+      "binding": "reviews/background-r02.md",
+      "evidenceKind": "spec+source",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "ui-boundary-implemented-world-character-joint-acceptance-pending",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TYPE-COLOR",
+      "board": "all",
+      "cells": "all；production-notes",
+      "requirement": "浅底深棕字，mint菱形资源，独立形状；字体/对比目标未实测",
+      "binding": "formal palette/typography targets",
+      "evidenceKind": "visual+spec",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "DESKTOP-SCOPE",
+      "board": "all",
+      "cells": "board-plan/production-notes",
+      "requirement": "仅1440/960桌面，手机暂缓，无代码/接入/新控制",
+      "binding": "authorized desktop-only art scope",
+      "evidenceKind": "spec",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "implemented-ui-verified-or-conditional-preserved",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "COMPOSITE-DEPENDENCY",
+      "board": "all",
+      "cells": "production-notes/review-readme",
+      "requirement": "危险边界留可读空间，高密度联合复合仍master负责",
+      "binding": "desktop-usability-review; primary precheck",
+      "evidenceKind": "spec",
+      "implementation": [
+        "src/view/designSystem.js",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "source-audit.json"
+      ],
+      "status": "ui-boundary-implemented-world-character-joint-acceptance-pending",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-BASIC",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:BASIC",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "same-source-icon-connected-producer-review-dependent",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-CANNON",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:CANNON",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-SNIPER",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:SNIPER",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-RAPID",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:RAPID",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-MORTAR",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:MORTAR",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-FROST",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:FROST",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-RAIL",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:RAIL",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-BURST",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:BURST",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "same-source-icon-connected-producer-review-dependent",
+      "finalArtAcceptance": false
+    },
+    {
+      "id": "TOWER-SENTINEL",
+      "board": "DUI01",
+      "cells": "C；tower-icon-sources",
+      "requirement": "身份缩略图按精确NEUTRAL源格复用",
+      "binding": "tower:SENTINEL",
+      "evidenceKind": "visual+source",
+      "implementation": [
+        "src/view/components/BuildBar.jsx",
+        "src/view/components/ui.jsx"
+      ],
+      "evidence": [
+        "runtime-verification.json",
+        "component-twins-960x720.png"
+      ],
+      "status": "implemented-icon-api-awaiting-character-production",
+      "finalArtAcceptance": false
+    }
+  ],
+  "supplemental": [
+    {
+      "id": "START-END",
+      "file": "OverlayScreen.jsx",
+      "evidence": "game-start-1440x900.png + component-end-960x720.png"
+    },
+    {
+      "id": "PAUSE",
+      "file": "PauseOverlay.jsx",
+      "evidence": "game-pause-960x720.png + real pause/interruption checks"
+    },
+    {
+      "id": "AUDIO",
+      "file": "GameHud.jsx",
+      "evidence": "audioSaved + actual slider/localStorage"
+    },
+    {
+      "id": "STATUS",
+      "file": "StatusBanner.jsx",
+      "evidence": "statusAvoidsBoss + component-status-960x720.png"
+    },
+    {
+      "id": "DEBUG-CONTEXT",
+      "file": "unchanged TowerContextMenu.jsx",
+      "evidence": "contextDebugOnly + source-audit"
+    }
+  ],
+  "limitations": [
+    "UI code is complete; remaining canonical icons are explicitly pending producer resources.",
+    "Real full dense boss/gameplay/95 skills/performance/DPR2 are integrated QA responsibilities.",
+    "Component fixtures do not claim full gameplay trajectory or economy reachability."
+  ]
+}

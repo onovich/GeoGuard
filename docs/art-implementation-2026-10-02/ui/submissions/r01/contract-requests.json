@@ -1,0 +1,58 @@
+{
+  "approval": "requested-via-packet-only-no-tool-messaging",
+  "requests": [
+    {
+      "id": "C-01",
+      "owner": "integration",
+      "priority": "blocks-full-pause-scope",
+      "request": "Extract inline paused overlay from GameScreen into new UI-owned PauseOverlay and retain paused && PLAYING && !rewardState.active gating. Pass togglePause and existing audio props. Integration edits GameScreen only after contract approval.",
+      "reason": "Pause currently outside UI-owned files; double overlays cannot be resolved through styling.",
+      "primaryRoutingStatus": "accepted-routing-in-primary-followup-implementation-dispatch-pending"
+    },
+    {
+      "id": "C-02",
+      "owner": "characters + integration",
+      "priority": "blocks-canonical-icons",
+      "request": "Supply read-only UI asset adapter keyed by tower.id and stable Boss identity. Towers use canonical NEUTRAL transparency without labels/root/guides; portraits match approved Boss forms. Expose member art key in presentation snapshot, or provide deterministic mapping independent of UID/name parsing.",
+      "reason": "bossHud member.id is instance UID and supplies no art identity; no invented fallback anatomy.",
+      "proposedShape": {
+        "getTowerUiArt": "(towerId) => {src,alt,sourceIdentity,revision} | null",
+        "getBossUiArt": "(artKey) => {src,alt,sourceIdentity,revision} | null"
+      },
+      "uiMissingAssetBehavior": "Keep name and data readable and log missing asset in validation; no fake shape icon as accepted final.",
+      "primaryRoutingStatus": "submitted-for-integration-contract"
+    },
+    {
+      "id": "C-03",
+      "owner": "integration",
+      "priority": "blocks-overlap-acceptance",
+      "request": "Resolve Boss/status screen geometry through presentation-only coordination. Provide measured boss lower edge / status top inset (or move StatusBanner into same measured HUD stack). Existing waveMsg content stays intact.",
+      "reason": "StatusBanner top13% overlaps compact twin HUD at 720px; UI cannot read global boss state from current props.",
+      "primaryRoutingStatus": "submitted-for-integration-contract"
+    },
+    {
+      "id": "C-04",
+      "owner": "effects + integration",
+      "priority": "cross-owner-drag-state",
+      "request": "Canvas/presentation owner displays real dragPlacement.canPlace/invalidReason/pointer/world/cancel state for valid/invalid/funds/cancel labels using approved semantics. UI retains beginTowerDrag, dragTowerId, setBuildBarRect only; do not add gameplay evaluation in UI.",
+      "reason": "BuildBar has no canPlace/invalidReason prop; source position/funds release logic must remain canonical.",
+      "primaryRoutingStatus": "submitted-for-integration-contract"
+    },
+    {
+      "id": "C-05",
+      "owner": "primary",
+      "priority": "layout-contract-confirmation",
+      "request": "Approve exact 140px cards/gap8/padding8/border-box/bar min(92vw,920px) with native scrollbar; 960 window shows five full cards and most of sixth, standard shows six full cards plus partial seventh. PNG not a pixel ruler.",
+      "reason": "Use actual CSS measurements for 960 density rather than forcing nine microcards.",
+      "primaryRoutingStatus": "submitted-for-integration-contract"
+    },
+    {
+      "id": "C-06",
+      "owner": "primary",
+      "priority": "scope-confirmation-nonblocking",
+      "request": "Treat TowerContextMenu as debug-only and leave existing appearance under developer UI exclusion. Audio controls may expose only the already-wired enabled/volume capabilities; no extra music/effects channels.",
+      "reason": "Explicit implementation scope includes audio but not new logic; tower context is developer utility.",
+      "primaryRoutingStatus": "accepted-routing-in-primary-followup-implementation-dispatch-pending"
+    }
+  ]
+}

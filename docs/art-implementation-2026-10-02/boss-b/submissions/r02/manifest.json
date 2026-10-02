@@ -1,0 +1,6029 @@
+{
+  "boss:TWINS_MOON": {
+    "schemaVersion": 1,
+    "artId": "boss:TWINS_MOON",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      228
+    ],
+    "collisionCenterPx": [
+      128,
+      137
+    ],
+    "collisionRadiusPx": 100,
+    "referenceRuntimeRadius": 26,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 60,
+      "y": 37,
+      "width": 136,
+      "height": 189,
+      "maxRadius": 102.70589077555385,
+      "enclosingRadiusCeil": 103,
+      "edgePixels": 0,
+      "visiblePixels": 17823,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          228
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "crescent",
+          "crescent-highlight",
+          "coral-lower-rim",
+          "eye-left",
+          "eye-right",
+          "mouth"
+        ]
+      },
+      {
+        "id": "crescent-upper-tip",
+        "parent": "body",
+        "pivotPx": [
+          70,
+          61
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "crescent-lower-tip",
+        "parent": "body",
+        "pivotPx": [
+          65,
+          201
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "crescent-waist",
+        "parent": "body",
+        "pivotPx": [
+          103,
+          130
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "coral-lower-rim",
+        "parent": "body",
+        "pivotPx": [
+          145,
+          206
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          126,
+          115
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          159,
+          107
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "mouth",
+        "parent": "body",
+        "pivotPx": [
+          149,
+          136
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "crescent": 1,
+      "permanentCoralRim": 1,
+      "eyes": 2,
+      "mouth": 1,
+      "limbs": 0
+    },
+    "partTransforms": {},
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/twins_moon/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        28.5,
+        32,
+        199,
+        199
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/twins_moon/body.png",
+    "sourceFile": "art/characters/v1/boss/twins_moon/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "eclipsePulse": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "lunarSnare": {
+        "windup": "prepare",
+        "attack": "idle",
+        "recover": "idle"
+      },
+      "shadowArc": {
+        "windup": "prepare",
+        "attack": "idle",
+        "recover": "idle"
+      },
+      "soloLunarOrbit": {
+        "windup": "prepare",
+        "attack": "idle",
+        "recover": "idle"
+      },
+      "twinCrossfire": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "TWINS",
+        "runtimeId": "TWIN_LUNA",
+        "radius": 26,
+        "phases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "twinCrossfire"
+            ]
+          },
+          {
+            "name": "残月",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "twinCrossfire",
+              "eclipsePulse"
+            ]
+          }
+        ],
+        "survivorPhases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare",
+              "soloLunarOrbit"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "soloLunarOrbit"
+            ]
+          },
+          {
+            "name": "残月",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "eclipsePulse",
+              "soloLunarOrbit"
+            ]
+          }
+        ]
+      },
+      {
+        "templateId": "TWINS_T1",
+        "runtimeId": "TWIN_LUNA",
+        "radius": 26,
+        "phases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare"
+            ]
+          }
+        ],
+        "survivorPhases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare",
+              "soloLunarOrbit"
+            ]
+          }
+        ]
+      },
+      {
+        "templateId": "TWINS_T2",
+        "runtimeId": "TWIN_LUNA",
+        "radius": 26,
+        "phases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "twinCrossfire"
+            ]
+          }
+        ],
+        "survivorPhases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare",
+              "soloLunarOrbit"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "soloLunarOrbit"
+            ]
+          }
+        ]
+      },
+      {
+        "templateId": "TWINS_T3",
+        "runtimeId": "TWIN_LUNA",
+        "radius": 26,
+        "phases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "twinCrossfire"
+            ]
+          },
+          {
+            "name": "残月",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "twinCrossfire",
+              "eclipsePulse"
+            ]
+          }
+        ],
+        "survivorPhases": [
+          {
+            "name": "月网",
+            "abilities": [
+              "lunarSnare",
+              "soloLunarOrbit"
+            ]
+          },
+          {
+            "name": "锁域",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "soloLunarOrbit"
+            ]
+          },
+          {
+            "name": "残月",
+            "abilities": [
+              "lunarSnare",
+              "shadowArc",
+              "eclipsePulse",
+              "soloLunarOrbit"
+            ]
+          }
+        ]
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/twins_moon/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "lunarSnare",
+          "shadowArc",
+          "twinCrossfire",
+          "eclipsePulse"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/twins_moon/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "lunarSnare"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "lunarSnare",
+          "shadowArc",
+          "twinCrossfire"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "lunarSnare",
+          "shadowArc",
+          "twinCrossfire",
+          "eclipsePulse"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "SOLO": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "soloLunarOrbit"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "ORBIT": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "SWAP": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "ECLIPSE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/twins_moon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "eclipsePulse",
+          "twinCrossfire"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "SOLO_MOON": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/twins_moon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "soloLunarOrbit"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-05-twins.png",
+        "sha256": "4946e3a8822c68e18d98f23405075c41872b8f75aabeebd90482f5503f753051",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:DRAGON": {
+    "schemaVersion": 1,
+    "artId": "boss:DRAGON",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      225
+    ],
+    "collisionCenterPx": [
+      128,
+      141
+    ],
+    "collisionRadiusPx": 115,
+    "referenceRuntimeRadius": 32,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 21,
+      "y": 42,
+      "width": 215,
+      "height": 160,
+      "maxRadius": 113.58036802194295,
+      "enclosingRadiusCeil": 114,
+      "edgePixels": 0,
+      "visiblePixels": 18050,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          225
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "body-tail",
+          "eye-left",
+          "eye-right"
+        ]
+      },
+      {
+        "id": "tail-tip",
+        "parent": "body",
+        "pivotPx": [
+          50.64999999999999,
+          120
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "tail-body-continuity",
+        "parent": "body",
+        "pivotPx": [
+          98.88,
+          161
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "wing-left",
+        "parent": "body",
+        "pivotPx": [
+          106.16,
+          112
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "wing-left-tip",
+        "parent": "wing-left",
+        "pivotPx": [
+          52.47,
+          89
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "wing-right",
+        "parent": "body",
+        "pivotPx": [
+          144.38,
+          95
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "wing-right-tip",
+        "parent": "wing-right",
+        "pivotPx": [
+          136.19,
+          49
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          183.51,
+          104
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          197.16,
+          103
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "muzzle",
+        "parent": "body",
+        "pivotPx": [
+          209.9,
+          115
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "muzzle-aperture",
+        "parent": "muzzle",
+        "pivotPx": [
+          225.37,
+          114
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "continuousBodyTail": 1,
+      "wings": 2,
+      "roundedMuzzle": 1,
+      "eyes": 2,
+      "feet": 0
+    },
+    "partTransforms": {
+      "wing-left": {
+        "pivot": [
+          106.16,
+          112
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.1,
+          "attack": 0.08
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "wing-right": {
+        "pivot": [
+          144.38,
+          95
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.09,
+          "attack": -0.08
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "muzzle": {
+        "pivot": [
+          209.9,
+          115
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "wing-left-tip": {
+        "pivot": [
+          106.16,
+          112
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.1,
+          "attack": 0.08
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "wing-right-tip": {
+        "pivot": [
+          144.38,
+          95
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.09,
+          "attack": -0.08
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "muzzle-aperture": {
+        "pivot": [
+          209.9,
+          115
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": {
+      "partId": "muzzle",
+      "positionPx": [
+        225.37,
+        114
+      ],
+      "purpose": "Optional cosmetic cue only; no runtime projectile origin relocation"
+    },
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/dragon/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        16,
+        9.5,
+        225,
+        225
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/dragon/body.png",
+    "sourceFile": "art/characters/v1/boss/dragon/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "dragonStrafe": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "emberWake": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "infernoRing": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "meteorRain": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "skyDive": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "wingBuffet": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "DRAGON",
+        "runtimeId": "DRAGON",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "盘旋",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake"
+            ]
+          },
+          {
+            "name": "俯冲",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake",
+              "wingBuffet",
+              "meteorRain"
+            ]
+          },
+          {
+            "name": "天火",
+            "abilities": [
+              "dragonStrafe",
+              "wingBuffet",
+              "meteorRain",
+              "skyDive",
+              "infernoRing"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "DRAGON_T1",
+        "runtimeId": "DRAGON_T1",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "盘旋",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "DRAGON_T2",
+        "runtimeId": "DRAGON_T2",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "盘旋",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake"
+            ]
+          },
+          {
+            "name": "俯冲",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake",
+              "wingBuffet",
+              "meteorRain"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "DRAGON_T3",
+        "runtimeId": "DRAGON_T3",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "盘旋",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake"
+            ]
+          },
+          {
+            "name": "俯冲",
+            "abilities": [
+              "dragonStrafe",
+              "emberWake",
+              "wingBuffet",
+              "meteorRain"
+            ]
+          },
+          {
+            "name": "天火",
+            "abilities": [
+              "dragonStrafe",
+              "wingBuffet",
+              "meteorRain",
+              "skyDive",
+              "infernoRing"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/dragon/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/dragon/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe",
+          "emberWake",
+          "wingBuffet",
+          "meteorRain",
+          "skyDive",
+          "infernoRing"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/dragon/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/dragon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe",
+          "emberWake"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/dragon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe",
+          "emberWake",
+          "wingBuffet",
+          "meteorRain"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/dragon/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe",
+          "wingBuffet",
+          "meteorRain",
+          "skyDive",
+          "infernoRing"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "BREATH": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "TAIL": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "wingBuffet"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "METEOR": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "meteorRain"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "STRAFE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "dragonStrafe"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "EMBER_WAKE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "emberWake"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "WING_BUFFET": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "wingBuffet"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "SKY_DIVE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "skyDive"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "INFERNO_RING": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/dragon/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "infernoRing"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+        "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:SPIDER_MATRIARCH": {
+    "schemaVersion": 1,
+    "artId": "boss:SPIDER_MATRIARCH",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      223
+    ],
+    "collisionCenterPx": [
+      128,
+      152
+    ],
+    "collisionRadiusPx": 111,
+    "referenceRuntimeRadius": 31,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 16,
+      "y": 75,
+      "width": 224,
+      "height": 151,
+      "maxRadius": 119.88536190878351,
+      "enclosingRadiusCeil": 120,
+      "edgePixels": 0,
+      "visiblePixels": 24075,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          223
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "abdomen",
+          "eye-left",
+          "eye-right",
+          "smile"
+        ]
+      },
+      {
+        "id": "abdomen-top",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          80
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "leg-outer-left",
+        "parent": "body",
+        "pivotPx": [
+          64,
+          138
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "leg-outer-right",
+        "parent": "body",
+        "pivotPx": [
+          192,
+          138
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "leg-inner-left",
+        "parent": "body",
+        "pivotPx": [
+          77,
+          155
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "leg-inner-right",
+        "parent": "body",
+        "pivotPx": [
+          179,
+          155
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-left",
+        "parent": "body",
+        "pivotPx": [
+          98,
+          223
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-right",
+        "parent": "body",
+        "pivotPx": [
+          158,
+          223
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          115,
+          164
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          141,
+          164
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "smile",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          177
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "abdomen": 1,
+      "largeLegs": 4,
+      "shortFeet": 2,
+      "eyes": 2,
+      "smile": 1
+    },
+    "partTransforms": {
+      "leg-outer-left": {
+        "pivot": [
+          64,
+          138
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.025,
+          "attack": -0.025
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "leg-outer-right": {
+        "pivot": [
+          192,
+          138
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.025,
+          "attack": 0.025
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "leg-inner-left": {
+        "pivot": [
+          77,
+          155
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.02,
+          "attack": 0.02
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "leg-inner-right": {
+        "pivot": [
+          179,
+          155
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.02,
+          "attack": -0.02
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/spider_matriarch/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        11,
+        33.5,
+        234,
+        234
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/spider_matriarch/body.png",
+    "sourceFile": "art/characters/v1/boss/spider_matriarch/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "broodAmbush": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "nestBloom": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "silkVolley": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "spawnSpiderlings": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "webField": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "webTrap": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "SPIDER_MATRIARCH",
+        "runtimeId": "SPIDER_MATRIARCH",
+        "radius": 31,
+        "phases": [
+          {
+            "name": "织杀",
+            "abilities": [
+              "webTrap",
+              "silkVolley"
+            ]
+          },
+          {
+            "name": "孵潮",
+            "abilities": [
+              "webTrap",
+              "silkVolley",
+              "spawnSpiderlings",
+              "broodAmbush"
+            ]
+          },
+          {
+            "name": "巢域",
+            "abilities": [
+              "webTrap",
+              "spawnSpiderlings",
+              "broodAmbush",
+              "nestBloom",
+              "webField"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "SPIDER_MATRIARCH_T1",
+        "runtimeId": "SPIDER_MATRIARCH_T1",
+        "radius": 31,
+        "phases": [
+          {
+            "name": "织杀",
+            "abilities": [
+              "webTrap",
+              "silkVolley"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "SPIDER_MATRIARCH_T2",
+        "runtimeId": "SPIDER_MATRIARCH_T2",
+        "radius": 31,
+        "phases": [
+          {
+            "name": "织杀",
+            "abilities": [
+              "webTrap",
+              "silkVolley"
+            ]
+          },
+          {
+            "name": "孵潮",
+            "abilities": [
+              "webTrap",
+              "silkVolley",
+              "spawnSpiderlings",
+              "broodAmbush"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "SPIDER_MATRIARCH_T3",
+        "runtimeId": "SPIDER_MATRIARCH_T3",
+        "radius": 31,
+        "phases": [
+          {
+            "name": "织杀",
+            "abilities": [
+              "webTrap",
+              "silkVolley"
+            ]
+          },
+          {
+            "name": "孵潮",
+            "abilities": [
+              "webTrap",
+              "silkVolley",
+              "spawnSpiderlings",
+              "broodAmbush"
+            ]
+          },
+          {
+            "name": "巢域",
+            "abilities": [
+              "webTrap",
+              "spawnSpiderlings",
+              "broodAmbush",
+              "nestBloom",
+              "webField"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webTrap",
+          "silkVolley",
+          "spawnSpiderlings",
+          "broodAmbush",
+          "nestBloom",
+          "webField"
+        ],
+        "externalSummons": [
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "BURROWER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webTrap",
+          "silkVolley"
+        ],
+        "externalSummons": [
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webTrap",
+          "silkVolley",
+          "spawnSpiderlings",
+          "broodAmbush"
+        ],
+        "externalSummons": [
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "BURROWER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webTrap",
+          "spawnSpiderlings",
+          "broodAmbush",
+          "nestBloom",
+          "webField"
+        ],
+        "externalSummons": [
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "BURROWER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "WEB": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webTrap",
+          "silkVolley"
+        ],
+        "externalSummons": [
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "BROOD": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "spawnSpiderlings",
+          "broodAmbush",
+          "nestBloom"
+        ],
+        "externalSummons": [
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "BURROWER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      },
+      "FIELD": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/spider_matriarch/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "webField"
+        ],
+        "externalSummons": [
+          {
+            "id": "SPLINTER",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "WEB",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-06-dragon-spider.png",
+        "sha256": "96d8814f94114729e7a2eec81b1fb63d5b43c1b65820d29e4fb112f898a958a7",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:ASTROLABE": {
+    "schemaVersion": 1,
+    "artId": "boss:ASTROLABE",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      228
+    ],
+    "collisionCenterPx": [
+      128,
+      142
+    ],
+    "collisionRadiusPx": 104,
+    "referenceRuntimeRadius": 33,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 40,
+      "y": 42,
+      "width": 171,
+      "height": 178,
+      "maxRadius": 110.36530251849989,
+      "enclosingRadiusCeil": 111,
+      "edgePixels": 0,
+      "visiblePixels": 18898,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          228
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "moon-shell",
+          "shell-highlight",
+          "shell-dot",
+          "shell-line"
+        ]
+      },
+      {
+        "id": "moon-shell-upper-tip",
+        "parent": "body",
+        "pivotPx": [
+          137,
+          48
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "moon-shell-lower-tip",
+        "parent": "body",
+        "pivotPx": [
+          201,
+          157
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "shell-dot",
+        "parent": "body",
+        "pivotPx": [
+          75,
+          167
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "shell-line",
+        "parent": "body",
+        "pivotPx": [
+          88,
+          183
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "center-orb",
+        "parent": "body",
+        "pivotPx": [
+          144,
+          126
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "orb-eye-left",
+        "parent": "center-orb",
+        "pivotPx": [
+          135,
+          125
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "orb-eye-right",
+        "parent": "center-orb",
+        "pivotPx": [
+          152,
+          125
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "orbit-orb",
+        "parent": "body",
+        "pivotPx": [
+          194,
+          76
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "moonShell": 1,
+      "centerOrb": 1,
+      "centerOrbEyes": 2,
+      "orbitOrb": 1,
+      "shellDot": 1,
+      "shellLine": 1
+    },
+    "partTransforms": {
+      "center-orb": {
+        "pivot": [
+          144,
+          126
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "orbit-orb": {
+        "pivot": [
+          194,
+          76
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "orb-eye-left": {
+        "pivot": [
+          144,
+          126
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "orb-eye-right": {
+        "pivot": [
+          144,
+          126
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0,
+          "attack": 0
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/astrolabe/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        31.5,
+        37,
+        188,
+        188
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/astrolabe/body.png",
+    "sourceFile": "art/characters/v1/boss/astrolabe/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "eventHorizon": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "gravityWell": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "orbitalLock": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "orbitalShots": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "singularity": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "starfall": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "ASTROLABE",
+        "runtimeId": "ASTROLABE",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "引潮",
+            "abilities": [
+              "gravityWell",
+              "starfall"
+            ]
+          },
+          {
+            "name": "轨域",
+            "abilities": [
+              "gravityWell",
+              "orbitalShots",
+              "starfall",
+              "orbitalLock"
+            ]
+          },
+          {
+            "name": "奇点",
+            "abilities": [
+              "gravityWell",
+              "orbitalShots",
+              "orbitalLock",
+              "singularity",
+              "eventHorizon"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "ASTROLABE_T1",
+        "runtimeId": "ASTROLABE_T1",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "引潮",
+            "abilities": [
+              "gravityWell",
+              "starfall"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "ASTROLABE_T2",
+        "runtimeId": "ASTROLABE_T2",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "引潮",
+            "abilities": [
+              "gravityWell",
+              "starfall"
+            ]
+          },
+          {
+            "name": "轨域",
+            "abilities": [
+              "gravityWell",
+              "orbitalShots",
+              "starfall",
+              "orbitalLock"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "ASTROLABE_T3",
+        "runtimeId": "ASTROLABE_T3",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "引潮",
+            "abilities": [
+              "gravityWell",
+              "starfall"
+            ]
+          },
+          {
+            "name": "轨域",
+            "abilities": [
+              "gravityWell",
+              "orbitalShots",
+              "starfall",
+              "orbitalLock"
+            ]
+          },
+          {
+            "name": "奇点",
+            "abilities": [
+              "gravityWell",
+              "orbitalShots",
+              "orbitalLock",
+              "singularity",
+              "eventHorizon"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/astrolabe/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/astrolabe/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gravityWell",
+          "starfall",
+          "orbitalShots",
+          "orbitalLock",
+          "singularity",
+          "eventHorizon"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/astrolabe/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/astrolabe/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gravityWell",
+          "starfall"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/astrolabe/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gravityWell",
+          "orbitalShots",
+          "starfall",
+          "orbitalLock"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/astrolabe/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gravityWell",
+          "orbitalShots",
+          "orbitalLock",
+          "singularity",
+          "eventHorizon"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      },
+      "WELL": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/astrolabe/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gravityWell",
+          "starfall"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "ORBIT": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/astrolabe/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "orbitalShots",
+          "orbitalLock"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "SINGULARITY": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/astrolabe/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "singularity",
+          "eventHorizon"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "impact-wave: decorative feedback, separate lifecycle"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-04-collector-astrolabe.png",
+        "sha256": "23b15528c0983aef3efeb646c7dd568e6322917f95fdf6d7e358f62ecaaf7632",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r02.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:BLOOD_FORGE": {
+    "schemaVersion": 1,
+    "artId": "boss:BLOOD_FORGE",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      233
+    ],
+    "collisionCenterPx": [
+      128,
+      151
+    ],
+    "collisionRadiusPx": 110,
+    "referenceRuntimeRadius": 35,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 17,
+      "y": 59,
+      "width": 222,
+      "height": 178,
+      "maxRadius": 130.79946483070947,
+      "enclosingRadiusCeil": 131,
+      "edgePixels": 0,
+      "visiblePixels": 29048,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          233
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "arch-body",
+          "core-chamber",
+          "core-orb",
+          "core-highlight-left",
+          "core-highlight-right",
+          "core-highlight-bottom",
+          "face-window",
+          "eye-left",
+          "eye-right",
+          "arch-mark-left",
+          "arch-mark-right"
+        ]
+      },
+      {
+        "id": "arch-crown",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          64
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "door-left",
+        "parent": "body",
+        "pivotPx": [
+          74,
+          211
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "door-right",
+        "parent": "body",
+        "pivotPx": [
+          182,
+          211
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-left",
+        "parent": "body",
+        "pivotPx": [
+          44,
+          233
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-right",
+        "parent": "body",
+        "pivotPx": [
+          212,
+          233
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "face-window",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          109
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          118,
+          110
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          139,
+          110
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "core-orb",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          185
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "archBody": 1,
+      "doorArms": 2,
+      "feet": 2,
+      "faceWindow": 1,
+      "eyes": 2,
+      "coreOrb": 1
+    },
+    "partTransforms": {
+      "door-left": {
+        "pivot": [
+          74,
+          211
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": 0.12,
+          "attack": -0.085
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "door-right": {
+        "pivot": [
+          182,
+          211
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": -0.12,
+          "attack": 0.085
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/blood_forge/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        12,
+        32,
+        232,
+        232
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/blood_forge/body.png",
+    "sourceFile": "art/characters/v1/boss/blood_forge/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "brandLine": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "forgeArmor": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "forgeDetonation": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "moltenBurst": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "sacrificeMinions": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "slagDrop": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "BLOOD_FORGE",
+        "runtimeId": "BLOOD_FORGE",
+        "radius": 35,
+        "phases": [
+          {
+            "name": "铸火",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop"
+            ]
+          },
+          {
+            "name": "献炉",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop",
+              "sacrificeMinions",
+              "brandLine"
+            ]
+          },
+          {
+            "name": "过热",
+            "abilities": [
+              "forgeArmor",
+              "sacrificeMinions",
+              "brandLine",
+              "moltenBurst",
+              "forgeDetonation"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "BLOOD_FORGE_T1",
+        "runtimeId": "BLOOD_FORGE_T1",
+        "radius": 35,
+        "phases": [
+          {
+            "name": "铸火",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "BLOOD_FORGE_T2",
+        "runtimeId": "BLOOD_FORGE_T2",
+        "radius": 35,
+        "phases": [
+          {
+            "name": "铸火",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop"
+            ]
+          },
+          {
+            "name": "献炉",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop",
+              "sacrificeMinions",
+              "brandLine"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "BLOOD_FORGE_T3",
+        "runtimeId": "BLOOD_FORGE_T3",
+        "radius": 35,
+        "phases": [
+          {
+            "name": "铸火",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop"
+            ]
+          },
+          {
+            "name": "献炉",
+            "abilities": [
+              "forgeArmor",
+              "slagDrop",
+              "sacrificeMinions",
+              "brandLine"
+            ]
+          },
+          {
+            "name": "过热",
+            "abilities": [
+              "forgeArmor",
+              "sacrificeMinions",
+              "brandLine",
+              "moltenBurst",
+              "forgeDetonation"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/blood_forge/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/blood_forge/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "forgeArmor",
+          "slagDrop",
+          "sacrificeMinions",
+          "brandLine",
+          "moltenBurst",
+          "forgeDetonation"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHIELD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "shield-overlay",
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/blood_forge/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/blood_forge/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "forgeArmor",
+          "slagDrop"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHIELD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "shield-overlay",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/blood_forge/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "forgeArmor",
+          "slagDrop",
+          "sacrificeMinions",
+          "brandLine"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHIELD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "shield-overlay",
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/blood_forge/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "forgeArmor",
+          "sacrificeMinions",
+          "brandLine",
+          "moltenBurst",
+          "forgeDetonation"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHIELD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "shield-overlay",
+          "area-hazard: telegraph + active + aftermath",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "ARMOR": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/blood_forge/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "forgeArmor",
+          "slagDrop"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHIELD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "shield-overlay",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "SACRIFICE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/blood_forge/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "sacrificeMinions",
+          "brandLine"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "shield-overlay",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "OVERHEAT": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/blood_forge/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "moltenBurst",
+          "forgeDetonation"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+        "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:VOID_CONDUCTOR": {
+    "schemaVersion": 1,
+    "artId": "boss:VOID_CONDUCTOR",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      242
+    ],
+    "collisionCenterPx": [
+      128,
+      144
+    ],
+    "collisionRadiusPx": 114,
+    "referenceRuntimeRadius": 29,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 17,
+      "y": 33,
+      "width": 222,
+      "height": 208,
+      "maxRadius": 147.12069874766092,
+      "enclosingRadiusCeil": 148,
+      "edgePixels": 0,
+      "visiblePixels": 25408,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          242
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "arm-left",
+          "arm-right",
+          "robe-three-skirt-lobes",
+          "robe-side-left-shade",
+          "robe-side-right-shade",
+          "face-window",
+          "eye-left",
+          "eye-right",
+          "skirt-left-notch",
+          "skirt-right-notch"
+        ]
+      },
+      {
+        "id": "robe-crown",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          70
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "arm-left",
+        "parent": "body",
+        "pivotPx": [
+          100,
+          139
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "arm-right",
+        "parent": "body",
+        "pivotPx": [
+          156,
+          139
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "hand-forearm-left",
+        "parent": "body",
+        "pivotPx": [
+          34,
+          116
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "hand-forearm-right",
+        "parent": "body",
+        "pivotPx": [
+          222,
+          116
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "finger-left-1",
+        "parent": "hand-forearm-left",
+        "pivotPx": [
+          28,
+          48
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "finger-left-2",
+        "parent": "hand-forearm-left",
+        "pivotPx": [
+          47,
+          39
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "finger-left-3",
+        "parent": "hand-forearm-left",
+        "pivotPx": [
+          65,
+          53
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "finger-right-1",
+        "parent": "hand-forearm-right",
+        "pivotPx": [
+          228,
+          48
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "finger-right-2",
+        "parent": "hand-forearm-right",
+        "pivotPx": [
+          209,
+          39
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "finger-right-3",
+        "parent": "hand-forearm-right",
+        "pivotPx": [
+          191,
+          53
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "skirt-left",
+        "parent": "body",
+        "pivotPx": [
+          63,
+          229
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "skirt-center",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          234
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "skirt-right",
+        "parent": "body",
+        "pivotPx": [
+          192,
+          229
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "face-window",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          137
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          119,
+          111
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          136,
+          111
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "robe": 1,
+      "faceWindow": 1,
+      "eyes": 2,
+      "arms": 2,
+      "fingersPerHand": 3,
+      "skirtLobes": 3,
+      "feet": 0
+    },
+    "partTransforms": {
+      "hand-forearm-left": {
+        "pivot": [
+          34,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.65,
+          "attack": -0.04
+        },
+        "angleMin": -0.08,
+        "angleMax": 0.65
+      },
+      "hand-forearm-right": {
+        "pivot": [
+          222,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.65,
+          "attack": 0.04
+        },
+        "angleMin": -0.65,
+        "angleMax": 0.08
+      },
+      "finger-left-1": {
+        "pivot": [
+          34,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.65,
+          "attack": -0.04
+        },
+        "angleMin": -0.08,
+        "angleMax": 0.65
+      },
+      "finger-left-2": {
+        "pivot": [
+          34,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.65,
+          "attack": -0.04
+        },
+        "angleMin": -0.08,
+        "angleMax": 0.65
+      },
+      "finger-left-3": {
+        "pivot": [
+          34,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.65,
+          "attack": -0.04
+        },
+        "angleMin": -0.08,
+        "angleMax": 0.65
+      },
+      "finger-right-1": {
+        "pivot": [
+          222,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.65,
+          "attack": 0.04
+        },
+        "angleMin": -0.65,
+        "angleMax": 0.08
+      },
+      "finger-right-2": {
+        "pivot": [
+          222,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.65,
+          "attack": 0.04
+        },
+        "angleMin": -0.65,
+        "angleMax": 0.08
+      },
+      "finger-right-3": {
+        "pivot": [
+          222,
+          116
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.65,
+          "attack": 0.04
+        },
+        "angleMin": -0.65,
+        "angleMax": 0.08
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/void_conductor/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        12,
+        21,
+        232,
+        232
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/void_conductor/body.png",
+    "sourceFile": "art/characters/v1/boss/void_conductor/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "conductLines": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "crescendo": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "finale": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "pulseMeasure": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "syncopate": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "tempoShift": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "VOID_CONDUCTOR",
+        "runtimeId": "VOID_CONDUCTOR",
+        "radius": 29,
+        "phases": [
+          {
+            "name": "起拍",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure"
+            ]
+          },
+          {
+            "name": "切分",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure",
+              "tempoShift",
+              "syncopate"
+            ]
+          },
+          {
+            "name": "终章",
+            "abilities": [
+              "conductLines",
+              "tempoShift",
+              "syncopate",
+              "finale",
+              "crescendo"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "VOID_CONDUCTOR_T1",
+        "runtimeId": "VOID_CONDUCTOR_T1",
+        "radius": 29,
+        "phases": [
+          {
+            "name": "起拍",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "VOID_CONDUCTOR_T2",
+        "runtimeId": "VOID_CONDUCTOR_T2",
+        "radius": 29,
+        "phases": [
+          {
+            "name": "起拍",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure"
+            ]
+          },
+          {
+            "name": "切分",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure",
+              "tempoShift",
+              "syncopate"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "VOID_CONDUCTOR_T3",
+        "runtimeId": "VOID_CONDUCTOR_T3",
+        "radius": 29,
+        "phases": [
+          {
+            "name": "起拍",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure"
+            ]
+          },
+          {
+            "name": "切分",
+            "abilities": [
+              "conductLines",
+              "pulseMeasure",
+              "tempoShift",
+              "syncopate"
+            ]
+          },
+          {
+            "name": "终章",
+            "abilities": [
+              "conductLines",
+              "tempoShift",
+              "syncopate",
+              "finale",
+              "crescendo"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/void_conductor/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/void_conductor/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "conductLines",
+          "pulseMeasure",
+          "tempoShift",
+          "syncopate",
+          "finale",
+          "crescendo"
+        ],
+        "externalSummons": [
+          {
+            "id": "FAST",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/void_conductor/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/void_conductor/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "conductLines",
+          "pulseMeasure"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/void_conductor/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "conductLines",
+          "pulseMeasure",
+          "tempoShift",
+          "syncopate"
+        ],
+        "externalSummons": [
+          {
+            "id": "FAST",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/void_conductor/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "conductLines",
+          "tempoShift",
+          "syncopate",
+          "finale",
+          "crescendo"
+        ],
+        "externalSummons": [
+          {
+            "id": "FAST",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "PULSE_MEASURE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/void_conductor/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "pulseMeasure"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "SYNCOPATE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/void_conductor/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "syncopate"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "CRESCENDO": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/void_conductor/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "crescendo"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "TWO_BEAT": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/void_conductor/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "conductLines",
+          "tempoShift"
+        ],
+        "externalSummons": [
+          {
+            "id": "FAST",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "FINALE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/void_conductor/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "finale"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-07-forge-conductor.png",
+        "sha256": "c04483857a64b5d9783fef425d5b7e514b26ee6c7cd913e04a1bbf1943310349",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:LABYRINTH_KEEPER": {
+    "schemaVersion": 1,
+    "artId": "boss:LABYRINTH_KEEPER",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      233
+    ],
+    "collisionCenterPx": [
+      128,
+      149
+    ],
+    "collisionRadiusPx": 110,
+    "referenceRuntimeRadius": 33,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 19,
+      "y": 56,
+      "width": 218,
+      "height": 180,
+      "maxRadius": 131.30308450299253,
+      "enclosingRadiusCeil": 132,
+      "edgePixels": 0,
+      "visiblePixels": 23968,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          233
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "empty-arch-body",
+          "face-window",
+          "eye-left",
+          "eye-right",
+          "arch-mark-left-1",
+          "arch-mark-left-2",
+          "arch-mark-right-1",
+          "arch-mark-right-2"
+        ]
+      },
+      {
+        "id": "arch-crown",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          61
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "arch-opening",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          188
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "door-left",
+        "parent": "body",
+        "pivotPx": [
+          70,
+          211
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "door-right",
+        "parent": "body",
+        "pivotPx": [
+          186,
+          211
+        ],
+        "class": "rigid-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-left",
+        "parent": "body",
+        "pivotPx": [
+          46,
+          233
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-right",
+        "parent": "body",
+        "pivotPx": [
+          210,
+          233
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": false
+      },
+      {
+        "id": "face-window",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          107
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-left",
+        "parent": "body",
+        "pivotPx": [
+          117,
+          107
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "eye-right",
+        "parent": "body",
+        "pivotPx": [
+          138,
+          107
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "emptyArch": 1,
+      "doorShields": 2,
+      "feet": 2,
+      "faceWindow": 1,
+      "eyes": 2,
+      "coreOrb": 0
+    },
+    "partTransforms": {
+      "door-left": {
+        "pivot": [
+          70,
+          211
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": 0.1,
+          "attack": -0.075
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "door-right": {
+        "pivot": [
+          186,
+          211
+        ],
+        "rigid": true,
+        "angleByPose": {
+          "windup": -0.1,
+          "attack": 0.075
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/labyrinth_keeper/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        14,
+        32,
+        228,
+        228
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/labyrinth_keeper/body.png",
+    "sourceFile": "art/characters/v1/boss/labyrinth_keeper/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "corridorClamp": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "deadEnd": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "gateSwap": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "mazeCrush": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "mazeFold": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "raiseWalls": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "LABYRINTH_KEEPER",
+        "runtimeId": "LABYRINTH_KEEPER",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "筑墙",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp"
+            ]
+          },
+          {
+            "name": "换门",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp",
+              "gateSwap",
+              "mazeFold"
+            ]
+          },
+          {
+            "name": "迷狱",
+            "abilities": [
+              "raiseWalls",
+              "gateSwap",
+              "mazeFold",
+              "mazeCrush",
+              "deadEnd"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "LABYRINTH_KEEPER_T1",
+        "runtimeId": "LABYRINTH_KEEPER_T1",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "筑墙",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "LABYRINTH_KEEPER_T2",
+        "runtimeId": "LABYRINTH_KEEPER_T2",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "筑墙",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp"
+            ]
+          },
+          {
+            "name": "换门",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp",
+              "gateSwap",
+              "mazeFold"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "LABYRINTH_KEEPER_T3",
+        "runtimeId": "LABYRINTH_KEEPER_T3",
+        "radius": 33,
+        "phases": [
+          {
+            "name": "筑墙",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp"
+            ]
+          },
+          {
+            "name": "换门",
+            "abilities": [
+              "raiseWalls",
+              "corridorClamp",
+              "gateSwap",
+              "mazeFold"
+            ]
+          },
+          {
+            "name": "迷狱",
+            "abilities": [
+              "raiseWalls",
+              "gateSwap",
+              "mazeFold",
+              "mazeCrush",
+              "deadEnd"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "raiseWalls",
+          "corridorClamp",
+          "gateSwap",
+          "mazeFold",
+          "mazeCrush",
+          "deadEnd"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath",
+          "uses existing independent mechanic world anchors: WALL"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "raiseWalls",
+          "corridorClamp"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "raiseWalls",
+          "corridorClamp",
+          "gateSwap",
+          "mazeFold"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "raiseWalls",
+          "gateSwap",
+          "mazeFold",
+          "mazeCrush",
+          "deadEnd"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath",
+          "uses existing independent mechanic world anchors: WALL"
+        ],
+        "externalProjectiles": []
+      },
+      "WALL": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "raiseWalls",
+          "corridorClamp"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "GATE": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gateSwap",
+          "mazeFold"
+        ],
+        "externalSummons": [
+          {
+            "id": "WALL",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "COMPRESS": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/labyrinth_keeper/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 1,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "mazeCrush",
+          "deadEnd"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath",
+          "uses existing independent mechanic world anchors: WALL"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+        "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  },
+  "boss:NIGHTMARE_BLOOM": {
+    "schemaVersion": 1,
+    "artId": "boss:NIGHTMARE_BLOOM",
+    "status": "produced_pending_primary_review",
+    "version": "v1",
+    "sourceSize": {
+      "width": 256,
+      "height": 256
+    },
+    "rootPx": [
+      128,
+      234
+    ],
+    "collisionCenterPx": [
+      128,
+      146
+    ],
+    "collisionRadiusPx": 108,
+    "referenceRuntimeRadius": 32,
+    "visualScaleMode": "runtime-radius",
+    "anchorsMeasured": true,
+    "geometryMeasurementMode": "Authored Bézier source-space joints and source collision-reference circle measured in vector units, verified through shared sampler; neutral raster alpha envelope measured independently. r0 is the authored collision-reference circle, not an enclosing silhouette radius.",
+    "neutralAlphaBoundsPx": {
+      "x": 21,
+      "y": 46,
+      "width": 214,
+      "height": 191,
+      "maxRadius": 124.17930584441193,
+      "enclosingRadiusCeil": 125,
+      "edgePixels": 0,
+      "visiblePixels": 26603,
+      "sourceSize": [
+        256,
+        256
+      ],
+      "hasAlpha": true
+    },
+    "parts": [
+      {
+        "id": "body",
+        "parent": null,
+        "pivotPx": [
+          128,
+          234
+        ],
+        "class": "soft-body",
+        "sourceShapeIds": [
+          "rear-leaf-left",
+          "rear-leaf-right",
+          "main-petal-top",
+          "mouth",
+          "tooth-upper-left",
+          "tooth-upper-center",
+          "tooth-upper-right",
+          "tooth-lower-left",
+          "tooth-lower-center",
+          "tooth-lower-right",
+          "petal-top-mark-left",
+          "petal-top-mark-right"
+        ]
+      },
+      {
+        "id": "main-petal-top",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          143
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "main-petal-top-tip",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          49
+        ],
+        "class": "soft-attached",
+        "embeddedContour": true
+      },
+      {
+        "id": "main-petal-left",
+        "parent": "body",
+        "pivotPx": [
+          125,
+          201
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "main-petal-right",
+        "parent": "body",
+        "pivotPx": [
+          131,
+          201
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "rear-leaf-left",
+        "parent": "body",
+        "pivotPx": [
+          83,
+          191
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "rear-leaf-right",
+        "parent": "body",
+        "pivotPx": [
+          173,
+          191
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "foot-base-leaf-left",
+        "parent": "body",
+        "pivotPx": [
+          101,
+          222
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": true
+      },
+      {
+        "id": "foot-base-leaf-right",
+        "parent": "body",
+        "pivotPx": [
+          155,
+          222
+        ],
+        "class": "fixed-contact",
+        "embeddedContour": true
+      },
+      {
+        "id": "mouth",
+        "parent": "body",
+        "pivotPx": [
+          128,
+          143
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-upper-left",
+        "parent": "mouth",
+        "pivotPx": [
+          105,
+          112
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-upper-center",
+        "parent": "mouth",
+        "pivotPx": [
+          128,
+          104
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-upper-right",
+        "parent": "mouth",
+        "pivotPx": [
+          150,
+          113
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-lower-left",
+        "parent": "mouth",
+        "pivotPx": [
+          107,
+          176
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-lower-center",
+        "parent": "mouth",
+        "pivotPx": [
+          128,
+          181
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      },
+      {
+        "id": "tooth-lower-right",
+        "parent": "mouth",
+        "pivotPx": [
+          149,
+          176
+        ],
+        "class": "soft-attached",
+        "embeddedContour": false
+      }
+    ],
+    "organCounts": {
+      "mainPetals": 3,
+      "rearLeaves": 2,
+      "baseLeaves": 2,
+      "blackMouth": 1,
+      "upperTeeth": 3,
+      "lowerTeeth": 3,
+      "eyes": 0
+    },
+    "partTransforms": {
+      "main-petal-left": {
+        "pivot": [
+          125,
+          201
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": 0.065,
+          "attack": -0.045
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      },
+      "main-petal-right": {
+        "pivot": [
+          131,
+          201
+        ],
+        "rigid": false,
+        "angleByPose": {
+          "windup": -0.065,
+          "attack": 0.045
+        },
+        "angleMin": -0.32,
+        "angleMax": 0.32
+      }
+    },
+    "muzzles": [],
+    "castingCue": null,
+    "directions": {
+      "right": {
+        "bodyRotation": 0
+      },
+      "left": {
+        "reflectionAxisPx": 128,
+        "wholeRig": true,
+        "bodyRotation": 0
+      },
+      "up": {
+        "bodyRotation": 0,
+        "mode": "same approved right body; no extra up source exists for these bosses",
+        "newProjectionProduced": false
+      }
+    },
+    "icon": {
+      "src": "art/characters/v1/boss/nightmare_bloom/icon.svg",
+      "width": 64,
+      "height": 64,
+      "viewBox": [
+        16,
+        29.5,
+        224,
+        224
+      ]
+    },
+    "bodyPng": "art/characters/v1/boss/nightmare_bloom/body.png",
+    "sourceFile": "art/characters/v1/boss/nightmare_bloom/source.svg",
+    "clips": {
+      "neutral": {
+        "sourceSize": [
+          256,
+          256
+        ],
+        "sourceOffset": [
+          0,
+          0
+        ],
+        "trim": null,
+        "loop": false
+      },
+      "windup": {
+        "sampler": "shared continuous source-local compression and authored parts",
+        "duration": "existing runtime windup window",
+        "loop": false
+      },
+      "attack": {
+        "sampler": "shared sin(progress*pi) body and local part pulse",
+        "duration": "existing runtime action window",
+        "loop": false
+      },
+      "open": {
+        "bodyReuse": "neutral",
+        "externalOverlayOnly": true
+      },
+      "move": {
+        "duration": 0.72,
+        "loop": true,
+        "verifiedSeam": true
+      },
+      "squash": {
+        "sampler": "shared sampleSoftPose"
+      },
+      "stretch": {
+        "sampler": "shared sampleSoftPose"
+      }
+    },
+    "phaseVariants": {
+      "0": "idle",
+      "1": "idle",
+      "2": "idle"
+    },
+    "abilityVariants": {
+      "blightRoots": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "creepingCanopy": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "gardenWake": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "poisonBloom": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "seedPods": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      },
+      "sporeBurst": {
+        "windup": "prepare",
+        "attack": "cast",
+        "recover": "idle"
+      }
+    },
+    "runtimeTemplates": [
+      {
+        "templateId": "NIGHTMARE_BLOOM",
+        "runtimeId": "NIGHTMARE_BLOOM",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "播种",
+            "abilities": [
+              "seedPods",
+              "blightRoots"
+            ]
+          },
+          {
+            "name": "绽瘴",
+            "abilities": [
+              "seedPods",
+              "blightRoots",
+              "poisonBloom",
+              "sporeBurst"
+            ]
+          },
+          {
+            "name": "花园",
+            "abilities": [
+              "seedPods",
+              "poisonBloom",
+              "sporeBurst",
+              "gardenWake",
+              "creepingCanopy"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "NIGHTMARE_BLOOM_T1",
+        "runtimeId": "NIGHTMARE_BLOOM_T1",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "播种",
+            "abilities": [
+              "seedPods",
+              "blightRoots"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "NIGHTMARE_BLOOM_T2",
+        "runtimeId": "NIGHTMARE_BLOOM_T2",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "播种",
+            "abilities": [
+              "seedPods",
+              "blightRoots"
+            ]
+          },
+          {
+            "name": "绽瘴",
+            "abilities": [
+              "seedPods",
+              "blightRoots",
+              "poisonBloom",
+              "sporeBurst"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      },
+      {
+        "templateId": "NIGHTMARE_BLOOM_T3",
+        "runtimeId": "NIGHTMARE_BLOOM_T3",
+        "radius": 32,
+        "phases": [
+          {
+            "name": "播种",
+            "abilities": [
+              "seedPods",
+              "blightRoots"
+            ]
+          },
+          {
+            "name": "绽瘴",
+            "abilities": [
+              "seedPods",
+              "blightRoots",
+              "poisonBloom",
+              "sporeBurst"
+            ]
+          },
+          {
+            "name": "花园",
+            "abilities": [
+              "seedPods",
+              "poisonBloom",
+              "sporeBurst",
+              "gardenWake",
+              "creepingCanopy"
+            ]
+          }
+        ],
+        "survivorPhases": null
+      }
+    ],
+    "actions": {
+      "NEUTRAL": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/neutral.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [],
+        "externalProjectiles": []
+      },
+      "WINDUP": {
+        "bodyPose": "windup",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/windup.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 2,
+            "label": "WINDUP",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "seedPods",
+          "blightRoots",
+          "poisonBloom",
+          "sporeBurst",
+          "gardenWake",
+          "creepingCanopy"
+        ],
+        "externalSummons": [
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SHARD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated",
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath",
+          "healing-feedback"
+        ],
+        "externalProjectiles": []
+      },
+      "OPEN": {
+        "bodyPose": "open",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/open.svg",
+        "mappingMode": "direct_concept_cell",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 4,
+            "label": "OPEN",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [],
+        "externalSummons": [],
+        "externalEffects": [
+          "whole-body OPEN tint/outline separate overlay; no added weak-point hole"
+        ],
+        "externalProjectiles": []
+      },
+      "P1": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "seedPods",
+          "blightRoots"
+        ],
+        "externalSummons": [
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P2": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "seedPods",
+          "blightRoots",
+          "poisonBloom",
+          "sporeBurst"
+        ],
+        "externalSummons": [
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated",
+          "line-hazard: telegraph + active + aftermath",
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "P3": {
+        "bodyPose": "neutral",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/neutral.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 1,
+            "label": "NEUTRAL",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "seedPods",
+          "poisonBloom",
+          "sporeBurst",
+          "gardenWake",
+          "creepingCanopy"
+        ],
+        "externalSummons": [
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "SHARD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated",
+          "area-hazard: telegraph + active + aftermath",
+          "healing-feedback"
+        ],
+        "externalProjectiles": []
+      },
+      "SEED": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "seedPods",
+          "blightRoots"
+        ],
+        "externalSummons": [
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated",
+          "line-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "BLOOM": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "poisonBloom",
+          "sporeBurst"
+        ],
+        "externalSummons": [],
+        "externalEffects": [
+          "area-hazard: telegraph + active + aftermath"
+        ],
+        "externalProjectiles": []
+      },
+      "GARDEN": {
+        "bodyPose": "attack",
+        "resource": "art/characters/v1/boss/nightmare_bloom/clips/attack.svg",
+        "mappingMode": "explicit_body_pose_reuse",
+        "bodySources": [
+          {
+            "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+            "row": 2,
+            "column": 3,
+            "label": "ATTACK",
+            "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+            "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md",
+            "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+          }
+        ],
+        "runtimeAbilityIds": [
+          "gardenWake",
+          "creepingCanopy"
+        ],
+        "externalSummons": [
+          {
+            "id": "SHARD",
+            "class": "independent-ai-hp-unit",
+            "owner": "enemies group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          },
+          {
+            "id": "ROOT",
+            "class": "independent-hp-timed-mechanic",
+            "owner": "bosses-mechanics group"
+          }
+        ],
+        "externalEffects": [
+          "healing-feedback",
+          "mechanic-owned terrain (WEB/ROOT only), ends when mechanic is defeated"
+        ],
+        "externalProjectiles": []
+      }
+    },
+    "referenceSources": [
+      {
+        "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+        "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+        "reviewEvidence": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/reviews/bosses-mechanics-r03.md"
+      }
+    ],
+    "integrationStatus": "standalone group, not registered by this worker",
+    "continuousTransitionLimit": "Per-pose intermediates verified; current shared windup end and attack start have different soft transforms. Global cross-pose blending belongs to character owner/QA."
+  }
+}

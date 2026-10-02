@@ -1,0 +1,529 @@
+{
+  "schemaVersion": 1,
+  "artId": "tower:RAIL",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    143
+  ],
+  "collisionRadiusPx": 90,
+  "referenceRuntimeRadius": 14,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "连续长颈梨身；2脚；2颈顶小眼；2平行长喙；1腹垫",
+  "organCounts": {
+    "continuousPearNeck": 1,
+    "feet": 2,
+    "eyes": 2,
+    "parallelLongBeaks": 2,
+    "bellyPad": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "neck-top",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        149,
+        51
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        145,
+        62
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        159,
+        62
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "belly-pad",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        111,
+        190
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        91,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        137,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "launcher",
+      "parent": "body",
+      "class": "rigid",
+      "pivotPx": [
+        166,
+        78
+      ]
+    }
+  ],
+  "muzzles": [
+    {
+      "id": "M1",
+      "partId": "launcher",
+      "positionPx": [
+        230,
+        68
+      ],
+      "axisRadians": 0,
+      "visibleProjectionAxisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    },
+    {
+      "id": "M2",
+      "partId": "launcher",
+      "positionPx": [
+        230,
+        88
+      ],
+      "axisRadians": 0,
+      "visibleProjectionAxisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    }
+  ],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "pivotPx": [
+        166,
+        78
+      ],
+      "projection": "rigid authored launcher at supported upward angle",
+      "projectedAxisRadians": -0.58,
+      "angleRange": [
+        -0.15,
+        0.15
+      ]
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "DIR_LEFT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "left",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "DIR_UP": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "up",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "DIR_RIGHT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "right",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER"
+      ],
+      "notes": null
+    },
+    "LV1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 0,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 1,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 2,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV4": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 3,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+          "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960",
+          "row": "上排RAIL",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P08",
+        "R01/HIT_SNIPER",
+        "B02/S12"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/tower/rail/source.svg",
+  "bodyResource": "art/characters/v1/tower/rail/body.svg",
+  "icon": {
+    "src": "art/characters/v1/tower/rail/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "tower:RAIL"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r02/rail-rapid-fixed-root.png",
+      "sha256": "81d1d129503162a26784923b30d639f1b08efb42e30add87f0f6521c5f4e3960"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 58.75,
+    "y": 39.75,
+    "width": 178,
+    "height": 182.5
+  },
+  "iconSourceViewBox": [
+    50.5,
+    33.75,
+    194.5,
+    194.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 65,
+    "y": 40,
+    "width": 172,
+    "height": 183,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/tower/rail/body.png"
+}

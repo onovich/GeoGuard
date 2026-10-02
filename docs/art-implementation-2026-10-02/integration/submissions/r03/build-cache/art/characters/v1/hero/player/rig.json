@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "artId": "hero:PLAYER",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    159
+  ],
+  "collisionRadiusPx": 54,
+  "referenceRuntimeRadius": 12,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "单连续蜂蜜水滴；1顶端sage叶；0脚0手0炮；无眼无嘴，旧squash眼删除",
+  "organCounts": {
+    "continuousDrop": 1,
+    "sageLeaf": 1,
+    "eyes": 0,
+    "mouth": 0,
+    "feet": 0,
+    "hands": 0,
+    "launcher": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "leaf-root",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        82
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "leaf-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        164,
+        42
+      ],
+      "embeddedContour": true
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_LEFT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "left",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_RIGHT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "right",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "AUTO_ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+          "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa",
+          "row": "上排PLAYER主身体行",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P01",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/hero/player/source.svg",
+  "bodyResource": "art/characters/v1/hero/player/body.svg",
+  "icon": {
+    "src": "art/characters/v1/hero/player/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "hero:PLAYER"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/player-fixed-root.png",
+      "sha256": "6d5ec0a8c6928c06dbb0feb6be0533d57cfee3aa97d0cb65ad84b87f23e7fbfa"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 74.75,
+    "y": 26.75,
+    "width": 106.5,
+    "height": 199.5
+  },
+  "iconSourceViewBox": [
+    22.25,
+    20.75,
+    211.5,
+    211.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 79,
+    "y": 33,
+    "width": 95,
+    "height": 191,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/hero/player/body.png"
+}

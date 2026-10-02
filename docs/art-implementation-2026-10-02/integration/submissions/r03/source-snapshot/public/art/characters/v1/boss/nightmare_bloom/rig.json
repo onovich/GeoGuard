@@ -1,0 +1,556 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:NIGHTMARE_BLOOM",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    234
+  ],
+  "collisionCenterPx": [
+    128,
+    146
+  ],
+  "collisionRadiusPx": 108,
+  "referenceRuntimeRadius": 32,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "3主花瓣2后侧叶2底叶；1黑口6白牙上3下3；无眼；闭口保留相同牙根",
+  "organCounts": {
+    "mainPetals": 3,
+    "rearLeaves": 2,
+    "baseLeaves": 2,
+    "blackMouth": 1,
+    "whiteTeeth": 6,
+    "upperTeeth": 3,
+    "lowerTeeth": 3,
+    "eyes": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        234
+      ]
+    },
+    {
+      "id": "main-petal-top",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        143
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "main-petal-top-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        49
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "main-petal-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        125,
+        201
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "main-petal-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        131,
+        201
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "rear-leaf-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        83,
+        191
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "rear-leaf-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        173,
+        191
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-base-leaf-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        101,
+        222
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "foot-base-leaf-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        155,
+        222
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        143
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-upper-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        105,
+        112
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-upper-center",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        104
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-upper-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        150,
+        113
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-lower-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        107,
+        176
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-lower-center",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        181
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth-lower-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        149,
+        176
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B02/S16",
+        "B03/H01",
+        "B03/H02",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H02",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "SEED": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": null
+    },
+    "BLOOM": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01"
+      ],
+      "notes": null
+    },
+    "GARDEN": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+          "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B04/M02",
+        "B04/M03",
+        "B04/M05",
+        "B04/M07"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/nightmare_bloom/source.svg",
+  "bodyResource": "art/characters/v1/boss/nightmare_bloom/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/nightmare_bloom/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:NIGHTMARE_BLOOM"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-08-keeper-bloom.png",
+      "sha256": "65252f9b1496337af4d5b5f336c36676c454b8843e30e946a80cac862b564af7"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 21.75,
+    "y": 46.75,
+    "width": 212.5,
+    "height": 194.5
+  },
+  "iconSourceViewBox": [
+    15.75,
+    31.75,
+    224.5,
+    224.5
+  ]
+}

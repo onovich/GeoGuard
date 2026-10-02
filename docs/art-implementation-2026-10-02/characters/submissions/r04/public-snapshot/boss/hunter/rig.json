@@ -1,0 +1,503 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:HUNTER",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    230
+  ],
+  "collisionCenterPx": [
+    128,
+    175.44
+  ],
+  "collisionRadiusPx": 81.84,
+  "referenceRuntimeRadius": 24,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "前倾单体；1后长耳1顶角1长鼻楔1后瓣2脚；1近侧眼，口沿鼻根",
+  "organCounts": {
+    "body": 1,
+    "longRearEar": 1,
+    "topHorn": 1,
+    "noseWedge": 1,
+    "rearLobe": 1,
+    "feet": 2,
+    "nearEye": 1,
+    "noseRootMouth": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        230
+      ]
+    },
+    {
+      "id": "rear-ear",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        109.52,
+        146.4
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "ear-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        50.56,
+        123.52
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "top-horn",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        148.24,
+        139.36
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "nose-root",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        179.04,
+        188.64
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "nose-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        223.92,
+        208
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "rear-lobe",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        75.2,
+        189.52
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        80.48,
+        230
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        170.24,
+        229.12
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "near-eye",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        170.24,
+        183.36
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        181.68,
+        205.36
+      ],
+      "embeddedContour": true
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S16",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "PROBE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01",
+        "B03/H02",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "PINCER": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02",
+        "B04/M03"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "AFTERIMAGE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+          "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7",
+          "row": 2,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/hunter/source.svg",
+  "bodyResource": "art/characters/v1/boss/hunter/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/hunter/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:HUNTER"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-01-commander-hunter.png",
+      "sha256": "1c4f6b82f69ad11375d5357a30b6157cb0cf32047ed8b8524bb07b6c35160ba7"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 38.900000000000006,
+    "y": 101.3,
+    "width": 187.88,
+    "height": 130.68
+  },
+  "iconSourceViewBox": [
+    32.900000000000006,
+    66.7,
+    199.88,
+    199.88
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 40,
+    "y": 105,
+    "width": 187,
+    "height": 127,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/boss/hunter/body.png"
+}

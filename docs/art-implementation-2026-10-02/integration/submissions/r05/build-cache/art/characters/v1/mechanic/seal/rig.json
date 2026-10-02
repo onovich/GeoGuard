@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "artId": "mechanic:SEAL",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    224
+  ],
+  "collisionCenterPx": [
+    128,
+    145
+  ],
+  "collisionRadiusPx": 104,
+  "referenceRuntimeRadius": 13,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "2独立软爪相向；0脸脚；破碎才允许各爪裂为碎片，不混三弧",
+  "organCounts": {
+    "opposedIndependentSoftClaws": 2,
+    "face": 0,
+    "feet": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        224
+      ]
+    },
+    {
+      "id": "claw-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        65,
+        145
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "claw-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        191,
+        145
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored fragments"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "INTACT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "sha256": "ae4745631c54ea97654f8f0adb0565707f073e6be5d9105b33bd9cbe9de5c0dc",
+          "row": 1,
+          "column": 1,
+          "label": "INTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "TRIGGER": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "sha256": "ae4745631c54ea97654f8f0adb0565707f073e6be5d9105b33bd9cbe9de5c0dc",
+          "row": 1,
+          "column": 2,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "BROKEN": {
+      "status": "produced_pending_review",
+      "pose": "broken",
+      "clip": "broken",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "sha256": "ae4745631c54ea97654f8f0adb0565707f073e6be5d9105b33bd9cbe9de5c0dc",
+          "row": 1,
+          "column": 3,
+          "label": "BROKEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "FADE": {
+      "status": "produced_pending_review",
+      "pose": "fade",
+      "clip": "fade",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+          "sha256": "ae4745631c54ea97654f8f0adb0565707f073e6be5d9105b33bd9cbe9de5c0dc",
+          "row": 1,
+          "column": 4,
+          "label": "FADE",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/mechanic/seal/source.svg",
+  "bodyResource": "art/characters/v1/mechanic/seal/body.svg",
+  "icon": {
+    "src": "art/characters/v1/mechanic/seal/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "mechanic:SEAL"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r01/seal-production.png",
+      "sha256": "ae4745631c54ea97654f8f0adb0565707f073e6be5d9105b33bd9cbe9de5c0dc"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 10.75,
+    "y": 60.75,
+    "width": 234.5,
+    "height": 159.5
+  },
+  "iconSourceViewBox": [
+    4.75,
+    17.25,
+    246.5,
+    246.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 17,
+    "y": 67,
+    "width": 222,
+    "height": 145,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/mechanic/seal/body.png"
+}

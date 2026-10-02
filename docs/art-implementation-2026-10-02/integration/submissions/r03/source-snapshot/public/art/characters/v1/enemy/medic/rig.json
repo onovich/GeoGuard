@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:MEDIC",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    232
+  ],
+  "collisionCenterPx": [
+    128,
+    143
+  ],
+  "collisionRadiusPx": 106,
+  "referenceRuntimeRadius": 11,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "4圆瓣主体；2卷臂2脚；1奶油十字在中央，0眼口",
+  "organCounts": {
+    "roundLobes": 4,
+    "curlArms": 2,
+    "feet": 2,
+    "creamCross": 1,
+    "eyes": 0,
+    "mouth": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        232
+      ]
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        88,
+        232
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        169,
+        232
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "body-lobe-1",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        93,
+        91
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "body-lobe-2",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        161,
+        91
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "body-lobe-3",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        96,
+        193
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "body-lobe-4",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        163,
+        193
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "curl-arm-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        75,
+        140
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "curl-arm-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        181,
+        140
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "cream-cross",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        137
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15"
+      ],
+      "notes": null
+    },
+    "HEAL": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 4,
+          "label": "HEAL / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+          "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3",
+          "row": 2,
+          "column": 4,
+          "label": "HEAL / CONTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/medic/source.svg",
+  "bodyResource": "art/characters/v1/enemy/medic/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/medic/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:MEDIC"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r02/images/03-shield-medic.png",
+      "sha256": "59c1595e4a549cc8dc1c9c4d58cf48db45b69010c348cb7481272ca79dd1e2a3"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 17.75,
+    "y": 44.75,
+    "width": 220.5,
+    "height": 187.5
+  },
+  "iconSourceViewBox": [
+    11.75,
+    22.25,
+    232.5,
+    232.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 21,
+    "y": 54,
+    "width": 214,
+    "height": 178,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/medic/body.png"
+}

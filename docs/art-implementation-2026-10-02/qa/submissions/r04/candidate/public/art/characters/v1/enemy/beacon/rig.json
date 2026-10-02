@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "artId": "enemy:BEACON",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    246
+  ],
+  "collisionCenterPx": [
+    128,
+    152
+  ],
+  "collisionRadiusPx": 103,
+  "referenceRuntimeRadius": 12,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1钟形瓶身；2顶触芽2脚；1大黑口+1舌，0眼",
+  "organCounts": {
+    "bellBody": 1,
+    "topFeelers": 2,
+    "feet": 2,
+    "blackMouth": 1,
+    "tongue": 1,
+    "eyes": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        246
+      ]
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        91,
+        246
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        165,
+        246
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "antenna-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        99,
+        88
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "antenna-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        156,
+        88
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "antenna-left-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        80,
+        51
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "antenna-right-tip",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        169,
+        51
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        155
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tongue",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        181
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "MOVE": {
+      "status": "produced_pending_review",
+      "pose": "move",
+      "clip": "move",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_in_place_cycle_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 3,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 3,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "SUMMON_3_BASIC": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "body_subposes_plus_independent_spawn_event",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 3,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        },
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+          "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b",
+          "row": 1,
+          "column": 4,
+          "label": "RECOVER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S02",
+        "B02/S05",
+        "B02/S08",
+        "B02/S11",
+        "B02/S14",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/enemy/beacon/source.svg",
+  "bodyResource": "art/characters/v1/enemy/beacon/body.svg",
+  "icon": {
+    "src": "art/characters/v1/enemy/beacon/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "enemy:BEACON"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/enemies/submissions/r01/images/beacon-body-only.png",
+      "sha256": "db33bb425564c2a59344d82b02f39933276be53fdbea777cf9e2022e69dec85b"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 44.75,
+    "y": 35.75,
+    "width": 169.5,
+    "height": 209.5
+  },
+  "iconSourceViewBox": [
+    18.75,
+    29.75,
+    221.5,
+    221.5
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 48,
+    "y": 40,
+    "width": 159,
+    "height": 206,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/enemy/beacon/body.png"
+}

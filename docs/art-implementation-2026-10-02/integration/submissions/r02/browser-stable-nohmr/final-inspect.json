@@ -1,0 +1,1386 @@
+{
+  "gameState": "PLAYING",
+  "paused": false,
+  "rewardActive": false,
+  "state": {
+    "player": {
+      "x": 0,
+      "y": 0,
+      "vx": 0,
+      "vy": 0,
+      "speed": 180,
+      "radius": 12,
+      "hp": 100,
+      "maxHp": 100,
+      "lastShoot": 15.563299999999968,
+      "shootCd": 0.5,
+      "damage": 8,
+      "range": 200,
+      "slowTimer": 0,
+      "slowRatio": 1,
+      "controlGraceTimer": 0
+    },
+    "camera": {
+      "x": 0,
+      "y": 0,
+      "shakeTimer": 0,
+      "shakeDuration": 0,
+      "shakeStrength": 0,
+      "shakeSeed": 2.3395353928183282
+    },
+    "keys": {
+      "w": false,
+      "a": false,
+      "s": false,
+      "d": false
+    },
+    "joystick": {
+      "active": false,
+      "startX": 0,
+      "startY": 0,
+      "currentX": 0,
+      "currentY": 0,
+      "dirX": 0,
+      "dirY": 0
+    },
+    "pointer": {
+      "x": 211,
+      "y": 40,
+      "active": false
+    },
+    "dragPlacement": {
+      "active": false,
+      "kind": "tower",
+      "entityId": null,
+      "towerId": null,
+      "pointerX": 0,
+      "pointerY": 0,
+      "worldX": 0,
+      "worldY": 0,
+      "canPlace": false,
+      "invalidReason": null
+    },
+    "buildBarRect": {
+      "left": 260,
+      "right": 1180,
+      "top": 800,
+      "bottom": 976
+    },
+    "debugPanelRect": {
+      "left": 160,
+      "right": 1280,
+      "top": 12,
+      "bottom": 88
+    },
+    "enemies": [
+      {
+        "id": "HIVE",
+        "name": "蜂巢建筑师",
+        "form": "hive",
+        "baseEnemy": "BEACON",
+        "color": "#6366f1",
+        "personality": "冷静、生产、扩张",
+        "hp": 346.79999999999995,
+        "speed": 66,
+        "damage": 9,
+        "radius": 29,
+        "value": 40,
+        "phases": [
+          {
+            "name": "铺巢",
+            "hpBelow": 1,
+            "abilities": [
+              "spawnHive",
+              "broodShift"
+            ],
+            "behaviorNodes": [
+              {
+                "id": "spawnHive-0-0",
+                "abilityId": "spawnHive",
+                "cooldown": 8,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "broodShift-0-1",
+                "abilityId": "broodShift",
+                "cooldown": 7.5,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "name": "孵潮",
+            "hpBelow": 0.75,
+            "abilities": [
+              "spawnHive",
+              "broodShift",
+              "hivePulse",
+              "summonSwarm"
+            ],
+            "behaviorNodes": [
+              {
+                "id": "spawnHive-1-0",
+                "abilityId": "spawnHive",
+                "cooldown": 8,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "broodShift-1-1",
+                "abilityId": "broodShift",
+                "cooldown": 7.5,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "hivePulse-1-2",
+                "abilityId": "hivePulse",
+                "cooldown": 7.2,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "summonSwarm-1-3",
+                "abilityId": "summonSwarm",
+                "cooldown": 7,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              }
+            ]
+          },
+          {
+            "name": "迁巢",
+            "hpBelow": 0.35,
+            "abilities": [
+              "spawnHive",
+              "hivePulse",
+              "summonSwarm",
+              "hiveCollapse",
+              "broodShift"
+            ],
+            "behaviorNodes": [
+              {
+                "id": "spawnHive-2-0",
+                "abilityId": "spawnHive",
+                "cooldown": 8,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "hivePulse-2-1",
+                "abilityId": "hivePulse",
+                "cooldown": 7.2,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "summonSwarm-2-2",
+                "abilityId": "summonSwarm",
+                "cooldown": 7,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "hiveCollapse-2-3",
+                "abilityId": "hiveCollapse",
+                "cooldown": 10.2,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              },
+              {
+                "id": "broodShift-2-4",
+                "abilityId": "broodShift",
+                "cooldown": 7.5,
+                "condition": "when ready",
+                "note": "",
+                "enabled": true
+              }
+            ]
+          }
+        ],
+        "maxHp": 430,
+        "isBoss": true,
+        "enemyType": "BOSS",
+        "summary": "",
+        "authoredTemplate": true,
+        "uid": 25,
+        "baseSpeed": 66,
+        "shield": 0,
+        "maxShield": 0,
+        "slowTimer": 0,
+        "slowRatio": 1,
+        "hitFlash": 0,
+        "currentPhaseIndex": 0,
+        "abilityCooldowns": {
+          "spawnHive": 4.113299999999977,
+          "broodShift": 5.514899999999987
+        },
+        "bossState": {
+          "combatClockManaged": true,
+          "combatTime": 6.1220000000000105,
+          "actionMode": "idle",
+          "phaseIntroTimer": 0,
+          "actionTimer": 0,
+          "castAbility": "broodShift",
+          "phaseIntroDuration": 1.15,
+          "abilityCursor": 0,
+          "lockedTarget": {
+            "x": 120,
+            "y": 80,
+            "radius": 16,
+            "uid": 3
+          },
+          "lockedPlayerPoint": {
+            "x": 0,
+            "y": 0,
+            "radius": 12
+          },
+          "castOrigin": {
+            "x": 261.5965045974046,
+            "y": 106.54934461201334,
+            "radius": 29,
+            "uid": 25
+          },
+          "windupDuration": 0.8,
+          "migrationIndex": 1
+        },
+        "isDefeated": false,
+        "x": 175.526029415689,
+        "y": 117.98263650292664,
+        "armoredTimer": 0,
+        "damageTakenMultiplier": 1
+      },
+      {
+        "uid": 27,
+        "id": "MECHANIC_NEST",
+        "name": "孵化巢",
+        "x": 346.5965045974046,
+        "y": 151.54934461201333,
+        "hp": 36,
+        "maxHp": 36,
+        "radius": 13,
+        "damage": 0,
+        "speed": 0,
+        "baseSpeed": 0,
+        "value": 0,
+        "color": "#6366f1",
+        "shield": 0,
+        "maxShield": 0,
+        "slowTimer": 0,
+        "slowRatio": 1,
+        "hitFlash": 0,
+        "summonedByBossUid": 25,
+        "summonedByEncounterUid": null,
+        "summonCategory": "mechanic:nest",
+        "mechanic": {
+          "kind": "nest",
+          "cargo": 0,
+          "targetUid": null,
+          "solid": false,
+          "timer": 5.1157999999999975,
+          "life": 14.11330000000007
+        },
+        "armoredTimer": 0
+      },
+      {
+        "id": "BASIC",
+        "name": "方阵兵",
+        "color": "#e74c3c",
+        "hp": 20,
+        "speed": 100,
+        "damage": 5,
+        "radius": 10,
+        "value": 1,
+        "uid": 28,
+        "maxHp": 20,
+        "baseSpeed": 100,
+        "shield": 0,
+        "maxShield": 0,
+        "slowTimer": 0,
+        "slowRatio": 1,
+        "hitFlash": 0,
+        "abilityTimer": 0,
+        "summonTimer": 0,
+        "phaseTimer": 0,
+        "phased": false,
+        "burrowTimer": 0,
+        "burrowed": false,
+        "fuseTimer": null,
+        "summonedByBossUid": 25,
+        "summonedByEncounterUid": null,
+        "summonCategory": "hiveBrood",
+        "x": 320.96748601106935,
+        "y": 133.62450431374384,
+        "skipBurrowPosition": true,
+        "armoredTimer": 0
+      },
+      {
+        "id": "BASIC",
+        "name": "方阵兵",
+        "color": "#e74c3c",
+        "hp": 20,
+        "speed": 100,
+        "damage": 5,
+        "radius": 10,
+        "value": 1,
+        "uid": 29,
+        "maxHp": 20,
+        "baseSpeed": 100,
+        "shield": 0,
+        "maxShield": 0,
+        "slowTimer": 0,
+        "slowRatio": 1,
+        "hitFlash": 0,
+        "abilityTimer": 0,
+        "summonTimer": 0,
+        "phaseTimer": 0,
+        "phased": false,
+        "burrowTimer": 0,
+        "burrowed": false,
+        "fuseTimer": null,
+        "summonedByBossUid": 25,
+        "summonedByEncounterUid": null,
+        "summonCategory": "hiveBrood",
+        "x": 293.4007967219291,
+        "y": 144.46484234374338,
+        "skipBurrowPosition": true,
+        "armoredTimer": 0
+      },
+      {
+        "id": "BASIC",
+        "name": "方阵兵",
+        "color": "#e74c3c",
+        "hp": 20,
+        "speed": 100,
+        "damage": 5,
+        "radius": 10,
+        "value": 1,
+        "uid": 30,
+        "maxHp": 20,
+        "baseSpeed": 100,
+        "shield": 0,
+        "maxShield": 0,
+        "slowTimer": 0,
+        "slowRatio": 1,
+        "hitFlash": 0,
+        "abilityTimer": 0,
+        "summonTimer": 0,
+        "phaseTimer": 0,
+        "phased": false,
+        "burrowTimer": 0,
+        "burrowed": false,
+        "fuseTimer": null,
+        "summonedByBossUid": 25,
+        "summonedByEncounterUid": null,
+        "summonCategory": "hiveBrood",
+        "x": 253.5594906844696,
+        "y": 151.27412611062758,
+        "skipBurrowPosition": true,
+        "armoredTimer": 0
+      }
+    ],
+    "towers": [
+      {
+        "id": "BURST",
+        "name": "散射塔",
+        "summary": "扇形连射，近距压制。",
+        "cost": 66,
+        "color": "#c0392b",
+        "radius": 16,
+        "range": 165,
+        "fireRate": 0.95,
+        "damage": 8,
+        "hp": 64,
+        "shape": "triangle",
+        "burstCount": 4,
+        "spread": 0.18,
+        "projectileSpeed": 460,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 7,
+        "uid": 3,
+        "x": 120,
+        "y": 80,
+        "maxHp": 64,
+        "lastShoot": 0.7839999999999998,
+        "frozenTimer": 0
+      }
+    ],
+    "projectiles": [
+      {
+        "x": 433.2023061702706,
+        "y": 822.3710777674623,
+        "previousX": 430.1983105413261,
+        "previousY": 815.2508253659494,
+        "vx": 178.80926362769537,
+        "vy": 423.8245477092158,
+        "damage": 8,
+        "life": 0.24840000000000154,
+        "color": "#c0392b",
+        "kind": "basic",
+        "radius": 4,
+        "pierce": 0,
+        "hitEnemies": {},
+        "sourceArtId": "tower:BURST",
+        "sourceUid": 3,
+        "shotIndex": 3
+      }
+    ],
+    "drops": [],
+    "particles": [
+      {
+        "x": 155.73228848271683,
+        "y": 106.40684823823021,
+        "vx": -35.984093390937986,
+        "vy": -34.43073982147384,
+        "life": 0.3494000000000019,
+        "maxLife": 0.578704358323612,
+        "color": "#c0392b",
+        "size": 3.008379300574947
+      },
+      {
+        "x": 188.40036541801248,
+        "y": 113.64624013674967,
+        "vx": 14.228136758610168,
+        "vy": -23.303485135768963,
+        "life": 0.3494000000000019,
+        "maxLife": 0.5571792383956498,
+        "color": "#c0392b",
+        "size": 2.950915750448921
+      },
+      {
+        "x": 199.76567641343456,
+        "y": 107.03019779071384,
+        "vx": 31.697105395902167,
+        "vy": -33.47262492371224,
+        "life": 0.3494000000000019,
+        "maxLife": 0.5707076478957034,
+        "color": "#c0392b",
+        "size": 3.964449860421472
+      },
+      {
+        "x": 149.0157999722043,
+        "y": 118.5189837946728,
+        "vx": -46.30762322572486,
+        "vy": -15.813869922237943,
+        "life": 0.3494000000000019,
+        "maxLife": 0.42544025707585054,
+        "color": "#c0392b",
+        "size": 2.0971807089936876
+      },
+      {
+        "x": 187.3117331032069,
+        "y": 110.58305759230835,
+        "vx": 12.554862373725797,
+        "vy": -28.011727595715644,
+        "life": 0.3494000000000019,
+        "maxLife": 0.3516775932300021,
+        "color": "#c0392b",
+        "size": 2.0978487372910326
+      },
+      {
+        "x": 197.57537364634172,
+        "y": 131.78384107612146,
+        "vx": 16.36856981341421,
+        "vy": 22.061704498236566,
+        "life": 0.3494000000000019,
+        "maxLife": 0.4318053878074558,
+        "color": "#c0392b",
+        "size": 2.839775876560866
+      },
+      {
+        "x": 187.83045117520618,
+        "y": 130.74284983285636,
+        "vx": 1.3902075768087039,
+        "vy": 20.461656476003146,
+        "life": 0.3494000000000019,
+        "maxLife": 0.3816767771881908,
+        "color": "#c0392b",
+        "size": 3.304742052716268
+      },
+      {
+        "x": 215.80492301691646,
+        "y": 112.07029878427704,
+        "vx": 44.38816614076532,
+        "vy": -8.238852359809039,
+        "life": 0.3494000000000019,
+        "maxLife": 0.3310384373326397,
+        "color": "#c0392b",
+        "size": 3.3992660562986874
+      },
+      {
+        "x": 195.18517039991912,
+        "y": 128.18527879441376,
+        "vx": 12.694725290784794,
+        "vy": 16.53056050544874,
+        "life": 0.3494000000000019,
+        "maxLife": 0.5131809203905893,
+        "color": "#c0392b",
+        "size": 3.170030954318169
+      },
+      {
+        "x": 221.4357716649007,
+        "y": 109.38865827934224,
+        "vx": 53.04302111768585,
+        "vy": -12.360648401823882,
+        "life": 0.3494000000000019,
+        "maxLife": 0.534287080923687,
+        "color": "#c0392b",
+        "size": 3.7731289504843857
+      },
+      {
+        "x": 169.1390563784084,
+        "y": 107.42436382496243,
+        "vx": -8.30419414675523,
+        "vy": -58.44527289862289,
+        "life": 0.36600000000000044,
+        "maxLife": 0.5424579770671157,
+        "color": "#c0392b",
+        "size": 2.7026423438192886
+      },
+      {
+        "x": 187.7052644183918,
+        "y": 134.95834735826608,
+        "vx": 20.980045663944036,
+        "vy": -15.01627678931117,
+        "life": 0.36600000000000044,
+        "maxLife": 0.5822617470509948,
+        "color": "#c0392b",
+        "size": 2.544103436932274
+      },
+      {
+        "x": 189.90209749843655,
+        "y": 115.94198412815747,
+        "vx": 24.44508206780021,
+        "vy": -45.010540559198745,
+        "life": 0.36600000000000044,
+        "maxLife": 0.4090487697723969,
+        "color": "#c0392b",
+        "size": 3.43229623835758
+      },
+      {
+        "x": 198.07069683231222,
+        "y": 143.33774892581528,
+        "vx": 37.32930814646858,
+        "vy": -1.7995550739339916,
+        "life": 0.36600000000000044,
+        "maxLife": 0.34261292510902797,
+        "color": "#c0392b",
+        "size": 2.5031248888079616
+      },
+      {
+        "x": 187.64822908007827,
+        "y": 127.88037481873349,
+        "vx": 20.8900845625032,
+        "vy": -26.18027133116094,
+        "life": 0.36600000000000044,
+        "maxLife": 0.40956916066576854,
+        "color": "#c0392b",
+        "size": 3.006010075967062
+      },
+      {
+        "x": 193.15834119658368,
+        "y": 118.51961271685124,
+        "vx": -10.497117851213734,
+        "vy": 17.644655255174907,
+        "life": 0.36600000000000044,
+        "maxLife": 0.32870918145912875,
+        "color": "#c0392b",
+        "size": 2.013524153970908
+      },
+      {
+        "x": 227.20596625179547,
+        "y": 107.3339532105106,
+        "vx": 43.20576078476646,
+        "vy": 0.0016591883916731924,
+        "life": 0.36600000000000044,
+        "maxLife": 0.40235084473007254,
+        "color": "#c0392b",
+        "size": 3.0024065408878085
+      },
+      {
+        "x": 217.09686462110278,
+        "y": 121.24497477881415,
+        "vx": 27.260805531308158,
+        "vy": 21.943333586346863,
+        "life": 0.36600000000000044,
+        "maxLife": 0.5124219669567456,
+        "color": "#c0392b",
+        "size": 3.589054745469986
+      },
+      {
+        "x": 183.33898631476606,
+        "y": 102.91100500811343,
+        "vx": -25.98505930518468,
+        "vy": -6.974599805925659,
+        "life": 0.36600000000000044,
+        "maxLife": 0.4484558479500047,
+        "color": "#c0392b",
+        "size": 2.969758523704435
+      },
+      {
+        "x": 189.4151260122218,
+        "y": 97.61577263471594,
+        "vx": -16.401242747683664,
+        "vy": -15.326701341252846,
+        "life": 0.36600000000000044,
+        "maxLife": 0.5463015352172611,
+        "color": "#c0392b",
+        "size": 2.340054661419515
+      }
+    ],
+    "impactWaves": [],
+    "hazards": [],
+    "floatingTexts": [
+      {
+        "x": 210.06275373319323,
+        "y": 107.08951765430429,
+        "text": 8,
+        "color": "#c0392b",
+        "life": 0.14940000000000167,
+        "maxLife": 0.8,
+        "vy": -30,
+        "font": "bold 14px system-ui, sans-serif",
+        "outlineColor": null
+      },
+      {
+        "x": 210.06275373319323,
+        "y": 107.08951765430429,
+        "text": 8,
+        "color": "#c0392b",
+        "life": 0.14940000000000167,
+        "maxLife": 0.8,
+        "vy": -30,
+        "font": "bold 14px system-ui, sans-serif",
+        "outlineColor": null
+      },
+      {
+        "x": 209.15303244596535,
+        "y": 106.96522188896022,
+        "text": 8,
+        "color": "#c0392b",
+        "life": 0.16600000000000018,
+        "maxLife": 0.8,
+        "vy": -30,
+        "font": "bold 14px system-ui, sans-serif",
+        "outlineColor": null
+      },
+      {
+        "x": 209.15303244596535,
+        "y": 106.96522188896022,
+        "text": 8,
+        "color": "#c0392b",
+        "life": 0.16600000000000018,
+        "maxLife": 0.8,
+        "vy": -30,
+        "font": "bold 14px system-ui, sans-serif",
+        "outlineColor": null
+      }
+    ],
+    "nextTowerUid": 4,
+    "nextEnemyUid": 31,
+    "nextBossEncounterUid": 1,
+    "lastTime": 49816.1,
+    "gameTime": 47.056900000000574,
+    "money": 1000003,
+    "towerCatalog": [
+      {
+        "id": "BASIC",
+        "name": "速射塔",
+        "summary": "稳定对单火力。",
+        "cost": 15,
+        "color": "#3498db",
+        "radius": 14,
+        "range": 180,
+        "fireRate": 0.3,
+        "damage": 6,
+        "hp": 50,
+        "shape": "circle",
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 0
+      },
+      {
+        "id": "CANNON",
+        "name": "榴弹炮",
+        "summary": "范围爆炸，清理怪群。",
+        "cost": 40,
+        "color": "#e67e22",
+        "radius": 16,
+        "range": 140,
+        "fireRate": 1.5,
+        "damage": 15,
+        "splash": 60,
+        "hp": 80,
+        "shape": "square",
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 1
+      },
+      {
+        "id": "SNIPER",
+        "name": "穿透塔",
+        "summary": "高伤穿透，专打后排。",
+        "cost": 80,
+        "color": "#9b59b6",
+        "radius": 14,
+        "range": 350,
+        "fireRate": 2,
+        "damage": 35,
+        "pierce": 3,
+        "hp": 40,
+        "shape": "triangle",
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 2
+      },
+      {
+        "id": "RAPID",
+        "name": "链锯塔",
+        "summary": "极高射速，适合近距压制。",
+        "cost": 28,
+        "color": "#16a085",
+        "radius": 13,
+        "range": 155,
+        "fireRate": 0.12,
+        "damage": 3,
+        "hp": 42,
+        "shape": "circle",
+        "projectileSpeed": 560,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 3
+      },
+      {
+        "id": "MORTAR",
+        "name": "迫击塔",
+        "summary": "超大范围爆炸，但装填缓慢。",
+        "cost": 72,
+        "color": "#d35400",
+        "radius": 18,
+        "range": 260,
+        "fireRate": 2.3,
+        "damage": 24,
+        "splash": 92,
+        "hp": 68,
+        "shape": "square",
+        "projectileSpeed": 420,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 4
+      },
+      {
+        "id": "FROST",
+        "name": "霜冻塔",
+        "summary": "造成减速，帮助阵线控场。",
+        "cost": 55,
+        "color": "#5dade2",
+        "radius": 15,
+        "range": 190,
+        "fireRate": 0.85,
+        "damage": 7,
+        "hp": 74,
+        "shape": "square",
+        "slowRatio": 0.55,
+        "slowDuration": 1.4,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 5
+      },
+      {
+        "id": "RAIL",
+        "name": "磁轨塔",
+        "summary": "超长射程和高穿透。",
+        "cost": 98,
+        "color": "#7d3c98",
+        "radius": 14,
+        "range": 430,
+        "fireRate": 1.65,
+        "damage": 26,
+        "pierce": 5,
+        "hp": 38,
+        "shape": "triangle",
+        "projectileSpeed": 700,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 6
+      },
+      {
+        "id": "BURST",
+        "name": "散射塔",
+        "summary": "扇形连射，近距压制。",
+        "cost": 66,
+        "color": "#c0392b",
+        "radius": 16,
+        "range": 165,
+        "fireRate": 0.95,
+        "damage": 8,
+        "hp": 64,
+        "shape": "triangle",
+        "burstCount": 4,
+        "spread": 0.18,
+        "projectileSpeed": 460,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 7
+      },
+      {
+        "id": "SENTINEL",
+        "name": "哨戒塔",
+        "summary": "耐久更高，适合前线。",
+        "cost": 52,
+        "color": "#117864",
+        "radius": 17,
+        "range": 175,
+        "fireRate": 0.55,
+        "damage": 11,
+        "hp": 108,
+        "shape": "circle",
+        "projectileSpeed": 520,
+        "available": true,
+        "level": 0,
+        "maxLevel": 3,
+        "sortOrder": 8
+      }
+    ],
+    "rewardHistory": {
+      "offeredKeys": [],
+      "pickedKeys": []
+    },
+    "wave": {
+      "number": 0,
+      "queue": [],
+      "spawnInterval": 999,
+      "spawnTimer": 0,
+      "boss": null,
+      "bossSpawned": true,
+      "awaitingReward": false,
+      "pendingRewardBossUid": null,
+      "pendingRewardBossEncounterUid": null
+    },
+    "difficultyMultiplier": 1,
+    "isMobile": false,
+    "mode": "debug",
+    "debugWaveFlow": false,
+    "debugOptions": {
+      "infiniteMoney": true,
+      "infiniteHealth": true
+    },
+    "bossHudTimer": 0.06679999999999564
+  },
+  "presentation": {
+    "epoch": 6,
+    "events": [],
+    "actors": [
+      {
+        "key": "6/hero/player",
+        "artId": "hero:PLAYER",
+        "domain": "hero",
+        "x": 0,
+        "y": 0,
+        "radius": 12,
+        "referenceRadius": 12,
+        "facing": "right",
+        "aimAngle": 0,
+        "pose": "neutral",
+        "poseTime": 6.839200000000368,
+        "poseProgress": 0,
+        "movementSpeed": 0,
+        "alpha": 1,
+        "level": 0,
+        "hp": 100,
+        "maxHp": 100,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/tower/3",
+        "artId": "tower:BURST",
+        "domain": "tower",
+        "x": 120,
+        "y": 80,
+        "radius": 16,
+        "referenceRadius": 16,
+        "facing": "right",
+        "aimAngle": 0.5999415536430768,
+        "pose": "neutral",
+        "poseTime": 0.6173000000000215,
+        "poseProgress": 0,
+        "movementSpeed": 0,
+        "alpha": 1,
+        "level": 0,
+        "hp": 64,
+        "maxHp": 64,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/boss/25",
+        "artId": "boss:HIVE",
+        "domain": "boss",
+        "x": 175.526029415689,
+        "y": 117.98263650292664,
+        "radius": 29,
+        "referenceRadius": 29,
+        "facing": "left",
+        "aimAngle": -2.541651099946714,
+        "pose": "move",
+        "poseTime": 0.8842000000000425,
+        "poseProgress": 0,
+        "movementSpeed": 65.9999999999964,
+        "alpha": 1,
+        "level": 0,
+        "hp": 346.79999999999995,
+        "maxHp": 430,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": {
+          "phaseIndex": 0,
+          "phaseCount": 3,
+          "castAbility": "broodShift",
+          "actionMode": "idle",
+          "actionTimer": 0,
+          "windupDuration": 0.8,
+          "phaseName": "铺巢",
+          "phaseIntroTimer": 0
+        },
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/mechanic/27",
+        "artId": "mechanic:NEST",
+        "domain": "mechanic",
+        "x": 346.5965045974046,
+        "y": 151.54934461201333,
+        "radius": 13,
+        "referenceRadius": 13,
+        "facing": "right",
+        "aimAngle": 0,
+        "pose": "neutral",
+        "poseTime": 0.6839000000000297,
+        "poseProgress": 0,
+        "movementSpeed": 0,
+        "alpha": 1,
+        "level": 0,
+        "hp": 36,
+        "maxHp": 36,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": {
+          "kind": "nest",
+          "cargo": 0,
+          "targetUid": null,
+          "solid": false,
+          "timer": 5.1157999999999975,
+          "life": 14.11330000000007,
+          "targetKey": null,
+          "parentKey": null
+        },
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/enemy/28",
+        "artId": "enemy:BASIC",
+        "domain": "enemy",
+        "x": 320.96748601106935,
+        "y": 133.62450431374384,
+        "radius": 10,
+        "referenceRadius": 10,
+        "facing": "left",
+        "aimAngle": -2.880836152499161,
+        "pose": "move",
+        "poseTime": 0.8675000000000423,
+        "poseProgress": 0,
+        "movementSpeed": 99.99999999999602,
+        "alpha": 1,
+        "level": 0,
+        "hp": 20,
+        "maxHp": 20,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/enemy/29",
+        "artId": "enemy:BASIC",
+        "domain": "enemy",
+        "x": 293.4007967219291,
+        "y": 144.46484234374338,
+        "radius": 10,
+        "referenceRadius": 10,
+        "facing": "left",
+        "aimAngle": -2.785658650935549,
+        "pose": "move",
+        "poseTime": 0.8675000000000423,
+        "poseProgress": 0,
+        "movementSpeed": 99.99999999999605,
+        "alpha": 1,
+        "level": 0,
+        "hp": 20,
+        "maxHp": 20,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "key": "6/enemy/30",
+        "artId": "enemy:BASIC",
+        "domain": "enemy",
+        "x": 253.5594906844696,
+        "y": 151.27412611062758,
+        "radius": 10,
+        "referenceRadius": 10,
+        "facing": "left",
+        "aimAngle": -2.6513882144256726,
+        "pose": "move",
+        "poseTime": 0.8675000000000423,
+        "poseProgress": 0,
+        "movementSpeed": 99.99999999999629,
+        "alpha": 1,
+        "level": 0,
+        "hp": 20,
+        "maxHp": 20,
+        "shield": 0,
+        "maxShield": 0,
+        "hitFlash": 0,
+        "states": {
+          "frozen": false,
+          "slowed": false,
+          "jammed": false,
+          "phased": false,
+          "burrowed": false,
+          "armored": false,
+          "open": false,
+          "partnerFallen": false
+        },
+        "healAura": null,
+        "jamAura": null,
+        "fuse": null,
+        "boss": null,
+        "mechanic": null,
+        "presentationOffset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
+    "retired": [],
+    "errors": [],
+    "actorCacheSize": 7
+  },
+  "art": {
+    "status": "partial",
+    "errors": [
+      {
+        "url": "/art/characters/v1/tower/cannon/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/sniper/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/rapid/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/mortar/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/frost/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/rail/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/tower/sentinel/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/fast/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/tank/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/splinter/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/shield/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/medic/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/bomber/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/jammer/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/phase/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/burrower/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/beacon/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/scout/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/enemy/siege/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/commander/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/hunter/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/fortress/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/prism/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/frost_judge/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/rail_warlord/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/collector/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/twins_sun/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/twins_moon/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/dragon/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/spider_matriarch/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/astrolabe/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/blood_forge/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/void_conductor/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/labyrinth_keeper/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/boss/nightmare_bloom/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/mechanic/web/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/mechanic/root/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/mechanic/wall/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/mechanic/reticle/body.svg",
+        "reason": "not-produced"
+      },
+      {
+        "url": "/art/characters/v1/mechanic/courier/body.svg",
+        "reason": "not-produced"
+      }
+    ],
+    "drawErrors": [],
+    "fallbackArtIds": [
+      "enemy:SPLINTER",
+      "boss:FROST_JUDGE"
+    ],
+    "availableIds": [
+      "tower:BASIC",
+      "tower:BURST",
+      "hero:PLAYER",
+      "enemy:BASIC",
+      "enemy:SHARD",
+      "boss:HIVE",
+      "mechanic:NEST",
+      "mechanic:SEAL"
+    ]
+  }
+}

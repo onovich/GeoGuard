@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "artId": "mechanic:RETICLE",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    228
+  ],
+  "collisionCenterPx": [
+    128,
+    137
+  ],
+  "collisionRadiusPx": 100,
+  "referenceRuntimeRadius": 13,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "3独立圆弧固定12/4/8点；0脸；破碎才分裂，塔目标标记另实体",
+  "organCounts": {
+    "separateArcs": 3,
+    "face": 0
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        228
+      ]
+    },
+    {
+      "id": "arc-12",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        77
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "arc-8",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        62,
+        171
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "arc-4",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        194,
+        171
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored fragments"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "INTACT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 1,
+          "column": 1,
+          "label": "INTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "TRIGGER": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 1,
+          "column": 2,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "BROKEN": {
+      "status": "produced_pending_review",
+      "pose": "broken",
+      "clip": "broken",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 1,
+          "column": 3,
+          "label": "BROKEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "FADE": {
+      "status": "produced_pending_review",
+      "pose": "fade",
+      "clip": "fade",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+          "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b",
+          "row": 1,
+          "column": 4,
+          "label": "FADE",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/mechanic/reticle/source.svg",
+  "bodyResource": "art/characters/v1/mechanic/reticle/body.svg",
+  "icon": {
+    "src": "art/characters/v1/mechanic/reticle/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "mechanic:RETICLE"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-11-reticle-courier.png",
+      "sha256": "0dbaf36378632a401957aae1c6360f59bde2177d6bcf183b8b26b51329e7033b"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 26.75,
+    "y": 52.75,
+    "width": 202.5,
+    "height": 171.5
+  },
+  "iconSourceViewBox": [
+    20.75,
+    31.25,
+    214.5,
+    214.5
+  ]
+}

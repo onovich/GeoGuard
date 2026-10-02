@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:FORTRESS",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    226
+  ],
+  "collisionCenterPx": [
+    128,
+    177.6
+  ],
+  "collisionRadiusPx": 92.4,
+  "referenceRuntimeRadius": 34,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1顶壳2侧盾2脚；1奶油脸窗2眼；顶壳只抬升不换数量",
+  "organCounts": {
+    "topShell": 1,
+    "sideShields": 2,
+    "feet": 2,
+    "creamFaceWindow": 1,
+    "eyes": 2
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        226
+      ]
+    },
+    {
+      "id": "top-shell",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        161.76
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "shell-connector",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        174.08
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "shield-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        76.96,
+        171.44
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "shield-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        179.04,
+        171.44
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "shield-left-end",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        54.08,
+        215.44
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "shield-right-end",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        201.92,
+        215.44
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        89.28,
+        224.24
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        168.48,
+        224.24
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "face-window",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        191.68
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        120.96,
+        191.68
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        135.04,
+        191.68
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous local pulse or sin² named-part variant; neutral endpoints"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "continuous sin(pi*progress) soft compression or sin² named-part variant; neutral endpoints"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "approved recover body sampled continuously; OPEN remains external"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S01",
+        "B02/S11",
+        "B02/S14",
+        "B02/S16",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B04/M03"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S01",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S01",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H02",
+        "B04/M03",
+        "B04/M10"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "SIEGE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01",
+        "B04/M03"
+      ],
+      "notes": null
+    },
+    "ARMOR": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S01",
+        "B02/S11",
+        "B02/S14",
+        "B03/H02",
+        "B04/M10"
+      ],
+      "notes": null
+    },
+    "QUAKE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+          "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H01"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/fortress/source.svg",
+  "bodyResource": "art/characters/v1/boss/fortress/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/fortress/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:FORTRESS"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-02-fortress-prism.png",
+      "sha256": "9d1424cf3f3b86d864d2560fc9ccff67ee8e711adfbf5fa6ece710fccda644b8"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 23.94,
+    "y": 104.33999999999999,
+    "width": 208.12,
+    "height": 123.64
+  },
+  "iconSourceViewBox": [
+    17.94,
+    56.09999999999999,
+    220.12,
+    220.12
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 27,
+    "y": 104,
+    "width": 202,
+    "height": 124,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/boss/fortress/body.png"
+}

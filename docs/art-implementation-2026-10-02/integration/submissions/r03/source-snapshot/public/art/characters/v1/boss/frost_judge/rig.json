@@ -1,0 +1,529 @@
+{
+  "schemaVersion": 1,
+  "artId": "boss:FROST_JUDGE",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    236
+  ],
+  "collisionCenterPx": [
+    128,
+    155.92
+  ],
+  "collisionRadiusPx": 89.76,
+  "referenceRuntimeRadius": 30,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1圆头2闭眼槽1口牙；1冰蓝U项圈2拳1独立冠1胸菱；OPEN冠不变圆球",
+  "organCounts": {
+    "head": 1,
+    "closedEyeSlots": 2,
+    "mouthTooth": 1,
+    "blueUCollar": 1,
+    "fists": 2,
+    "crown": 1,
+    "chestDiamond": 1
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        236
+      ]
+    },
+    {
+      "id": "head",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        133.92
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "eye-slot-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        119.2,
+        132.16
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "eye-slot-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        137.68,
+        132.16
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "mouth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        140.96
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "tooth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        142.72
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "U-collar",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        192
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "fist-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        69.92,
+        185.84
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "fist-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        186.08,
+        185.84
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "crown",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        79.36
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "chest-diamond",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        210.48
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "bottom-lobe-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        106.88,
+        220.16
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "bottom-lobe-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        148.24,
+        220.16
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "WINDUP": {
+      "status": "produced_pending_review",
+      "pose": "windup",
+      "clip": "windup",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 2,
+          "label": "WINDUP",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B02/S16",
+        "B03/H01",
+        "B03/H03",
+        "B04/M03",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "OPEN": {
+      "status": "produced_pending_review",
+      "pose": "recover",
+      "clip": "recover",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 4,
+          "label": "OPEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S09",
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "P1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H03"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H03",
+        "B04/M03",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "P3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B02/S15",
+        "B03/H01",
+        "B03/H03",
+        "B04/M03",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": "existing runtime phase only; same approved body reuse"
+    },
+    "RING": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B03/H03"
+      ],
+      "notes": null
+    },
+    "FREEZE": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B03/H01",
+        "B04/M03",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": null
+    },
+    "STORM": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "explicit_body_pose_reuse",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+          "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c",
+          "row": 1,
+          "column": 3,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S03",
+        "B02/S11",
+        "B02/S14",
+        "B03/H03",
+        "B04/M03",
+        "B04/M05",
+        "B04/M06"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/boss/frost_judge/source.svg",
+  "bodyResource": "art/characters/v1/boss/frost_judge/body.svg",
+  "icon": {
+    "src": "art/characters/v1/boss/frost_judge/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "boss:FROST_JUDGE"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r02/pair-03-frost-rail.png",
+      "sha256": "03541efee594163201791575a5802c06b9dedc2ed71c1c6274fbedc62d0c854c"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 20.419999999999998,
+    "y": 57.14,
+    "width": 215.16,
+    "height": 179.07999999999998
+  },
+  "iconSourceViewBox": [
+    14.419999999999998,
+    33.099999999999994,
+    227.16,
+    227.16
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 24,
+    "y": 57,
+    "width": 208,
+    "height": 179,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/boss/frost_judge/body.png"
+}

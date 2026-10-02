@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "artId": "mechanic:WALL",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    219
+  ],
+  "collisionCenterPx": [
+    128,
+    141
+  ],
+  "collisionRadiusPx": 109,
+  "referenceRuntimeRadius": 18,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "1宽软垫4角瓣2底脚；1眼槽1牙2腹弯线",
+  "organCounts": {
+    "wideMat": 1,
+    "cornerLobes": 4,
+    "feet": 2,
+    "eyeSlot": 1,
+    "tooth": 1,
+    "bellyArcs": 2
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        219
+      ]
+    },
+    {
+      "id": "corner-top-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        45,
+        77
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "corner-top-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        213,
+        77
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "corner-bottom-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        42,
+        187
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "corner-bottom-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        214,
+        187
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "eye-slot",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        127
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "single-tooth",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        128,
+        130
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "belly-arc-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        74,
+        182
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "belly-arc-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        183,
+        182
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        62,
+        219
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        197,
+        219
+      ],
+      "embeddedContour": false
+    }
+  ],
+  "muzzles": [],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "bodyRotation": 0
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored fragments"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "INTACT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 2,
+          "column": 1,
+          "label": "INTACT",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "TRIGGER": {
+      "status": "produced_pending_review",
+      "pose": "trigger",
+      "clip": "trigger",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 2,
+          "column": 2,
+          "label": "TRIGGER",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "BROKEN": {
+      "status": "produced_pending_review",
+      "pose": "broken",
+      "clip": "broken",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 2,
+          "column": 3,
+          "label": "BROKEN",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14"
+      ],
+      "notes": null
+    },
+    "FADE": {
+      "status": "produced_pending_review",
+      "pose": "fade",
+      "clip": "fade",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+          "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a",
+          "row": 2,
+          "column": 4,
+          "label": "FADE",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B02/S11",
+        "B02/S14",
+        "B04/M05"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/mechanic/wall/source.svg",
+  "bodyResource": "art/characters/v1/mechanic/wall/body.svg",
+  "icon": {
+    "src": "art/characters/v1/mechanic/wall/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "mechanic:WALL"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/bosses-mechanics/submissions/r03/pair-10-root-wall.png",
+      "sha256": "e410ccc7c4acb469cd4106cc0d728ae7cb2273ae24671cc24ec7d2700c50329a"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 12.75,
+    "y": 41.75,
+    "width": 233.5,
+    "height": 179.5
+  },
+  "iconSourceViewBox": [
+    6.75,
+    8.75,
+    245.5,
+    245.5
+  ]
+}

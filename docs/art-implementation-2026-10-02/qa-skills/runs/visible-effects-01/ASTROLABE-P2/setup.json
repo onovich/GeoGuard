@@ -1,0 +1,1279 @@
+{
+  "frame": 0,
+  "dt": 0.016666666666666666,
+  "snapshot": {
+    "schemaVersion": 1,
+    "control": {
+      "manual": true,
+      "seed": 20261001,
+      "rngState": 3092769254,
+      "rngCalls": 201,
+      "pendingTimers": 0,
+      "droppedEvents": 0
+    },
+    "semantic": {
+      "gameState": "PLAYING",
+      "paused": false,
+      "rewardState": {
+        "active": false,
+        "choices": []
+      },
+      "state": {
+        "player": {
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "speed": 180,
+          "radius": 12,
+          "hp": 100,
+          "maxHp": 100,
+          "lastShoot": 0,
+          "shootCd": 0.5,
+          "damage": 8,
+          "range": 200,
+          "slowTimer": 0,
+          "slowRatio": 1,
+          "controlGraceTimer": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 0,
+          "shakeTimer": 0.28,
+          "shakeDuration": 0.28,
+          "shakeStrength": 14,
+          "shakeSeed": 5.684477371562339
+        },
+        "keys": {
+          "w": false,
+          "a": false,
+          "s": false,
+          "d": false
+        },
+        "joystick": {
+          "active": false,
+          "startX": 0,
+          "startY": 0,
+          "currentX": 0,
+          "currentY": 0,
+          "dirX": 0,
+          "dirY": 0,
+          "touchId": null
+        },
+        "pointer": {
+          "x": 211,
+          "y": 40,
+          "active": false
+        },
+        "dragPlacement": {
+          "active": false,
+          "kind": "tower",
+          "entityId": null,
+          "towerId": null,
+          "pointerX": 0,
+          "pointerY": 0,
+          "worldX": 0,
+          "worldY": 0,
+          "canPlace": false,
+          "invalidReason": null
+        },
+        "enemies": [
+          {
+            "id": "ASTROLABE",
+            "name": "星图吞噬者",
+            "form": "astrolabe",
+            "baseEnemy": "JAMMER",
+            "color": "#0f766e",
+            "personality": "牵引、错位、吞噬弹道",
+            "hp": 225,
+            "speed": 58,
+            "damage": 12,
+            "radius": 33,
+            "value": 52,
+            "phases": [
+              {
+                "name": "引潮",
+                "hpBelow": 1,
+                "abilities": [
+                  "gravityWell",
+                  "starfall"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "gravityWell-0-0",
+                    "abilityId": "gravityWell",
+                    "cooldown": 5.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "starfall-0-1",
+                    "abilityId": "starfall",
+                    "cooldown": 6.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "轨域",
+                "hpBelow": 0.62,
+                "abilities": [
+                  "gravityWell",
+                  "orbitalShots",
+                  "starfall",
+                  "orbitalLock"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "gravityWell-1-0",
+                    "abilityId": "gravityWell",
+                    "cooldown": 5.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "orbitalShots-1-1",
+                    "abilityId": "orbitalShots",
+                    "cooldown": 6.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "starfall-1-2",
+                    "abilityId": "starfall",
+                    "cooldown": 6.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "orbitalLock-1-3",
+                    "abilityId": "orbitalLock",
+                    "cooldown": 8.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "奇点",
+                "hpBelow": 0.28,
+                "abilities": [
+                  "gravityWell",
+                  "orbitalShots",
+                  "orbitalLock",
+                  "singularity",
+                  "eventHorizon"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "gravityWell-2-0",
+                    "abilityId": "gravityWell",
+                    "cooldown": 5.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "orbitalShots-2-1",
+                    "abilityId": "orbitalShots",
+                    "cooldown": 6.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "orbitalLock-2-2",
+                    "abilityId": "orbitalLock",
+                    "cooldown": 8.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "singularity-2-3",
+                    "abilityId": "singularity",
+                    "cooldown": 10,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "eventHorizon-2-4",
+                    "abilityId": "eventHorizon",
+                    "cooldown": 9.8,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              }
+            ],
+            "maxHp": 500,
+            "isBoss": true,
+            "enemyType": "BOSS",
+            "summary": "",
+            "authoredTemplate": true,
+            "uid": 1,
+            "baseSpeed": 58,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "currentPhaseIndex": 1,
+            "abilityCooldowns": {},
+            "bossState": {
+              "actionMode": "intro",
+              "phaseIntroTimer": 1.15,
+              "actionTimer": 0,
+              "castAbility": null,
+              "phaseIntroDuration": 1.15,
+              "orbitalIndex": 1
+            },
+            "isDefeated": false,
+            "x": 304,
+            "y": -8,
+            "dashTimer": 0
+          }
+        ],
+        "towers": [],
+        "projectiles": [],
+        "drops": [],
+        "particles": [
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -13.193879481217394,
+            "vy": 28.12917632189919,
+            "life": 1,
+            "maxLife": 0.3192694843746722,
+            "color": "#1f2937",
+            "size": 3.9886139654554427
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -19.69363735950889,
+            "vy": 13.97142051442939,
+            "life": 1,
+            "maxLife": 0.5928280026884749,
+            "color": "#1f2937",
+            "size": 2.5172571991570294
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 25.956297695504535,
+            "vy": -50.46527192124612,
+            "life": 1,
+            "maxLife": 0.3552901756949723,
+            "color": "#1f2937",
+            "size": 2.701368438079953
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 27.059561853308395,
+            "vy": 3.53439589234039,
+            "life": 1,
+            "maxLife": 0.45645874470937997,
+            "color": "#1f2937",
+            "size": 2.6159499404020607
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 26.790676950182537,
+            "vy": 2.6064243934608564,
+            "life": 1,
+            "maxLife": 0.5071010331390425,
+            "color": "#1f2937",
+            "size": 3.3632701975293458
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -5.441455211948574,
+            "vy": -54.438320540552766,
+            "life": 1,
+            "maxLife": 0.5556600385811179,
+            "color": "#1f2937",
+            "size": 3.4446205776184797
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -24.563476892471616,
+            "vy": -5.762182728937931,
+            "life": 1,
+            "maxLife": 0.5651252581039443,
+            "color": "#1f2937",
+            "size": 2.43186246836558
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 55.849093684349945,
+            "vy": -59.22983400472095,
+            "life": 1,
+            "maxLife": 0.4037750711431727,
+            "color": "#1f2937",
+            "size": 2.8452762765809894
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 73.26377323264032,
+            "vy": 11.297948100342493,
+            "life": 1,
+            "maxLife": 0.40257804198190567,
+            "color": "#1f2937",
+            "size": 2.087606670334935
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -53.791843078049276,
+            "vy": 31.268642769376825,
+            "life": 1,
+            "maxLife": 0.501604015356861,
+            "color": "#1f2937",
+            "size": 2.257814242504537
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -28.385961344943144,
+            "vy": -40.437962990332494,
+            "life": 1,
+            "maxLife": 0.5874747943365946,
+            "color": "#1f2937",
+            "size": 3.06692164670676
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 7.702140218667017,
+            "vy": 31.155949691862663,
+            "life": 1,
+            "maxLife": 0.3710715841501951,
+            "color": "#1f2937",
+            "size": 3.285154080018401
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 35.31726996214769,
+            "vy": -69.63104765692346,
+            "life": 1,
+            "maxLife": 0.5224517886992543,
+            "color": "#1f2937",
+            "size": 3.6146054356358945
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -41.456806154371975,
+            "vy": 65.00999347047942,
+            "life": 1,
+            "maxLife": 0.5960540735162794,
+            "color": "#1f2937",
+            "size": 3.52933736378327
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 71.11011756412603,
+            "vy": -44.22359958754381,
+            "life": 1,
+            "maxLife": 0.46359149068593974,
+            "color": "#1f2937",
+            "size": 2.225548630580306
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -13.991463287930562,
+            "vy": 17.124743499985062,
+            "life": 1,
+            "maxLife": 0.5594596185721457,
+            "color": "#1f2937",
+            "size": 2.372959748376161
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -13.214627869226291,
+            "vy": 83.0210233601523,
+            "life": 1,
+            "maxLife": 0.4101314047118649,
+            "color": "#1f2937",
+            "size": 3.51885903859511
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 47.785005192386244,
+            "vy": 35.2899770238167,
+            "life": 1,
+            "maxLife": 0.40196024912875145,
+            "color": "#1f2937",
+            "size": 2.1608005482703447
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 75.9974510177986,
+            "vy": 19.60229655943344,
+            "life": 1,
+            "maxLife": 0.5905945104081183,
+            "color": "#1f2937",
+            "size": 3.9770330884493887
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -71.72323976620241,
+            "vy": -25.890838347574586,
+            "life": 1,
+            "maxLife": 0.45731408454012124,
+            "color": "#1f2937",
+            "size": 3.0913635012693703
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -38.670668266896264,
+            "vy": 22.0064488670701,
+            "life": 1,
+            "maxLife": 0.5080588172189892,
+            "color": "#1f2937",
+            "size": 2.345789897721261
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 32.69392679505065,
+            "vy": -1.2996332546374,
+            "life": 1,
+            "maxLife": 0.40912270783446725,
+            "color": "#1f2937",
+            "size": 3.6363035272806883
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 36.1734104690263,
+            "vy": -23.91742057354247,
+            "life": 1,
+            "maxLife": 0.48392640743404625,
+            "color": "#1f2937",
+            "size": 3.1517249420285225
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 60.31503034915913,
+            "vy": 27.82734436140938,
+            "life": 1,
+            "maxLife": 0.4861590188462287,
+            "color": "#1f2937",
+            "size": 3.324875540100038
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 36.53120914335789,
+            "vy": 5.6501959463668845,
+            "life": 1,
+            "maxLife": 0.5761516579426824,
+            "color": "#0f766e",
+            "size": 2.5060735382139683
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 8.08623035655607,
+            "vy": -22.153912830256484,
+            "life": 1,
+            "maxLife": 0.5791557965800166,
+            "color": "#0f766e",
+            "size": 2.031166951637715
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -13.682621764023663,
+            "vy": -26.673288777970914,
+            "life": 1,
+            "maxLife": 0.3039832238573581,
+            "color": "#0f766e",
+            "size": 3.5478182840161026
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 101.75688410331693,
+            "vy": -76.20162524451666,
+            "life": 1,
+            "maxLife": 0.3025805335957557,
+            "color": "#0f766e",
+            "size": 2.6305970051325858
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 29.35105258907161,
+            "vy": -44.35600906732247,
+            "life": 1,
+            "maxLife": 0.49596699087414886,
+            "color": "#0f766e",
+            "size": 2.008470301050693
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -65.71353437863117,
+            "vy": 0.16150723019132537,
+            "life": 1,
+            "maxLife": 0.511318664602004,
+            "color": "#0f766e",
+            "size": 3.1913062753155828
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -32.19193489821274,
+            "vy": -35.936409858382795,
+            "life": 1,
+            "maxLife": 0.36059731626883146,
+            "color": "#0f766e",
+            "size": 2.2702769124880433
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -6.1953122242762495,
+            "vy": 125.98894006299494,
+            "life": 1,
+            "maxLife": 0.3625538523774594,
+            "color": "#0f766e",
+            "size": 2.3152687451802194
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 72.0169206860128,
+            "vy": 35.3850312815059,
+            "life": 1,
+            "maxLife": 0.568032693117857,
+            "color": "#0f766e",
+            "size": 3.768462131265551
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 67.46286457436206,
+            "vy": 31.468112303447924,
+            "life": 1,
+            "maxLife": 0.5516963955480605,
+            "color": "#0f766e",
+            "size": 3.305693134665489
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -70.76625224259256,
+            "vy": -73.10664322450616,
+            "life": 1,
+            "maxLife": 0.3638497864594683,
+            "color": "#0f766e",
+            "size": 2.0512789078056812
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 11.810266751551675,
+            "vy": -125.46251827580616,
+            "life": 1,
+            "maxLife": 0.3533116847276688,
+            "color": "#0f766e",
+            "size": 3.337134473025799
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 24.503036053749778,
+            "vy": 47.9029128058598,
+            "life": 1,
+            "maxLife": 0.31881581114139407,
+            "color": "#0f766e",
+            "size": 2.1404809984378517
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 19.413731428945237,
+            "vy": -111.33252192169644,
+            "life": 1,
+            "maxLife": 0.4674541913671419,
+            "color": "#0f766e",
+            "size": 3.0272603863850236
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 44.841787731968466,
+            "vy": -105.76030644517739,
+            "life": 1,
+            "maxLife": 0.5563221853226423,
+            "color": "#0f766e",
+            "size": 2.936668325215578
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -105.30888019816028,
+            "vy": 50.79615826348578,
+            "life": 1,
+            "maxLife": 0.4164927380159497,
+            "color": "#0f766e",
+            "size": 2.247063714079559
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -92.85590875489414,
+            "vy": 87.37378851131177,
+            "life": 1,
+            "maxLife": 0.4694297851994633,
+            "color": "#0f766e",
+            "size": 3.0284714279696345
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 22.872028671984538,
+            "vy": 10.294925129558525,
+            "life": 1,
+            "maxLife": 0.3519249217584729,
+            "color": "#0f766e",
+            "size": 3.393216837197542
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -1.989978875108585,
+            "vy": 54.11223070373959,
+            "life": 1,
+            "maxLife": 0.3123943257378414,
+            "color": "#0f766e",
+            "size": 2.4054675148800015
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -102.39115306164042,
+            "vy": -50.779792687214105,
+            "life": 1,
+            "maxLife": 0.5783087760675698,
+            "color": "#0f766e",
+            "size": 2.546342278830707
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -84.52347316705433,
+            "vy": -91.97592432470934,
+            "life": 1,
+            "maxLife": 0.44780121033545583,
+            "color": "#0f766e",
+            "size": 2.0972828697413206
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -28.367566429404988,
+            "vy": 45.8203657848453,
+            "life": 1,
+            "maxLife": 0.42128486707806584,
+            "color": "#0f766e",
+            "size": 3.6673417054116726
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 10.194880603358165,
+            "vy": 78.24996948026616,
+            "life": 1,
+            "maxLife": 0.30812278906814755,
+            "color": "#0f766e",
+            "size": 2.9783039866015315
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -53.69579554905012,
+            "vy": -24.599068291755007,
+            "life": 1,
+            "maxLife": 0.4241511734202504,
+            "color": "#0f766e",
+            "size": 3.18370240367949
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": -21.5995798144032,
+            "vy": 10.184514404782396,
+            "life": 1,
+            "maxLife": 0.5588310535764321,
+            "color": "#0f766e",
+            "size": 3.571910626720637
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "vx": 62.657325638543995,
+            "vy": 53.82197897490674,
+            "life": 1,
+            "maxLife": 0.5389680502004921,
+            "color": "#0f766e",
+            "size": 2.484938154928386
+          }
+        ],
+        "impactWaves": [
+          {
+            "x": 304,
+            "y": -8,
+            "radius": 18.150000000000002,
+            "maxRadius": 103,
+            "growth": 320,
+            "life": 0.46,
+            "maxLife": 0.46,
+            "color": "#0f766e",
+            "lineWidth": 5,
+            "fillAlpha": 0.12,
+            "dash": [
+              14,
+              8
+            ],
+            "spokes": 7,
+            "spin": 0.7,
+            "style": null,
+            "accentColor": "#0f766e",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "radius": 9.9,
+            "maxRadius": 61,
+            "growth": 260,
+            "life": 0.3,
+            "maxLife": 0.3,
+            "color": "#ffffff",
+            "lineWidth": 2,
+            "fillAlpha": 0,
+            "dash": [
+              3,
+              9
+            ],
+            "spokes": 0,
+            "spin": -1,
+            "style": null,
+            "accentColor": "#ffffff",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "radius": 13.200000000000001,
+            "maxRadius": 85,
+            "growth": 240,
+            "life": 0.48,
+            "maxLife": 0.48,
+            "color": "#0f766e",
+            "lineWidth": 3,
+            "fillAlpha": 0.06,
+            "dash": [
+              5,
+              9
+            ],
+            "spokes": 5,
+            "spin": 0.8,
+            "style": null,
+            "accentColor": "#0f766e",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "radius": 19.14,
+            "maxRadius": 107,
+            "growth": 218,
+            "life": 0.53,
+            "maxLife": 0.53,
+            "color": "#ffffff",
+            "lineWidth": 2,
+            "fillAlpha": 0.02,
+            "dash": [
+              2,
+              8
+            ],
+            "spokes": 6,
+            "spin": -0.8,
+            "style": null,
+            "accentColor": "#ffffff",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": 304,
+            "y": -8,
+            "radius": 25.080000000000002,
+            "maxRadius": 129,
+            "growth": 196,
+            "life": 0.58,
+            "maxLife": 0.58,
+            "color": "#0f766e",
+            "lineWidth": 3,
+            "fillAlpha": 0.06,
+            "dash": [
+              5,
+              9
+            ],
+            "spokes": 7,
+            "spin": 0.8,
+            "style": null,
+            "accentColor": "#0f766e",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          }
+        ],
+        "hazards": [],
+        "floatingTexts": [
+          {
+            "x": 304,
+            "y": -61,
+            "text": "轨域",
+            "color": "#0f766e",
+            "life": 1.05,
+            "maxLife": 1.05,
+            "vy": -24,
+            "font": "bold 16px system-ui, sans-serif",
+            "outlineColor": "rgba(15,23,42,0.55)"
+          }
+        ],
+        "nextTowerUid": 1,
+        "nextEnemyUid": 2,
+        "nextBossEncounterUid": 1,
+        "gameTime": 0,
+        "money": 999999,
+        "towerCatalog": [
+          {
+            "id": "BASIC",
+            "name": "速射塔",
+            "summary": "稳定对单火力。",
+            "cost": 15,
+            "color": "#3498db",
+            "radius": 14,
+            "range": 180,
+            "fireRate": 0.3,
+            "damage": 6,
+            "hp": 50,
+            "shape": "circle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 0
+          },
+          {
+            "id": "CANNON",
+            "name": "榴弹炮",
+            "summary": "范围爆炸，清理怪群。",
+            "cost": 40,
+            "color": "#e67e22",
+            "radius": 16,
+            "range": 140,
+            "fireRate": 1.5,
+            "damage": 15,
+            "splash": 60,
+            "hp": 80,
+            "shape": "square",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 1
+          },
+          {
+            "id": "SNIPER",
+            "name": "穿透塔",
+            "summary": "高伤穿透，专打后排。",
+            "cost": 80,
+            "color": "#9b59b6",
+            "radius": 14,
+            "range": 350,
+            "fireRate": 2,
+            "damage": 35,
+            "pierce": 3,
+            "hp": 40,
+            "shape": "triangle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 2
+          },
+          {
+            "id": "RAPID",
+            "name": "链锯塔",
+            "summary": "极高射速，适合近距压制。",
+            "cost": 28,
+            "color": "#16a085",
+            "radius": 13,
+            "range": 155,
+            "fireRate": 0.12,
+            "damage": 3,
+            "hp": 42,
+            "shape": "circle",
+            "projectileSpeed": 560,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 3
+          },
+          {
+            "id": "MORTAR",
+            "name": "迫击塔",
+            "summary": "超大范围爆炸，但装填缓慢。",
+            "cost": 72,
+            "color": "#d35400",
+            "radius": 18,
+            "range": 260,
+            "fireRate": 2.3,
+            "damage": 24,
+            "splash": 92,
+            "hp": 68,
+            "shape": "square",
+            "projectileSpeed": 420,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 4
+          },
+          {
+            "id": "FROST",
+            "name": "霜冻塔",
+            "summary": "造成减速，帮助阵线控场。",
+            "cost": 55,
+            "color": "#5dade2",
+            "radius": 15,
+            "range": 190,
+            "fireRate": 0.85,
+            "damage": 7,
+            "hp": 74,
+            "shape": "square",
+            "slowRatio": 0.55,
+            "slowDuration": 1.4,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 5
+          },
+          {
+            "id": "RAIL",
+            "name": "磁轨塔",
+            "summary": "超长射程和高穿透。",
+            "cost": 98,
+            "color": "#7d3c98",
+            "radius": 14,
+            "range": 430,
+            "fireRate": 1.65,
+            "damage": 26,
+            "pierce": 5,
+            "hp": 38,
+            "shape": "triangle",
+            "projectileSpeed": 700,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 6
+          },
+          {
+            "id": "BURST",
+            "name": "散射塔",
+            "summary": "扇形连射，近距压制。",
+            "cost": 66,
+            "color": "#c0392b",
+            "radius": 16,
+            "range": 165,
+            "fireRate": 0.95,
+            "damage": 8,
+            "hp": 64,
+            "shape": "triangle",
+            "burstCount": 4,
+            "spread": 0.18,
+            "projectileSpeed": 460,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 7
+          },
+          {
+            "id": "SENTINEL",
+            "name": "哨戒塔",
+            "summary": "耐久更高，适合前线。",
+            "cost": 52,
+            "color": "#117864",
+            "radius": 17,
+            "range": 175,
+            "fireRate": 0.55,
+            "damage": 11,
+            "hp": 108,
+            "shape": "circle",
+            "projectileSpeed": 520,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 8
+          }
+        ],
+        "rewardHistory": {
+          "offeredKeys": [],
+          "pickedKeys": []
+        },
+        "wave": {
+          "number": 0,
+          "queue": [],
+          "spawnInterval": 999,
+          "spawnTimer": 0,
+          "boss": null,
+          "bossSpawned": true,
+          "awaitingReward": false,
+          "pendingRewardBossUid": null,
+          "pendingRewardBossEncounterUid": null
+        },
+        "difficultyMultiplier": 1,
+        "isMobile": false,
+        "mode": "debug",
+        "debugWaveFlow": false,
+        "debugOptions": {
+          "infiniteMoney": true,
+          "infiniteHealth": true
+        }
+      },
+      "events": []
+    },
+    "presentation": {
+      "epoch": 63,
+      "events": [],
+      "actors": [
+        {
+          "key": "63/hero/player",
+          "artId": "hero:PLAYER",
+          "domain": "hero",
+          "x": 0,
+          "y": 0,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 100,
+          "maxHp": 100,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "63/boss/1",
+          "artId": "boss:ASTROLABE",
+          "domain": "boss",
+          "x": 304,
+          "y": -8,
+          "radius": 33,
+          "referenceRadius": 33,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "intro",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 225,
+          "maxHp": 500,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": {
+            "phaseIndex": 1,
+            "phaseCount": 3,
+            "castAbility": null,
+            "actionMode": "intro",
+            "actionTimer": 0,
+            "phaseName": "轨域",
+            "phaseIntroTimer": 1.15
+          },
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "retired": [],
+      "errors": [],
+      "actorCacheSize": 2
+    },
+    "eventLog": [],
+    "art": {
+      "status": "ready",
+      "errors": [],
+      "drawErrors": [],
+      "fallbackArtIds": [],
+      "availableIds": [
+        "tower:BASIC",
+        "tower:CANNON",
+        "tower:SNIPER",
+        "tower:RAPID",
+        "tower:MORTAR",
+        "tower:FROST",
+        "tower:RAIL",
+        "tower:BURST",
+        "tower:SENTINEL",
+        "hero:PLAYER",
+        "enemy:BASIC",
+        "enemy:FAST",
+        "enemy:TANK",
+        "enemy:SHARD",
+        "enemy:SPLINTER",
+        "enemy:SHIELD",
+        "enemy:MEDIC",
+        "enemy:BOMBER",
+        "enemy:JAMMER",
+        "enemy:PHASE",
+        "enemy:BURROWER",
+        "enemy:BEACON",
+        "enemy:SCOUT",
+        "enemy:SIEGE",
+        "boss:COMMANDER",
+        "boss:HUNTER",
+        "boss:FORTRESS",
+        "boss:PRISM",
+        "boss:HIVE",
+        "boss:FROST_JUDGE",
+        "boss:RAIL_WARLORD",
+        "boss:COLLECTOR",
+        "boss:TWINS_SUN",
+        "boss:TWINS_MOON",
+        "boss:DRAGON",
+        "boss:SPIDER_MATRIARCH",
+        "boss:ASTROLABE",
+        "boss:BLOOD_FORGE",
+        "boss:VOID_CONDUCTOR",
+        "boss:LABYRINTH_KEEPER",
+        "boss:NIGHTMARE_BLOOM",
+        "mechanic:NEST",
+        "mechanic:WEB",
+        "mechanic:ROOT",
+        "mechanic:WALL",
+        "mechanic:SEAL",
+        "mechanic:RETICLE",
+        "mechanic:COURIER"
+      ]
+    },
+    "geometry": {
+      "buildBarRect": null,
+      "debugPanelRect": {
+        "left": 160,
+        "right": 1280,
+        "top": 12,
+        "bottom": 88
+      }
+    }
+  },
+  "inputTrace": [
+    {
+      "frame": 0,
+      "operation": "DEV reset",
+      "seed": 20261001,
+      "mode": "debug"
+    },
+    {
+      "frame": 0,
+      "operation": "GUI boss drag",
+      "label": "星图吞噬者",
+      "screen": [
+        1100,
+        440
+      ]
+    },
+    {
+      "frame": 0,
+      "operation": "GUI button",
+      "label": "Phase 2"
+    }
+  ]
+}

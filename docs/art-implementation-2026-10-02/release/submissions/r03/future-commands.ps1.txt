@@ -1,0 +1,28 @@
+# 未来命令清单，仅在根审最终通过并派发后执行；当前没有执行。
+# 以下清单不给 push 授权，不能使用 CommitAndPush.cmd。
+
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Status.cmd'
+
+# 删除精确 info/exclude 规则/专属注释的步骤见 save-steps.md；保留其余行。
+# 所有ignore规则必须按下列顺序添加（当前只是文本）。
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '/docs/art-implementation-2026-10-02/**/vite-cache/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r02/baseline/node_modules/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '/docs/art-implementation-2026-10-02/qa/submissions/r02/baseline/node_modules/*'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r02/baseline/node_modules/geoguard-baseline/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r02/baseline/node_modules/geoguard-baseline/**'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/*'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/baseline/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/baseline/**'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/candidate/'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Ignore.cmd' -Pattern '!/docs/art-implementation-2026-10-02/qa/submissions/r03/snapshots/node_modules/candidate/**'
+
+# 只有最终范围尚缺有效验证时才执行；最终证据完整时依据根审要求复用。
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Validate.cmd'
+
+# 本地commit默认自行运行验证，勿与上面无理由重复。
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Commit.cmd' -Message 'feat: implement desktop sticker art and preserve review evidence' -Paths '.gitignore,src,public/art,scripts/art-validation,tests,docs/art-implementation-2026-10-02'
+& 'C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Status.cmd'
+
+# Push.cmd路径仅供未来独立派发后使用，当前禁止执行：
+# C:/Users/Administrator/.codex/skills/project-git-workflow/scripts/git/Push.cmd

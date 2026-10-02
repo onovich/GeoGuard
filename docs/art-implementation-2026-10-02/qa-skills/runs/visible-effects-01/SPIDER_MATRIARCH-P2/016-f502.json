@@ -1,0 +1,3157 @@
+{
+  "frame": 502,
+  "dt": 0.016666666666666666,
+  "snapshot": {
+    "schemaVersion": 1,
+    "control": {
+      "manual": true,
+      "seed": 20261001,
+      "rngState": 264203986,
+      "rngCalls": 645,
+      "pendingTimers": 0,
+      "droppedEvents": 0
+    },
+    "semantic": {
+      "gameState": "PLAYING",
+      "paused": false,
+      "rewardState": {
+        "active": false,
+        "choices": []
+      },
+      "state": {
+        "player": {
+          "x": -18,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "speed": 180,
+          "radius": 12,
+          "hp": 100,
+          "maxHp": 100,
+          "lastShoot": 0.08333333333333333,
+          "shootCd": 0.5,
+          "damage": 8,
+          "range": 200,
+          "slowTimer": 0,
+          "slowRatio": 1,
+          "controlGraceTimer": 0
+        },
+        "camera": {
+          "x": -17.99999999999998,
+          "y": 0,
+          "shakeTimer": 0,
+          "shakeDuration": 0,
+          "shakeStrength": 0,
+          "shakeSeed": 5.684477371562339
+        },
+        "keys": {
+          "w": false,
+          "a": false,
+          "s": false,
+          "d": false
+        },
+        "joystick": {
+          "active": false,
+          "startX": 0,
+          "startY": 0,
+          "currentX": 0,
+          "currentY": 0,
+          "dirX": 0,
+          "dirY": 0,
+          "touchId": null
+        },
+        "pointer": {
+          "x": 211,
+          "y": 40,
+          "active": false
+        },
+        "dragPlacement": {
+          "active": false,
+          "kind": "tower",
+          "entityId": null,
+          "towerId": null,
+          "pointerX": 0,
+          "pointerY": 0,
+          "worldX": 0,
+          "worldY": 0,
+          "canPlace": false,
+          "invalidReason": null
+        },
+        "enemies": [
+          {
+            "id": "SPIDER_MATRIARCH",
+            "name": "织网蛛后",
+            "form": "spider",
+            "baseEnemy": "BURROWER",
+            "color": "#a16207",
+            "personality": "伏击、织网、逐步封锁阵地",
+            "hp": 247,
+            "speed": 74,
+            "damage": 14,
+            "radius": 31,
+            "value": 48,
+            "phases": [
+              {
+                "name": "织杀",
+                "hpBelow": 1,
+                "abilities": [
+                  "webTrap",
+                  "silkVolley"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "webTrap-0-0",
+                    "abilityId": "webTrap",
+                    "cooldown": 4.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "silkVolley-0-1",
+                    "abilityId": "silkVolley",
+                    "cooldown": 6.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "孵潮",
+                "hpBelow": 0.7,
+                "abilities": [
+                  "webTrap",
+                  "silkVolley",
+                  "spawnSpiderlings",
+                  "broodAmbush"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "webTrap-1-0",
+                    "abilityId": "webTrap",
+                    "cooldown": 4.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "silkVolley-1-1",
+                    "abilityId": "silkVolley",
+                    "cooldown": 6.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "spawnSpiderlings-1-2",
+                    "abilityId": "spawnSpiderlings",
+                    "cooldown": 7,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "broodAmbush-1-3",
+                    "abilityId": "broodAmbush",
+                    "cooldown": 8.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "巢域",
+                "hpBelow": 0.35,
+                "abilities": [
+                  "webTrap",
+                  "spawnSpiderlings",
+                  "broodAmbush",
+                  "nestBloom",
+                  "webField"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "webTrap-2-0",
+                    "abilityId": "webTrap",
+                    "cooldown": 4.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "spawnSpiderlings-2-1",
+                    "abilityId": "spawnSpiderlings",
+                    "cooldown": 7,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "broodAmbush-2-2",
+                    "abilityId": "broodAmbush",
+                    "cooldown": 8.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "nestBloom-2-3",
+                    "abilityId": "nestBloom",
+                    "cooldown": 10,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "webField-2-4",
+                    "abilityId": "webField",
+                    "cooldown": 9,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              }
+            ],
+            "maxHp": 470,
+            "isBoss": true,
+            "enemyType": "BOSS",
+            "summary": "",
+            "authoredTemplate": true,
+            "uid": 1,
+            "baseSpeed": 74,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "currentPhaseIndex": 1,
+            "abilityCooldowns": {
+              "webTrap": 0,
+              "silkVolley": 2.2666666666666817,
+              "spawnSpiderlings": 4.816666666666674,
+              "broodAmbush": 7.966666666666657
+            },
+            "bossState": {
+              "actionMode": "recover",
+              "phaseIntroTimer": 0,
+              "actionTimer": 0.8666666666666667,
+              "castAbility": "broodAmbush",
+              "phaseIntroDuration": 1.15,
+              "combatClockManaged": true,
+              "combatTime": 8.366666666666662,
+              "abilityCursor": 0,
+              "lockedTarget": {
+                "x": -18,
+                "y": 0,
+                "radius": 12
+              },
+              "lockedPlayerPoint": {
+                "x": -18,
+                "y": 0,
+                "radius": 12
+              },
+              "castOrigin": {
+                "x": 281.80755622193163,
+                "y": -7.420899021969797,
+                "radius": 31,
+                "uid": 1
+              },
+              "windupDuration": 0.85
+            },
+            "isDefeated": false,
+            "x": 281.80755622193163,
+            "y": -7.420899021969797,
+            "dashTimer": 0,
+            "armoredTimer": 0,
+            "damageTakenMultiplier": 1.25
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 9,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "spiderling",
+            "x": 46.01233035936575,
+            "y": 1.3895107904181958,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 10,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "spiderling",
+            "x": 35.888633099879485,
+            "y": 7.554038070180873,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "BURROWER",
+            "name": "掘地者",
+            "color": "#a16207",
+            "hp": 44,
+            "speed": 92,
+            "damage": 10,
+            "radius": 12,
+            "value": 4,
+            "burrow": {
+              "duration": 1.1,
+              "emergeNearPlayer": 130
+            },
+            "uid": 11,
+            "maxHp": 44,
+            "baseSpeed": 92,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0.8666666666666667,
+            "burrowed": true,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "broodBurrower",
+            "x": 362.39653883940423,
+            "y": 0.7286948747040114,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "BURROWER",
+            "name": "掘地者",
+            "color": "#a16207",
+            "hp": 44,
+            "speed": 92,
+            "damage": 10,
+            "radius": 12,
+            "value": 4,
+            "burrow": {
+              "duration": 1.1,
+              "emergeNearPlayer": 130
+            },
+            "uid": 12,
+            "maxHp": 44,
+            "baseSpeed": 92,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0.8666666666666667,
+            "burrowed": true,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "broodBurrower",
+            "x": 351.79759203012503,
+            "y": 44.25496466280863,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 13,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "ambushSpiderling",
+            "x": 62.35342529663035,
+            "y": 13.43429218080587,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 14,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "ambushSpiderling",
+            "x": -37.98663483388587,
+            "y": 48.23398478126855,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 15,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "ambushSpiderling",
+            "x": -100.25086140336856,
+            "y": -7.201485958614434,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          },
+          {
+            "id": "SPLINTER",
+            "name": "碎片",
+            "color": "#fb7185",
+            "hp": 8,
+            "speed": 150,
+            "damage": 2,
+            "radius": 5,
+            "value": 0,
+            "uid": 16,
+            "maxHp": 8,
+            "baseSpeed": 150,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0,
+            "abilityTimer": 0,
+            "summonTimer": 0,
+            "phaseTimer": 0,
+            "phased": false,
+            "burrowTimer": 0,
+            "burrowed": false,
+            "fuseTimer": null,
+            "summonedByBossUid": 1,
+            "summonedByEncounterUid": null,
+            "summonCategory": "ambushSpiderling",
+            "x": 1.4067562639625018,
+            "y": -48.28434565615653,
+            "skipBurrowPosition": true,
+            "armoredTimer": 0
+          }
+        ],
+        "towers": [],
+        "projectiles": [],
+        "drops": [],
+        "particles": [
+          {
+            "x": 121.90251449795275,
+            "y": -0.8570876893772934,
+            "vx": 26.68970547425903,
+            "vy": -31.240365194479843,
+            "life": 0.14999999999999858,
+            "maxLife": 0.5136639575706795,
+            "color": "#f1c40f",
+            "size": 2.328460816293955
+          },
+          {
+            "x": 61.55398527175423,
+            "y": 42.513946070560365,
+            "vx": -44.30856420362156,
+            "vy": 19.78438040544674,
+            "life": 0.14999999999999858,
+            "maxLife": 0.4121710057603195,
+            "color": "#f1c40f",
+            "size": 2.668253466952592
+          },
+          {
+            "x": 94.57801757353556,
+            "y": -9.47816254625912,
+            "vx": -5.456761495643433,
+            "vy": -41.38280620257611,
+            "life": 0.14999999999999858,
+            "maxLife": 0.46939013202209023,
+            "color": "#f1c40f",
+            "size": 2.1374870999716222
+          },
+          {
+            "x": 116.97204243208907,
+            "y": 53.57823535544491,
+            "vx": 20.889150102654938,
+            "vy": 32.80119132884035,
+            "life": 0.14999999999999858,
+            "maxLife": 0.5921896524494514,
+            "color": "#f1c40f",
+            "size": 2.8158731036819518
+          },
+          {
+            "x": 119.52901512293283,
+            "y": 31.508517232710265,
+            "vx": 23.897353268353353,
+            "vy": 6.836817066799664,
+            "life": 0.14999999999999858,
+            "maxLife": 0.5091213265433907,
+            "color": "#f1c40f",
+            "size": 2.954182085581124
+          },
+          {
+            "x": 87.05602310007379,
+            "y": 26.30943336248189,
+            "vx": -22.702076196112404,
+            "vy": -1.0432487927949852,
+            "life": 0.16666666666666524,
+            "maxLife": 0.31642451954539863,
+            "color": "#fb7185",
+            "size": 3.7584585212171078
+          },
+          {
+            "x": 98.77418401838298,
+            "y": 53.24936126679861,
+            "vx": -8.640283094141424,
+            "vy": 31.284664692385224,
+            "life": 0.16666666666666524,
+            "maxLife": 0.5965851557906716,
+            "color": "#fb7185",
+            "size": 2.9182716635987163
+          },
+          {
+            "x": 108.32854821942774,
+            "y": 64.2731941916265,
+            "vx": 2.8249539471120353,
+            "vy": 44.51326420217849,
+            "life": 0.16666666666666524,
+            "maxLife": 0.4011283838655799,
+            "color": "#fb7185",
+            "size": 2.342872654553503
+          },
+          {
+            "x": 127.4775735094039,
+            "y": 1.567106987097345,
+            "vx": 25.803784295083897,
+            "vy": -30.73404044325638,
+            "life": 0.16666666666666524,
+            "maxLife": 0.552966741216369,
+            "color": "#fb7185",
+            "size": 2.4327301057055593
+          },
+          {
+            "x": 66.57723821915198,
+            "y": 0.8754302040600194,
+            "vx": -47.27661805321868,
+            "vy": -31.564052582901105,
+            "life": 0.16666666666666524,
+            "maxLife": 0.5193397408118472,
+            "color": "#fb7185",
+            "size": 3.0042218561284244
+          },
+          {
+            "x": 100.13974106906787,
+            "y": -28.249957606641757,
+            "vx": -7.001614633319634,
+            "vy": -66.51451795574329,
+            "life": 0.16666666666666524,
+            "maxLife": 0.36485398937948044,
+            "color": "#fb7185",
+            "size": 3.0879261074587703
+          },
+          {
+            "x": 132.42357699471512,
+            "y": 8.588795789630893,
+            "vx": 31.738988477456633,
+            "vy": -22.308013880216123,
+            "life": 0.16666666666666524,
+            "maxLife": 0.4258847601944581,
+            "color": "#fb7185",
+            "size": 3.4211579994298518
+          },
+          {
+            "x": 137.13217678162124,
+            "y": -4.540463090145642,
+            "vx": 37.38930822174437,
+            "vy": -38.06312453594789,
+            "life": 0.16666666666666524,
+            "maxLife": 0.3664075362961739,
+            "color": "#fb7185",
+            "size": 3.2071514734998345
+          },
+          {
+            "x": 54.595915676619505,
+            "y": -12.394994581333767,
+            "vx": -15.593330656449051,
+            "vy": -52.03541494606589,
+            "life": 0.5666666666666653,
+            "maxLife": 0.5718715826282277,
+            "color": "#f1c40f",
+            "size": 3.286089947912842
+          },
+          {
+            "x": 73.34003546077457,
+            "y": 5.136154753253371,
+            "vx": 27.66233038390866,
+            "vy": -11.57891648163403,
+            "life": 0.5666666666666653,
+            "maxLife": 0.3271811689948663,
+            "color": "#f1c40f",
+            "size": 3.928534558508545
+          },
+          {
+            "x": 65.67403533196084,
+            "y": 20.15906603189994,
+            "vx": 9.971560855876998,
+            "vy": 23.089340315242673,
+            "life": 0.5666666666666653,
+            "maxLife": 0.47419908475130795,
+            "color": "#f1c40f",
+            "size": 2.538173222914338
+          },
+          {
+            "x": 66.89973572712607,
+            "y": 24.81872140693996,
+            "vx": 12.800100229335339,
+            "vy": 33.84239118071959,
+            "life": 0.5666666666666653,
+            "maxLife": 0.5139699030434712,
+            "color": "#f1c40f",
+            "size": 3.608560006134212
+          },
+          {
+            "x": 79.97027021479472,
+            "y": 15.768609583350948,
+            "vx": 42.962872123955414,
+            "vy": 12.957517741668033,
+            "life": 0.5666666666666653,
+            "maxLife": 0.5405156183755024,
+            "color": "#f1c40f",
+            "size": 3.9754263861104846
+          },
+          {
+            "x": 86.10927593118046,
+            "y": 17.363261033113208,
+            "vx": 32.92074989889863,
+            "vy": 13.912887083575749,
+            "life": 0.583333333333332,
+            "maxLife": 0.3708451457787305,
+            "color": "#fb7185",
+            "size": 2.776894639711827
+          },
+          {
+            "x": 73.46754489946602,
+            "y": -10.094370858141794,
+            "vx": 2.5805954227841696,
+            "vy": -51.985429455436226,
+            "life": 0.583333333333332,
+            "maxLife": 0.3760792250744998,
+            "color": "#fb7185",
+            "size": 3.087113834451884
+          },
+          {
+            "x": 84.25735890964273,
+            "y": 10.95486085693913,
+            "vx": 28.47614904720885,
+            "vy": -1.4672733392420023,
+            "life": 0.583333333333332,
+            "maxLife": 0.39947662835475056,
+            "color": "#fb7185",
+            "size": 2.123365900479257
+          },
+          {
+            "x": 88.78026209195394,
+            "y": -12.534502516574124,
+            "vx": 39.33111668475518,
+            "vy": -57.84174543567383,
+            "life": 0.583333333333332,
+            "maxLife": 0.45653070153202857,
+            "color": "#fb7185",
+            "size": 3.4563460797071457
+          },
+          {
+            "x": 61.56345434305898,
+            "y": 12.681769149272503,
+            "vx": -25.98922191259289,
+            "vy": 2.677306562358115,
+            "life": 0.583333333333332,
+            "maxLife": 0.5959888347890228,
+            "color": "#fb7185",
+            "size": 2.0414010626263916
+          },
+          {
+            "x": 75.78841067395555,
+            "y": 20.531324382017768,
+            "vx": 8.15067328155921,
+            "vy": 21.516239120946675,
+            "life": 0.583333333333332,
+            "maxLife": 0.47019426890183236,
+            "color": "#fb7185",
+            "size": 3.259579936042428
+          },
+          {
+            "x": 65.25799816044032,
+            "y": 35.847552898305544,
+            "vx": -17.122316750877253,
+            "vy": 58.27518756003744,
+            "life": 0.583333333333332,
+            "maxLife": 0.4453601641114801,
+            "color": "#fb7185",
+            "size": 3.71976959425956
+          },
+          {
+            "x": 63.083590447677096,
+            "y": 22.5318157880926,
+            "vx": -22.34089526150908,
+            "vy": 26.317418495526294,
+            "life": 0.583333333333332,
+            "maxLife": 0.5301753307459875,
+            "color": "#fb7185",
+            "size": 2.042916466947645
+          },
+          {
+            "x": 16.87162714690856,
+            "y": 0.48387479949613105,
+            "vx": 46.149249244028724,
+            "vy": 13.583681196124175,
+            "life": 0.9666666666666666,
+            "maxLife": 0.4756147301523015,
+            "color": "#f1c40f",
+            "size": 2.565602565649897
+          },
+          {
+            "x": 15.374997667977324,
+            "y": 0.7719953452670203,
+            "vx": 1.2503648760917512,
+            "vy": 22.227297569250855,
+            "life": 0.9666666666666666,
+            "maxLife": 0.3193106564925983,
+            "color": "#f1c40f",
+            "size": 2.469479899853468
+          },
+          {
+            "x": 13.777308824175469,
+            "y": -0.1618047518917665,
+            "vx": -46.68030043796388,
+            "vy": -5.786705345512751,
+            "life": 0.9666666666666666,
+            "maxLife": 0.5477399904979392,
+            "color": "#f1c40f",
+            "size": 2.4335593646392226
+          },
+          {
+            "x": 17.130762810021533,
+            "y": 0.7962256935870071,
+            "vx": 53.923319137418,
+            "vy": 22.954208018850455,
+            "life": 0.9666666666666666,
+            "maxLife": 0.5202651216415688,
+            "color": "#f1c40f",
+            "size": 2.1047143787145615
+          },
+          {
+            "x": 16.084830832659186,
+            "y": -0.5767802818415246,
+            "vx": 22.54535981654765,
+            "vy": -18.235971244005498,
+            "life": 0.9666666666666666,
+            "maxLife": 0.42970256027765574,
+            "color": "#f1c40f",
+            "size": 2.8384667676873505
+          },
+          {
+            "x": 25.265360146413922,
+            "y": -0.37263243889780195,
+            "vx": -6.245294287581277,
+            "vy": -24.784631413027547,
+            "life": 0.9833333333333333,
+            "maxLife": 0.34003935295622795,
+            "color": "#fb7185",
+            "size": 3.148697292432189
+          },
+          {
+            "x": 24.711338732081458,
+            "y": 0.9259724389838029,
+            "vx": -39.48657914752919,
+            "vy": 53.13166125986874,
+            "life": 0.9833333333333333,
+            "maxLife": 0.3515470107318833,
+            "color": "#fb7185",
+            "size": 2.50598849914968
+          },
+          {
+            "x": 25.15213497480727,
+            "y": 0.3439564966747099,
+            "vx": -13.038804583980255,
+            "vy": 18.210704721323165,
+            "life": 0.9833333333333333,
+            "maxLife": 0.5270861081080511,
+            "color": "#fb7185",
+            "size": 3.9458334813825786
+          },
+          {
+            "x": 25.450237395602763,
+            "y": -0.4501236612917478,
+            "vx": 4.847340663749112,
+            "vy": -29.4341047566643,
+            "life": 0.9833333333333333,
+            "maxLife": 0.5236809686059132,
+            "color": "#fb7185",
+            "size": 3.3610220020636916
+          },
+          {
+            "x": 24.507199930401455,
+            "y": 0.12529725936780922,
+            "vx": -51.73490724832931,
+            "vy": 5.0911504829091205,
+            "life": 0.9833333333333333,
+            "maxLife": 0.5284969550091774,
+            "color": "#fb7185",
+            "size": 2.258167441934347
+          },
+          {
+            "x": 25.575467430397897,
+            "y": 0.34031817425255056,
+            "vx": 12.361142751457065,
+            "vy": 17.992405375993602,
+            "life": 0.9833333333333333,
+            "maxLife": 0.3548632038524374,
+            "color": "#fb7185",
+            "size": 3.9371020179241896
+          },
+          {
+            "x": 24.995322978272462,
+            "y": -0.6840595042407452,
+            "vx": -22.447524376068824,
+            "vy": -43.47025533360415,
+            "life": 0.9833333333333333,
+            "maxLife": 0.5932166252983734,
+            "color": "#fb7185",
+            "size": 2.8278968981467187
+          },
+          {
+            "x": 24.95471352681632,
+            "y": -0.06653620325381389,
+            "vx": -24.884091463437436,
+            "vy": -6.418857274388265,
+            "life": 0.9833333333333333,
+            "maxLife": 0.5352315716212614,
+            "color": "#fb7185",
+            "size": 2.978845363948494
+          }
+        ],
+        "impactWaves": [],
+        "hazards": [],
+        "floatingTexts": [
+          {
+            "x": 72.39229680663922,
+            "y": -16.433775251710035,
+            "text": 8,
+            "color": "#f1c40f",
+            "life": 0.36666666666666586,
+            "maxLife": 0.8,
+            "vy": -30,
+            "font": "bold 14px system-ui, sans-serif",
+            "outlineColor": null
+          },
+          {
+            "x": 25.369448384540277,
+            "y": -15.959555248680676,
+            "text": 8,
+            "color": "#f1c40f",
+            "life": 0.7666666666666666,
+            "maxLife": 0.8,
+            "vy": -30,
+            "font": "bold 14px system-ui, sans-serif",
+            "outlineColor": null
+          }
+        ],
+        "nextTowerUid": 1,
+        "nextEnemyUid": 17,
+        "nextBossEncounterUid": 1,
+        "gameTime": 8.366666666666662,
+        "money": 999999,
+        "towerCatalog": [
+          {
+            "id": "BASIC",
+            "name": "速射塔",
+            "summary": "稳定对单火力。",
+            "cost": 15,
+            "color": "#3498db",
+            "radius": 14,
+            "range": 180,
+            "fireRate": 0.3,
+            "damage": 6,
+            "hp": 50,
+            "shape": "circle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 0
+          },
+          {
+            "id": "CANNON",
+            "name": "榴弹炮",
+            "summary": "范围爆炸，清理怪群。",
+            "cost": 40,
+            "color": "#e67e22",
+            "radius": 16,
+            "range": 140,
+            "fireRate": 1.5,
+            "damage": 15,
+            "splash": 60,
+            "hp": 80,
+            "shape": "square",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 1
+          },
+          {
+            "id": "SNIPER",
+            "name": "穿透塔",
+            "summary": "高伤穿透，专打后排。",
+            "cost": 80,
+            "color": "#9b59b6",
+            "radius": 14,
+            "range": 350,
+            "fireRate": 2,
+            "damage": 35,
+            "pierce": 3,
+            "hp": 40,
+            "shape": "triangle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 2
+          },
+          {
+            "id": "RAPID",
+            "name": "链锯塔",
+            "summary": "极高射速，适合近距压制。",
+            "cost": 28,
+            "color": "#16a085",
+            "radius": 13,
+            "range": 155,
+            "fireRate": 0.12,
+            "damage": 3,
+            "hp": 42,
+            "shape": "circle",
+            "projectileSpeed": 560,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 3
+          },
+          {
+            "id": "MORTAR",
+            "name": "迫击塔",
+            "summary": "超大范围爆炸，但装填缓慢。",
+            "cost": 72,
+            "color": "#d35400",
+            "radius": 18,
+            "range": 260,
+            "fireRate": 2.3,
+            "damage": 24,
+            "splash": 92,
+            "hp": 68,
+            "shape": "square",
+            "projectileSpeed": 420,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 4
+          },
+          {
+            "id": "FROST",
+            "name": "霜冻塔",
+            "summary": "造成减速，帮助阵线控场。",
+            "cost": 55,
+            "color": "#5dade2",
+            "radius": 15,
+            "range": 190,
+            "fireRate": 0.85,
+            "damage": 7,
+            "hp": 74,
+            "shape": "square",
+            "slowRatio": 0.55,
+            "slowDuration": 1.4,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 5
+          },
+          {
+            "id": "RAIL",
+            "name": "磁轨塔",
+            "summary": "超长射程和高穿透。",
+            "cost": 98,
+            "color": "#7d3c98",
+            "radius": 14,
+            "range": 430,
+            "fireRate": 1.65,
+            "damage": 26,
+            "pierce": 5,
+            "hp": 38,
+            "shape": "triangle",
+            "projectileSpeed": 700,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 6
+          },
+          {
+            "id": "BURST",
+            "name": "散射塔",
+            "summary": "扇形连射，近距压制。",
+            "cost": 66,
+            "color": "#c0392b",
+            "radius": 16,
+            "range": 165,
+            "fireRate": 0.95,
+            "damage": 8,
+            "hp": 64,
+            "shape": "triangle",
+            "burstCount": 4,
+            "spread": 0.18,
+            "projectileSpeed": 460,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 7
+          },
+          {
+            "id": "SENTINEL",
+            "name": "哨戒塔",
+            "summary": "耐久更高，适合前线。",
+            "cost": 52,
+            "color": "#117864",
+            "radius": 17,
+            "range": 175,
+            "fireRate": 0.55,
+            "damage": 11,
+            "hp": 108,
+            "shape": "circle",
+            "projectileSpeed": 520,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 8
+          }
+        ],
+        "rewardHistory": {
+          "offeredKeys": [],
+          "pickedKeys": []
+        },
+        "wave": {
+          "number": 0,
+          "queue": [],
+          "spawnInterval": 999,
+          "spawnTimer": 0,
+          "boss": null,
+          "bossSpawned": true,
+          "awaitingReward": false,
+          "pendingRewardBossUid": null,
+          "pendingRewardBossEncounterUid": null
+        },
+        "difficultyMultiplier": 1,
+        "isMobile": false,
+        "mode": "debug",
+        "debugWaveFlow": false,
+        "debugOptions": {
+          "infiniteMoney": true,
+          "infiniteHealth": true
+        },
+        "bossHudTimer": 0.09999999999999999
+      },
+      "events": [
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/mechanic/2",
+          "childKeys": [
+            "run0/mechanic/2"
+          ],
+          "position": {
+            "x": 38,
+            "y": 0
+          },
+          "radius": 12,
+          "time": 2.28333333333333,
+          "type": "summon-success"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 2.2999999999999967,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/2",
+          "position": {
+            "x": 38,
+            "y": 0
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0,
+          "time": 2.3833333333333298,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 2.8166666666666615,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/2",
+          "position": {
+            "x": 38,
+            "y": 0
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0,
+          "time": 2.8999999999999946,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/mechanic/2",
+          "sourceArtId": "mechanic:WEB",
+          "position": {
+            "x": 38,
+            "y": 0
+          },
+          "radius": 12,
+          "time": 2.916666666666661,
+          "type": "defeat"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/mechanic/3",
+          "childKeys": [
+            "run0/mechanic/3"
+          ],
+          "position": {
+            "x": -103,
+            "y": 45
+          },
+          "radius": 13,
+          "time": 4.233333333333324,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/mechanic/4",
+          "childKeys": [
+            "run0/mechanic/4"
+          ],
+          "position": {
+            "x": 67,
+            "y": 45
+          },
+          "radius": 13,
+          "time": 4.233333333333324,
+          "type": "summon-success"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 2.654693421778524,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 4.24999999999999,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/3",
+          "position": {
+            "x": -103,
+            "y": 45
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 2.654693421778524,
+          "time": 4.433333333333323,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 2.654693421778524,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 4.766666666666655,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/3",
+          "position": {
+            "x": -103,
+            "y": 45
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 2.654693421778524,
+          "time": 4.949999999999988,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/mechanic/3",
+          "sourceArtId": "mechanic:WEB",
+          "position": {
+            "x": -103,
+            "y": 45
+          },
+          "radius": 13,
+          "time": 4.966666666666654,
+          "type": "defeat"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.48689923181126904,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 5.28333333333332,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/4",
+          "position": {
+            "x": 67,
+            "y": 45
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.48689923181126904,
+          "time": 5.466666666666653,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.48689923181126904,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 5.799999999999985,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/mechanic/4",
+          "position": {
+            "x": 67,
+            "y": 45
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.48689923181126904,
+          "time": 5.983333333333317,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/mechanic/4",
+          "sourceArtId": "mechanic:WEB",
+          "position": {
+            "x": 67,
+            "y": 45
+          },
+          "radius": 13,
+          "time": 5.999999999999984,
+          "type": "defeat"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/5",
+          "childKeys": [
+            "run0/enemy/5"
+          ],
+          "position": {
+            "x": 350.3693070625903,
+            "y": 0.3435276576661792
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/6",
+          "childKeys": [
+            "run0/enemy/6"
+          ],
+          "position": {
+            "x": 335.2491941985528,
+            "y": 45.200307068120544
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/7",
+          "childKeys": [
+            "run0/enemy/7"
+          ],
+          "position": {
+            "x": 303.7768668558229,
+            "y": 70.54287070648543
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/8",
+          "childKeys": [
+            "run0/enemy/8"
+          ],
+          "position": {
+            "x": 249.7148613701516,
+            "y": 73.44354889644816
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/9",
+          "childKeys": [
+            "run0/enemy/9"
+          ],
+          "position": {
+            "x": 373.4352001630452,
+            "y": 8.496854142359512
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/10",
+          "childKeys": [
+            "run0/enemy/10"
+          ],
+          "position": {
+            "x": 360.2175924537627,
+            "y": 53.01804718097902
+          },
+          "radius": 5,
+          "time": 6.183333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.26774783425522947,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 6.733333333333315,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/enemy/8",
+          "position": {
+            "x": 121.93594567998514,
+            "y": 38.38932368684914
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.26774783425522947,
+          "time": 7.066666666666647,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/enemy/8",
+          "sourceArtId": "enemy:SPLINTER",
+          "position": {
+            "x": 121.93594567998514,
+            "y": 38.38932368684914
+          },
+          "radius": 5,
+          "time": 7.0833333333333135,
+          "type": "defeat"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.21581492792554907,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 7.24999999999998,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/enemy/7",
+          "position": {
+            "x": 105.97441993016758,
+            "y": 27.178807356477627
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.21581492792554907,
+          "time": 7.533333333333312,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/enemy/7",
+          "sourceArtId": "enemy:SPLINTER",
+          "position": {
+            "x": 105.97441993016758,
+            "y": 27.178807356477627
+          },
+          "radius": 5,
+          "time": 7.5499999999999785,
+          "type": "defeat"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.12726432048710654,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 7.766666666666644,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/enemy/6",
+          "position": {
+            "x": 72.39229680663922,
+            "y": 11.566224748289965
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.12726432048710654,
+          "time": 7.949999999999977,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/enemy/6",
+          "sourceArtId": "enemy:SPLINTER",
+          "position": {
+            "x": 72.39229680663922,
+            "y": 11.566224748289965
+          },
+          "radius": 5,
+          "time": 7.966666666666644,
+          "type": "defeat"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/11",
+          "childKeys": [
+            "run0/enemy/11"
+          ],
+          "position": {
+            "x": 362.39653883940423,
+            "y": 0.7286948747040114
+          },
+          "radius": 12,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/12",
+          "childKeys": [
+            "run0/enemy/12"
+          ],
+          "position": {
+            "x": 351.79759203012503,
+            "y": 44.25496466280863
+          },
+          "radius": 12,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/13",
+          "childKeys": [
+            "run0/enemy/13"
+          ],
+          "position": {
+            "x": 96.87427833841264,
+            "y": 19.20583489204625
+          },
+          "radius": 5,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/14",
+          "childKeys": [
+            "run0/enemy/14"
+          ],
+          "position": {
+            "x": -51.38482574301007,
+            "y": 80.56799907523863
+          },
+          "radius": 5,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/15",
+          "childKeys": [
+            "run0/enemy/15"
+          ],
+          "position": {
+            "x": -135.11747450894075,
+            "y": -10.25423726626137
+          },
+          "radius": 5,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "run0/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "run0/enemy/16",
+          "childKeys": [
+            "run0/enemy/16"
+          ],
+          "position": {
+            "x": 14.45934480272382,
+            "y": -80.7594119753774
+          },
+          "radius": 5,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.0009325629239306443,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 8.283333333333324,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/enemy/5",
+          "position": {
+            "x": 25.369448384540277,
+            "y": 0.04044475131932386
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.0009325629239306443,
+          "time": 8.349999999999994,
+          "type": "hit"
+        },
+        {
+          "targetKey": "run0/enemy/5",
+          "sourceArtId": "enemy:SPLINTER",
+          "position": {
+            "x": 25.369448384540277,
+            "y": 0.04044475131932386
+          },
+          "radius": 5,
+          "time": 8.366666666666662,
+          "type": "defeat"
+        }
+      ]
+    },
+    "presentation": {
+      "epoch": 57,
+      "events": [
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/11",
+          "childKeys": [
+            "57/enemy/11"
+          ],
+          "position": {
+            "x": 362.39653883940423,
+            "y": 0.7286948747040114
+          },
+          "radius": 12,
+          "eventId": "57/event/34",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/12",
+          "childKeys": [
+            "57/enemy/12"
+          ],
+          "position": {
+            "x": 351.79759203012503,
+            "y": 44.25496466280863
+          },
+          "radius": 12,
+          "eventId": "57/event/35",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/13",
+          "childKeys": [
+            "57/enemy/13"
+          ],
+          "position": {
+            "x": 96.87427833841264,
+            "y": 19.20583489204625
+          },
+          "radius": 5,
+          "eventId": "57/event/36",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/14",
+          "childKeys": [
+            "57/enemy/14"
+          ],
+          "position": {
+            "x": -51.38482574301007,
+            "y": 80.56799907523863
+          },
+          "radius": 5,
+          "eventId": "57/event/37",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/15",
+          "childKeys": [
+            "57/enemy/15"
+          ],
+          "position": {
+            "x": -135.11747450894075,
+            "y": -10.25423726626137
+          },
+          "radius": 5,
+          "eventId": "57/event/38",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceKey": "57/boss/1",
+          "sourceArtId": "boss:SPIDER_MATRIARCH",
+          "targetKey": "57/enemy/16",
+          "childKeys": [
+            "57/enemy/16"
+          ],
+          "position": {
+            "x": 14.45934480272382,
+            "y": -80.7594119753774
+          },
+          "radius": 5,
+          "eventId": "57/event/39",
+          "epoch": 57,
+          "time": 8.133333333333317,
+          "type": "summon-success"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "57/hero/player",
+          "position": {
+            "x": -18,
+            "y": 0
+          },
+          "angle": 0.0009325629239306443,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "projectileKey": "57/projectile/165",
+          "eventId": "57/event/40",
+          "epoch": 57,
+          "time": 8.283333333333324,
+          "type": "shot"
+        },
+        {
+          "targetKey": "57/enemy/5",
+          "position": {
+            "x": 25.369448384540277,
+            "y": 0.04044475131932386
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "57/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.0009325629239306443,
+          "projectileKey": "57/projectile/165",
+          "eventId": "57/event/41",
+          "epoch": 57,
+          "time": 8.349999999999994,
+          "type": "hit"
+        },
+        {
+          "targetKey": "57/enemy/5",
+          "sourceArtId": "enemy:SPLINTER",
+          "position": {
+            "x": 25.369448384540277,
+            "y": 0.04044475131932386
+          },
+          "radius": 5,
+          "eventId": "57/event/42",
+          "epoch": 57,
+          "time": 8.366666666666662,
+          "type": "defeat"
+        }
+      ],
+      "actors": [
+        {
+          "key": "57/hero/player",
+          "artId": "hero:PLAYER",
+          "domain": "hero",
+          "x": -18,
+          "y": 0,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0.0009325629239306443,
+          "pose": "attack",
+          "poseTime": 0.08333333333333748,
+          "poseProgress": 0.5208333333333592,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 100,
+          "maxHp": 100,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/boss/1",
+          "artId": "boss:SPIDER_MATRIARCH",
+          "domain": "boss",
+          "x": 281.80755622193163,
+          "y": -7.420899021969797,
+          "radius": 31,
+          "referenceRadius": 31,
+          "facing": "left",
+          "aimAngle": 3.1168454986243463,
+          "pose": "recover",
+          "poseTime": 0.23333333333334494,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 247,
+          "maxHp": 470,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": true,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": {
+            "phaseIndex": 1,
+            "phaseCount": 3,
+            "castAbility": "broodAmbush",
+            "actionMode": "recover",
+            "actionTimer": 0.8666666666666667,
+            "windupDuration": 0.85,
+            "phaseName": "孵潮",
+            "phaseIntroTimer": 0
+          },
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/9",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": 46.01233035936575,
+          "y": 1.3895107904181958,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "left",
+          "aimAngle": -3.1198891379882387,
+          "pose": "move",
+          "poseTime": 2.1666666666666785,
+          "poseProgress": 0,
+          "movementSpeed": 149.9999999999925,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/10",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": 35.888633099879485,
+          "y": 7.554038070180873,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "left",
+          "aimAngle": -3.002321460017962,
+          "pose": "move",
+          "poseTime": 2.1666666666666785,
+          "poseProgress": 0,
+          "movementSpeed": 149.99999999999244,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/11",
+          "artId": "enemy:BURROWER",
+          "domain": "enemy",
+          "x": 362.39653883940423,
+          "y": 0.7286948747040114,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0.23333333333334494,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 0.25,
+          "level": 0,
+          "hp": 44,
+          "maxHp": 44,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": true,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/12",
+          "artId": "enemy:BURROWER",
+          "domain": "enemy",
+          "x": 351.79759203012503,
+          "y": 44.25496466280863,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0.23333333333334494,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 0.25,
+          "level": 0,
+          "hp": 44,
+          "maxHp": 44,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": true,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/13",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": 62.35342529663035,
+          "y": 13.43429218080587,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "left",
+          "aimAngle": -2.9759347938526175,
+          "pose": "move",
+          "poseTime": 0.21666666666667744,
+          "poseProgress": 0,
+          "movementSpeed": 149.9999999999926,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/14",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": -37.98663483388587,
+          "y": 48.23398478126855,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "up",
+          "aimAngle": -1.177965165625495,
+          "pose": "move",
+          "poseTime": 0.21666666666667744,
+          "poseProgress": 0,
+          "movementSpeed": 149.9999999999927,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/15",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": -100.25086140336856,
+          "y": -7.201485958614434,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "right",
+          "aimAngle": 0.08733243702716854,
+          "pose": "move",
+          "poseTime": 0.21666666666667744,
+          "poseProgress": 0,
+          "movementSpeed": 149.9999999999923,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "57/enemy/16",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": 1.4067562639625018,
+          "y": -48.28434565615653,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "left",
+          "aimAngle": 1.9529623437838954,
+          "pose": "move",
+          "poseTime": 0.21666666666667744,
+          "poseProgress": 0,
+          "movementSpeed": 149.99999999999235,
+          "alpha": 1,
+          "level": 0,
+          "hp": 8,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "retired": [
+        {
+          "key": "57/enemy/5",
+          "artId": "enemy:SPLINTER",
+          "domain": "enemy",
+          "x": 25.369448384540277,
+          "y": 0.04044475131932386,
+          "radius": 5,
+          "referenceRadius": 5,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 0.7,
+          "level": 0,
+          "hp": 0,
+          "maxHp": 8,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 1,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "errors": [],
+      "actorCacheSize": 10
+    },
+    "eventLog": [
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/mechanic/2",
+        "childKeys": [
+          "57/mechanic/2"
+        ],
+        "position": {
+          "x": 38,
+          "y": 0
+        },
+        "radius": 12,
+        "eventId": "57/event/1",
+        "epoch": 57,
+        "time": 2.28333333333333,
+        "type": "summon-success"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/60",
+        "eventId": "57/event/2",
+        "epoch": 57,
+        "time": 2.2999999999999967,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/2",
+        "position": {
+          "x": 38,
+          "y": 0
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0,
+        "projectileKey": "57/projectile/60",
+        "eventId": "57/event/3",
+        "epoch": 57,
+        "time": 2.3833333333333298,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/66",
+        "eventId": "57/event/4",
+        "epoch": 57,
+        "time": 2.8166666666666615,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/2",
+        "position": {
+          "x": 38,
+          "y": 0
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0,
+        "projectileKey": "57/projectile/66",
+        "eventId": "57/event/5",
+        "epoch": 57,
+        "time": 2.8999999999999946,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/mechanic/2",
+        "sourceArtId": "mechanic:WEB",
+        "position": {
+          "x": 38,
+          "y": 0
+        },
+        "radius": 12,
+        "eventId": "57/event/6",
+        "epoch": 57,
+        "time": 2.916666666666661,
+        "type": "defeat"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/mechanic/3",
+        "childKeys": [
+          "57/mechanic/3"
+        ],
+        "position": {
+          "x": -103,
+          "y": 45
+        },
+        "radius": 13,
+        "eventId": "57/event/7",
+        "epoch": 57,
+        "time": 4.233333333333324,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/mechanic/4",
+        "childKeys": [
+          "57/mechanic/4"
+        ],
+        "position": {
+          "x": 67,
+          "y": 45
+        },
+        "radius": 13,
+        "eventId": "57/event/8",
+        "epoch": 57,
+        "time": 4.233333333333324,
+        "type": "summon-success"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 2.654693421778524,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/82",
+        "eventId": "57/event/9",
+        "epoch": 57,
+        "time": 4.24999999999999,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/3",
+        "position": {
+          "x": -103,
+          "y": 45
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 2.654693421778524,
+        "projectileKey": "57/projectile/82",
+        "eventId": "57/event/10",
+        "epoch": 57,
+        "time": 4.433333333333323,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 2.654693421778524,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/88",
+        "eventId": "57/event/11",
+        "epoch": 57,
+        "time": 4.766666666666655,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/3",
+        "position": {
+          "x": -103,
+          "y": 45
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 2.654693421778524,
+        "projectileKey": "57/projectile/88",
+        "eventId": "57/event/12",
+        "epoch": 57,
+        "time": 4.949999999999988,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/mechanic/3",
+        "sourceArtId": "mechanic:WEB",
+        "position": {
+          "x": -103,
+          "y": 45
+        },
+        "radius": 13,
+        "eventId": "57/event/13",
+        "epoch": 57,
+        "time": 4.966666666666654,
+        "type": "defeat"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.48689923181126904,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/102",
+        "eventId": "57/event/14",
+        "epoch": 57,
+        "time": 5.28333333333332,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/4",
+        "position": {
+          "x": 67,
+          "y": 45
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.48689923181126904,
+        "projectileKey": "57/projectile/102",
+        "eventId": "57/event/15",
+        "epoch": 57,
+        "time": 5.466666666666653,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.48689923181126904,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/109",
+        "eventId": "57/event/16",
+        "epoch": 57,
+        "time": 5.799999999999985,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/mechanic/4",
+        "position": {
+          "x": 67,
+          "y": 45
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.48689923181126904,
+        "projectileKey": "57/projectile/109",
+        "eventId": "57/event/17",
+        "epoch": 57,
+        "time": 5.983333333333317,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/mechanic/4",
+        "sourceArtId": "mechanic:WEB",
+        "position": {
+          "x": 67,
+          "y": 45
+        },
+        "radius": 13,
+        "eventId": "57/event/18",
+        "epoch": 57,
+        "time": 5.999999999999984,
+        "type": "defeat"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/5",
+        "childKeys": [
+          "57/enemy/5"
+        ],
+        "position": {
+          "x": 350.3693070625903,
+          "y": 0.3435276576661792
+        },
+        "radius": 5,
+        "eventId": "57/event/19",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/6",
+        "childKeys": [
+          "57/enemy/6"
+        ],
+        "position": {
+          "x": 335.2491941985528,
+          "y": 45.200307068120544
+        },
+        "radius": 5,
+        "eventId": "57/event/20",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/7",
+        "childKeys": [
+          "57/enemy/7"
+        ],
+        "position": {
+          "x": 303.7768668558229,
+          "y": 70.54287070648543
+        },
+        "radius": 5,
+        "eventId": "57/event/21",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/8",
+        "childKeys": [
+          "57/enemy/8"
+        ],
+        "position": {
+          "x": 249.7148613701516,
+          "y": 73.44354889644816
+        },
+        "radius": 5,
+        "eventId": "57/event/22",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/9",
+        "childKeys": [
+          "57/enemy/9"
+        ],
+        "position": {
+          "x": 373.4352001630452,
+          "y": 8.496854142359512
+        },
+        "radius": 5,
+        "eventId": "57/event/23",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/10",
+        "childKeys": [
+          "57/enemy/10"
+        ],
+        "position": {
+          "x": 360.2175924537627,
+          "y": 53.01804718097902
+        },
+        "radius": 5,
+        "eventId": "57/event/24",
+        "epoch": 57,
+        "time": 6.183333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.26774783425522947,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/123",
+        "eventId": "57/event/25",
+        "epoch": 57,
+        "time": 6.733333333333315,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/enemy/8",
+        "position": {
+          "x": 121.93594567998514,
+          "y": 38.38932368684914
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.26774783425522947,
+        "projectileKey": "57/projectile/123",
+        "eventId": "57/event/26",
+        "epoch": 57,
+        "time": 7.066666666666647,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/enemy/8",
+        "sourceArtId": "enemy:SPLINTER",
+        "position": {
+          "x": 121.93594567998514,
+          "y": 38.38932368684914
+        },
+        "radius": 5,
+        "eventId": "57/event/27",
+        "epoch": 57,
+        "time": 7.0833333333333135,
+        "type": "defeat"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.21581492792554907,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/137",
+        "eventId": "57/event/28",
+        "epoch": 57,
+        "time": 7.24999999999998,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/enemy/7",
+        "position": {
+          "x": 105.97441993016758,
+          "y": 27.178807356477627
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.21581492792554907,
+        "projectileKey": "57/projectile/137",
+        "eventId": "57/event/29",
+        "epoch": 57,
+        "time": 7.533333333333312,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/enemy/7",
+        "sourceArtId": "enemy:SPLINTER",
+        "position": {
+          "x": 105.97441993016758,
+          "y": 27.178807356477627
+        },
+        "radius": 5,
+        "eventId": "57/event/30",
+        "epoch": 57,
+        "time": 7.5499999999999785,
+        "type": "defeat"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.12726432048710654,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/151",
+        "eventId": "57/event/31",
+        "epoch": 57,
+        "time": 7.766666666666644,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/enemy/6",
+        "position": {
+          "x": 72.39229680663922,
+          "y": 11.566224748289965
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.12726432048710654,
+        "projectileKey": "57/projectile/151",
+        "eventId": "57/event/32",
+        "epoch": 57,
+        "time": 7.949999999999977,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/enemy/6",
+        "sourceArtId": "enemy:SPLINTER",
+        "position": {
+          "x": 72.39229680663922,
+          "y": 11.566224748289965
+        },
+        "radius": 5,
+        "eventId": "57/event/33",
+        "epoch": 57,
+        "time": 7.966666666666644,
+        "type": "defeat"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/11",
+        "childKeys": [
+          "57/enemy/11"
+        ],
+        "position": {
+          "x": 362.39653883940423,
+          "y": 0.7286948747040114
+        },
+        "radius": 12,
+        "eventId": "57/event/34",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/12",
+        "childKeys": [
+          "57/enemy/12"
+        ],
+        "position": {
+          "x": 351.79759203012503,
+          "y": 44.25496466280863
+        },
+        "radius": 12,
+        "eventId": "57/event/35",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/13",
+        "childKeys": [
+          "57/enemy/13"
+        ],
+        "position": {
+          "x": 96.87427833841264,
+          "y": 19.20583489204625
+        },
+        "radius": 5,
+        "eventId": "57/event/36",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/14",
+        "childKeys": [
+          "57/enemy/14"
+        ],
+        "position": {
+          "x": -51.38482574301007,
+          "y": 80.56799907523863
+        },
+        "radius": 5,
+        "eventId": "57/event/37",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/15",
+        "childKeys": [
+          "57/enemy/15"
+        ],
+        "position": {
+          "x": -135.11747450894075,
+          "y": -10.25423726626137
+        },
+        "radius": 5,
+        "eventId": "57/event/38",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceKey": "57/boss/1",
+        "sourceArtId": "boss:SPIDER_MATRIARCH",
+        "targetKey": "57/enemy/16",
+        "childKeys": [
+          "57/enemy/16"
+        ],
+        "position": {
+          "x": 14.45934480272382,
+          "y": -80.7594119753774
+        },
+        "radius": 5,
+        "eventId": "57/event/39",
+        "epoch": 57,
+        "time": 8.133333333333317,
+        "type": "summon-success"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "position": {
+          "x": -18,
+          "y": 0
+        },
+        "angle": 0.0009325629239306443,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "57/projectile/165",
+        "eventId": "57/event/40",
+        "epoch": 57,
+        "time": 8.283333333333324,
+        "type": "shot"
+      },
+      {
+        "targetKey": "57/enemy/5",
+        "position": {
+          "x": 25.369448384540277,
+          "y": 0.04044475131932386
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "57/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.0009325629239306443,
+        "projectileKey": "57/projectile/165",
+        "eventId": "57/event/41",
+        "epoch": 57,
+        "time": 8.349999999999994,
+        "type": "hit"
+      },
+      {
+        "targetKey": "57/enemy/5",
+        "sourceArtId": "enemy:SPLINTER",
+        "position": {
+          "x": 25.369448384540277,
+          "y": 0.04044475131932386
+        },
+        "radius": 5,
+        "eventId": "57/event/42",
+        "epoch": 57,
+        "time": 8.366666666666662,
+        "type": "defeat"
+      }
+    ],
+    "art": {
+      "status": "ready",
+      "errors": [],
+      "drawErrors": [],
+      "fallbackArtIds": [],
+      "availableIds": [
+        "tower:BASIC",
+        "tower:CANNON",
+        "tower:SNIPER",
+        "tower:RAPID",
+        "tower:MORTAR",
+        "tower:FROST",
+        "tower:RAIL",
+        "tower:BURST",
+        "tower:SENTINEL",
+        "hero:PLAYER",
+        "enemy:BASIC",
+        "enemy:FAST",
+        "enemy:TANK",
+        "enemy:SHARD",
+        "enemy:SPLINTER",
+        "enemy:SHIELD",
+        "enemy:MEDIC",
+        "enemy:BOMBER",
+        "enemy:JAMMER",
+        "enemy:PHASE",
+        "enemy:BURROWER",
+        "enemy:BEACON",
+        "enemy:SCOUT",
+        "enemy:SIEGE",
+        "boss:COMMANDER",
+        "boss:HUNTER",
+        "boss:FORTRESS",
+        "boss:PRISM",
+        "boss:HIVE",
+        "boss:FROST_JUDGE",
+        "boss:RAIL_WARLORD",
+        "boss:COLLECTOR",
+        "boss:TWINS_SUN",
+        "boss:TWINS_MOON",
+        "boss:DRAGON",
+        "boss:SPIDER_MATRIARCH",
+        "boss:ASTROLABE",
+        "boss:BLOOD_FORGE",
+        "boss:VOID_CONDUCTOR",
+        "boss:LABYRINTH_KEEPER",
+        "boss:NIGHTMARE_BLOOM",
+        "mechanic:NEST",
+        "mechanic:WEB",
+        "mechanic:ROOT",
+        "mechanic:WALL",
+        "mechanic:SEAL",
+        "mechanic:RETICLE",
+        "mechanic:COURIER"
+      ]
+    },
+    "geometry": {
+      "buildBarRect": null,
+      "debugPanelRect": {
+        "left": 160,
+        "right": 1280,
+        "top": 12,
+        "bottom": 88
+      }
+    }
+  },
+  "inputTrace": [
+    {
+      "frame": 0,
+      "operation": "DEV reset",
+      "seed": 20261001,
+      "mode": "debug"
+    },
+    {
+      "frame": 0,
+      "operation": "GUI boss drag",
+      "label": "织网蛛后",
+      "screen": [
+        1100,
+        440
+      ]
+    },
+    {
+      "frame": 0,
+      "operation": "GUI button",
+      "label": "Phase 2"
+    },
+    {
+      "frame": 80,
+      "operation": "GUI keydown",
+      "key": "a"
+    },
+    {
+      "frame": 86,
+      "operation": "GUI keyup",
+      "key": "a"
+    },
+    {
+      "frame": 86,
+      "operation": "GUI pause Escape"
+    },
+    {
+      "frame": 86,
+      "operation": "GUI resume Escape"
+    },
+    {
+      "frame": 203,
+      "operation": "GUI pause Escape"
+    },
+    {
+      "frame": 203,
+      "operation": "GUI resume Escape"
+    },
+    {
+      "frame": 320,
+      "operation": "GUI pause Escape"
+    },
+    {
+      "frame": 320,
+      "operation": "GUI resume Escape"
+    },
+    {
+      "frame": 437,
+      "operation": "GUI pause Escape"
+    },
+    {
+      "frame": 437,
+      "operation": "GUI resume Escape"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import{fileURLToPath}from'node:url';
+const owner=path.dirname(fileURLToPath(import.meta.url)),dir=path.join(owner,'submissions/r01');
+const hash=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+const write=(f,v)=>fs.writeFileSync(f,JSON.stringify(v,null,2)+'\n','utf8');
+if(fs.existsSync(path.join(dir,'packet.json')))throw Error('r01 already sealed');
+for(const f of ['README.md','PERMISSION.json','actual-skills-02-audit.json'])fs.copyFileSync(path.join(owner,f),path.join(dir,f));
+write(path.join(dir,'findings.json'),{status:'independent_audit_in_progress',findings:[
+ {id:'QS01',type:'test_harness',severity:'evidence_gap',source:'qa/r04/runs/actual-skills-01',finding:'Repeated original Phase button resets cooldown stagger; runner returns after first completed cast. Only 13 unique lifecycles in original 37-scene audit. No product AI bug asserted.'},
+ {id:'QS02',type:'test_harness',severity:'visual_evidence_gap',source:'qa/r04/runs/actual-skills-02',finding:'92 unique skills and 175 phase cases retain actual dispatch evidence. All 175 cast records have at least one boss center outside viewport; COMMANDER commandLine execute PNG independently opened and shows only player/ground. Holding a indefinitely moves caster outside camera. Visual timing/body/geometry needs additional visible sampling.'},
+ {id:'QS03',type:'test_preconditions',severity:'effect_evidence_gap',finding:'InfiniteMoney disables courier creation for stealMoney/repossess. Sacrifice needs live marked minions. Other conditional handlers need source-specific child/target verification. Dispatch alone cannot close these.'},
+ {id:'QS04',type:'own_harness',severity:'repaired',source:'qa-skills/runs/twins-01',finding:'Collapsed developer panel intercepts pointer on Pause. Timeout preserved. Original Escape pause/resume used in twins-02; zero advanced frames and unchanged semantic state verified.'}],
+ progress:{mapping:{skills:95,phaseCases:180,survivorCases:6},twinsMissingDefaultCases:'Captured in twins-02; effect/visual review pending',survivors:'not_run',productionFilesChanged:false},visualApproval:false});
+const files=fs.readdirSync(dir).filter(f=>fs.statSync(path.join(dir,f)).isFile()).sort().map(f=>({path:f,sha256:hash(path.join(dir,f)),bytes:fs.statSync(path.join(dir,f)).size}));
+const packet={schemaVersion:1,owner:'qa-skills',revision:'r01',status:'preparation_and_evidence_gap_ready_for_review',scope:'Static complete95 map plus independent QA evidence reuse audit; runtime supplement underway, not full acceptance',candidateLockSha256:'b2ff7e280d52aa49cad9d3fd582cf6bec70adf7f998d0c6d54fcd4d676514a88',sourceFingerprint:'f353ca072173dfb8e63f4b06506f0e4ad345cecc276fab8bfedf163d18ec3ac6',files,visualApproval:false};
+write(path.join(dir,'packet.json'),packet);
+write(path.join(owner,'PREPARATION.json'),{status:'prepared_browser_permission_received',preparationStatus:'prepared_waiting_perf_release superseded by explicit root permission before file publication',permissionPath:'PERMISSION.json',coverage:'submissions/r01/coverage.json',browserWork:'runs/twins-02 and runs/visible-effects-01',readOnlyCandidate:true});
+const ready={schemaVersion:1,owner:'qa-skills',revision:'r01',status:packet.status,packetPath:'submissions/r01/packet.json',packetSha256:hash(path.join(dir,'packet.json')),readyAt:new Date().toISOString(),scope:packet.scope};
+write(path.join(owner,'READY.tmp.json'),ready);fs.renameSync(path.join(owner,'READY.tmp.json'),path.join(owner,'READY.json'));console.log(JSON.stringify(ready));

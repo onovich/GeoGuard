@@ -1,0 +1,5384 @@
+{
+  "provenance": "actual GUI Clear Enemies and 30 real hook frames; not boss-death reward proof",
+  "before": {
+    "schemaVersion": 1,
+    "control": {
+      "manual": true,
+      "seed": 20261001,
+      "rngState": 585411356,
+      "rngCalls": 3431,
+      "pendingTimers": 0,
+      "droppedEvents": 0
+    },
+    "semantic": {
+      "gameState": "PLAYING",
+      "paused": false,
+      "rewardState": {
+        "active": false,
+        "choices": []
+      },
+      "state": {
+        "player": {
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "speed": 180,
+          "radius": 12,
+          "hp": 100,
+          "maxHp": 100,
+          "lastShoot": 0.4666666666666666,
+          "shootCd": 0.5,
+          "damage": 8,
+          "range": 200,
+          "slowTimer": 0,
+          "slowRatio": 1,
+          "controlGraceTimer": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 0,
+          "shakeTimer": 0,
+          "shakeDuration": 0,
+          "shakeStrength": 0,
+          "shakeSeed": 6.186277229243446
+        },
+        "keys": {
+          "w": false,
+          "a": false,
+          "s": false,
+          "d": false
+        },
+        "joystick": {
+          "active": false,
+          "startX": 0,
+          "startY": 0,
+          "currentX": 0,
+          "currentY": 0,
+          "dirX": 0,
+          "dirY": 0,
+          "touchId": null
+        },
+        "pointer": {
+          "x": 211,
+          "y": 40,
+          "active": false
+        },
+        "dragPlacement": {
+          "active": false,
+          "kind": "tower",
+          "entityId": null,
+          "towerId": null,
+          "pointerX": 0,
+          "pointerY": 0,
+          "worldX": 0,
+          "worldY": 0,
+          "canPlace": false,
+          "invalidReason": null
+        },
+        "enemies": [
+          {
+            "id": "DRAGON",
+            "name": "折线龙",
+            "form": "dragon",
+            "baseEnemy": "BOMBER",
+            "color": "#f97316",
+            "personality": "游走、扫射、逼迫走位",
+            "hp": 64,
+            "speed": 104,
+            "damage": 17,
+            "radius": 32,
+            "value": 50,
+            "phases": [
+              {
+                "name": "盘旋",
+                "hpBelow": 1,
+                "abilities": [
+                  "dragonStrafe",
+                  "emberWake"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "dragonStrafe-0-0",
+                    "abilityId": "dragonStrafe",
+                    "cooldown": 5.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "emberWake-0-1",
+                    "abilityId": "emberWake",
+                    "cooldown": 6.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "俯冲",
+                "hpBelow": 0.66,
+                "abilities": [
+                  "dragonStrafe",
+                  "emberWake",
+                  "wingBuffet",
+                  "meteorRain"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "dragonStrafe-1-0",
+                    "abilityId": "dragonStrafe",
+                    "cooldown": 5.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "emberWake-1-1",
+                    "abilityId": "emberWake",
+                    "cooldown": 6.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "wingBuffet-1-2",
+                    "abilityId": "wingBuffet",
+                    "cooldown": 7.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "meteorRain-1-3",
+                    "abilityId": "meteorRain",
+                    "cooldown": 9,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              },
+              {
+                "name": "天火",
+                "hpBelow": 0.3,
+                "abilities": [
+                  "dragonStrafe",
+                  "wingBuffet",
+                  "meteorRain",
+                  "skyDive",
+                  "infernoRing"
+                ],
+                "behaviorNodes": [
+                  {
+                    "id": "dragonStrafe-2-0",
+                    "abilityId": "dragonStrafe",
+                    "cooldown": 5.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "wingBuffet-2-1",
+                    "abilityId": "wingBuffet",
+                    "cooldown": 7.4,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "meteorRain-2-2",
+                    "abilityId": "meteorRain",
+                    "cooldown": 9,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "skyDive-2-3",
+                    "abilityId": "skyDive",
+                    "cooldown": 8.5,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  },
+                  {
+                    "id": "infernoRing-2-4",
+                    "abilityId": "infernoRing",
+                    "cooldown": 10.2,
+                    "condition": "when ready",
+                    "note": "",
+                    "enabled": true
+                  }
+                ]
+              }
+            ],
+            "maxHp": 520,
+            "isBoss": true,
+            "enemyType": "BOSS",
+            "summary": "",
+            "authoredTemplate": true,
+            "uid": 1,
+            "baseSpeed": 104,
+            "shield": 0,
+            "maxShield": 0,
+            "slowTimer": 0,
+            "slowRatio": 1,
+            "hitFlash": 0.08333333333333325,
+            "currentPhaseIndex": 2,
+            "abilityCooldowns": {
+              "dragonStrafe": 4.500000000000003,
+              "wingBuffet": 0,
+              "meteorRain": 0,
+              "skyDive": 0.08333333333333542,
+              "infernoRing": 0.6833333333333381
+            },
+            "bossState": {
+              "actionMode": "recover",
+              "phaseIntroTimer": 0,
+              "actionTimer": 1.6,
+              "castAbility": "dragonStrafe",
+              "phaseIntroDuration": 1.15,
+              "combatClockManaged": true,
+              "combatTime": 34.63333333333265,
+              "patrolAngle": 2.3100000000000067,
+              "abilityCursor": 1,
+              "lockedTarget": {
+                "x": 0,
+                "y": 0,
+                "radius": 12
+              },
+              "lockedPlayerPoint": {
+                "x": 0,
+                "y": 0,
+                "radius": 12
+              },
+              "castOrigin": {
+                "x": -6.1635202155947955,
+                "y": 156.79179626546733,
+                "radius": 32,
+                "uid": 1
+              },
+              "windupDuration": 1,
+              "strafeSide": "left"
+            },
+            "isDefeated": false,
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733,
+            "dashTimer": 0,
+            "armoredTimer": 0,
+            "damageTakenMultiplier": 1.45
+          }
+        ],
+        "towers": [],
+        "projectiles": [],
+        "drops": [],
+        "particles": [
+          {
+            "x": -82.00268854241159,
+            "y": 170.2817258676384,
+            "vx": -79.03139766532584,
+            "vy": 18.823157584424695,
+            "life": 0.2833333333333319,
+            "maxLife": 0.32111142212525007,
+            "color": "#ffd166",
+            "size": 2.036578055471182
+          },
+          {
+            "x": -65.15394930444872,
+            "y": 106.5141756500893,
+            "vx": -55.52152896119143,
+            "vy": -70.15481946331852,
+            "life": 0.2833333333333319,
+            "maxLife": 0.5745461043901741,
+            "color": "#ffd166",
+            "size": 2.6854224670678377
+          },
+          {
+            "x": -56.63396427271488,
+            "y": 164.43804856651863,
+            "vx": -43.63317775412113,
+            "vy": 10.66918925728023,
+            "life": 0.2833333333333319,
+            "maxLife": 0.47312986536417156,
+            "color": "#ffd166",
+            "size": 3.458111457526684
+          },
+          {
+            "x": -37.48701374416757,
+            "y": 168.90729452706643,
+            "vx": -16.916502598008567,
+            "vy": 16.905346411533813,
+            "life": 0.2833333333333319,
+            "maxLife": 0.4619469189550728,
+            "color": "#ffd166",
+            "size": 3.1628353600390255
+          },
+          {
+            "x": 20.7757914690044,
+            "y": 166.04904985911162,
+            "vx": 64.38043490874304,
+            "vy": 12.917098037642752,
+            "life": 0.2833333333333319,
+            "maxLife": 0.33492503366433085,
+            "color": "#ffd166",
+            "size": 2.653347535058856
+          },
+          {
+            "x": -30.6720032773522,
+            "y": 141.0291980279356,
+            "vx": -7.4071856675685686,
+            "vy": -21.994323122138063,
+            "life": 0.2833333333333319,
+            "maxLife": 0.4112580886809155,
+            "color": "#ffd166",
+            "size": 3.5080869551748037
+          },
+          {
+            "x": -41.857278855781104,
+            "y": 108.30959866608553,
+            "vx": -51.82840859435444,
+            "vy": -16.182964245423545,
+            "life": 0.2833333333333319,
+            "maxLife": 0.32230081474408506,
+            "color": "#f1c40f",
+            "size": 2.4890929996035993
+          },
+          {
+            "x": 24.61108669816702,
+            "y": 138.64871512393964,
+            "vx": 40.9181479925499,
+            "vy": 26.150686626001153,
+            "life": 0.2833333333333319,
+            "maxLife": 0.3549718318507075,
+            "color": "#f1c40f",
+            "size": 2.665183688979596
+          },
+          {
+            "x": -36.100583585515864,
+            "y": 140.347527775876,
+            "vx": -43.79581054282155,
+            "vy": 28.521122884516963,
+            "life": 0.2833333333333319,
+            "maxLife": 0.41163147871848194,
+            "color": "#f1c40f",
+            "size": 3.868729826528579
+          },
+          {
+            "x": 6.848547401100993,
+            "y": 154.9854636440089,
+            "vx": 16.133209438504274,
+            "vy": 48.946149677259754,
+            "life": 0.2833333333333319,
+            "maxLife": 0.5857447311747819,
+            "color": "#f1c40f",
+            "size": 3.1527071110904217
+          },
+          {
+            "x": -3.5085542996818493,
+            "y": 86.2402914343035,
+            "vx": 1.6814396234584659,
+            "vy": -46.977346429305484,
+            "life": 0.2833333333333319,
+            "maxLife": 0.40014406896661964,
+            "color": "#f1c40f",
+            "size": 2.3096305299550295
+          },
+          {
+            "x": -13.286020917540746,
+            "y": 126.38572043727076,
+            "vx": -42.862174438568346,
+            "vy": 32.39165364315906,
+            "life": 0.7999999999999994,
+            "maxLife": 0.38717535361647604,
+            "color": "#f1c40f",
+            "size": 2.310342615004629
+          },
+          {
+            "x": -13.650430117525376,
+            "y": 121.53043487988923,
+            "vx": -44.68422043849149,
+            "vy": 8.115225856251136,
+            "life": 0.7999999999999994,
+            "maxLife": 0.5669841015245765,
+            "color": "#f1c40f",
+            "size": 3.0809877067804337
+          },
+          {
+            "x": 1.7242503926046568,
+            "y": 115.72755908439346,
+            "vx": 32.18918211215867,
+            "vy": -20.89915312122718,
+            "life": 0.7999999999999994,
+            "maxLife": 0.5576641885796562,
+            "color": "#f1c40f",
+            "size": 3.4354958436451852
+          },
+          {
+            "x": -7.983297413648397,
+            "y": 125.87182313608439,
+            "vx": -16.348556919106596,
+            "vy": 29.822167137227414,
+            "life": 0.7999999999999994,
+            "maxLife": 0.31483282302506266,
+            "color": "#f1c40f",
+            "size": 3.112013141158968
+          },
+          {
+            "x": -5.487281122931843,
+            "y": 115.002060539174,
+            "vx": -3.8684754655238542,
+            "vy": -24.526645847325046,
+            "life": 0.7999999999999994,
+            "maxLife": 0.3946291387779638,
+            "color": "#f1c40f",
+            "size": 3.618018746841699
+          }
+        ],
+        "impactWaves": [
+          {
+            "x": 175.64468552304274,
+            "y": -573.2673594929204,
+            "radius": 9.666666666666666,
+            "maxRadius": 36,
+            "growth": 220,
+            "life": 0.16333333333333333,
+            "maxLife": 0.18,
+            "color": "#f97316",
+            "lineWidth": 4,
+            "fillAlpha": 0.08,
+            "dash": [],
+            "spokes": 0,
+            "spin": 0,
+            "style": null,
+            "accentColor": "#f97316",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": 65.81447729174639,
+            "y": -597.1221043932596,
+            "radius": 9.666666666666666,
+            "maxRadius": 36,
+            "growth": 220,
+            "life": 0.16333333333333333,
+            "maxLife": 0.18,
+            "color": "#f97316",
+            "lineWidth": 4,
+            "fillAlpha": 0.08,
+            "dash": [],
+            "spokes": 0,
+            "spin": 0,
+            "style": null,
+            "accentColor": "#f97316",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          },
+          {
+            "x": -46.51893762299551,
+            "y": -604.5169261816893,
+            "radius": 9.666666666666666,
+            "maxRadius": 36,
+            "growth": 220,
+            "life": 0.16333333333333333,
+            "maxLife": 0.18,
+            "color": "#f97316",
+            "lineWidth": 4,
+            "fillAlpha": 0.08,
+            "dash": [],
+            "spokes": 0,
+            "spin": 0,
+            "style": null,
+            "accentColor": "#f97316",
+            "secondaryColor": "#ffffff",
+            "nodeCount": 6,
+            "anchorA": null,
+            "anchorB": null,
+            "rotation": 0
+          }
+        ],
+        "hazards": [],
+        "floatingTexts": [
+          {
+            "x": -6.1635202155947955,
+            "y": 120.29179626546733,
+            "text": 8,
+            "color": "#f1c40f",
+            "life": 0.0833333333333326,
+            "maxLife": 0.8,
+            "vy": -30,
+            "font": "bold 14px system-ui, sans-serif",
+            "outlineColor": null
+          },
+          {
+            "x": -6.1635202155947955,
+            "y": 135.79179626546733,
+            "text": 8,
+            "color": "#f1c40f",
+            "life": 0.5999999999999994,
+            "maxLife": 0.8,
+            "vy": -30,
+            "font": "bold 14px system-ui, sans-serif",
+            "outlineColor": null
+          }
+        ],
+        "nextTowerUid": 2,
+        "nextEnemyUid": 2,
+        "nextBossEncounterUid": 1,
+        "gameTime": 34.63333333333265,
+        "money": 999999,
+        "towerCatalog": [
+          {
+            "id": "BASIC",
+            "name": "速射塔",
+            "summary": "稳定对单火力。",
+            "cost": 15,
+            "color": "#3498db",
+            "radius": 14,
+            "range": 180,
+            "fireRate": 0.3,
+            "damage": 6,
+            "hp": 50,
+            "shape": "circle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 0
+          },
+          {
+            "id": "CANNON",
+            "name": "榴弹炮",
+            "summary": "范围爆炸，清理怪群。",
+            "cost": 40,
+            "color": "#e67e22",
+            "radius": 16,
+            "range": 140,
+            "fireRate": 1.5,
+            "damage": 15,
+            "splash": 60,
+            "hp": 80,
+            "shape": "square",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 1
+          },
+          {
+            "id": "SNIPER",
+            "name": "穿透塔",
+            "summary": "高伤穿透，专打后排。",
+            "cost": 80,
+            "color": "#9b59b6",
+            "radius": 14,
+            "range": 350,
+            "fireRate": 2,
+            "damage": 35,
+            "pierce": 3,
+            "hp": 40,
+            "shape": "triangle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 2
+          },
+          {
+            "id": "RAPID",
+            "name": "链锯塔",
+            "summary": "极高射速，适合近距压制。",
+            "cost": 28,
+            "color": "#16a085",
+            "radius": 13,
+            "range": 155,
+            "fireRate": 0.12,
+            "damage": 3,
+            "hp": 42,
+            "shape": "circle",
+            "projectileSpeed": 560,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 3
+          },
+          {
+            "id": "MORTAR",
+            "name": "迫击塔",
+            "summary": "超大范围爆炸，但装填缓慢。",
+            "cost": 72,
+            "color": "#d35400",
+            "radius": 18,
+            "range": 260,
+            "fireRate": 2.3,
+            "damage": 24,
+            "splash": 92,
+            "hp": 68,
+            "shape": "square",
+            "projectileSpeed": 420,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 4
+          },
+          {
+            "id": "FROST",
+            "name": "霜冻塔",
+            "summary": "造成减速，帮助阵线控场。",
+            "cost": 55,
+            "color": "#5dade2",
+            "radius": 15,
+            "range": 190,
+            "fireRate": 0.85,
+            "damage": 7,
+            "hp": 74,
+            "shape": "square",
+            "slowRatio": 0.55,
+            "slowDuration": 1.4,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 5
+          },
+          {
+            "id": "RAIL",
+            "name": "磁轨塔",
+            "summary": "超长射程和高穿透。",
+            "cost": 98,
+            "color": "#7d3c98",
+            "radius": 14,
+            "range": 430,
+            "fireRate": 1.65,
+            "damage": 26,
+            "pierce": 5,
+            "hp": 38,
+            "shape": "triangle",
+            "projectileSpeed": 700,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 6
+          },
+          {
+            "id": "BURST",
+            "name": "散射塔",
+            "summary": "扇形连射，近距压制。",
+            "cost": 66,
+            "color": "#c0392b",
+            "radius": 16,
+            "range": 165,
+            "fireRate": 0.95,
+            "damage": 8,
+            "hp": 64,
+            "shape": "triangle",
+            "burstCount": 4,
+            "spread": 0.18,
+            "projectileSpeed": 460,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 7
+          },
+          {
+            "id": "SENTINEL",
+            "name": "哨戒塔",
+            "summary": "耐久更高，适合前线。",
+            "cost": 52,
+            "color": "#117864",
+            "radius": 17,
+            "range": 175,
+            "fireRate": 0.55,
+            "damage": 11,
+            "hp": 108,
+            "shape": "circle",
+            "projectileSpeed": 520,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 8
+          }
+        ],
+        "rewardHistory": {
+          "offeredKeys": [],
+          "pickedKeys": []
+        },
+        "wave": {
+          "number": 0,
+          "queue": [],
+          "spawnInterval": 999,
+          "spawnTimer": 0,
+          "boss": null,
+          "bossSpawned": true,
+          "awaitingReward": false,
+          "pendingRewardBossUid": null,
+          "pendingRewardBossEncounterUid": null
+        },
+        "difficultyMultiplier": 1,
+        "isMobile": false,
+        "mode": "debug",
+        "debugWaveFlow": false,
+        "debugOptions": {
+          "infiniteMoney": true,
+          "infiniteHealth": true
+        },
+        "bossHudTimer": 0.09999999999999999
+      },
+      "events": [
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7088049126850554,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 17.116666666666976,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7088049126850554,
+          "time": 17.500000000000288,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 17.633333333333614,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 18.016666666666925,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 18.15000000000025,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 18.533333333333562,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 18.666666666666888,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 19.0500000000002,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 19.183333333333525,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 19.566666666666837,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 19.700000000000163,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 139.26457998920327,
+            "y": 136.3767429753534
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 20.083333333333474,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8341456741950305,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 20.2166666666668,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8341456741950305,
+          "time": 20.583333333333446,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 20.733333333333437,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 21.100000000000083,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 21.250000000000075,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 21.61666666666672,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 21.766666666666712,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 22.133333333333358,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 22.28333333333335,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 22.649999999999995,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 22.799999999999986,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 23.166666666666632,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.9658947529931022,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 23.316666666666624,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.9658947529931022,
+          "time": 23.649999999999938,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 23.83333333333326,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 24.166666666666575,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 24.3499999999999,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 24.683333333333213,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 24.866666666666536,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 25.19999999999985,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 25.383333333333173,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 25.716666666666487,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 25.89999999999981,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 26.233333333333125,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.1049161173614712,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 26.416666666666448,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.1049161173614712,
+          "time": 26.733333333333096,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 26.933333333333085,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 27.249999999999734,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 27.449999999999722,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 27.76666666666637,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 27.96666666666636,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 28.283333333333008,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 28.483333333332997,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 28.799999999999645,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 28.999999999999634,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 29.316666666666283,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2516068509122185,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 29.51666666666627,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2516068509122185,
+          "time": 29.83333333333292,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 30.03333333333291,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 30.33333333333289,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 30.549999999999546,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 30.84999999999953,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 31.066666666666183,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 31.366666666666166,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 31.58333333333282,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 31.883333333332804,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 32.09999999999946,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 32.399999999999444,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 32.6166666666661,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 32.93333333333275,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 33.133333333332736,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 33.41666666666605,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 33.64999999999937,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 33.93333333333269,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 34.16666666666601,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 34.44999999999933,
+          "type": "hit"
+        }
+      ]
+    },
+    "presentation": {
+      "epoch": 61,
+      "events": [],
+      "actors": [
+        {
+          "key": "61/hero/player",
+          "artId": "hero:PLAYER",
+          "domain": "hero",
+          "x": 0,
+          "y": 0,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "left",
+          "aimAngle": 1.610086318279019,
+          "pose": "neutral",
+          "poseTime": 0.29999999999998295,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 100,
+          "maxHp": 100,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "key": "61/boss/1",
+          "artId": "boss:DRAGON",
+          "domain": "boss",
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733,
+          "radius": 32,
+          "referenceRadius": 32,
+          "facing": "up",
+          "aimAngle": -1.5315063353107743,
+          "pose": "recover",
+          "poseTime": 0,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 64,
+          "maxHp": 520,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0.08333333333333325,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": true,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": {
+            "phaseIndex": 2,
+            "phaseCount": 3,
+            "castAbility": "dragonStrafe",
+            "actionMode": "recover",
+            "actionTimer": 1.6,
+            "windupDuration": 1,
+            "phaseName": "天火",
+            "phaseIntroTimer": 0
+          },
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "retired": [],
+      "errors": [],
+      "actorCacheSize": 2
+    },
+    "eventLog": [
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7088049126850554,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/469",
+        "eventId": "61/event/1",
+        "epoch": 61,
+        "time": 17.116666666666976,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7088049126850554,
+        "projectileKey": "61/projectile/469",
+        "eventId": "61/event/2",
+        "epoch": 61,
+        "time": 17.500000000000288,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/475",
+        "eventId": "61/event/3",
+        "epoch": 61,
+        "time": 17.633333333333614,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/475",
+        "eventId": "61/event/4",
+        "epoch": 61,
+        "time": 18.016666666666925,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/481",
+        "eventId": "61/event/5",
+        "epoch": 61,
+        "time": 18.15000000000025,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/481",
+        "eventId": "61/event/6",
+        "epoch": 61,
+        "time": 18.533333333333562,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/499",
+        "eventId": "61/event/7",
+        "epoch": 61,
+        "time": 18.666666666666888,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/499",
+        "eventId": "61/event/8",
+        "epoch": 61,
+        "time": 19.0500000000002,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/562",
+        "eventId": "61/event/9",
+        "epoch": 61,
+        "time": 19.183333333333525,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/562",
+        "eventId": "61/event/10",
+        "epoch": 61,
+        "time": 19.566666666666837,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/568",
+        "eventId": "61/event/11",
+        "epoch": 61,
+        "time": 19.700000000000163,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 139.26457998920327,
+          "y": 136.3767429753534
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/568",
+        "eventId": "61/event/12",
+        "epoch": 61,
+        "time": 20.083333333333474,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8341456741950305,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/574",
+        "eventId": "61/event/13",
+        "epoch": 61,
+        "time": 20.2166666666668,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8341456741950305,
+        "projectileKey": "61/projectile/574",
+        "eventId": "61/event/14",
+        "epoch": 61,
+        "time": 20.583333333333446,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/580",
+        "eventId": "61/event/15",
+        "epoch": 61,
+        "time": 20.733333333333437,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/580",
+        "eventId": "61/event/16",
+        "epoch": 61,
+        "time": 21.100000000000083,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/586",
+        "eventId": "61/event/17",
+        "epoch": 61,
+        "time": 21.250000000000075,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/586",
+        "eventId": "61/event/18",
+        "epoch": 61,
+        "time": 21.61666666666672,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/604",
+        "eventId": "61/event/19",
+        "epoch": 61,
+        "time": 21.766666666666712,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/604",
+        "eventId": "61/event/20",
+        "epoch": 61,
+        "time": 22.133333333333358,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/667",
+        "eventId": "61/event/21",
+        "epoch": 61,
+        "time": 22.28333333333335,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/667",
+        "eventId": "61/event/22",
+        "epoch": 61,
+        "time": 22.649999999999995,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/673",
+        "eventId": "61/event/23",
+        "epoch": 61,
+        "time": 22.799999999999986,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/673",
+        "eventId": "61/event/24",
+        "epoch": 61,
+        "time": 23.166666666666632,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.9658947529931022,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/679",
+        "eventId": "61/event/25",
+        "epoch": 61,
+        "time": 23.316666666666624,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.9658947529931022,
+        "projectileKey": "61/projectile/679",
+        "eventId": "61/event/26",
+        "epoch": 61,
+        "time": 23.649999999999938,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/685",
+        "eventId": "61/event/27",
+        "epoch": 61,
+        "time": 23.83333333333326,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/685",
+        "eventId": "61/event/28",
+        "epoch": 61,
+        "time": 24.166666666666575,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/691",
+        "eventId": "61/event/29",
+        "epoch": 61,
+        "time": 24.3499999999999,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/691",
+        "eventId": "61/event/30",
+        "epoch": 61,
+        "time": 24.683333333333213,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/709",
+        "eventId": "61/event/31",
+        "epoch": 61,
+        "time": 24.866666666666536,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/709",
+        "eventId": "61/event/32",
+        "epoch": 61,
+        "time": 25.19999999999985,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/772",
+        "eventId": "61/event/33",
+        "epoch": 61,
+        "time": 25.383333333333173,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/772",
+        "eventId": "61/event/34",
+        "epoch": 61,
+        "time": 25.716666666666487,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/778",
+        "eventId": "61/event/35",
+        "epoch": 61,
+        "time": 25.89999999999981,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/778",
+        "eventId": "61/event/36",
+        "epoch": 61,
+        "time": 26.233333333333125,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.1049161173614712,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/784",
+        "eventId": "61/event/37",
+        "epoch": 61,
+        "time": 26.416666666666448,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.1049161173614712,
+        "projectileKey": "61/projectile/784",
+        "eventId": "61/event/38",
+        "epoch": 61,
+        "time": 26.733333333333096,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/790",
+        "eventId": "61/event/39",
+        "epoch": 61,
+        "time": 26.933333333333085,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/790",
+        "eventId": "61/event/40",
+        "epoch": 61,
+        "time": 27.249999999999734,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/796",
+        "eventId": "61/event/41",
+        "epoch": 61,
+        "time": 27.449999999999722,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/796",
+        "eventId": "61/event/42",
+        "epoch": 61,
+        "time": 27.76666666666637,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/814",
+        "eventId": "61/event/43",
+        "epoch": 61,
+        "time": 27.96666666666636,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/814",
+        "eventId": "61/event/44",
+        "epoch": 61,
+        "time": 28.283333333333008,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/877",
+        "eventId": "61/event/45",
+        "epoch": 61,
+        "time": 28.483333333332997,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/877",
+        "eventId": "61/event/46",
+        "epoch": 61,
+        "time": 28.799999999999645,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/883",
+        "eventId": "61/event/47",
+        "epoch": 61,
+        "time": 28.999999999999634,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/883",
+        "eventId": "61/event/48",
+        "epoch": 61,
+        "time": 29.316666666666283,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2516068509122185,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/889",
+        "eventId": "61/event/49",
+        "epoch": 61,
+        "time": 29.51666666666627,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2516068509122185,
+        "projectileKey": "61/projectile/889",
+        "eventId": "61/event/50",
+        "epoch": 61,
+        "time": 29.83333333333292,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/895",
+        "eventId": "61/event/51",
+        "epoch": 61,
+        "time": 30.03333333333291,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/895",
+        "eventId": "61/event/52",
+        "epoch": 61,
+        "time": 30.33333333333289,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/901",
+        "eventId": "61/event/53",
+        "epoch": 61,
+        "time": 30.549999999999546,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/901",
+        "eventId": "61/event/54",
+        "epoch": 61,
+        "time": 30.84999999999953,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/919",
+        "eventId": "61/event/55",
+        "epoch": 61,
+        "time": 31.066666666666183,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/919",
+        "eventId": "61/event/56",
+        "epoch": 61,
+        "time": 31.366666666666166,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/982",
+        "eventId": "61/event/57",
+        "epoch": 61,
+        "time": 31.58333333333282,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/982",
+        "eventId": "61/event/58",
+        "epoch": 61,
+        "time": 31.883333333332804,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/988",
+        "eventId": "61/event/59",
+        "epoch": 61,
+        "time": 32.09999999999946,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/988",
+        "eventId": "61/event/60",
+        "epoch": 61,
+        "time": 32.399999999999444,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/994",
+        "eventId": "61/event/61",
+        "epoch": 61,
+        "time": 32.6166666666661,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/994",
+        "eventId": "61/event/62",
+        "epoch": 61,
+        "time": 32.93333333333275,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1000",
+        "eventId": "61/event/63",
+        "epoch": 61,
+        "time": 33.133333333332736,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1000",
+        "eventId": "61/event/64",
+        "epoch": 61,
+        "time": 33.41666666666605,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1006",
+        "eventId": "61/event/65",
+        "epoch": 61,
+        "time": 33.64999999999937,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1006",
+        "eventId": "61/event/66",
+        "epoch": 61,
+        "time": 33.93333333333269,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1024",
+        "eventId": "61/event/67",
+        "epoch": 61,
+        "time": 34.16666666666601,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1024",
+        "eventId": "61/event/68",
+        "epoch": 61,
+        "time": 34.44999999999933,
+        "type": "hit"
+      }
+    ],
+    "art": {
+      "status": "ready",
+      "errors": [],
+      "drawErrors": [],
+      "fallbackArtIds": [],
+      "availableIds": [
+        "tower:BASIC",
+        "tower:CANNON",
+        "tower:SNIPER",
+        "tower:RAPID",
+        "tower:MORTAR",
+        "tower:FROST",
+        "tower:RAIL",
+        "tower:BURST",
+        "tower:SENTINEL",
+        "hero:PLAYER",
+        "enemy:BASIC",
+        "enemy:FAST",
+        "enemy:TANK",
+        "enemy:SHARD",
+        "enemy:SPLINTER",
+        "enemy:SHIELD",
+        "enemy:MEDIC",
+        "enemy:BOMBER",
+        "enemy:JAMMER",
+        "enemy:PHASE",
+        "enemy:BURROWER",
+        "enemy:BEACON",
+        "enemy:SCOUT",
+        "enemy:SIEGE",
+        "boss:COMMANDER",
+        "boss:HUNTER",
+        "boss:FORTRESS",
+        "boss:PRISM",
+        "boss:HIVE",
+        "boss:FROST_JUDGE",
+        "boss:RAIL_WARLORD",
+        "boss:COLLECTOR",
+        "boss:TWINS_SUN",
+        "boss:TWINS_MOON",
+        "boss:DRAGON",
+        "boss:SPIDER_MATRIARCH",
+        "boss:ASTROLABE",
+        "boss:BLOOD_FORGE",
+        "boss:VOID_CONDUCTOR",
+        "boss:LABYRINTH_KEEPER",
+        "boss:NIGHTMARE_BLOOM",
+        "mechanic:NEST",
+        "mechanic:WEB",
+        "mechanic:ROOT",
+        "mechanic:WALL",
+        "mechanic:SEAL",
+        "mechanic:RETICLE",
+        "mechanic:COURIER"
+      ]
+    },
+    "geometry": {
+      "buildBarRect": null,
+      "debugPanelRect": {
+        "left": 160,
+        "right": 1280,
+        "top": 12,
+        "bottom": 88
+      }
+    }
+  },
+  "after": {
+    "schemaVersion": 1,
+    "control": {
+      "manual": true,
+      "seed": 20261001,
+      "rngState": 585411356,
+      "rngCalls": 3431,
+      "pendingTimers": 0,
+      "droppedEvents": 0
+    },
+    "semantic": {
+      "gameState": "PLAYING",
+      "paused": false,
+      "rewardState": {
+        "active": false,
+        "choices": []
+      },
+      "state": {
+        "player": {
+          "x": 0,
+          "y": 0,
+          "vx": 0,
+          "vy": 0,
+          "speed": 180,
+          "radius": 12,
+          "hp": 100,
+          "maxHp": 100,
+          "lastShoot": 0.966666666666668,
+          "shootCd": 0.5,
+          "damage": 8,
+          "range": 200,
+          "slowTimer": 0,
+          "slowRatio": 1,
+          "controlGraceTimer": 0
+        },
+        "camera": {
+          "x": 0,
+          "y": 0,
+          "shakeTimer": 0,
+          "shakeDuration": 0,
+          "shakeStrength": 0,
+          "shakeSeed": 6.186277229243446
+        },
+        "keys": {
+          "w": false,
+          "a": false,
+          "s": false,
+          "d": false
+        },
+        "joystick": {
+          "active": false,
+          "startX": 0,
+          "startY": 0,
+          "currentX": 0,
+          "currentY": 0,
+          "dirX": 0,
+          "dirY": 0,
+          "touchId": null
+        },
+        "pointer": {
+          "x": 211,
+          "y": 40,
+          "active": false
+        },
+        "dragPlacement": {
+          "active": false,
+          "kind": "tower",
+          "entityId": null,
+          "towerId": null,
+          "pointerX": 0,
+          "pointerY": 0,
+          "worldX": 0,
+          "worldY": 0,
+          "canPlace": false,
+          "invalidReason": null
+        },
+        "enemies": [],
+        "towers": [],
+        "projectiles": [],
+        "drops": [],
+        "particles": [],
+        "impactWaves": [],
+        "hazards": [],
+        "floatingTexts": [],
+        "nextTowerUid": 2,
+        "nextEnemyUid": 2,
+        "nextBossEncounterUid": 1,
+        "gameTime": 35.13333333333262,
+        "money": 999999,
+        "towerCatalog": [
+          {
+            "id": "BASIC",
+            "name": "速射塔",
+            "summary": "稳定对单火力。",
+            "cost": 15,
+            "color": "#3498db",
+            "radius": 14,
+            "range": 180,
+            "fireRate": 0.3,
+            "damage": 6,
+            "hp": 50,
+            "shape": "circle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 0
+          },
+          {
+            "id": "CANNON",
+            "name": "榴弹炮",
+            "summary": "范围爆炸，清理怪群。",
+            "cost": 40,
+            "color": "#e67e22",
+            "radius": 16,
+            "range": 140,
+            "fireRate": 1.5,
+            "damage": 15,
+            "splash": 60,
+            "hp": 80,
+            "shape": "square",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 1
+          },
+          {
+            "id": "SNIPER",
+            "name": "穿透塔",
+            "summary": "高伤穿透，专打后排。",
+            "cost": 80,
+            "color": "#9b59b6",
+            "radius": 14,
+            "range": 350,
+            "fireRate": 2,
+            "damage": 35,
+            "pierce": 3,
+            "hp": 40,
+            "shape": "triangle",
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 2
+          },
+          {
+            "id": "RAPID",
+            "name": "链锯塔",
+            "summary": "极高射速，适合近距压制。",
+            "cost": 28,
+            "color": "#16a085",
+            "radius": 13,
+            "range": 155,
+            "fireRate": 0.12,
+            "damage": 3,
+            "hp": 42,
+            "shape": "circle",
+            "projectileSpeed": 560,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 3
+          },
+          {
+            "id": "MORTAR",
+            "name": "迫击塔",
+            "summary": "超大范围爆炸，但装填缓慢。",
+            "cost": 72,
+            "color": "#d35400",
+            "radius": 18,
+            "range": 260,
+            "fireRate": 2.3,
+            "damage": 24,
+            "splash": 92,
+            "hp": 68,
+            "shape": "square",
+            "projectileSpeed": 420,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 4
+          },
+          {
+            "id": "FROST",
+            "name": "霜冻塔",
+            "summary": "造成减速，帮助阵线控场。",
+            "cost": 55,
+            "color": "#5dade2",
+            "radius": 15,
+            "range": 190,
+            "fireRate": 0.85,
+            "damage": 7,
+            "hp": 74,
+            "shape": "square",
+            "slowRatio": 0.55,
+            "slowDuration": 1.4,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 5
+          },
+          {
+            "id": "RAIL",
+            "name": "磁轨塔",
+            "summary": "超长射程和高穿透。",
+            "cost": 98,
+            "color": "#7d3c98",
+            "radius": 14,
+            "range": 430,
+            "fireRate": 1.65,
+            "damage": 26,
+            "pierce": 5,
+            "hp": 38,
+            "shape": "triangle",
+            "projectileSpeed": 700,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 6
+          },
+          {
+            "id": "BURST",
+            "name": "散射塔",
+            "summary": "扇形连射，近距压制。",
+            "cost": 66,
+            "color": "#c0392b",
+            "radius": 16,
+            "range": 165,
+            "fireRate": 0.95,
+            "damage": 8,
+            "hp": 64,
+            "shape": "triangle",
+            "burstCount": 4,
+            "spread": 0.18,
+            "projectileSpeed": 460,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 7
+          },
+          {
+            "id": "SENTINEL",
+            "name": "哨戒塔",
+            "summary": "耐久更高，适合前线。",
+            "cost": 52,
+            "color": "#117864",
+            "radius": 17,
+            "range": 175,
+            "fireRate": 0.55,
+            "damage": 11,
+            "hp": 108,
+            "shape": "circle",
+            "projectileSpeed": 520,
+            "available": true,
+            "level": 0,
+            "maxLevel": 3,
+            "sortOrder": 8
+          }
+        ],
+        "rewardHistory": {
+          "offeredKeys": [],
+          "pickedKeys": []
+        },
+        "wave": {
+          "number": 0,
+          "queue": [],
+          "spawnInterval": 999,
+          "spawnTimer": 0,
+          "boss": null,
+          "bossSpawned": true,
+          "awaitingReward": false,
+          "pendingRewardBossUid": null,
+          "pendingRewardBossEncounterUid": null
+        },
+        "difficultyMultiplier": 1,
+        "isMobile": false,
+        "mode": "debug",
+        "debugWaveFlow": false,
+        "debugOptions": {
+          "infiniteMoney": true,
+          "infiniteHealth": true
+        },
+        "bossHudTimer": 0.06666666666666667
+      },
+      "events": [
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7088049126850554,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 17.116666666666976,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7088049126850554,
+          "time": 17.500000000000288,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 17.633333333333614,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 18.016666666666925,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 18.15000000000025,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 18.533333333333562,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 18.666666666666888,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 19.0500000000002,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 19.183333333333525,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 145.45803523557814,
+            "y": 133.26093383266064
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 19.566666666666837,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.7416647771970301,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 19.700000000000163,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 139.26457998920327,
+            "y": 136.3767429753534
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.7416647771970301,
+          "time": 20.083333333333474,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8341456741950305,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 20.2166666666668,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8341456741950305,
+          "time": 20.583333333333446,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 20.733333333333437,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 21.100000000000083,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 21.250000000000075,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 21.61666666666672,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 21.766666666666712,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 22.133333333333358,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 22.28333333333335,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 22.649999999999995,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.8947695794282591,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 22.799999999999986,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 116.87917112928223,
+            "y": 145.7144793266812
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.8947695794282591,
+          "time": 23.166666666666632,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 0.9658947529931022,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 23.316666666666624,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 0.9658947529931022,
+          "time": 23.649999999999938,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 23.83333333333326,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 24.166666666666575,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 24.3499999999999,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 24.683333333333213,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 24.866666666666536,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 25.19999999999985,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 25.383333333333173,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 25.716666666666487,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.0577316949794817,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 25.89999999999981,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 86.88135917752973,
+            "y": 154.21198838902652
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.0577316949794817,
+          "time": 26.233333333333125,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.1049161173614712,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 26.416666666666448,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.1049161173614712,
+          "time": 26.733333333333096,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 26.933333333333085,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 27.249999999999734,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 27.449999999999722,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 27.76666666666637,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 27.96666666666636,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 28.283333333333008,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 28.483333333332997,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 28.799999999999645,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2316059881318258,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 28.999999999999634,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 56.04922558843005,
+            "y": 158.85790571383092
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2316059881318258,
+          "time": 29.316666666666283,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.2516068509122185,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 29.51666666666627,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.2516068509122185,
+          "time": 29.83333333333292,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 30.03333333333291,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 30.33333333333289,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 30.549999999999546,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 30.84999999999953,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 31.066666666666183,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 31.366666666666166,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 31.58333333333282,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 31.883333333332804,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 32.09999999999946,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": 24.879970509297543,
+            "y": 159.71388317670642
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 32.399999999999444,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.4162599949995223,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 32.6166666666661,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.4162599949995223,
+          "time": 32.93333333333275,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 33.133333333332736,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 33.41666666666605,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 33.64999999999937,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 33.93333333333269,
+          "type": "hit"
+        },
+        {
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "angle": 1.610086318279019,
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "time": 34.16666666666601,
+          "type": "shot"
+        },
+        {
+          "targetKey": "run0/boss/1",
+          "position": {
+            "x": -6.1635202155947955,
+            "y": 156.79179626546733
+          },
+          "sourceArtId": "hero:PLAYER",
+          "sourceKey": "run0/hero/player",
+          "shotIndex": 0,
+          "projectileKind": "basic",
+          "angle": 1.610086318279019,
+          "time": 34.44999999999933,
+          "type": "hit"
+        }
+      ]
+    },
+    "presentation": {
+      "epoch": 62,
+      "events": [],
+      "actors": [
+        {
+          "key": "62/hero/player",
+          "artId": "hero:PLAYER",
+          "domain": "hero",
+          "x": 0,
+          "y": 0,
+          "radius": 12,
+          "referenceRadius": 12,
+          "facing": "right",
+          "aimAngle": 0,
+          "pose": "neutral",
+          "poseTime": 0.4999999999999716,
+          "poseProgress": 0,
+          "movementSpeed": 0,
+          "alpha": 1,
+          "level": 0,
+          "hp": 100,
+          "maxHp": 100,
+          "shield": 0,
+          "maxShield": 0,
+          "hitFlash": 0,
+          "states": {
+            "frozen": false,
+            "slowed": false,
+            "jammed": false,
+            "phased": false,
+            "burrowed": false,
+            "armored": false,
+            "open": false,
+            "partnerFallen": false
+          },
+          "healAura": null,
+          "jamAura": null,
+          "fuse": null,
+          "boss": null,
+          "mechanic": null,
+          "presentationOffset": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      ],
+      "retired": [],
+      "errors": [],
+      "actorCacheSize": 1
+    },
+    "eventLog": [
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7088049126850554,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/469",
+        "eventId": "61/event/1",
+        "epoch": 61,
+        "time": 17.116666666666976,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7088049126850554,
+        "projectileKey": "61/projectile/469",
+        "eventId": "61/event/2",
+        "epoch": 61,
+        "time": 17.500000000000288,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/475",
+        "eventId": "61/event/3",
+        "epoch": 61,
+        "time": 17.633333333333614,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/475",
+        "eventId": "61/event/4",
+        "epoch": 61,
+        "time": 18.016666666666925,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/481",
+        "eventId": "61/event/5",
+        "epoch": 61,
+        "time": 18.15000000000025,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/481",
+        "eventId": "61/event/6",
+        "epoch": 61,
+        "time": 18.533333333333562,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/499",
+        "eventId": "61/event/7",
+        "epoch": 61,
+        "time": 18.666666666666888,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/499",
+        "eventId": "61/event/8",
+        "epoch": 61,
+        "time": 19.0500000000002,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/562",
+        "eventId": "61/event/9",
+        "epoch": 61,
+        "time": 19.183333333333525,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 145.45803523557814,
+          "y": 133.26093383266064
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/562",
+        "eventId": "61/event/10",
+        "epoch": 61,
+        "time": 19.566666666666837,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.7416647771970301,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/568",
+        "eventId": "61/event/11",
+        "epoch": 61,
+        "time": 19.700000000000163,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 139.26457998920327,
+          "y": 136.3767429753534
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.7416647771970301,
+        "projectileKey": "61/projectile/568",
+        "eventId": "61/event/12",
+        "epoch": 61,
+        "time": 20.083333333333474,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8341456741950305,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/574",
+        "eventId": "61/event/13",
+        "epoch": 61,
+        "time": 20.2166666666668,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8341456741950305,
+        "projectileKey": "61/projectile/574",
+        "eventId": "61/event/14",
+        "epoch": 61,
+        "time": 20.583333333333446,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/580",
+        "eventId": "61/event/15",
+        "epoch": 61,
+        "time": 20.733333333333437,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/580",
+        "eventId": "61/event/16",
+        "epoch": 61,
+        "time": 21.100000000000083,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/586",
+        "eventId": "61/event/17",
+        "epoch": 61,
+        "time": 21.250000000000075,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/586",
+        "eventId": "61/event/18",
+        "epoch": 61,
+        "time": 21.61666666666672,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/604",
+        "eventId": "61/event/19",
+        "epoch": 61,
+        "time": 21.766666666666712,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/604",
+        "eventId": "61/event/20",
+        "epoch": 61,
+        "time": 22.133333333333358,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/667",
+        "eventId": "61/event/21",
+        "epoch": 61,
+        "time": 22.28333333333335,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/667",
+        "eventId": "61/event/22",
+        "epoch": 61,
+        "time": 22.649999999999995,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.8947695794282591,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/673",
+        "eventId": "61/event/23",
+        "epoch": 61,
+        "time": 22.799999999999986,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 116.87917112928223,
+          "y": 145.7144793266812
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.8947695794282591,
+        "projectileKey": "61/projectile/673",
+        "eventId": "61/event/24",
+        "epoch": 61,
+        "time": 23.166666666666632,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 0.9658947529931022,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/679",
+        "eventId": "61/event/25",
+        "epoch": 61,
+        "time": 23.316666666666624,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 0.9658947529931022,
+        "projectileKey": "61/projectile/679",
+        "eventId": "61/event/26",
+        "epoch": 61,
+        "time": 23.649999999999938,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/685",
+        "eventId": "61/event/27",
+        "epoch": 61,
+        "time": 23.83333333333326,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/685",
+        "eventId": "61/event/28",
+        "epoch": 61,
+        "time": 24.166666666666575,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/691",
+        "eventId": "61/event/29",
+        "epoch": 61,
+        "time": 24.3499999999999,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/691",
+        "eventId": "61/event/30",
+        "epoch": 61,
+        "time": 24.683333333333213,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/709",
+        "eventId": "61/event/31",
+        "epoch": 61,
+        "time": 24.866666666666536,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/709",
+        "eventId": "61/event/32",
+        "epoch": 61,
+        "time": 25.19999999999985,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/772",
+        "eventId": "61/event/33",
+        "epoch": 61,
+        "time": 25.383333333333173,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/772",
+        "eventId": "61/event/34",
+        "epoch": 61,
+        "time": 25.716666666666487,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.0577316949794817,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/778",
+        "eventId": "61/event/35",
+        "epoch": 61,
+        "time": 25.89999999999981,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 86.88135917752973,
+          "y": 154.21198838902652
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.0577316949794817,
+        "projectileKey": "61/projectile/778",
+        "eventId": "61/event/36",
+        "epoch": 61,
+        "time": 26.233333333333125,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.1049161173614712,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/784",
+        "eventId": "61/event/37",
+        "epoch": 61,
+        "time": 26.416666666666448,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.1049161173614712,
+        "projectileKey": "61/projectile/784",
+        "eventId": "61/event/38",
+        "epoch": 61,
+        "time": 26.733333333333096,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/790",
+        "eventId": "61/event/39",
+        "epoch": 61,
+        "time": 26.933333333333085,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/790",
+        "eventId": "61/event/40",
+        "epoch": 61,
+        "time": 27.249999999999734,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/796",
+        "eventId": "61/event/41",
+        "epoch": 61,
+        "time": 27.449999999999722,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/796",
+        "eventId": "61/event/42",
+        "epoch": 61,
+        "time": 27.76666666666637,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/814",
+        "eventId": "61/event/43",
+        "epoch": 61,
+        "time": 27.96666666666636,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/814",
+        "eventId": "61/event/44",
+        "epoch": 61,
+        "time": 28.283333333333008,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/877",
+        "eventId": "61/event/45",
+        "epoch": 61,
+        "time": 28.483333333332997,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/877",
+        "eventId": "61/event/46",
+        "epoch": 61,
+        "time": 28.799999999999645,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2316059881318258,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/883",
+        "eventId": "61/event/47",
+        "epoch": 61,
+        "time": 28.999999999999634,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 56.04922558843005,
+          "y": 158.85790571383092
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2316059881318258,
+        "projectileKey": "61/projectile/883",
+        "eventId": "61/event/48",
+        "epoch": 61,
+        "time": 29.316666666666283,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.2516068509122185,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/889",
+        "eventId": "61/event/49",
+        "epoch": 61,
+        "time": 29.51666666666627,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.2516068509122185,
+        "projectileKey": "61/projectile/889",
+        "eventId": "61/event/50",
+        "epoch": 61,
+        "time": 29.83333333333292,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/895",
+        "eventId": "61/event/51",
+        "epoch": 61,
+        "time": 30.03333333333291,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/895",
+        "eventId": "61/event/52",
+        "epoch": 61,
+        "time": 30.33333333333289,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/901",
+        "eventId": "61/event/53",
+        "epoch": 61,
+        "time": 30.549999999999546,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/901",
+        "eventId": "61/event/54",
+        "epoch": 61,
+        "time": 30.84999999999953,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/919",
+        "eventId": "61/event/55",
+        "epoch": 61,
+        "time": 31.066666666666183,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/919",
+        "eventId": "61/event/56",
+        "epoch": 61,
+        "time": 31.366666666666166,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/982",
+        "eventId": "61/event/57",
+        "epoch": 61,
+        "time": 31.58333333333282,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/982",
+        "eventId": "61/event/58",
+        "epoch": 61,
+        "time": 31.883333333332804,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/988",
+        "eventId": "61/event/59",
+        "epoch": 61,
+        "time": 32.09999999999946,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": 24.879970509297543,
+          "y": 159.71388317670642
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/988",
+        "eventId": "61/event/60",
+        "epoch": 61,
+        "time": 32.399999999999444,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.4162599949995223,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/994",
+        "eventId": "61/event/61",
+        "epoch": 61,
+        "time": 32.6166666666661,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.4162599949995223,
+        "projectileKey": "61/projectile/994",
+        "eventId": "61/event/62",
+        "epoch": 61,
+        "time": 32.93333333333275,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1000",
+        "eventId": "61/event/63",
+        "epoch": 61,
+        "time": 33.133333333332736,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1000",
+        "eventId": "61/event/64",
+        "epoch": 61,
+        "time": 33.41666666666605,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1006",
+        "eventId": "61/event/65",
+        "epoch": 61,
+        "time": 33.64999999999937,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1006",
+        "eventId": "61/event/66",
+        "epoch": 61,
+        "time": 33.93333333333269,
+        "type": "hit"
+      },
+      {
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "angle": 1.610086318279019,
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "projectileKey": "61/projectile/1024",
+        "eventId": "61/event/67",
+        "epoch": 61,
+        "time": 34.16666666666601,
+        "type": "shot"
+      },
+      {
+        "targetKey": "61/boss/1",
+        "position": {
+          "x": -6.1635202155947955,
+          "y": 156.79179626546733
+        },
+        "sourceArtId": "hero:PLAYER",
+        "sourceKey": "61/hero/player",
+        "shotIndex": 0,
+        "projectileKind": "basic",
+        "angle": 1.610086318279019,
+        "projectileKey": "61/projectile/1024",
+        "eventId": "61/event/68",
+        "epoch": 61,
+        "time": 34.44999999999933,
+        "type": "hit"
+      }
+    ],
+    "art": {
+      "status": "ready",
+      "errors": [],
+      "drawErrors": [],
+      "fallbackArtIds": [],
+      "availableIds": [
+        "tower:BASIC",
+        "tower:CANNON",
+        "tower:SNIPER",
+        "tower:RAPID",
+        "tower:MORTAR",
+        "tower:FROST",
+        "tower:RAIL",
+        "tower:BURST",
+        "tower:SENTINEL",
+        "hero:PLAYER",
+        "enemy:BASIC",
+        "enemy:FAST",
+        "enemy:TANK",
+        "enemy:SHARD",
+        "enemy:SPLINTER",
+        "enemy:SHIELD",
+        "enemy:MEDIC",
+        "enemy:BOMBER",
+        "enemy:JAMMER",
+        "enemy:PHASE",
+        "enemy:BURROWER",
+        "enemy:BEACON",
+        "enemy:SCOUT",
+        "enemy:SIEGE",
+        "boss:COMMANDER",
+        "boss:HUNTER",
+        "boss:FORTRESS",
+        "boss:PRISM",
+        "boss:HIVE",
+        "boss:FROST_JUDGE",
+        "boss:RAIL_WARLORD",
+        "boss:COLLECTOR",
+        "boss:TWINS_SUN",
+        "boss:TWINS_MOON",
+        "boss:DRAGON",
+        "boss:SPIDER_MATRIARCH",
+        "boss:ASTROLABE",
+        "boss:BLOOD_FORGE",
+        "boss:VOID_CONDUCTOR",
+        "boss:LABYRINTH_KEEPER",
+        "boss:NIGHTMARE_BLOOM",
+        "mechanic:NEST",
+        "mechanic:WEB",
+        "mechanic:ROOT",
+        "mechanic:WALL",
+        "mechanic:SEAL",
+        "mechanic:RETICLE",
+        "mechanic:COURIER"
+      ]
+    },
+    "geometry": {
+      "buildBarRect": null,
+      "debugPanelRect": {
+        "left": 160,
+        "right": 1280,
+        "top": 12,
+        "bottom": 88
+      }
+    }
+  }
+}

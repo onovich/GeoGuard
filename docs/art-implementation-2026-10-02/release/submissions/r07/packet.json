@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "revision": "r07",
+  "status": "STOPPED_GIT_EOL_PRESERVATION_CHECK_FAILED",
+  "recordedAt": "2026-10-02T15:59:09.924Z",
+  "commitCreated": false,
+  "indexMutationsPerformed": false,
+  "pushPerformed": false,
+  "incrementalSyntaxPassed": 101,
+  "productFileCount": 880,
+  "productFingerprint": "f353ca072173dfb8e63f4b06506f0e4ad345cecc276fab8bfedf163d18ec3ac6",
+  "finalQAApprovedPacketSha": "1b0f1a1d695205d9e61549292018d7ece0d812ac7e7af4a7fa1816aa820b4705",
+  "finding": "core.autocrlf=true and no text attributes cause Git clean filter to change CRLF bytes. A new frozen candidate source mirror would lose its approved exact byte SHA in the committed blob.",
+  "findings": [
+    {
+      "path": "package.json",
+      "bytes": 703,
+      "filteredBytes": 685,
+      "approvedFilesystemSha256": "60a03b3a4538151147534fb2d9174ac6fb99cb512cd24575088e5886ef467a82",
+      "normalizedSha256": "2db12cbac1abd06f255e492914112f4fa5ffc6cec074527ff65a161b3e0acbab",
+      "rawOid": "5726d0ddc48f68523f962db7361b63d1f47a2b51",
+      "filteredOid": "db2c59d3f6fd094a764ac391329c239c649e1508",
+      "gitFilterChangesBytes": true
+    },
+    {
+      "path": "docs/art-implementation-2026-10-02/qa/submissions/r04/candidate/package.json",
+      "bytes": 703,
+      "filteredBytes": 685,
+      "approvedFilesystemSha256": "60a03b3a4538151147534fb2d9174ac6fb99cb512cd24575088e5886ef467a82",
+      "normalizedSha256": "2db12cbac1abd06f255e492914112f4fa5ffc6cec074527ff65a161b3e0acbab",
+      "rawOid": "5726d0ddc48f68523f962db7361b63d1f47a2b51",
+      "filteredOid": "db2c59d3f6fd094a764ac391329c239c649e1508",
+      "gitFilterChangesBytes": true
+    }
+  ],
+  "alreadyCompletedAuthorizedChanges": {
+    "removedOnlyTemporaryDocsExcludeAndDedicatedComment": true,
+    "addedScopedViteCacheIgnore": true,
+    "addedPreciseThreeMirrorWhiteList": true,
+    "noSourceOwnerBytesChanged": true
+  },
+  "proposedFix": "Add narrowly scoped .gitattributes -text rules for the approved880 product paths and this round docs/scripts/tests so frozen byte hashes survive storage, and explicitly stage/renormalize those paths using a reviewable Git operation where the wrapper lacks this option. Final pointer/mirror hash preflight must pass before Commit.cmd -SkipValidation. No frozen source byte changes needed.",
+  "stopReason": "Final dispatch explicitly requires stopping/reporting any validation or inventory failure.",
+  "awaitingPrimaryDisposition": true
+}

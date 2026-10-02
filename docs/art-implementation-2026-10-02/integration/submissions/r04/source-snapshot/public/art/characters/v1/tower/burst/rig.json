@@ -1,0 +1,564 @@
+{
+  "schemaVersion": 1,
+  "artId": "tower:BURST",
+  "version": "v1",
+  "status": "produced_pending_review",
+  "sourceSize": {
+    "width": 256,
+    "height": 256
+  },
+  "rootPx": [
+    128,
+    220
+  ],
+  "collisionCenterPx": [
+    128,
+    143
+  ],
+  "collisionRadiusPx": 80,
+  "referenceRuntimeRadius": 16,
+  "visualScaleMode": "runtime-radius",
+  "anchorsMeasured": true,
+  "geometryMeasurementMode": "authored vector joints, shared sampler; raster alpha audit in r04",
+  "anatomy": "圆主体；2顶芽、1后瓣、2脚；1近侧眼+1弯笑线；1炮口平面含4等径圆孔2x2，无四叶随机孔",
+  "organCounts": {
+    "body": 1,
+    "topBuds": 2,
+    "rearLobes": 1,
+    "feet": 2,
+    "eyes": 1,
+    "smile": 1,
+    "rigidMuzzlePlane": 1,
+    "equalBores": 4,
+    "rows": 2,
+    "columns": 2
+  },
+  "parts": [
+    {
+      "id": "body",
+      "parent": null,
+      "class": "soft",
+      "pivotPx": [
+        128,
+        220
+      ]
+    },
+    {
+      "id": "bud-top-left",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        84,
+        74
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "bud-top-right",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        114,
+        61
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "rear-lobe",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        40,
+        145
+      ],
+      "embeddedContour": true
+    },
+    {
+      "id": "eye",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        147,
+        139
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "smile",
+      "parent": "body",
+      "class": "soft-attached",
+      "pivotPx": [
+        149,
+        167
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-left",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        100,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "foot-right",
+      "parent": "body",
+      "class": "fixed-contact",
+      "pivotPx": [
+        156,
+        220
+      ],
+      "embeddedContour": false
+    },
+    {
+      "id": "launcher",
+      "parent": "body",
+      "class": "rigid",
+      "pivotPx": [
+        176,
+        143
+      ]
+    }
+  ],
+  "muzzles": [
+    {
+      "id": "M1",
+      "partId": "launcher",
+      "positionPx": [
+        192,
+        130
+      ],
+      "axisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    },
+    {
+      "id": "M2",
+      "partId": "launcher",
+      "positionPx": [
+        215,
+        130
+      ],
+      "axisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    },
+    {
+      "id": "M3",
+      "partId": "launcher",
+      "positionPx": [
+        192,
+        156
+      ],
+      "axisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    },
+    {
+      "id": "M4",
+      "partId": "launcher",
+      "positionPx": [
+        215,
+        156
+      ],
+      "axisRadians": 0,
+      "angleMin": -0.44,
+      "angleMax": 0.44
+    }
+  ],
+  "directions": {
+    "right": {
+      "mirror": false,
+      "bodyRotation": 0,
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "left": {
+      "mirror": "entire rig at root including face/feet/P/M before residual aim",
+      "launcherAngleRange": [
+        -0.44,
+        0.44
+      ]
+    },
+    "up": {
+      "mirror": false,
+      "pivotPx": [
+        176,
+        143
+      ],
+      "projection": "approved BURST upward oblique 4-bore common plane",
+      "projectedAxisRadians": -0.58,
+      "angleRange": [
+        -0.15,
+        0.15
+      ]
+    },
+    "outOfRange": "nearest supported rigid projection; actual projectile direction/origin remain logical"
+  },
+  "clips": {
+    "neutral": {
+      "duration": 1,
+      "loop": true,
+      "frames": "continuous vector sampler"
+    },
+    "move": {
+      "duration": 0.72,
+      "loop": true,
+      "frames": "N->stretch->N->squash->N; smooth fixed-root sine"
+    },
+    "attack": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local body pulse only"
+    },
+    "windup": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "progress0..1; local compression only"
+    },
+    "recover": {
+      "duration": "existing window",
+      "loop": false,
+      "frames": "same neutral body; external OPEN overlay only"
+    },
+    "broken": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "neutral disappearance body"
+    },
+    "fade": {
+      "duration": "sidecar only",
+      "loop": false,
+      "frames": "authored broken body, alpha1-progress"
+    },
+    "sourceOffset": [
+      0,
+      0
+    ],
+    "sourceSize": [
+      256,
+      256
+    ],
+    "trim": null
+  },
+  "actions": {
+    "NEUTRAL": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "SQUASH": {
+      "status": "produced_pending_review",
+      "pose": "squash",
+      "clip": "squash",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 2,
+          "label": "SQUASH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "STRETCH": {
+      "status": "produced_pending_review",
+      "pose": "stretch",
+      "clip": "stretch",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 3,
+          "label": "STRETCH",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "ATTACK": {
+      "status": "produced_pending_review",
+      "pose": "attack",
+      "clip": "attack",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": null,
+      "mappingMode": "direct_concept_cell",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 4,
+          "label": "ATTACK",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_LEFT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "left",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_UP": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "up",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "DIR_RIGHT": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": "right",
+      "externalLevel": null,
+      "mappingMode": "direction_construction",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC"
+      ],
+      "notes": null
+    },
+    "LV1": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 0,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV2": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 1,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV3": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 2,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    },
+    "LV4": {
+      "status": "produced_pending_review",
+      "pose": "neutral",
+      "clip": "neutral",
+      "archiveOnly": false,
+      "facing": null,
+      "externalLevel": 3,
+      "mappingMode": "body_plus_external_level_badge",
+      "bodySources": [
+        {
+          "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "href": "../../../../art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+          "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98",
+          "row": "主身体行",
+          "column": 1,
+          "label": "NEUTRAL",
+          "accuracy": "concept cell locator; not a pixel extraction rectangle or exported animation frame"
+        }
+      ],
+      "effectKeys": [
+        "B01/P09",
+        "R01/HIT_BASIC",
+        "B02/S12"
+      ],
+      "notes": null
+    }
+  },
+  "sourceFile": "art/characters/v1/tower/burst/source.svg",
+  "bodyResource": "art/characters/v1/tower/burst/body.svg",
+  "icon": {
+    "src": "art/characters/v1/tower/burst/icon.svg",
+    "width": 64,
+    "height": 64,
+    "alt": "tower:BURST"
+  },
+  "referenceSources": [
+    {
+      "path": "docs/art-direction/sticker-bible-2026-10-01/production-art-2026-10-02/friendly/submissions/r01/burst-fixed-root.png",
+      "sha256": "0200f1cd4b53b089236a76d79e03b7c79ca7fb61c6282b3132d9dbdb34a41d98"
+    }
+  ],
+  "neutralBoundsPx": {
+    "x": 21.75,
+    "y": 37.75,
+    "width": 204.15,
+    "height": 185.5
+  },
+  "iconSourceViewBox": [
+    15.75,
+    22.424999999999997,
+    216.15,
+    216.15
+  ],
+  "sourceAlphaBoundsPx": {
+    "x": 25,
+    "y": 39,
+    "width": 201,
+    "height": 184,
+    "edgePixels": 0
+  },
+  "bodyPng": "art/characters/v1/tower/burst/body.png"
+}
