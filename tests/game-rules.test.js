@@ -514,7 +514,7 @@ test('boss phase presentation data exposes structured phase intent, tone, and co
   assert.equal(commanderMid.intent, 'Shield Wall');
   assert.equal(commanderMid.tone, '#60a5fa');
   assert.equal(commanderMid.phaseTier, 1);
-  assert.equal(commanderMid.counterplay, 'Break the escort line first and keep sustained fire on the front.');
+  assert.match(commanderMid.counterplay, /护卫.*恢复/);
   assert.deepEqual(commanderMid.threats, ['Advance', 'Shielding', 'Lane Pressure']);
   assert.equal(getBossPhaseHint({ form: 'commander' }, 1), 'Shield Wall');
   assert.equal(getBossPhaseTone({ form: 'commander' }, 2), '#2563eb');

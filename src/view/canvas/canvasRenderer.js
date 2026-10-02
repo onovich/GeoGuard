@@ -1,4 +1,5 @@
 import { COLORS } from '../../data/gameConfig.js';
+import { BOSS_ACTION_LABELS, MECHANIC_LABELS } from '../../data/bossMechanics.js';
 import { drawRoundRect } from '../../logic/engine/gameMath.js';
 
 const drawTowerShape = (ctx, tower, x, y, color, alpha = 1) => {
@@ -909,6 +910,35 @@ export const drawGameScene = (ctx, canvas, { state, getTowerById, getDebugDragEn
     drawBossEncounterLinks(ctx, state.enemies);
 
     for (const enemy of state.enemies) {
+      if (enemy.mechanic?.parentUid) {
+        const parent = state.enemies.find((candidate) => candidate.uid === enemy.mechanic.parentUid && candidate.hp > 0);
+        if (parent) {
+          ctx.strokeStyle = `${enemy.color}66`;
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(parent.x, parent.y); ctx.lineTo(enemy.x, enemy.y); ctx.stroke();
+        }
+      }
+      if (!enemy.isBoss || enemy.bossState.actionMode !== 'windup') continue;
+      const target = enemy.bossState.lockedTarget;
+      if (!target) continue;
+      ctx.save();
+      ctx.strokeStyle = enemy.color;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 6]);
+      ctx.beginPath(); ctx.moveTo(enemy.x, enemy.y); ctx.lineTo(target.x, target.y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(target.x, target.y, 24, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(enemy.x, enemy.y, enemy.radius + 12, -Math.PI / 2,
+        -Math.PI / 2 + Math.PI * 2 * (1 - enemy.bossState.actionTimer / enemy.bossState.windupDuration)); ctx.stroke();
+      for (const uid of enemy.bossState.sacrificeTargets ?? []) {
+        if (enemy.bossState.castAbility !== 'sacrificeMinions') break;
+        const victim = state.enemies.find((candidate) => candidate.uid === uid && candidate.hp > 0);
+        if (victim) { ctx.beginPath(); ctx.moveTo(enemy.x, enemy.y); ctx.lineTo(victim.x, victim.y); ctx.stroke(); }
+      }
+      ctx.restore();
+    }
+
+    for (const enemy of state.enemies) {
       if (enemy.burrowed) {
         ctx.save();
         ctx.globalAlpha = 0.45;
@@ -930,6 +960,18 @@ export const drawGameScene = (ctx, canvas, { state, getTowerById, getDebugDragEn
         drawRoundRect(ctx, enemy.x - enemy.radius, enemy.y - enemy.radius, enemy.radius * 2, enemy.radius * 2, 5);
         ctx.fill();
       }
+      if (enemy.mechanic) {
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(enemy.x - 6, enemy.y - 6); ctx.lineTo(enemy.x + 6, enemy.y + 6);
+        ctx.moveTo(enemy.x + 6, enemy.y - 6); ctx.lineTo(enemy.x - 6, enemy.y + 6); ctx.stroke();
+        ctx.fillStyle = enemy.color; ctx.font = 'bold 11px system-ui, sans-serif'; ctx.textAlign = 'center';
+        const label = enemy.mechanic.kind === 'courier' ? `追回 ${enemy.mechanic.cargo}` : MECHANIC_LABELS[enemy.mechanic.kind];
+        ctx.fillText(label, enemy.x, enemy.y - enemy.radius - 17);
+        if (['seal', 'reticle'].includes(enemy.mechanic.kind)) {
+          const tower = state.towers.find((candidate) => candidate.uid === enemy.mechanic.targetUid);
+          if (tower) { ctx.strokeStyle = `${enemy.color}99`; ctx.beginPath(); ctx.moveTo(enemy.x, enemy.y); ctx.lineTo(tower.x, tower.y); ctx.stroke(); }
+        }
+      }
       if (enemy.shield > 0) {
         ctx.strokeStyle = COLORS.enemyShield;
         ctx.lineWidth = 3;
@@ -945,6 +987,9 @@ export const drawGameScene = (ctx, canvas, { state, getTowerById, getDebugDragEn
         ctx.stroke();
       }
       if (enemy.isBoss) {
+        ctx.fillStyle = (enemy.damageTakenMultiplier ?? 1) > 1 ? '#b45309' : enemy.color;
+        ctx.font = 'bold 11px system-ui, sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(BOSS_ACTION_LABELS[enemy.bossState.actionMode ?? 'idle'], enemy.x, enemy.y + enemy.radius + 18);
         ctx.strokeStyle = COLORS.boss;
         ctx.lineWidth = 3;
         ctx.strokeRect(enemy.x - enemy.radius - 3, enemy.y - enemy.radius - 3, (enemy.radius + 3) * 2, (enemy.radius + 3) * 2);

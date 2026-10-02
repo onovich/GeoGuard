@@ -18,6 +18,12 @@ export const forceBossPhaseRuntime = ({ enemies, phaseNumber, onPhaseShift }) =>
     const previousPhaseIndex = boss.currentPhaseIndex ?? 0;
     boss.currentPhaseIndex = nextPhaseIndex;
     boss.abilityCooldowns = {};
+    boss.bossState ??= {};
+    boss.bossState.actionMode = 'intro';
+    boss.bossState.phaseIntroTimer = 1.15;
+    boss.bossState.actionTimer = 0;
+    boss.bossState.castAbility = null;
+    boss.dashTimer = 0;
     boss.hp = getForcedBossPhaseHp({ boss, phaseIndex: nextPhaseIndex });
     onPhaseShift?.({
       boss,

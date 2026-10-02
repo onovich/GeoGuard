@@ -1,0 +1,7 @@
+# 主审调用链纠正
+
+Boss工作会话发现，主审上一轮把基础bossAbilityRuntime当成当前入口，导致spawnHive=BEACON的结论错误。
+
+已核实 useGeoGuardGame.jsx:798 调runBossOptimizedAbility，bossOptimizedAbilities.js:209 优先handlers，仅未定义handler时回落runBossAbilityEffect。spawnHive优化handler创建NEST；NEST触发BASIC；summonSwarm无优化覆盖则回落创建SHARD。
+
+本轮全部技能映射须核完整调用链。主审已更正整体计划、production-notes与通讯规范，并逐会话发相同修正。不因旧原画包含NEST/BASIC就判其错误；需逐技能判归属。原画身体-only原则不变。

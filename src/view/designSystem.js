@@ -11,7 +11,7 @@ export const ui = {
     card: 'rounded-lg border border-slate-200 bg-white shadow-sm',
     softCard: 'rounded-xl border border-slate-200 bg-slate-50/80',
     hud: 'rounded-xl bg-white/80 shadow-sm backdrop-blur-sm',
-    darkHud: 'rounded-xl bg-slate-900/78 text-white shadow-lg backdrop-blur-sm',
+    darkHud: 'rounded-xl bg-slate-900/90 text-white shadow-lg backdrop-blur-sm',
     menu: 'overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl',
   },
   text: {

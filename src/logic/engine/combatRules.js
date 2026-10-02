@@ -8,7 +8,7 @@ export const resolveTargetDamage = ({ targetHp, amount, infiniteHealth = false }
 export const resolveEnemyDamage = (enemy, amount) => {
   const phaseMultiplier = enemy.phased ? enemy.phase?.damageMultiplier ?? 0.25 : 1;
   const armorMultiplier = enemy.armoredTimer > 0 ? 0.65 : 1;
-  let remainingDamage = amount * phaseMultiplier * armorMultiplier;
+  let remainingDamage = amount * phaseMultiplier * armorMultiplier * (enemy.damageTakenMultiplier ?? 1);
   const shield = enemy.shield ?? 0;
   let nextShield = shield;
 
@@ -40,7 +40,7 @@ export const getPulledPosition = ({ target, hazard }) => {
   }
 
   const angle = Math.atan2(hazard.y - target.y, hazard.x - target.x);
-  const pullDistance = Math.min(hazard.pull * 0.18, hazard.radius * 0.35);
+  const pullDistance = Math.sign(hazard.pull) * Math.min(Math.abs(hazard.pull) * 0.18, hazard.radius * 0.35, hazard.maxPullStep ?? Infinity, dist(target, hazard));
   return {
     x: target.x + Math.cos(angle) * pullDistance,
     y: target.y + Math.sin(angle) * pullDistance,

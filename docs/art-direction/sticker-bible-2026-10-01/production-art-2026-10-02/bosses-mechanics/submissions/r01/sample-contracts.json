@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "status": "submitted-design-specification-not-exported-sprites",
+  "coordinateSystem": "512x512 proposed fixed source canvas; origin top-left; x right; y down. No per-frame auto-centering. Values are design targets, not measurements of the generated sheet.",
+  "HIVE": {
+    "sampleImage": "hive-production.png",
+    "bodyPoses": ["NEUTRAL", "WINDUP", "ATTACK", "OPEN"],
+    "sourceActionCoverage": ["NEUTRAL", "WINDUP", "OPEN", "P1", "P2", "P3", "NEST", "HATCH", "SWARM"],
+    "root": [256, 448],
+    "collisionCenter": [256, 288],
+    "collisionOffsetFromRoot": [0, -160],
+    "anchors": {
+      "body": [256, 288],
+      "earL": [190, 120],
+      "earR": [322, 120],
+      "eyeL": [226, 155],
+      "eyeR": [286, 155],
+      "apertureUpper": [256, 228],
+      "apertureLowerL": [158, 322],
+      "apertureLowerR": [354, 322],
+      "skirtRootsLeftToRight": [[112, 375], [184, 382], [256, 385], [328, 382], [400, 375]]
+    },
+    "anchorRules": "Named organ roots follow the same body deformation. Apertures are not muzzles. Do not spawn or animate units traveling from these holes. Ground projection stays fixed for all poses; silhouette may squash/stretch vertically.",
+    "organCounts": {"ears": 2, "closedEyeSlots": 2, "apertures": 3, "skirtLobes": 5, "feet": 0},
+    "bodyLayers": ["continuous three-tier abdomen", "fixed face slots", "three distinct aperture rims/interiors", "two parent ears", "five parent skirt lobes"],
+    "excludedLayers": ["shadow", "root guides", "count numerals", "OPEN outline/tint", "summon feedback", "NEST", "BASIC", "SHARD", "hazards"],
+    "independentObjects": [
+      {"ability": "spawnHive", "runtimeId": "MECHANIC_NEST", "class": "independent-hp-timed-mechanic", "requested": 2, "source": "bossOptimizedAbilities.js:53", "root": "own ground foot midpoint"},
+      {"event": "NEST timer", "runtimeId": "BASIC", "class": "independent-ai-hp-unit", "requested": 3, "source": "bossMechanicEntities.js:60", "root": "own ground foot midpoint"},
+      {"ability": "summonSwarm", "runtimeId": "SHARD", "class": "independent-ai-hp-unit", "requested": 5, "source": "bossAbilityRuntime.js:251", "root": "own projection"}
+    ],
+    "spawnRule": "Requested counts are capped by existing ownership/placement budgets. Art feedback requires actual successful creation. Bottom-row single icons describe types, not spawn counts.",
+    "openState": "OPEN = same complete body plus independent WHOLE-BODY vulnerability outline/tint, covering the complete silhouette. Never a core-only outline or a new anatomical weak-point hole.",
+    "motion": "broodShift changes world coordinates beside a living NEST. No root drift encoded in sheet poses.",
+    "sheetGuideInterpretation": "Four upper cells each have a center ground-projection cross on one horizontal baseline. Shadow ellipses and 1-5 numerals are guide/effect-only; source body export excludes them. Generated sheet is not cropped as game sprite."
+  },
+  "SEAL": {
+    "sampleImage": "seal-production.png",
+    "bodyPoses": ["INTACT", "TRIGGER", "BROKEN", "FADE"],
+    "root": [256, 448],
+    "collisionCenter": [256, 288],
+    "collisionOffsetFromRoot": [0, -160],
+    "anchors": {"clawL": [176, 288], "clawR": [336, 288]},
+    "organCounts": {"opposingClaws": 2, "head": 0, "face": 0, "feet": 0},
+    "anchorRules": "Two rounded-tip pincers are parent parts of one independent SEAL entity. Neither pincer has separate HP. TRIGGER closes locally around the same center. BROKEN allows each claw to split into two adjacent fragments; FADE preserves those four fragment positions while reducing alpha.",
+    "sheetGuideInterpretation": "Each cell's green cross marks collision/body center. The ground root is the intersection of its vertical guide with the lower horizontal baseline. Both stay fixed. Green lines are guide-only; no claim of pixel-perfect frame export.",
+    "bodyLayers": ["left pincer", "right pincer"],
+    "excludedLayers": ["guide grid", "target freeze ring/snowflake", "tower", "FROST_JUDGE", "HP bar"],
+    "independentEntity": {"runtimeId": "MECHANIC_SEAL", "hp": 16, "timerSeconds": 1.5, "lifeSeconds": 2, "creators": ["freezeTower", "coldSnap"]},
+    "trigger": "If still alive at timer and target tower exists/alive, frozenTimer=max(existing,1.6), then SEAL hp=0. Killing SEAL beforehand prevents trigger. Parent boss absence also ends node.",
+    "effect": {"type": "target-freeze-overlay", "class": "pure-effect", "anchor": "target tower local center/projection, not SEAL root", "duration": "consume actual tower.frozenTimer; 1.6 seconds is a minimum applied timer and may not shorten an already longer freeze", "sample": "lower panel shows empty-center ring plus snowflake; no target body is baked into overlay", "note": "break before trigger cancels only this SEAL trigger; it does not remove unrelated existing freeze"},
+    "destruction": "Broken/fade are optional visual endings, not additional damage, timed states or summons. Expiry and successful trigger need not show violent shatter."
+  }
+}

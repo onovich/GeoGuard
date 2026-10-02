@@ -1,4 +1,5 @@
 import { BOSS_TYPES, COLORS, ENEMY_TYPES } from '../../data/gameConfig.js';
+import { getBossBaseId } from '../../data/bossPresentation.js';
 
 export const splitEncounterValue = (totalValue, shares) => {
   let remaining = totalValue;
@@ -164,10 +165,11 @@ export const getBossPhaseOverrides = (bossTemplate) => {
   return bossTemplate.phases;
 };
 
-export const enrichBossTemplate = (bossTemplate) => ({
-  ...bossTemplate,
-  phases: getBossPhaseOverrides(bossTemplate),
-});
+export const enrichBossTemplate = (bossTemplate) => {
+  const tier = bossTemplate.id?.match(/_T([123])$/)?.[1];
+  const phases = getBossPhaseOverrides({ ...bossTemplate, id: getBossBaseId(bossTemplate.id) });
+  return { ...bossTemplate, phases: tier ? phases.slice(0, Number(tier)) : phases };
+};
 
 export const getBossEditorBaseTemplate = (bossId) => {
   const bossTemplate = BOSS_TYPES[bossId];
@@ -226,7 +228,7 @@ export const getBossOwnership = (boss) => ({
 });
 
 export const createBossEncounterRuntime = ({ bossTemplate, x, y, allocateEnemyUid, allocateEncounterUid }) => {
-  if (bossTemplate.id === 'TWINS') {
+  if (getBossBaseId(bossTemplate.id) === 'TWINS') {
     const encounterUid = allocateEncounterUid();
     const memberTemplates = createTwinsEncounterMembers({
       ...bossTemplate,
@@ -238,6 +240,7 @@ export const createBossEncounterRuntime = ({ bossTemplate, x, y, allocateEnemyUi
       const boss = createBossRuntimeEntity({
         bossTemplate: {
           ...memberTemplate,
+          phases: memberTemplate.phases.slice(0, bossTemplate.phases.length),
           encounterUid,
           encounterBossId: bossTemplate.id,
           encounterName: bossTemplate.name,

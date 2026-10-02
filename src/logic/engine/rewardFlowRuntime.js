@@ -22,11 +22,13 @@ export const buildRuntimeRewardChoices = ({ state, catalog, currentWave, hudMone
   const plan = buildRewardOfferPlan({
     catalog,
     waveNumber,
-    money: typeof hudMoney === 'number' ? hudMoney : state.money,
+    // Boss bounty has already settled here; the React HUD can still show the previous balance.
+    money: state.money,
     hp: state.player.hp,
     maxHp: state.player.maxHp,
     infiniteMoney: state.debugOptions.infiniteMoney,
     history: state.rewardHistory,
+    towers: state.towers,
   });
 
   return materializeRewardChoices(catalog, plan);

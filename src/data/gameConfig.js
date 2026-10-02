@@ -1,3 +1,5 @@
+export const STARTING_MONEY = 45;
+
 export const COLORS = {
   bg: '#f0f4f8',
   grid: '#e2e8f0',

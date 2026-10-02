@@ -123,6 +123,7 @@ export const findNearestTarget = (source, candidates, maxRange) => {
   let target = null;
 
   for (const candidate of candidates) {
+    if (candidate.hp <= 0 || candidate.burrowed) continue;
     const distance = dist(source, candidate);
     if (distance < nearestDistance) {
       nearestDistance = distance;

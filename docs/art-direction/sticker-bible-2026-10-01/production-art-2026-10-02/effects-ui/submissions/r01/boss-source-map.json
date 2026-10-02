@@ -1,0 +1,2237 @@
+{
+  "method": "static source collection, not runtime execution or gameplay testing",
+  "dispatch": "useGeoGuardGame.jsx runBossAbility -> runBossOptimizedAbility -> optimized handler else fallback",
+  "helpers": {
+    "placeWalls": "const placeWalls = (context) => {\n  const { state, boss } = context;\n  const center = pointFor(boss, state);\n  for (const wall of getBossMechanics(state, boss.uid, 'wall')) wall.hp = 0;\n  const horizontal = Boolean(boss.bossState.horizontalGates);\n  for (const side of [-1, 1]) for (const offset of [-110, -60, 60, 110]) {\n    const x = horizontal ? center.x + offset : center.x + side * 110;\n    const y = horizontal ? center.y + side * 110 : center.y + offset;\n    plant(context, 'wall', { x, y }, { radius: 18, hp: 28, limit: BOSS_LIMITS.walls });\n  }\n};\n\n",
+    "stealWithCourier": "const stealWithCourier = (context, amount) => {\n  const { boss, state, syncHudMoney, spawnFloatingText } = context;\n  const stolen = state.debugOptions.infiniteMoney ? 0 : Math.min(state.money, amount);\n  if (!stolen) return;\n  const courier = plant(context, 'courier', { x: boss.x + 60, y: boss.y + 40 }, { hp: 18, cargo: stolen, limit: BOSS_LIMITS.couriers });\n  if (!courier) return;\n  state.money -= stolen;\n  syncHudMoney();\n  spawnFloatingText(courier.x, courier.y - 20, `击破追回 ${stolen}`, boss.color);\n};\n\n",
+    "plant": "const plant = (context, kind, point, options = {}) => {\n  const entity = spawnBossMechanic({ state: context.state, boss: context.boss, kind, ...point, ...options });\n  if (entity) queueMechanicTerrain({ ...context, entity });\n  return entity;\n};\n\n"
+  },
+  "abilities": [
+    {
+      "ability": "afterimageBurst",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 128,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy PHASE"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "PHASE"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'afterimageBurst') spawnAround(boss, 'PHASE', 3, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'afterimage', maxActive: 6 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "bastionMortar",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 130,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / mortar"
+      ],
+      "labels": [
+        "mortar"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'bastionMortar') {\n    const priorityTargets = [...state.towers.slice(0, 2), state.player].filter(Boolean);\n    priorityTargets.forEach((targetPoint, index) => {\n      queueAreaHazard(targetPoint.x, targetPoint.y, {\n        radius: 72,\n        damage: 20,\n        delay: 0.9 + index * 0.12,\n        color: COLORS.enemyTank,\n        label: 'mortar',\n        ...ownership,\n      });\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "blightRoots",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1109,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / vine"
+      ],
+      "labels": [
+        "vine"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'blightRoots') {\n    for (let index = 0; index < 3; index += 1) {\n      queueLineHazard(\n        { x: boss.x + rand(-70, 70), y: boss.y + rand(-70, 70) },\n        { x: playerPoint.x + rand(-110, 110), y: playerPoint.y + rand(-90, 90) },\n        { width: 10, damage: 12, color: COLORS.enemyMedic, delay: 0.6 + index * 0.08, length: 420, label: 'vine', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "brandLine",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 984,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / brand",
+        "hazard.area / slag"
+      ],
+      "labels": [
+        "brand",
+        "slag"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'brandLine') {\n    queueLineHazard(boss, playerPoint, { width: 14, damage: 20, color: COLORS.enemySiege, delay: 0.58, length: 520, label: 'brand', ...ownership });\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 82,\n      damage: 12,\n      delay: 0.82,\n      pulses: 2,\n      pulseInterval: 0.48,\n      color: COLORS.enemySiege,\n      label: 'slag',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "broodAmbush",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 719,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy BURROWER",
+        "independent enemy SPLINTER"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "BURROWER",
+        "SPLINTER"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'broodAmbush') {\n    spawnAround(boss, 'BURROWER', 2, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'broodBurrower', maxActive: 4 });\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.3;\n      const x = playerPoint.x + Math.cos(angle) * 118;\n      const y = playerPoint.y + Math.sin(angle) * 84;\n      spawnEnemyAt('SPLINTER', x, y, {\n        skipBurrowPosition: true,\n        summonedByBossUid: boss.uid,\n        summonedByEncounterUid: boss.encounterUid ?? null,\n        summonCategory: 'ambushSpiderling',\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "broodShift",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 56,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_NEST",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [],
+      "mechanics": [
+        "nest"
+      ],
+      "summons": [],
+      "displacement": true,
+      "code": "  broodShift: (c) => {\n    const nodes = getBossMechanics(c.state, c.boss.uid, 'nest');\n    if (!nodes.length) return handlers.spawnHive(c);\n    const node = nodes[(c.boss.bossState.migrationIndex ?? 0) % nodes.length];\n    c.boss.bossState.migrationIndex = (c.boss.bossState.migrationIndex ?? 0) + 1;\n    c.boss.x = node.x + 48;\n    c.boss.y = node.y;\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 214,
+        "code": "  if (abilityName === 'broodShift') {\n    const beacons = state.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);\n    if (beacons.length > 0) {\n      const beacon = beacons[Math.floor(Math.random() * beacons.length)];\n      const oldX = boss.x;\n      const oldY = boss.y;\n      boss.x = beacon.x + rand(-24, 24);\n      boss.y = beacon.y + rand(-24, 24);\n      queueLineHazard({ x: oldX, y: oldY }, boss, { width: 12, damage: 14, color: COLORS.enemyBeacon, delay: 0.5, length: Math.hypot(boss.x - oldX, boss.y - oldY), label: 'brood', ...ownership });\n      spawnImpactWave(boss.x, boss.y, { maxRadius: 76, color: COLORS.enemyBeacon, fillAlpha: 0.12 });\n    } else {\n      spawnAround(boss, 'BEACON', 1, boss.radius + 44, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'hive', maxActive: 4 });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "bunkerRing",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 157,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / bunker"
+      ],
+      "labels": [
+        "bunker"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'bunkerRing') {\n    for (let index = 0; index < 6; index += 1) {\n      const angle = (Math.PI * 2 * index) / 6;\n      queueAreaHazard(boss.x + Math.cos(angle) * 130, boss.y + Math.sin(angle) * 110, {\n        radius: 58,\n        damage: 16,\n        delay: 0.78 + index * 0.04,\n        pulses: 2,\n        pulseInterval: 0.55,\n        color: COLORS.enemyTank,\n        label: 'bunker',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "coldSnap",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 92,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_SEAL"
+      ],
+      "labels": [],
+      "mechanics": [
+        "seal"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  coldSnap: (c) => {\n    for (const tower of [...c.state.towers].filter((tower) => tower.hp > 0).sort((a, b) => b.cost - a.cost).slice(0, 2)) {\n      plant(c, 'seal', { x: (tower.x + c.boss.x) / 2, y: (tower.y + c.boss.y) / 2 }, { hp: 16, targetUid: tower.uid, limit: 2 });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 317,
+        "code": "  if (abilityName === 'coldSnap') {\n    const targets = [...state.towers.slice(0, 3), state.player];\n    targets.forEach((targetPoint, index) => {\n      queueAreaHazard(targetPoint.x, targetPoint.y, {\n        radius: 68,\n        damage: 16,\n        delay: 0.72 + index * 0.08,\n        slowRatio: 0.36,\n        slowDuration: 2.8,\n        color: COLORS.towerFrost,\n        label: 'frost',\n        ...ownership,\n      });\n    });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "commandLine",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 43,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / formation"
+      ],
+      "labels": [
+        "formation"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'commandLine') {\n    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    for (let index = -1; index <= 1; index += 1) {\n      const offsetX = Math.cos(angle + Math.PI / 2) * index * 42;\n      const offsetY = Math.sin(angle + Math.PI / 2) * index * 42;\n      queueLineHazard(\n        { x: boss.x + offsetX, y: boss.y + offsetY },\n        { x: playerPoint.x + offsetX * 0.4, y: playerPoint.y + offsetY * 0.4 },\n        { width: 12, damage: 16, color: COLORS.enemyBasic, delay: 0.7, length: 520, label: 'formation', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "commandRush",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 81,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / charge",
+        "impactWave / generic",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "charge"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  if (abilityName === 'commandRush') {\n    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    boss.dashTimer = 0.4;\n    boss.dashVx = Math.cos(angle) * 460;\n    boss.dashVy = Math.sin(angle) * 460;\n    queueLineHazard(boss, playerPoint, { width: 18, damage: 22, color: COLORS.enemyBasic, delay: 0.5, length: 420, label: 'charge', ...ownership });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 58, color: COLORS.enemyBasic, fillAlpha: 0.1 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "conductLines",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 157,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.line / tempo"
+      ],
+      "labels": [
+        "tempo"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  conductLines: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (const [index, side] of [-1, 1].entries()) c.queueLineHazard({ x: p.x - 220, y: p.y + side * 50 },\n      { x: p.x + 220, y: p.y + side * 50 }, { width: 10, damage: 12, delay: (index + 1) * beatFor(c.boss),\n        length: 440, label: 'tempo', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1018,
+        "code": "  if (abilityName === 'conductLines') {\n    queueLineHazard(boss, playerPoint, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, label: 'tempo', ...ownership });\n    queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560, label: 'tempo', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "corridorClamp",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1072,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / gate"
+      ],
+      "labels": [
+        "gate"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'corridorClamp') {\n    queueLineHazard({ x: playerPoint.x - 240, y: playerPoint.y - 110 }, { x: playerPoint.x - 240, y: playerPoint.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });\n    queueLineHazard({ x: playerPoint.x + 240, y: playerPoint.y - 110 }, { x: playerPoint.x + 240, y: playerPoint.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "creepingCanopy",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 117,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_ROOT",
+        "terrain.area / poison (queueMechanicTerrain)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "root"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  creepingCanopy: (c) => handlers.seedPods(c),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1141,
+        "code": "  if (abilityName === 'creepingCanopy') {\n    for (let index = 0; index < 5; index += 1) {\n      const angle = (Math.PI * 2 * index) / 5;\n      queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 120, {\n        radius: 74,\n        damage: 12,\n        delay: 0.72 + index * 0.06,\n        pulses: 3,\n        pulseInterval: 0.48,\n        color: COLORS.enemyMedic,\n        label: 'spore',\n        ...ownership,\n      });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "crescendo",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 180,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / beat"
+      ],
+      "labels": [
+        "beat"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  crescendo: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (let index = 0; index < 4; index++) c.queueAreaHazard(p.x, p.y, { radius: 40 + index * 18, damage: 8,\n      delay: (index + 1) * beatFor(c.boss), label: 'beat', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1056,
+        "code": "  if (abilityName === 'crescendo') {\n    for (let index = 0; index < 5; index += 1) {\n      queueAreaHazard(playerPoint.x, playerPoint.y, {\n        radius: 46 + index * 16,\n        damage: 8 + index * 2,\n        delay: 0.4 + index * 0.14,\n        color: COLORS.towerRail,\n        label: 'beat',\n        ...ownership,\n      });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "crosshairBarrage",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 333,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / crosshair"
+      ],
+      "labels": [
+        "crosshair"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'crosshairBarrage') {\n    queueLineHazard({ x: playerPoint.x - 260, y: playerPoint.y }, { x: playerPoint.x + 260, y: playerPoint.y }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.7, length: 520, label: 'crosshair', ...ownership });\n    queueLineHazard({ x: playerPoint.x, y: playerPoint.y - 220 }, { x: playerPoint.x, y: playerPoint.y + 220 }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.82, length: 440, label: 'crosshair', ...ownership });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "dashAtPlayer",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 89,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "impactWave / generic",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  if (abilityName === 'dashAtPlayer') {\n    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    boss.dashTimer = 0.42;\n    boss.dashVx = Math.cos(angle) * 560;\n    boss.dashVy = Math.sin(angle) * 560;\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 44, color: boss.color, life: 0.18 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "deadEnd",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 126,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / wall"
+      ],
+      "labels": [
+        "wall"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  deadEnd: (c) => handlers.mazeCrush(c),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1095,
+        "code": "  if (abilityName === 'deadEnd') {\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4;\n      queueAreaHazard(playerPoint.x + Math.cos(angle) * 120, playerPoint.y + Math.sin(angle) * 90, {\n        radius: 68,\n        damage: 16,\n        delay: 0.7 + index * 0.06,\n        color: COLORS.enemyShield,\n        label: 'wall',\n        ...ownership,\n      });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "dragonBreath",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 554,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / breath"
+      ],
+      "labels": [
+        "breath"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'dragonBreath') {\n    queueLineHazard(boss, playerPoint, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, label: 'breath', ...ownership });\n    queueLineHazard(boss, { x: playerPoint.x + 120, y: playerPoint.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });\n    queueLineHazard(boss, { x: playerPoint.x - 120, y: playerPoint.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "dragonStrafe",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 559,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / strafe"
+      ],
+      "labels": [
+        "strafe"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'dragonStrafe') {\n    boss.bossState.strafeSide = boss.bossState.strafeSide === 'left' ? 'right' : 'left';\n    const side = boss.bossState.strafeSide === 'left' ? -1 : 1;\n    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    for (const offset of [-0.28, 0, 0.28]) {\n      queueLineHazard(\n        { x: boss.x + Math.cos(baseAngle + Math.PI / 2 * side) * 34, y: boss.y + Math.sin(baseAngle + Math.PI / 2 * side) * 34 },\n        { x: playerPoint.x + Math.cos(baseAngle + offset) * 180, y: playerPoint.y + Math.sin(baseAngle + offset) * 180 },\n        { width: offset === 0 ? 18 : 12, damage: offset === 0 ? 24 : 16, color: COLORS.enemyBomber, delay: 0.7, length: 760, label: 'strafe', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "eclipsePulse",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 434,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / eclipse",
+        "impactWave / twinFinisher"
+      ],
+      "labels": [
+        "eclipse"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'eclipsePulse') {\n    queueAreaHazard(boss.x, boss.y, {\n      radius: 170,\n      damage: 20,\n      delay: 0.68,\n      color: COLORS.enemyPhase,\n      label: 'eclipse',\n      ...ownership,\n    });\n    if (isClimaxPhase) {\n      const partner = getEncounterPartner(boss);\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: boss.radius * 0.75,\n        maxRadius: 168,\n        growth: 210,\n        life: 0.72,\n        color: boss.color,\n        accentColor: boss.color,\n        secondaryColor: '#ffffff',\n        fillAlpha: 0.04,\n        lineWidth: 3,\n        dash: [6, 10],\n        spokes: 6,\n        spin: 1,\n        style: 'twinFinisher',\n        nodeCount: 6,\n        anchorA: { x: boss.x, y: boss.y, color: boss.color },\n        anchorB: partner ? { x: partner.x, y: partner.y, color: partner.color } : null,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "emberWake",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 571,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / inferno"
+      ],
+      "labels": [
+        "inferno"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'emberWake') {\n    for (let index = 0; index < 3; index += 1) {\n      const angle = boss.bossState.strafeSide === 'left' ? Math.PI * 0.75 - index * 0.26 : Math.PI * 0.25 + index * 0.26;\n      queueAreaHazard(playerPoint.x + Math.cos(angle) * 110, playerPoint.y + Math.sin(angle) * 80, {\n        radius: 58 + index * 8,\n        damage: 10 + index * 2,\n        delay: 0.65 + index * 0.1,\n        pulses: 2,\n        pulseInterval: 0.6,\n        radiusStep: 14,\n        color: COLORS.enemyBomber,\n        label: 'inferno',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "eventHorizon",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 916,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / horizon",
+        "impactWave / astrolabeFinisher"
+      ],
+      "labels": [
+        "horizon"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'eventHorizon') {\n    if (isClimaxPhase) {\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: 32,\n        maxRadius: 220,\n        growth: 192,\n        life: 0.76,\n        color: COLORS.enemyJammer,\n        accentColor: '#a78bfa',\n        secondaryColor: '#ffffff',\n        fillAlpha: 0.02,\n        lineWidth: 2.8,\n        dash: [3, 11],\n        spokes: 6,\n        spin: 0.8,\n        style: 'astrolabeFinisher',\n        nodeCount: 6,\n        rotation: boss.bossState.orbitalIndex ?? 0,\n      });\n    }\n    for (let index = 0; index < 6; index += 1) {\n      const angle = (Math.PI * 2 * index) / 6;\n      queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, {\n        radius: 68,\n        damage: 16,\n        pull: 180,\n        delay: 0.75 + index * 0.05,\n        pulses: 2,\n        pulseInterval: 0.6,\n        color: COLORS.enemyJammer,\n        label: 'horizon',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "feintStrike",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 121,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / charge",
+        "impactWave / generic",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "charge"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  if (abilityName === 'feintStrike') {\n    const retreatAngle = Math.atan2(boss.y - playerPoint.y, boss.x - playerPoint.x);\n    boss.x = playerPoint.x + Math.cos(retreatAngle) * 180;\n    boss.y = playerPoint.y + Math.sin(retreatAngle) * 140;\n    queueLineHazard(boss, playerPoint, { width: 14, damage: 20, color: COLORS.enemyFast, delay: 0.38, length: 300, label: 'charge', ...ownership });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 50, color: COLORS.enemyFast, fillAlpha: 0.1 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "finale",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 185,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.line / tempo"
+      ],
+      "labels": [
+        "tempo"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  finale: (c) => {\n    for (let index = 0; index < 8; index++) {\n      const angle = index * Math.PI / 4;\n      c.queueLineHazard(c.boss, { x: c.boss.x + Math.cos(angle) * 220, y: c.boss.y + Math.sin(angle) * 220 },\n        { width: 9, damage: 12, delay: beatFor(c.boss) * 2, length: 620, label: 'tempo', color: c.boss.color, ...ownershipFor(c.boss) });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1050,
+        "code": "  if (abilityName === 'finale') {\n    for (let index = 0; index < 8; index += 1) {\n      const angle = (Math.PI * 2 * index) / 8;\n      queueLineHazard(boss, { x: boss.x + Math.cos(angle) * 220, y: boss.y + Math.sin(angle) * 220 }, { width: 9, damage: 16, color: COLORS.towerRail, delay: 0.55, length: 620, label: 'tempo', ...ownership });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "flareLance",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 473,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / flare"
+      ],
+      "labels": [
+        "flare"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'flareLance') {\n    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    for (const offset of [-0.2, 0, 0.2]) {\n      queueLineHazard(\n        boss,\n        { x: boss.x + Math.cos(baseAngle + offset) * 240, y: boss.y + Math.sin(baseAngle + offset) * 240 },\n        { width: offset === 0 ? 16 : 12, damage: offset === 0 ? 22 : 16, color: boss.color, delay: 0.6, length: 640, label: 'flare', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "forgeArmor",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 951,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SHIELD",
+        "shield state overlay (actual recipient)"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SHIELD"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'forgeArmor') {\n    boss.shield = Math.max(boss.shield ?? 0, 90);\n    boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);\n    spawnAround(boss, 'SHIELD', 2, boss.radius + 42, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'forgeGuard', maxActive: 6 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "forgeDetonation",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1003,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / slag"
+      ],
+      "labels": [
+        "slag"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'forgeDetonation') {\n    const forgeGuards = state.enemies.filter((enemy) => enemy.summonedByBossUid === boss.uid && enemy.summonCategory === 'forgeGuard');\n    for (const guard of forgeGuards.slice(0, 4)) {\n      queueAreaHazard(guard.x, guard.y, {\n        radius: 84,\n        damage: 18,\n        delay: 0.7,\n        pulses: 2,\n        pulseInterval: 0.42,\n        color: COLORS.enemySiege,\n        label: 'slag',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "fortify",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 143,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "impactWave / generic",
+        "shield state overlay (actual recipient)"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'fortify') {\n    boss.shield = Math.max(boss.shield ?? 0, 70);\n    boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 92, color: COLORS.enemyTank, fillAlpha: 0.1 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "freezeTower",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 88,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_SEAL"
+      ],
+      "labels": [],
+      "mechanics": [
+        "seal"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  freezeTower: (c) => {\n    const tower = [...c.state.towers].filter((tower) => tower.hp > 0).sort((a, b) => dist(a, c.boss) - dist(b, c.boss))[0];\n    if (tower) plant(c, 'seal', { x: (tower.x + c.boss.x) / 2, y: (tower.y + c.boss.y) / 2 }, { hp: 16, targetUid: tower.uid, limit: 2 });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 294,
+        "code": "  if (abilityName === 'freezeTower') {\n    const tower = state.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);\n    if (tower) {\n      tower.frozenTimer = 3.5;\n      spawnImpactWave(tower.x, tower.y, { maxRadius: tower.radius + 24, color: COLORS.towerFrost, fillAlpha: 0.16 });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "frostRing",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 86,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / frost"
+      ],
+      "labels": [
+        "frost"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  frostRing: (c) => c.queueAreaHazard(c.boss.x, c.boss.y, { radius: 135, damage: 8, slowRatio: 0.75,\n    slowDuration: 1.4, delay: 1.1, label: 'frost', color: c.boss.color, ...ownershipFor(c.boss) }),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 269,
+        "code": "  if (abilityName === 'frostRing') {\n    for (const enemy of state.enemies) {\n      if (enemy !== boss && dist(enemy, boss) <= 180) {\n        enemy.slowRatio = Math.min(enemy.slowRatio, 0.72);\n        enemy.slowTimer = Math.max(enemy.slowTimer, 2.5);\n      }\n    }\n    damageArea(boss.x, boss.y, 150, 8, { color: COLORS.towerFrost, towerFactor: 0.4 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "gardenWake",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 112,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_ROOT",
+        "terrain.area / poison (queueMechanicTerrain)",
+        "independent enemy SHARD",
+        "heal feedback (cosmetic only)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "root"
+      ],
+      "summons": [
+        "SHARD"
+      ],
+      "displacement": false,
+      "code": "  gardenWake: (c) => {\n    handlers.seedPods(c);\n    for (const enemy of c.state.enemies) if (!enemy.isBoss && !enemy.mechanic && dist(enemy, c.boss) < 220) enemy.hp = Math.min(enemy.maxHp, enemy.hp + 12);\n    c.spawnAround(c.boss, 'SHARD', 3, 50, { ...ownershipFor(c.boss), summonCategory: 'gardenShard', maxActive: 8 });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1134,
+        "code": "  if (abilityName === 'gardenWake') {\n    for (const enemy of state.enemies) {\n      if (enemy !== boss && dist(enemy, boss) <= 260) enemy.hp = Math.min(enemy.maxHp, enemy.hp + 20);\n    }\n    spawnAround(boss, 'SHARD', 6, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'gardenShard', maxActive: 10 });\n    queueAreaHazard(boss.x, boss.y, { radius: 210, damage: 16, slowRatio: 0.68, slowDuration: 2.4, delay: 0.85, color: COLORS.enemyMedic, label: 'garden', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "gateSwap",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 119,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WALL"
+      ],
+      "labels": [],
+      "mechanics": [
+        "wall"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  gateSwap: (c) => { c.boss.bossState.horizontalGates = !c.boss.bossState.horizontalGates; placeWalls(c); },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1076,
+        "code": "  if (abilityName === 'gateSwap') {\n    const oldX = boss.x;\n    const oldY = boss.y;\n    boss.x = playerPoint.x + rand(-210, 210);\n    boss.y = playerPoint.y + rand(-160, 160);\n    queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6, label: 'gate', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "glacialPrison",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 301,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / prison"
+      ],
+      "labels": [
+        "prison"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'glacialPrison') {\n    const focus = state.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, state.player) < dist(nearest, state.player) ? candidate : nearest), null) ?? state.player;\n    queueAreaHazard(focus.x, focus.y, {\n      radius: 90,\n      damage: 12,\n      delay: 0.75,\n      slowRatio: 0.3,\n      slowDuration: 3.1,\n      pulses: 2,\n      pulseInterval: 0.5,\n      color: COLORS.towerFrost,\n      label: 'prison',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "gravityWell",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 127,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / gravity"
+      ],
+      "labels": [
+        "gravity"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  gravityWell: (c) => {\n    const p = pointFor(c.boss, c.state);\n    c.queueAreaHazard(p.x, p.y, { radius: 100, damage: 7, pull: 80, maxPullStep: 14, delay: 1.1,\n      pulses: 2, pulseInterval: 1.2, label: 'gravity', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 818,
+        "code": "  if (abilityName === 'gravityWell') {\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 120,\n      damage: 10,\n      pull: 220,\n      delay: 0.7,\n      pulses: 2,\n      pulseInterval: 0.6,\n      radiusStep: 18,\n      color: COLORS.enemyJammer,\n      label: 'gravity',\n      ...ownership,\n    });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "hiveCollapse",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 70,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / brood"
+      ],
+      "labels": [
+        "brood"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  hiveCollapse: (c) => {\n    for (const node of getBossMechanics(c.state, c.boss.uid, 'nest')) {\n      c.queueAreaHazard(node.x, node.y, { radius: 100, damage: 14, delay: 1.2, label: 'brood', color: c.boss.color,\n        ...ownershipFor(c.boss), ownerMechanicUid: node.uid });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 252,
+        "code": "  if (abilityName === 'hiveCollapse') {\n    const beacons = state.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);\n    for (const beacon of beacons.slice(0, 4)) {\n      queueAreaHazard(beacon.x, beacon.y, {\n        radius: 104,\n        damage: 16,\n        delay: 0.8,\n        pulses: 2,\n        pulseInterval: 0.48,\n        radiusStep: 14,\n        color: COLORS.enemyBeacon,\n        label: 'brood',\n        ...ownership,\n      });\n      spawnAround(beacon, 'SHARD', 2, 28, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'collapseShard', maxActive: 8 });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "hiveHeal",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 228,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "heal feedback (cosmetic only)"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'hiveHeal') boss.hp = Math.min(boss.maxHp, boss.hp + 42);",
+      "fallbackSource": null
+    },
+    {
+      "ability": "hivePulse",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 64,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / brood"
+      ],
+      "labels": [
+        "brood"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  hivePulse: (c) => {\n    for (const node of getBossMechanics(c.state, c.boss.uid, 'nest')) {\n      c.queueAreaHazard(node.x, node.y, { radius: 80, damage: 8, delay: 1, label: 'brood', color: c.boss.color,\n        ...ownershipFor(c.boss), ownerMechanicUid: node.uid });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 229,
+        "code": "  if (abilityName === 'hivePulse') {\n    const beacons = state.enemies.filter((enemy) => enemy.id === 'BEACON' && enemy.summonedByBossUid === boss.uid);\n    const anchors = beacons.length > 0 ? beacons : [boss];\n    for (const anchor of anchors.slice(0, 3)) {\n      queueAreaHazard(anchor.x, anchor.y, {\n        radius: 92,\n        damage: 10,\n        delay: 0.7,\n        pulses: 2,\n        pulseInterval: 0.55,\n        radiusStep: 10,\n        color: COLORS.enemyBeacon,\n        label: 'brood',\n        ...ownership,\n      });\n      for (const enemy of state.enemies) {\n        if (!enemy.isBoss && dist(enemy, anchor) <= 110) {\n          enemy.hp = Math.min(enemy.maxHp, enemy.hp + 12);\n        }\n      }\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "infernoRing",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 655,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / inferno",
+        "impactWave / dragonFinisher"
+      ],
+      "labels": [
+        "inferno"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'infernoRing') {\n    if (isClimaxPhase) {\n      spawnImpactWave(playerPoint.x, playerPoint.y, {\n        startRadius: 28,\n        maxRadius: 150,\n        growth: 220,\n        life: 0.66,\n        color: COLORS.enemyBomber,\n        accentColor: '#ffd166',\n        secondaryColor: '#ff9f43',\n        fillAlpha: 0.02,\n        lineWidth: 2.6,\n        dash: [8, 10],\n        spokes: 6,\n        spin: 0.65,\n        style: 'dragonFinisher',\n        rotation: Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x),\n      });\n    }\n    for (let index = 0; index < 6; index += 1) {\n      const angle = (Math.PI * 2 * index) / 6;\n      queueAreaHazard(playerPoint.x + Math.cos(angle) * 140, playerPoint.y + Math.sin(angle) * 110, {\n        radius: 60,\n        damage: 18,\n        delay: 0.8 + index * 0.05,\n        pulses: 2,\n        pulseInterval: 0.55,\n        radiusStep: 10,\n        color: COLORS.enemyBomber,\n        label: 'inferno',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "killLane",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 352,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / crosshair"
+      ],
+      "labels": [
+        "crosshair"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'killLane') {\n    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    for (const offset of [-0.18, 0.18]) {\n      queueLineHazard(\n        { x: boss.x + Math.cos(angle + Math.PI / 2) * offset * 180, y: boss.y + Math.sin(angle + Math.PI / 2) * offset * 180 },\n        playerPoint,\n        { width: 14, damage: 24, color: COLORS.towerRail, delay: 0.75, length: 720, label: 'crosshair', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "lunarSnare",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 483,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / moon"
+      ],
+      "labels": [
+        "moon"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'lunarSnare') {\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 92,\n      damage: 10,\n      slowRatio: 0.38,\n      slowDuration: 2.9,\n      delay: 0.7,\n      color: boss.color,\n      label: 'moon',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "markPrey",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 96,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / mark",
+        "hazard.area / hunt"
+      ],
+      "labels": [
+        "hunt",
+        "mark"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'markPrey') {\n    queueLineHazard(boss, playerPoint, { width: 10, damage: 14, color: COLORS.enemyFast, delay: 0.45, length: 360, label: 'mark', ...ownership });\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 64,\n      damage: 10,\n      delay: 0.8,\n      pulses: 2,\n      pulseInterval: 0.42,\n      color: COLORS.enemyFast,\n      label: 'hunt',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "markTower",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 40,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_RETICLE"
+      ],
+      "labels": [],
+      "mechanics": [
+        "reticle"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  markTower: (c) => {\n    const tower = [...c.state.towers].filter((tower) => tower.hp > 0).sort((a, b) => dist(a, c.boss) - dist(b, c.boss))[0];\n    if (tower) plant(c, 'reticle', { x: (tower.x + c.boss.x) / 2, y: (tower.y + c.boss.y) / 2 }, { hp: 16, targetUid: tower.uid, limit: 2 });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 337,
+        "code": "  if (abilityName === 'markTower') {\n    const tower = state.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);\n    if (tower) queueLineHazard(boss, tower, { width: 12, damage: 28, color: COLORS.towerRail, delay: 0.55, label: 'mark', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "mazeCrush",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 120,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / wall"
+      ],
+      "labels": [
+        "wall"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  mazeCrush: (c) => {\n    for (const wall of getBossMechanics(c.state, c.boss.uid, 'wall')) {\n      c.queueAreaHazard(wall.x, wall.y, { radius: 48, damage: 12, delay: 1.2, label: 'wall', color: c.boss.color,\n        ...ownershipFor(c.boss), ownerMechanicUid: wall.uid });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1089,
+        "code": "  if (abilityName === 'mazeCrush') {\n    for (const tower of state.towers.slice(0, 4)) {\n      queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall', ...ownership });\n    }\n    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "mazeFold",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1083,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / maze",
+        "hazard.area / wall"
+      ],
+      "labels": [
+        "maze",
+        "wall"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'mazeFold') {\n    for (const tower of state.towers.slice(0, 2)) {\n      queueLineHazard({ x: tower.x - 160, y: tower.y }, { x: tower.x + 160, y: tower.y }, { width: 10, damage: 16, color: COLORS.enemyShield, delay: 0.68, length: 320, label: 'maze', ...ownership });\n    }\n    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 84, damage: 12, delay: 0.82, color: COLORS.enemyShield, label: 'wall', ...ownership });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "meteorRain",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 600,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / meteor"
+      ],
+      "labels": [
+        "meteor"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'meteorRain') {\n    for (let index = 0; index < 6; index += 1) {\n      queueAreaHazard(playerPoint.x + rand(-200, 200), playerPoint.y + rand(-160, 160), {\n        radius: 50 + (index % 2) * 8,\n        damage: 22,\n        delay: 0.95 + index * 0.1,\n        color: COLORS.enemyBomber,\n        label: 'meteor',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "mirrorStep",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 44,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.line / mirror",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "mirror"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  mirrorStep: (c) => {\n    const p = pointFor(c.boss, c.state);\n    const angle = Math.atan2(c.boss.y - p.y, c.boss.x - p.x) + Math.PI / 2;\n    const old = { x: c.boss.x, y: c.boss.y };\n    c.boss.x = p.x + Math.cos(angle) * 190;\n    c.boss.y = p.y + Math.sin(angle) * 190;\n    c.queueLineHazard(old, c.boss, { length: dist(old, c.boss), width: 10, damage: 14, delay: 1,\n      label: 'mirror', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 204,
+        "code": "  if (abilityName === 'mirrorStep') {\n    const oldX = boss.x;\n    const oldY = boss.y;\n    boss.x = playerPoint.x + rand(-180, 180);\n    boss.y = playerPoint.y + rand(-120, 120);\n    queueLineHazard({ x: oldX, y: oldY }, boss, { width: 12, damage: 18, color: COLORS.enemyPhase, delay: 0.52, length: Math.hypot(boss.x - oldX, boss.y - oldY), label: 'mirror', ...ownership });\n    spawnAround(boss, 'PHASE', 1, boss.radius + 28, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'mirrorStep', maxActive: 3 });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 62, color: COLORS.enemyPhase, fillAlpha: 0.1 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "mirrorSummon",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 183,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy PHASE"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "PHASE"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'mirrorSummon') spawnAround(boss, 'PHASE', 2, boss.radius + 48, { ownerBossUid: boss.uid, summonCategory: 'mirror', maxActive: 5 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "moltenBurst",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 997,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / slag"
+      ],
+      "labels": [
+        "slag"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'moltenBurst') {\n    for (let index = 0; index < 6; index += 1) {\n      const angle = (Math.PI * 2 * index) / 6;\n      queueAreaHazard(boss.x + Math.cos(angle) * 150, boss.y + Math.sin(angle) * 150, { radius: 62, damage: 22, delay: 0.8, color: COLORS.enemySiege, label: 'slag', ...ownership });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "nestBloom",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 102,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WEB",
+        "terrain.area / web (queueMechanicTerrain)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "web"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  nestBloom: (c) => {\n    for (const side of [-1, 1]) plant(c, 'web', { x: c.boss.x + side * 100, y: c.boss.y + 70 }, { hp: 20, limit: BOSS_LIMITS.webs });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 767,
+        "code": "  if (abilityName === 'nestBloom') {\n    for (let index = 0; index < 3; index += 1) {\n      const angle = (Math.PI * 2 * index) / 3 + Math.random() * 0.24;\n      queueAreaHazard(boss.x + Math.cos(angle) * 140, boss.y + Math.sin(angle) * 110, {\n        radius: 72,\n        damage: 10,\n        slowRatio: 0.56,\n        slowDuration: 2.8,\n        delay: 0.75,\n        pulses: 3,\n        pulseInterval: 0.65,\n        radiusStep: 10,\n        color: COLORS.enemyBurrower,\n        label: 'nest',\n        ...ownership,\n      });\n    }\n    spawnAround(boss, 'SPLINTER', 4, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'nestShard', maxActive: 12 });\n    if (isClimaxPhase) {\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: boss.radius * 0.8,\n        maxRadius: 152,\n        growth: 190,\n        life: 0.82,\n        color: COLORS.enemyBurrower,\n        accentColor: COLORS.enemyBurrower,\n        secondaryColor: '#ffffff',\n        fillAlpha: 0.04,\n        lineWidth: 2.4,\n        dash: [4, 9],\n        spokes: 6,\n        spin: 0.5,\n        style: 'spiderFinisher',\n        nodeCount: 6,\n      });\n      queueAreaHazard(playerPoint.x, playerPoint.y, {\n        radius: 98,\n        damage: 12,\n        slowRatio: 0.58,\n        slowDuration: 2.8,\n        delay: 0.92,\n        pulses: 2,\n        pulseInterval: 0.5,\n        radiusStep: 12,\n        color: COLORS.enemyBurrower,\n        label: 'nest',\n        ...ownership,\n      });\n      primeBossAbility('webField', 1.1);\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "orbitalLock",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 857,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / lock"
+      ],
+      "labels": [
+        "lock"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'orbitalLock') {\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4;\n      const source = { x: playerPoint.x + Math.cos(angle) * 180, y: playerPoint.y + Math.sin(angle) * 140 };\n      queueLineHazard(source, playerPoint, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - playerPoint.x, source.y - playerPoint.y), label: 'lock', ...ownership });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "orbitalShots",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 845,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / orbit"
+      ],
+      "labels": [
+        "orbit"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'orbitalShots') {\n    const angleOffset = (boss.bossState.orbitalIndex ?? 0) * 0.34;\n    boss.bossState.orbitalIndex = (boss.bossState.orbitalIndex ?? 0) + 1;\n    for (let index = 0; index < 5; index += 1) {\n      const angle = angleOffset + (Math.PI * 2 * index) / 5;\n      queueLineHazard(\n        { x: boss.x + Math.cos(angle) * 86, y: boss.y + Math.sin(angle) * 86 },\n        { x: boss.x - Math.cos(angle) * 160, y: boss.y - Math.sin(angle) * 160 },\n        { width: 10, damage: 18, color: COLORS.enemyJammer, delay: 0.6, length: 560, label: 'orbit', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "overload",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 348,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / overload"
+      ],
+      "labels": [
+        "overload"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'overload') {\n    boss.hp -= Math.min(24, boss.hp - 1);\n    queueLineHazard(boss, playerPoint, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, label: 'overload', ...ownership });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "paydaySweep",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 387,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / coinline",
+        "independent enemy SCOUT"
+      ],
+      "labels": [
+        "coinline"
+      ],
+      "mechanics": [],
+      "summons": [
+        "SCOUT"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'paydaySweep') {\n    for (const side of [-1, 1]) {\n      queueLineHazard(\n        { x: playerPoint.x + side * 220, y: playerPoint.y - 120 },\n        { x: playerPoint.x - side * 220, y: playerPoint.y + 120 },\n        { width: 10, damage: 14, color: COLORS.enemyScout, delay: 0.68, length: Math.hypot(440, 240), label: 'coinline', ...ownership }\n      );\n    }\n    spawnAround(boss, 'SCOUT', 2, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'paydayScout', maxActive: 6 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "phalanxAdvance",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 65,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / wall",
+        "independent enemy SHIELD"
+      ],
+      "labels": [
+        "wall"
+      ],
+      "mechanics": [],
+      "summons": [
+        "SHIELD"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'phalanxAdvance') {\n    spawnAround(boss, 'SHIELD', 2, boss.radius + 36, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'phalanx', maxActive: 6 });\n    queueAreaHazard(boss.x, boss.y, {\n      radius: 145,\n      damage: 10,\n      delay: 0.75,\n      slowRatio: 0.72,\n      slowDuration: 1.6,\n      pulses: 2,\n      pulseInterval: 0.6,\n      radiusStep: 12,\n      color: COLORS.enemyShield,\n      label: 'wall',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "pincerRush",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 110,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / slash",
+        "independent enemy SCOUT"
+      ],
+      "labels": [
+        "slash"
+      ],
+      "mechanics": [],
+      "summons": [
+        "SCOUT"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'pincerRush') {\n    for (const side of [-1, 1]) {\n      const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x) + side * 0.6;\n      queueLineHazard(\n        { x: boss.x + Math.cos(angle) * 20, y: boss.y + Math.sin(angle) * 20 },\n        { x: playerPoint.x + Math.cos(angle) * 110, y: playerPoint.y + Math.sin(angle) * 90 },\n        { width: 10, damage: 16, color: COLORS.enemyFast, delay: 0.55, length: 460, label: 'slash', ...ownership }\n      );\n    }\n    spawnAround(boss, 'SCOUT', 2, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'pincerScout', maxActive: 6 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "poisonBloom",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1118,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / poison"
+      ],
+      "labels": [
+        "poison"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'poisonBloom') queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ...ownership });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "prismBeam",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 172,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / unlabelled default"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'prismBeam') queueLineHazard(boss, target, { width: 18, damage: 24, color: COLORS.enemyPhase, ownerBossUid: boss.uid });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "prismLattice",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 184,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / lattice"
+      ],
+      "labels": [
+        "lattice"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'prismLattice') {\n    const offsets = [\n      { x: -120, y: -80 },\n      { x: 120, y: -80 },\n      { x: -120, y: 80 },\n      { x: 120, y: 80 },\n    ];\n    offsets.forEach((offset) => {\n      queueLineHazard(\n        { x: boss.x + offset.x, y: boss.y + offset.y },\n        { x: boss.x - offset.x, y: boss.y - offset.y },\n        { width: 10, damage: 16, color: COLORS.enemyPhase, delay: 0.75, length: Math.hypot(offset.x * 2, offset.y * 2), label: 'lattice', ...ownership }\n      );\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "pulseMeasure",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 163,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / beat"
+      ],
+      "labels": [
+        "beat"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  pulseMeasure: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (const [index, [x, y]] of [[-90, -60], [90, -60], [90, 60], [-90, 60]].entries()) {\n      c.queueAreaHazard(p.x + x, p.y + y, { radius: 40, damage: 7, delay: (index + 1) * beatFor(c.boss),\n        label: 'beat', color: c.boss.color, ...ownershipFor(c.boss) });\n    }\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1022,
+        "code": "  if (abilityName === 'pulseMeasure') {\n    for (let index = 0; index < 4; index += 1) {\n      queueAreaHazard(playerPoint.x + rand(-150, 150), playerPoint.y + rand(-110, 110), {\n        radius: 54,\n        damage: 10,\n        delay: 0.5 + index * 0.16,\n        color: COLORS.towerRail,\n        label: 'beat',\n        ...ownership,\n      });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "quake",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 145,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / bunker"
+      ],
+      "labels": [
+        "bunker"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  quake: (c) => c.queueAreaHazard(c.boss.x, c.boss.y, { radius: 120, damage: 14, delay: 1,\n    label: 'bunker', color: c.boss.color, ...ownershipFor(c.boss) }),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 156,
+        "code": "  if (abilityName === 'quake') damageArea(boss.x, boss.y, 120, 18, { color: COLORS.enemyTank, towerFactor: 1.8 });",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "railShot",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 332,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / rail"
+      ],
+      "labels": [
+        "rail"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65, label: 'rail', ...ownership });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "raiseWalls",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 118,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WALL"
+      ],
+      "labels": [],
+      "mechanics": [
+        "wall"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  raiseWalls: (c) => placeWalls(c),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1068,
+        "code": "  if (abilityName === 'raiseWalls') {\n    spawnAround(boss, 'SIEGE', 3, boss.radius + 58, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'wallGuard', maxActive: 6 });\n    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ...ownership });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "ransomBurst",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 397,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SCOUT"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SCOUT"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'ransomBurst') spawnAround(boss, 'SCOUT', 5, boss.radius + 42, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'ransom', maxActive: 8 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "refractVolley",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 173,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / refract"
+      ],
+      "labels": [
+        "refract"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'refractVolley') {\n    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    for (const offset of [-0.45, -0.15, 0.15, 0.45]) {\n      queueLineHazard(\n        boss,\n        { x: boss.x + Math.cos(baseAngle + offset) * 180, y: boss.y + Math.sin(baseAngle + offset) * 180 },\n        { width: 10, damage: 14, color: COLORS.enemyPhase, delay: 0.55, length: 560, label: 'refract', ...ownership }\n      );\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "repossess",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 81,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / coin",
+        "independent MECHANIC_COURIER",
+        "money/text feedback"
+      ],
+      "labels": [
+        "coin"
+      ],
+      "mechanics": [
+        "courier"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  repossess: (c) => {\n    const point = c.boss.bossState.lockedTarget ?? pointFor(c.boss, c.state);\n    c.queueAreaHazard(point.x, point.y, { radius: 70, damage: 16, delay: 1.1, label: 'coin', color: c.boss.color, ...ownershipFor(c.boss) });\n    stealWithCourier(c, 8);\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 398,
+        "code": "  if (abilityName === 'repossess') {\n    const tower = state.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);\n    if (tower) {\n      damageTarget(tower, 22);\n      queueAreaHazard(tower.x, tower.y, {\n        radius: 76,\n        damage: 12,\n        delay: 0.72,\n        color: COLORS.enemyScout,\n        label: 'coin',\n        ...ownership,\n      });\n    }\n    if (!state.debugOptions.infiniteMoney) {\n      const stolen = Math.min(state.money, 18);\n      state.money -= stolen;\n      syncHudMoney();\n      spawnFloatingText(boss.x, boss.y - boss.radius - 8, `-${stolen}`, COLORS.enemyScout);\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "sacrificeMinions",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 134,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / slag",
+        "shield state overlay (actual recipient)",
+        "heal feedback (cosmetic only)"
+      ],
+      "labels": [
+        "slag"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  sacrificeMinions: (c) => {\n    const marked = c.boss.bossState.sacrificeTargets ?? [];\n    const victims = c.state.enemies.filter((enemy) => marked.includes(enemy.uid) && enemy.hp > 0 && dist(enemy, c.boss) <= 180);\n    for (const enemy of victims) { enemy.hp = 0; enemy.consumed = true; }\n    c.boss.hp = Math.min(c.boss.maxHp, c.boss.hp + victims.length * 28);\n    c.boss.shield = Math.max(c.boss.shield ?? 0, victims.length * 24);\n    c.boss.maxShield = Math.max(c.boss.maxShield ?? 0, c.boss.shield);\n    c.boss.bossState.forgeHeat = victims.length;\n    c.queueAreaHazard(c.boss.x, c.boss.y, { radius: 95 + victims.length * 12, damage: 8 + victims.length * 3,\n      delay: 1, label: 'slag', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 971,
+        "code": "  if (abilityName === 'sacrificeMinions') {\n    let sacrificed = 0;\n    for (let index = state.enemies.length - 1; index >= 0; index -= 1) {\n      const enemy = state.enemies[index];\n      if (enemy !== boss && !enemy.isBoss && dist(enemy, boss) <= 180 && sacrificed < 4) {\n        state.enemies.splice(index, 1);\n        sacrificed += 1;\n      }\n    }\n    boss.hp = Math.min(boss.maxHp, boss.hp + sacrificed * 28);\n    boss.shield = Math.max(boss.shield ?? 0, sacrificed * 24);\n    damageArea(boss.x, boss.y, 95 + sacrificed * 18, 10 + sacrificed * 4, { color: COLORS.enemySiege, towerFactor: 1.3 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "seedPods",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 109,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_ROOT",
+        "terrain.area / poison (queueMechanicTerrain)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "root"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  seedPods: (c) => {\n    for (const side of [-1, 1]) plant(c, 'root', { x: c.boss.x + side * 90, y: c.boss.y + 55 }, { hp: 24, limit: BOSS_LIMITS.roots });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1108,
+        "code": "  if (abilityName === 'seedPods') spawnAround(boss, 'MEDIC', 2, boss.radius + 46, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'seedPod', maxActive: 5 });",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "shadowArc",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 495,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / shadow",
+        "hazard.area / shade"
+      ],
+      "labels": [
+        "shade",
+        "shadow"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'shadowArc') {\n    queueLineHazard(boss, playerPoint, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, label: 'shadow', ...ownership });\n    queueAreaHazard(playerPoint.x + rand(-80, 80), playerPoint.y + rand(-80, 80), {\n      radius: 76,\n      damage: 14,\n      slowRatio: 0.52,\n      slowDuration: 2.2,\n      delay: 0.82,\n      color: boss.color,\n      label: 'shade',\n      ...ownership,\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "shieldPulse",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 55,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "impactWave / generic",
+        "shield state overlay (actual recipient)"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'shieldPulse') {\n    for (const enemy of state.enemies) {\n      if (enemy !== boss && dist(enemy, boss) <= 160) {\n        enemy.shield = Math.max(enemy.shield ?? 0, 18);\n        enemy.maxShield = Math.max(enemy.maxShield ?? 0, enemy.shield);\n        enemy.armoredTimer = 4;\n      }\n    }\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 160, color: COLORS.enemyShield, fillAlpha: 0.08 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "shockRam",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 148,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / ram",
+        "impactWave / generic",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "ram"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  if (abilityName === 'shockRam') {\n    const angle = Math.atan2(target.y - boss.y, target.x - boss.x);\n    boss.dashTimer = 0.48;\n    boss.dashVx = Math.cos(angle) * 380;\n    boss.dashVy = Math.sin(angle) * 380;\n    queueLineHazard(boss, target, { width: 22, damage: 24, color: COLORS.enemyTank, delay: 0.62, length: 360, label: 'ram', ...ownership });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 66, color: COLORS.enemyTank, fillAlpha: 0.12 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "silkVolley",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 98,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WEB",
+        "terrain.area / web (queueMechanicTerrain)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "web"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  silkVolley: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (const side of [-1, 1]) plant(c, 'web', { x: p.x + side * 85, y: p.y + 45 }, { hp: 16, limit: BOSS_LIMITS.webs });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 704,
+        "code": "  if (abilityName === 'silkVolley') {\n    for (let index = 0; index < 3; index += 1) {\n      queueAreaHazard(playerPoint.x + rand(-120, 120), playerPoint.y + rand(-90, 90), {\n        radius: 62,\n        damage: 8,\n        slowRatio: 0.5,\n        slowDuration: 2.2,\n        delay: 0.55 + index * 0.1,\n        color: COLORS.enemyBurrower,\n        label: 'silk',\n        ...ownership,\n      });\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "singularity",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 132,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / singularity"
+      ],
+      "labels": [
+        "singularity"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  singularity: (c) => c.queueAreaHazard(c.boss.x, c.boss.y, { radius: 180, damage: 12, pull: 90, maxPullStep: 16,\n    delay: 1.5, pulses: 3, pulseInterval: 1.2, label: 'singularity', color: c.boss.color, ...ownershipFor(c.boss) }),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 864,
+        "code": "  if (abilityName === 'singularity') {\n    for (const tower of state.towers) {\n      const angle = Math.atan2(boss.y - tower.y, boss.x - tower.x);\n      tower.x += Math.cos(angle) * 34;\n      tower.y += Math.sin(angle) * 34;\n    }\n    queueAreaHazard(boss.x, boss.y, {\n      radius: 210,\n      damage: 20,\n      pull: 340,\n      delay: 0.95,\n      pulses: 3,\n      pulseInterval: 0.55,\n      radiusStep: -12,\n      color: COLORS.enemyJammer,\n      label: 'singularity',\n      ...ownership,\n    });\n    if (isClimaxPhase) {\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: boss.radius * 0.9,\n        maxRadius: 198,\n        growth: 176,\n        life: 0.94,\n        color: COLORS.enemyJammer,\n        accentColor: COLORS.enemyJammer,\n        secondaryColor: '#ffffff',\n        fillAlpha: 0.03,\n        lineWidth: 3,\n        dash: [4, 10],\n        spokes: 7,\n        spin: 0.7,\n        style: 'astrolabeFinisher',\n        nodeCount: 7,\n        rotation: (boss.bossState.orbitalIndex ?? 0) * 0.34,\n      });\n      for (let index = 0; index < 4; index += 1) {\n        const angle = (Math.PI * 2 * index) / 4;\n        const source = { x: boss.x + Math.cos(angle) * 180, y: boss.y + Math.sin(angle) * 180 };\n        queueLineHazard(source, boss, {\n          width: 10,\n          damage: 16,\n          color: COLORS.enemyJammer,\n          delay: 1.02 + index * 0.05,\n          length: Math.hypot(source.x - boss.x, source.y - boss.y),\n          label: 'lock',\n          ...ownership,\n        });\n      }\n      primeBossAbility('eventHorizon', 1.05);\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "skyDive",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 149,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / dive",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "dive"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  skyDive: (c) => {\n    const p = pointFor(c.boss, c.state);\n    const distance = Math.max(1, dist(c.boss, p));\n    c.boss.dashTimer = Math.min(0.6, distance / 500);\n    c.boss.dashVx = (p.x - c.boss.x) / distance * 500;\n    c.boss.dashVy = (p.y - c.boss.y) / distance * 500;\n    c.queueAreaHazard(p.x, p.y, { radius: 100, damage: 22, delay: 1.3, label: 'dive', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 612,
+        "code": "  if (abilityName === 'skyDive') {\n    const oldX = boss.x;\n    const oldY = boss.y;\n    const angle = Math.random() * Math.PI * 2;\n    boss.x = playerPoint.x + Math.cos(angle) * 140;\n    boss.y = playerPoint.y + Math.sin(angle) * 120;\n    spawnImpactWave(oldX, oldY, { maxRadius: 70, color: COLORS.enemyBomber, fillAlpha: 0.08 });\n    queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, label: 'diveTrail', ...ownership });\n    queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });\n    if (isClimaxPhase) {\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: 18,\n        maxRadius: 126,\n        growth: 188,\n        life: 0.88,\n        color: COLORS.enemyBomber,\n        accentColor: '#ff9f43',\n        secondaryColor: '#ffd166',\n        fillAlpha: 0.03,\n        lineWidth: 3,\n        dash: [7, 9],\n        spokes: 5,\n        spin: 0.8,\n        style: 'dragonFinisher',\n        rotation: angle,\n      });\n      for (let index = 0; index < 4; index += 1) {\n        const orbitAngle = (Math.PI * 2 * index) / 4;\n        queueAreaHazard(boss.x + Math.cos(orbitAngle) * 78, boss.y + Math.sin(orbitAngle) * 62, {\n          radius: 54,\n          damage: 14,\n          delay: 1 + index * 0.05,\n          pulses: 2,\n          pulseInterval: 0.45,\n          radiusStep: 8,\n          color: COLORS.enemyBomber,\n          label: 'inferno',\n          ...ownership,\n        });\n      }\n      primeBossAbility('infernoRing', 1.05);\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "slagDrop",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 956,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / slag"
+      ],
+      "labels": [
+        "slag"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'slagDrop') {\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.2;\n      queueAreaHazard(boss.x + Math.cos(angle) * 130, boss.y + Math.sin(angle) * 100, {\n        radius: 64,\n        damage: 14,\n        delay: 0.7 + index * 0.08,\n        pulses: 2,\n        pulseInterval: 0.55,\n        color: COLORS.enemySiege,\n        label: 'slag',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "solarDash",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 465,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / solar",
+        "impactWave / generic",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [
+        "solar"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": true,
+      "code": "  if (abilityName === 'solarDash') {\n    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);\n    boss.dashTimer = 0.34;\n    boss.dashVx = Math.cos(angle) * 620;\n    boss.dashVy = Math.sin(angle) * 620;\n    queueLineHazard(boss, playerPoint, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, label: 'solar', ...ownership });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 52, color: boss.color, fillAlpha: 0.12 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "soloLunarOrbit",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 199,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / moon"
+      ],
+      "labels": [
+        "moon"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  soloLunarOrbit: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (let index = 0; index < 4; index++) {\n      const angle = index * Math.PI / 2;\n      c.queueAreaHazard(p.x + Math.cos(angle) * 130, p.y + Math.sin(angle) * 130,\n        { radius: 45, damage: 10, delay: 1, label: 'moon', color: c.boss.color, ...ownershipFor(c.boss) });\n    }\n  },",
+      "fallbackSource": null
+    },
+    {
+      "ability": "soloSolarVolley",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 192,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.line / flare"
+      ],
+      "labels": [
+        "flare"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  soloSolarVolley: (c) => {\n    const p = pointFor(c.boss, c.state);\n    const angle = Math.atan2(p.y - c.boss.y, p.x - c.boss.x);\n    for (const offset of [-0.35, 0, 0.35]) c.queueLineHazard(c.boss,\n      { x: c.boss.x + Math.cos(angle + offset) * 300, y: c.boss.y + Math.sin(angle + offset) * 300 },\n      { width: 10, damage: 14, delay: 0.9, label: 'flare', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": null
+    },
+    {
+      "ability": "spawnHive",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 53,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_NEST"
+      ],
+      "labels": [],
+      "mechanics": [
+        "nest"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  spawnHive: (c) => {\n    for (const side of [-1, 1]) plant(c, 'nest', { x: c.boss.x + side * 85, y: c.boss.y + 45 }, { hp: 36, limit: BOSS_LIMITS.nests });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 213,
+        "code": "  if (abilityName === 'spawnHive') spawnAround(boss, 'BEACON', 2, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'hive', maxActive: 4 });",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "spawnSpiderlings",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 718,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SPLINTER"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SPLINTER"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'spawnSpiderlings') spawnAround(boss, 'SPLINTER', 6, boss.radius + 38, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'spiderling', maxActive: 10 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "sporeBurst",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1119,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / spore"
+      ],
+      "labels": [
+        "spore"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'sporeBurst') {\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4;\n      queueAreaHazard(playerPoint.x + Math.cos(angle) * 90, playerPoint.y + Math.sin(angle) * 80, {\n        radius: 64,\n        damage: 10,\n        delay: 0.7 + index * 0.05,\n        pulses: 2,\n        pulseInterval: 0.52,\n        color: COLORS.enemyMedic,\n        label: 'spore',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "starfall",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 832,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / star"
+      ],
+      "labels": [
+        "star"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'starfall') {\n    for (let index = 0; index < 4; index += 1) {\n      const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.22;\n      queueAreaHazard(playerPoint.x + Math.cos(angle) * 120, playerPoint.y + Math.sin(angle) * 88, {\n        radius: 58,\n        damage: 14,\n        delay: 0.65 + index * 0.08,\n        color: COLORS.enemyJammer,\n        label: 'star',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "stealMoney",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 76,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_COURIER",
+        "money/text feedback"
+      ],
+      "labels": [],
+      "mechanics": [
+        "courier"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  stealMoney: (c) => stealWithCourier(c, 12),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 362,
+        "code": "  if (abilityName === 'stealMoney') {\n    if (!state.debugOptions.infiniteMoney) {\n      const stolen = Math.min(state.money, 12);\n      state.money -= stolen;\n      syncHudMoney();\n      spawnFloatingText(boss.x, boss.y - boss.radius - 8, `-${stolen}`, COLORS.enemyScout);\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "summonFormation",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 42,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy BASIC"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "BASIC"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "summonFrostGuards",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 316,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SHIELD"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SHIELD"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'summonFrostGuards') spawnAround(boss, 'SHIELD', 3, boss.radius + 48, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'frostGuard', maxActive: 6 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "summonScouts",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 109,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SCOUT"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SCOUT"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'summonScouts') spawnAround(boss, 'SCOUT', 3, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'scouts', maxActive: 6 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "summonSiege",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 129,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SIEGE"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SIEGE"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'summonSiege') spawnAround(boss, 'SIEGE', 2, boss.radius + 46, { ownerBossUid: boss.uid, summonCategory: 'siege', maxActive: 5 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "summonSwarm",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 251,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "independent enemy SHARD"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "SHARD"
+      ],
+      "displacement": false,
+      "code": "  if (abilityName === 'summonSwarm') spawnAround(boss, 'SHARD', 5, boss.radius + 45, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'swarm', maxActive: 10 });",
+      "fallbackSource": null
+    },
+    {
+      "ability": "suppressiveGrid",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 341,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / grid"
+      ],
+      "labels": [
+        "grid"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'suppressiveGrid') {\n    const anchors = state.towers.slice(0, 2);\n    anchors.forEach((tower, index) => {\n      queueLineHazard({ x: tower.x - 180, y: tower.y }, { x: tower.x + 180, y: tower.y }, { width: 9, damage: 14, color: COLORS.towerRail, delay: 0.68 + index * 0.08, length: 360, label: 'grid', ...ownership });\n      queueLineHazard({ x: tower.x, y: tower.y - 180 }, { x: tower.x, y: tower.y + 180 }, { width: 9, damage: 14, color: COLORS.towerRail, delay: 0.76 + index * 0.08, length: 360, label: 'grid', ...ownership });\n    });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "syncopate",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 174,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.line / tempo"
+      ],
+      "labels": [
+        "tempo"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  syncopate: (c) => {\n    const p = pointFor(c.boss, c.state);\n    for (let index = 0; index < 3; index++) c.queueLineHazard({ x: p.x - 220, y: p.y - 70 + index * 70 },\n      { x: p.x + 220, y: p.y - 70 + index * 70 }, { width: 9, damage: 12, delay: (index + 1) * beatFor(c.boss),\n        length: 440, label: 'tempo', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1040,
+        "code": "  if (abilityName === 'syncopate') {\n    for (let index = 0; index < 3; index += 1) {\n      const delay = 0.42 + index * 0.18;\n      queueLineHazard(\n        { x: playerPoint.x - 220, y: playerPoint.y - 70 + index * 70 },\n        { x: playerPoint.x + 220, y: playerPoint.y - 70 + index * 70 },\n        { width: 9, damage: 14, color: COLORS.towerRail, delay, length: 440, label: 'tempo', ...ownership }\n      );\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "taxBeacon",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 77,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / coin"
+      ],
+      "labels": [
+        "coin"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  taxBeacon: (c) => {\n    const point = pointFor(c.boss, c.state);\n    c.queueAreaHazard(point.x, point.y, { radius: 64, damage: 8, delay: 1, label: 'coin', color: c.boss.color, ...ownershipFor(c.boss) });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 370,
+        "code": "  if (abilityName === 'taxBeacon') {\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 82,\n      damage: 8,\n      delay: 0.75,\n      pulses: 2,\n      pulseInterval: 0.5,\n      color: COLORS.enemyScout,\n      label: 'coin',\n      ...ownership,\n    });\n    if (!state.debugOptions.infiniteMoney) {\n      const stolen = Math.min(state.money, 8);\n      state.money -= stolen;\n      syncHudMoney();\n    }\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "tempoShift",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 170,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent enemy FAST"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "FAST"
+      ],
+      "displacement": false,
+      "code": "  tempoShift: (c) => {\n    c.boss.bossState.nextBeat = c.boss.bossState.combatTime + beatFor(c.boss);\n    c.spawnAround(c.boss, 'FAST', 2, 48, { ...ownershipFor(c.boss), summonCategory: 'tempoRunner', maxActive: 6 });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 1034,
+        "code": "  if (abilityName === 'tempoShift') {\n    for (const tower of state.towers) {\n      if (dist(tower, boss) <= 260) tower.frozenTimer = Math.max(tower.frozenTimer ?? 0, 1.6);\n    }\n    spawnAround(boss, 'FAST', 4, boss.radius + 45, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'tempoRunner', maxActive: 8 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "tripleBeam",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 199,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / unlabelled default"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'tripleBeam') {\n    queueLineHazard(boss, playerPoint, { width: 16, damage: 22, color: COLORS.enemyPhase, ownerBossUid: boss.uid });\n    queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x + 120, y: boss.y - 260 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });\n    queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x - 140, y: boss.y - 240 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "twinBolt",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 423,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / moonbolt,sunbolt"
+      ],
+      "labels": [
+        "moonbolt",
+        "sunbolt"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'twinBolt') {\n    queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, playerPoint, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, label: 'moonbolt', ...ownership });\n    queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7, label: 'sunbolt', ownerBossUid: boss.uid });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "twinCrossfire",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 508,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.line / crossfire",
+        "hazard.area / eclipse",
+        "impactWave / twinFinisher"
+      ],
+      "labels": [
+        "crossfire",
+        "eclipse"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'twinCrossfire') {\n    const partner = getEncounterPartner(boss);\n    if (partner && boss.uid < partner.uid) {\n      queueLineHazard(boss, { x: playerPoint.x + 90, y: playerPoint.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, label: 'crossfire', ...ownership });\n      queueLineHazard(partner, { x: playerPoint.x - 90, y: playerPoint.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });\n      spawnImpactWave(playerPoint.x, playerPoint.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });\n      if (isClimaxPhase) {\n        const midX = (boss.x + partner.x) * 0.5;\n        const midY = (boss.y + partner.y) * 0.5;\n        spawnImpactWave(midX, midY, {\n          startRadius: 22,\n          maxRadius: 138,\n          growth: 196,\n          life: 0.84,\n          color: '#ffffff',\n          accentColor: boss.color,\n          secondaryColor: partner.color,\n          fillAlpha: 0.03,\n          lineWidth: 2.5,\n          dash: [5, 11],\n          spokes: 8,\n          spin: 1.2,\n          style: 'twinFinisher',\n          nodeCount: 8,\n          anchorA: { x: boss.x, y: boss.y, color: boss.color },\n          anchorB: { x: partner.x, y: partner.y, color: partner.color },\n        });\n        queueAreaHazard(playerPoint.x, playerPoint.y, {\n          radius: 112,\n          damage: 18,\n          delay: 0.96,\n          pulses: 2,\n          pulseInterval: 0.42,\n          color: '#ffffff',\n          label: 'eclipse',\n          ...ownership,\n        });\n        primeBossAbility('eclipsePulse', 1.15);\n        const partnerOwnership = getEncounterPartner(boss);\n        if (partnerOwnership) {\n          const partnerCurrent = partnerOwnership.abilityCooldowns.eclipsePulse;\n          partnerOwnership.abilityCooldowns.eclipsePulse = partnerCurrent == null ? 1.15 : Math.min(partnerCurrent, 1.15);\n        }\n      }\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "twinOrbit",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 418,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "impactWave / generic",
+        "shield state overlay (actual recipient)"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'twinOrbit') {\n    boss.shield = Math.max(boss.shield ?? 0, 34);\n    boss.maxShield = Math.max(boss.maxShield ?? 0, boss.shield);\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 118, color: boss.color, fillAlpha: 0.08 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "twinSwap",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 427,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "impactWave / generic",
+        "independent enemy PHASE",
+        "logical displacement cue; root stays fixed in body art"
+      ],
+      "labels": [],
+      "mechanics": [],
+      "summons": [
+        "PHASE"
+      ],
+      "displacement": true,
+      "code": "  if (abilityName === 'twinSwap') {\n    const angle = Math.random() * Math.PI * 2;\n    boss.x = playerPoint.x + Math.cos(angle) * 170;\n    boss.y = playerPoint.y + Math.sin(angle) * 170;\n    spawnAround(boss, 'PHASE', 2, boss.radius + 34, { ownerBossUid: boss.uid, summonCategory: 'swapEcho', maxActive: 4 });\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "webField",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 105,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WEB",
+        "terrain.area / web (queueMechanicTerrain)",
+        "independent enemy SPLINTER"
+      ],
+      "labels": [],
+      "mechanics": [
+        "web"
+      ],
+      "summons": [
+        "SPLINTER"
+      ],
+      "displacement": false,
+      "code": "  webField: (c) => {\n    handlers.nestBloom(c);\n    c.spawnAround(c.boss, 'SPLINTER', 3, 45, { ...ownershipFor(c.boss), summonCategory: 'spiderling', maxActive: 10 });\n  },",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 733,
+        "code": "  if (abilityName === 'webField') {\n    if (isClimaxPhase) {\n      spawnImpactWave(boss.x, boss.y, {\n        startRadius: 26,\n        maxRadius: 184,\n        growth: 210,\n        life: 0.7,\n        color: COLORS.enemyBurrower,\n        accentColor: COLORS.enemyBurrower,\n        secondaryColor: '#d9f99d',\n        fillAlpha: 0.03,\n        lineWidth: 2,\n        dash: [4, 8],\n        spokes: 8,\n        spin: 0.4,\n        style: 'spiderFinisher',\n        nodeCount: 8,\n      });\n    }\n    queueAreaHazard(boss.x, boss.y, {\n      radius: 170,\n      damage: 9,\n      slowRatio: 0.52,\n      slowDuration: 3,\n      delay: 0.8,\n      pulses: 3,\n      pulseInterval: 0.75,\n      radiusStep: 12,\n      color: COLORS.enemyBurrower,\n      label: 'web',\n      ...ownership,\n    });\n    spawnAround(boss, 'BURROWER', 2, boss.radius + 52, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'burrowEscort', maxActive: 4 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "webTrap",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 97,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "independent MECHANIC_WEB",
+        "terrain.area / web (queueMechanicTerrain)"
+      ],
+      "labels": [],
+      "mechanics": [
+        "web"
+      ],
+      "summons": [],
+      "displacement": false,
+      "code": "  webTrap: (c) => plant(c, 'web', pointFor(c.boss, c.state), { hp: 16, limit: BOSS_LIMITS.webs }),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 689,
+        "code": "  if (abilityName === 'webTrap') {\n    queueAreaHazard(playerPoint.x, playerPoint.y, {\n      radius: 86,\n      damage: 8,\n      slowRatio: 0.42,\n      slowDuration: 2.8,\n      delay: 0.65,\n      pulses: 2,\n      pulseInterval: 0.55,\n      radiusStep: 8,\n      color: COLORS.enemyBurrower,\n      label: 'web',\n      ...ownership,\n    });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    },
+    {
+      "ability": "whiteout",
+      "handler": "fallback",
+      "source": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 278,
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      },
+      "resources": [
+        "hazard.area / frost"
+      ],
+      "labels": [
+        "frost"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  if (abilityName === 'whiteout') {\n    for (let index = 0; index < 3; index += 1) {\n      queueAreaHazard(playerPoint.x + rand(-120, 120), playerPoint.y + rand(-90, 90), {\n        radius: 74,\n        damage: 8,\n        delay: 0.6 + index * 0.14,\n        slowRatio: 0.42,\n        slowDuration: 2.4,\n        pulses: 2,\n        pulseInterval: 0.5,\n        color: COLORS.towerFrost,\n        label: 'frost',\n        ...ownership,\n      });\n    }\n  }",
+      "fallbackSource": null
+    },
+    {
+      "ability": "wingBuffet",
+      "handler": "optimized",
+      "source": {
+        "path": "src/logic/engine/bossOptimizedAbilities.js",
+        "line": 147,
+        "sha256": "79dae61b2e9a7f39f539d6ef5094c260ebf17b7a264d14e1e540e28ceaf7c9dc"
+      },
+      "resources": [
+        "hazard.area / breath"
+      ],
+      "labels": [
+        "breath"
+      ],
+      "mechanics": [],
+      "summons": [],
+      "displacement": false,
+      "code": "  wingBuffet: (c) => c.queueAreaHazard(c.boss.x, c.boss.y, { radius: 150, damage: 12, pull: -80, delay: 1.1,\n    label: 'breath', color: c.boss.color, ...ownershipFor(c.boss) }),",
+      "fallbackSource": {
+        "path": "src/logic/engine/bossAbilityRuntime.js",
+        "line": 587,
+        "code": "  if (abilityName === 'wingBuffet') {\n    damageArea(boss.x, boss.y, 165, 16, { color: COLORS.enemyBomber, towerFactor: 1.15 });\n    const pushTarget = (target, amount) => {\n      const angle = Math.atan2(target.y - boss.y, target.x - boss.x);\n      target.x += Math.cos(angle) * amount;\n      target.y += Math.sin(angle) * amount;\n    };\n    pushTarget(state.player, 42);\n    for (const tower of state.towers) {\n      if (dist(tower, boss) <= 210) pushTarget(tower, 24);\n    }\n    spawnImpactWave(boss.x, boss.y, { maxRadius: 170, color: COLORS.enemyBomber, fillAlpha: 0.1 });\n  }",
+        "sha256": "c1a11f53457f210177c5d939a1a72531e8928807479b93b8472dc4b32fa32f16"
+      }
+    }
+  ]
+}

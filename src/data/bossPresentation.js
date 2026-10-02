@@ -2,82 +2,82 @@ export const BOSS_PRESENTATION = {
   COMMANDER: {
     summary: 'A disciplined push boss that advances behind escorts and shield pressure.',
     threats: ['Advance', 'Shielding', 'Lane Pressure'],
-    counterplay: 'Break the escort line first and keep sustained fire on the front.',
+    counterplay: '清掉护卫解除保护，攻击结束后的恢复期集中输出。',
   },
   HUNTER: {
     summary: 'A pursuit boss that turns static play into a liability through repeated dives.',
     threats: ['Dive', 'Chase', 'Feint'],
-    counterplay: 'Move laterally early and punish the opening after each commit.',
+    counterplay: '冲刺蓄力时横移，冲刺结束后利用恢复窗口输出。',
   },
   FORTRESS: {
     summary: 'A heavy siege boss that wins by forcing the player to endure a slow collapse.',
     threats: ['Armor', 'Ram', 'Shockwave'],
-    counterplay: 'Slow it, chip it early, and keep splash ready for its support pack.',
+    counterplay: '分散关键塔，攻击结束后核心开放，集中输出。',
   },
   PRISM: {
     summary: 'A beam-pattern boss that constantly rewrites where the safe angle is.',
     threats: ['Refraction', 'Mirrors', 'Cross Lines'],
-    counterplay: 'Leave beam intersections first, then return to a clean firing lane.',
+    counterplay: '先离开光束交叉处，再回到塔的火力覆盖区。',
   },
   HIVE: {
     summary: 'A snowball boss that claims the board with spawn points and swarm growth.',
     threats: ['Nests', 'Growth', 'Rebuild'],
-    counterplay: 'Deny fresh nests quickly before returning to boss damage.',
+    counterplay: '优先拆掉孵化巢，阻止生产并取消巢的爆发攻击。',
   },
   FROST_JUDGE: {
     summary: 'A control boss that slows first and punishes clustered value next.',
     threats: ['Slow Zones', 'Freeze', 'Marked Targets'],
-    counterplay: 'Split key towers across lanes and pre-move before the freeze lands.',
+    counterplay: '击破冰封印可阻止冻塔；提前离开冰环预警。',
   },
   RAIL_WARLORD: {
     summary: 'A sight-line boss that punishes neat but overly linear defenses.',
     threats: ['Lock Lines', 'Sniping', 'Suppression Grid'],
-    counterplay: 'Spread critical towers and react to targeting lanes immediately.',
+    counterplay: '靠近诱导锁线再侧移；击破磁轨锁标可阻止对塔狙击。',
   },
   COLLECTOR: {
     summary: 'An economy boss that steals tempo and forces defensive spending.',
     threats: ['Theft', 'Escort Runs', 'Tax Pressure'],
-    counterplay: 'Protect income and stop repeated steal cycles before they compound.',
+    counterplay: '击破赎金搬运者可追回资金，别让它带钱逃走。',
   },
   TWINS: {
     summary: 'A true dual-boss encounter built around crossfire, role recognition, and enrage cleanup.',
     threats: ['Dual Sync', 'Crossfire', 'Enrage'],
-    counterplay: 'Break the twin restricting movement first, then survive the empowered remainder.',
+    counterplay: '选择先击破日或月；幸存者会使用不同的独奏招式。',
   },
   DRAGON: {
     summary: 'A stage sweeper that repeatedly erases stable ground with breath and dives.',
     threats: ['Sweep', 'Dive', 'Inferno'],
-    counterplay: 'Keep a moving route, dodge laterally, and recommit only after dives resolve.',
+    counterplay: '保留移动路线，横向避开吐息和俯冲预警。',
   },
   SPIDER_MATRIARCH: {
     summary: 'A territorial boss that wins through webs, body-blockers, and shrinking exits.',
     threats: ['Webs', 'Broods', 'Encirclement'],
-    counterplay: 'Open escape lanes first and never let webs and spiderlings stack freely.',
+    counterplay: '击破蛛网结点清理地形，保留出口并清理幼蛛。',
   },
   ASTROLABE: {
     summary: 'A displacement boss that changes what counts as safe through gravity and lock lines.',
     threats: ['Gravity', 'Orbitals', 'Singularity'],
-    counterplay: 'Preserve turning room and leave the pull line before the center closes.',
+    counterplay: '保留转向空间，离开引力中心与锁定线。',
   },
   BLOOD_FORGE: {
     summary: 'A conversion boss that turns nearby enemies into armor and burst windows.',
     threats: ['Sacrifice', 'Armor', 'Detonation'],
-    counterplay: 'Thin the fuel wave before phase spikes and avoid feeding the forge.',
+    counterplay: '击杀被标记的祭品阻止回血，攻击结束后趁过热输出。',
   },
   VOID_CONDUCTOR: {
     summary: 'A rhythm boss that becomes memorable because patterns resolve like beats.',
     threats: ['Tempo', 'Cuts', 'Finale'],
-    counterplay: 'Move for the next beat early and read grouped telegraphs as timing.',
+    counterplay: '按固定节拍躲避连击；阶段越晚节拍越快。',
   },
   LABYRINTH_KEEPER: {
     summary: 'A routing boss that shepherds the player into bad geometry and dead ends.',
     threats: ['Walls', 'Gate Swaps', 'Compression'],
-    counterplay: 'Avoid dead-end tower clusters and always keep one escape lane open.',
+    counterplay: '从墙间开口撤离，也可击破墙块开辟路线。',
   },
   NIGHTMARE_BLOOM: {
     summary: 'An attrition boss that gradually contaminates the arena if unchecked.',
     threats: ['Seeds', 'Spread', 'Garden'],
-    counterplay: 'Leave infected edges quickly and clear propagation nodes before they bloom.',
+    counterplay: '优先击破污染根，清理毒区并阻止继续扩散。',
   },
 };
 
@@ -307,7 +307,8 @@ export const BOSS_PHASE_PRESENTATION_BY_FORM = {
   }),
 };
 
-export const getBossPresentation = (bossId) => BOSS_PRESENTATION[bossId] ?? null;
+export const getBossBaseId = (bossId) => bossId?.replace(/_T[123]$/, '');
+export const getBossPresentation = (bossId) => BOSS_PRESENTATION[getBossBaseId(bossId)] ?? null;
 
 const clampPhaseTier = (activePhaseIndex = 0) => Math.max(0, Math.min(DEFAULT_BOSS_PHASE_PRESENTATION.length - 1, activePhaseIndex));
 

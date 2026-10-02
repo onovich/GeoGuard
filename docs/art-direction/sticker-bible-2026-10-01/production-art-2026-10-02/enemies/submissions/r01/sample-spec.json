@@ -1,0 +1,126 @@
+{
+  "owner": "enemies",
+  "revision": "r01",
+  "generationMode": "built-in image_gen",
+  "imageReferencesViewedBeforeGeneration": true,
+  "transparentBackground": false,
+  "deliverableType": "annotated raster concept boards only",
+  "notRuntimeSprites": true,
+  "fixedSourceProposal": {
+    "canvas": [
+      512,
+      512
+    ],
+    "root": [
+      256,
+      416
+    ],
+    "collisionCenter": [
+      256,
+      256
+    ],
+    "collisionCenterMinusRoot": [
+      0,
+      -160
+    ],
+    "units": "design pixels",
+    "status": "proposed design coordinates, not measurements of generated PNGs",
+    "runtimeAlignment": "world enemy.x/y remains collisionCenter; rendered art root placed at world center + scaled (0,160); existing radius untouched",
+    "precisionGate": "source artwork and every exported frame must later verify the exact coordinates; page guides are schematic"
+  },
+  "boards": [
+    {
+      "file": "images/basic-root-lock.png",
+      "prompt": "prompts/basic-root-lock.txt",
+      "reference": "action-consistency/pilot-03-basic-enemy-v2.png",
+      "cells": [
+        "NEUTRAL",
+        "SQUASH",
+        "STRETCH",
+        "MOVE 0",
+        "MOVE 1",
+        "MOVE 2",
+        "MOVE 3 / LOOP",
+        "anatomy inset"
+      ],
+      "counts": {
+        "buds": 5,
+        "feet": 2,
+        "eyes": 2,
+        "mouth": 1
+      },
+      "labels": "buds numbered1-5; feetL/R",
+      "loop": "reuse identical source NEUTRAL at loop endpoints; generated endpoints visually similar, not pixel-identical certified",
+      "coveredActions": [
+        "enemy:BASIC:NEUTRAL",
+        "enemy:BASIC:SQUASH",
+        "enemy:BASIC:STRETCH",
+        "enemy:BASIC:MOVE"
+      ],
+      "notCovered": [
+        "enemy:BASIC:ATTACK"
+      ]
+    },
+    {
+      "file": "images/beacon-body-only.png",
+      "prompt": "prompts/beacon-body-only.txt",
+      "references": [
+        "action-consistency/batch-13-beacon-scout-v4.png",
+        "images/basic-root-lock.png"
+      ],
+      "bodyCells": [
+        "NEUTRAL",
+        "WINDUP",
+        "TRIGGER",
+        "RECOVER"
+      ],
+      "counts": {
+        "topAntennae": 2,
+        "feet": 2,
+        "mouth": 1,
+        "tongue": 1,
+        "eyes": 0
+      },
+      "independentBox": "3 separate BASIC unit references, not body layers or exact spawn guarantee",
+      "event": "BEACON enemyBehaviorRuntime summonTimer; windup/recover are art-only subposes, no existing logic timing windows",
+      "coveredActions": [
+        "enemy:BEACON:NEUTRAL",
+        "enemy:BEACON:SUMMON_3_BASIC"
+      ],
+      "notCurrentHiveSpawnHive": true,
+      "effects": "wave is text-only requirement, not baked in body"
+    },
+    {
+      "file": "images/shard-splinter-separate.png",
+      "prompt": "prompts/shard-splinter-separate.txt",
+      "references": [
+        "action-consistency/batch-10-shard-medic.png",
+        "action-consistency/batch-04-player-splinter.png"
+      ],
+      "parent": "one connected3-lobe SHARD, six crease marks,1mouth,1tooth,0eyes/limbs",
+      "child": "three separately boxed SPLINTER complete bodies,1eye0mouth/limbs each",
+      "rootGuide": "mint crosses and leaders are annotation, not organs or MEDIC symbols",
+      "event": "hp<=0 && !consumed requests SPLINTER3; runtime allocates new UIDs; diagram does not specify operation ordering",
+      "coveredActions": [
+        "enemy:SHARD:NEUTRAL",
+        "enemy:SHARD:SPLIT_3",
+        "enemy:SPLINTER:NEUTRAL"
+      ],
+      "labelClarification": "NEW UNIT IDS means new runtime UIDs of existing SPLINTER ID, never new art/game IDs"
+    }
+  ],
+  "layerStack": [
+    "ground effects",
+    "separate shadow aligned root",
+    "parent-owned body/parts/face",
+    "independent summoned units each own root/UID",
+    "independent particles/waves",
+    "HP/status/UI",
+    "annotation only in concept boards"
+  ],
+  "localReview": {
+    "status": "creator observation only, not main acceptance",
+    "findings": "all BASIC drawn cells show5buds2feet; BEACON4body cells show2antennae2feet1mouth1tongue0eyes and no child; split diagram separates complete SHARD and complete one-eye SPLINTER",
+    "limits": "no editable vector source, alpha cutout, frame atlas, measured animation or rendered runtime test"
+  }
+}

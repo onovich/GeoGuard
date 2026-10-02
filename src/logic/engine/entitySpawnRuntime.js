@@ -1,6 +1,29 @@
 import { createBossEncounterRuntime, createEnemyRuntimeEntityFromKey } from './encounterRuntime.js';
+import { getOwnedSummonBudget, getSummonOwnership } from './battlefieldRules.js';
+import { ENEMY_TYPES } from '../../data/gameConfig.js';
+import { findOpenEnemySpawnPosition, getBossSummonSpawnCount } from './bossFlowRules.js';
+
+export const spawnEnemyGroupRuntime = ({ state, source, enemyKey, count, radius = 46, options = {} }) => {
+  const enemyTemplate = ENEMY_TYPES[enemyKey];
+  if (!enemyTemplate) return 0;
+  const ownership = getSummonOwnership(source, options);
+  const remaining = Math.min(getOwnedSummonBudget({ enemies: state.enemies, ...ownership, requestedCount: count }),
+    getBossSummonSpawnCount({ enemies: state.enemies, bossUid: ownership.ownerBossUid,
+      summonCategory: ownership.summonCategory ?? enemyKey, requestedCount: count, maxActive: options.maxActive }));
+  let spawned = 0;
+  for (let index = 0; index < remaining; index++) {
+    const point = findOpenEnemySpawnPosition({ source, enemyTemplate,
+      blockers: [...state.enemies, ...state.towers, state.player], baseRadius: radius + index * 6 });
+    if (spawnEnemyRuntimeAt({ state, enemyKey, ...point, extras: { skipBurrowPosition: true,
+      summonedByBossUid: ownership.ownerBossUid, summonedByEncounterUid: ownership.ownerEncounterUid,
+      summonCategory: ownership.summonCategory ?? (ownership.ownerBossUid ? enemyKey : null) } })) spawned++;
+  }
+  return spawned;
+};
 
 export const spawnEnemyRuntimeAt = ({ state, enemyKey, x, y, extras = {}, random = Math.random }) => {
+  if (extras.summonedByBossUid && getOwnedSummonBudget({ enemies: state.enemies, ownerBossUid: extras.summonedByBossUid,
+    ownerEncounterUid: extras.summonedByEncounterUid, requestedCount: 1 }) === 0) return null;
   const enemy = {
     ...createEnemyRuntimeEntityFromKey({ enemyKey, uid: state.nextEnemyUid++ }),
     x,

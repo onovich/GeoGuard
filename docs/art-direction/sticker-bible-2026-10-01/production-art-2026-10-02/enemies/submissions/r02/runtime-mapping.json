@@ -1,0 +1,267 @@
+{
+  "entryChain": [
+    {
+      "path": "src/logic/hooks/useGeoGuardGame.jsx",
+      "start": 797,
+      "end": 814,
+      "claim": "正式能力入口"
+    },
+    {
+      "path": "src/logic/engine/bossOptimizedAbilities.js",
+      "start": 209,
+      "end": 213,
+      "claim": "handler优先，否则fallback；不是两份同时执行"
+    },
+    {
+      "path": "src/logic/engine/encounterRuntime.js",
+      "start": 59,
+      "end": 171,
+      "claim": "默认Boss实际phase能力覆盖，tier裁剪；编辑模板可另有能力"
+    },
+    {
+      "path": "src/logic/engine/entitySpawnRuntime.js",
+      "start": 5,
+      "end": 41,
+      "claim": "spawn数量/UID/所有权分配"
+    },
+    {
+      "path": "src/logic/engine/bossMechanicEntities.js",
+      "start": 7,
+      "end": 27,
+      "claim": "机关独立uid/hp/timer加入enemies"
+    },
+    {
+      "path": "src/logic/engine/bossMechanicEntities.js",
+      "start": 57,
+      "end": 60,
+      "claim": "NEST tick请求BASIC3"
+    }
+  ],
+  "handlerOutputs": {
+    "markTower": "RETICLE独立机关，targetUid指向塔",
+    "mirrorStep": "逻辑换位+line hazard",
+    "spawnHive": "NEST独立机关",
+    "broodShift": "迁移至NEST或调用spawnHive",
+    "hivePulse": "NEST-owned area hazards",
+    "hiveCollapse": "NEST-owned area hazards",
+    "stealMoney": "COURIER独立机关+资金直接扣除",
+    "taxBeacon": "coin area hazard；名字不是BEACON单位",
+    "repossess": "coin area hazard+COURIER",
+    "frostRing": "area hazard",
+    "freezeTower": "SEAL独立机关",
+    "coldSnap": "SEAL独立机关，最多两塔目标",
+    "webTrap": "WEB独立机关+地形hazard",
+    "silkVolley": "WEB独立机关+地形hazard",
+    "nestBloom": "WEB独立机关；名字不是NEST",
+    "webField": "WEB + SPLINTER独立单位",
+    "seedPods": "ROOT独立机关",
+    "gardenWake": "ROOT+SHARD单位+治疗",
+    "creepingCanopy": "ROOT独立机关",
+    "raiseWalls": "WALL独立机关",
+    "gateSwap": "切墙方向+WALL独立机关",
+    "mazeCrush": "WALL-owned area hazards",
+    "deadEnd": "调用mazeCrush",
+    "gravityWell": "独立area hazard+拉拽",
+    "singularity": "独立多pulse area hazard+拉拽",
+    "sacrificeMinions": "标记单位consumed+BossHP/shield+独立hazard",
+    "quake": "area hazard",
+    "wingBuffet": "area hazard+推离",
+    "skyDive": "Boss dashTimer世界位移+area hazard",
+    "conductLines": "line hazards",
+    "pulseMeasure": "area hazards",
+    "tempoShift": "FAST独立单位+nextBeat",
+    "syncopate": "line hazards",
+    "crescendo": "area hazards",
+    "finale": "line hazards",
+    "soloSolarVolley": "line hazards",
+    "soloLunarOrbit": "area hazards"
+  },
+  "currentHandlerCount": 37,
+  "summonDifferences": [
+    {
+      "ability": "mirrorStep",
+      "optimizedLines": [
+        44,
+        51
+      ],
+      "baseFallback": "PHASE×1 + old/new line wave",
+      "current": "Boss逻辑换位+独立line hazard；不生成PHASE"
+    },
+    {
+      "ability": "spawnHive",
+      "optimizedLines": [
+        53,
+        55
+      ],
+      "baseFallback": "BEACON×2",
+      "current": "MECHANIC_NEST请求2；NEST后续请求BASIC×3；NEST非enemy BEACON"
+    },
+    {
+      "ability": "broodShift",
+      "optimizedLines": [
+        56,
+        63
+      ],
+      "baseFallback": "寻BEACON迁移；没有BEACON则召BEACON×1",
+      "current": "寻NEST迁移；没有NEST调用spawnHive；不生成BEACON"
+    },
+    {
+      "ability": "hivePulse",
+      "optimizedLines": [
+        64,
+        69
+      ],
+      "baseFallback": "BEACON或Boss区域、多次pulse及治疗",
+      "current": "每个NEST区域hazard；无本分支治疗"
+    },
+    {
+      "ability": "hiveCollapse",
+      "optimizedLines": [
+        70,
+        75
+      ],
+      "baseFallback": "BEACON区域及SHARD×2/节点",
+      "current": "NEST区域hazard；无SHARD召唤"
+    },
+    {
+      "ability": "nestBloom",
+      "optimizedLines": [
+        102,
+        104
+      ],
+      "baseFallback": "独立hazard + SPLINTER×4",
+      "current": "MECHANIC_WEB请求2；没有SPLINTER请求"
+    },
+    {
+      "ability": "webField",
+      "optimizedLines": [
+        105,
+        108
+      ],
+      "baseFallback": "独立大范围web hazard + BURROWER×2",
+      "current": "WEB请求2 + SPLINTER请求3；不请求BURROWER"
+    },
+    {
+      "ability": "seedPods",
+      "optimizedLines": [
+        109,
+        111
+      ],
+      "baseFallback": "MEDIC×2",
+      "current": "MECHANIC_ROOT请求2；不召MEDIC"
+    },
+    {
+      "ability": "gardenWake",
+      "optimizedLines": [
+        112,
+        116
+      ],
+      "baseFallback": "治疗+SHARD请求6+garden危险区",
+      "current": "ROOT请求2 + 范围非Boss非机关治疗 + SHARD请求3/maxActive8"
+    },
+    {
+      "ability": "creepingCanopy",
+      "optimizedLines": [
+        117,
+        117
+      ],
+      "baseFallback": "多个spore危险区",
+      "current": "同seedPods生成ROOT；不新增MEDIC"
+    },
+    {
+      "ability": "tempoShift",
+      "optimizedLines": [
+        170,
+        173
+      ],
+      "baseFallback": "冻结塔+FAST请求4/maxActive8",
+      "current": "更新nextBeat + FAST请求2/maxActive6"
+    },
+    {
+      "ability": "raiseWalls",
+      "optimizedLines": [
+        118,
+        119
+      ],
+      "baseFallback": "SIEGE请求3 + wall区域hazard",
+      "current": "WALL独立机关；不请求SIEGE"
+    },
+    {
+      "ability": "sacrificeMinions",
+      "optimizedLines": [
+        134,
+        144
+      ],
+      "baseFallback": "需检查fallback不可直接推导子体",
+      "current": "已标记存活近距敌人hp=0/consumed=true；禁止SHARD deathSpawn/资源drop；BossHP/护盾/slag hazard"
+    }
+  ],
+  "enemyResourceIngress": {
+    "BASIC": [
+      "BEACON自身summonTimer→BASIC3",
+      "NEST tick→BASIC3（optimized spawnHive创建NEST）",
+      "summonFormation无optimized handler→fallback BASIC4"
+    ],
+    "FAST": [
+      "tempoShift optimized→FAST2"
+    ],
+    "TANK": [
+      "普通波次/调试；未发现当前Boss技能直接spawn TANK"
+    ],
+    "SHARD": [
+      "summonSwarm无handler→fallback SHARD5",
+      "gardenWake optimized→SHARD3；hiveCollapse optimized无SHARD"
+    ],
+    "SPLINTER": [
+      "SHARD死亡且not consumed→SPLINTER3",
+      "spawnSpiderlings无handler→fallback SPLINTER6",
+      "broodAmbush无handler→fallback SPLINTER（逐点）",
+      "webField optimized→SPLINTER3；nestBloom optimized无SPLINTER"
+    ],
+    "SHIELD": [
+      "phalanxAdvance、summonFrostGuards、forgeArmor无handler→fallback SHIELD"
+    ],
+    "MEDIC": [
+      "普通波次/调试；seedPods optimized只ROOT，不能当当前Boss MEDIC召唤"
+    ],
+    "BOMBER": [
+      "普通波次/调试；未发现当前Boss技能直接spawn BOMBER"
+    ],
+    "JAMMER": [
+      "普通波次/调试；未发现当前Boss技能直接spawn JAMMER"
+    ],
+    "PHASE": [
+      "默认afterimageBurst、mirrorSummon无handler→fallback PHASE；mirrorStep optimized无PHASE；旧/编辑器twinSwap也可fallback PHASE，非默认双子phase"
+    ],
+    "BURROWER": [
+      "broodAmbush无handler→fallback BURROWER；webField optimized无BURROWER"
+    ],
+    "BEACON": [
+      "普通波次/调试；当前spawnHive与broodShift不创建BEACON"
+    ],
+    "SCOUT": [
+      "summonScouts、pincerRush、paydaySweep、ransomBurst无handler→fallback SCOUT"
+    ],
+    "SIEGE": [
+      "summonSiege无handler→fallback SIEGE；raiseWalls optimized为WALL，fallback SIEGE墙卫不可当当前召唤"
+    ]
+  },
+  "fallbackAbilitiesVerifiedNoHandler": [
+    "summonFormation",
+    "summonSwarm",
+    "spawnSpiderlings",
+    "broodAmbush",
+    "phalanxAdvance",
+    "summonFrostGuards",
+    "forgeArmor",
+    "afterimageBurst",
+    "mirrorSummon",
+    "twinSwap",
+    "summonScouts",
+    "pincerRush",
+    "paydaySweep",
+    "ransomBurst",
+    "summonSiege"
+  ],
+  "caveat": "Listed summons are requests, not guaranteed successful counts; authored editor patterns may choose other existing fallback abilities. Identity reuse does not depend on owner/category/tier."
+}

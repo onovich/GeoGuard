@@ -84,6 +84,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
           {towerTypes.map((tower) => (
             <div
               key={tower.id}
+              title={`${tower.summary} 伤害 ${tower.damage} · 间隔 ${tower.fireRate}秒 · 射程 ${tower.range}`}
               onMouseDown={(event) => {
                 if (event.button !== 0) return;
                 beginTowerDrag(tower.id, event.clientX, event.clientY);
@@ -156,6 +157,7 @@ export default function BuildBar({ gameState, money, dragTowerId, beginTowerDrag
                 <div className="h-2 w-2 rotate-45 bg-emerald-400"></div> {tower.cost}
               </span>
               <span className={`text-[10px] font-semibold ${tower.level > 0 ? 'text-amber-600' : 'text-slate-400'}`}>Lv.{tower.level + 1}/4</span>
+              <span className="text-[10px] text-slate-500">{tower.splash ? '范围' : tower.pierce ? '穿透' : tower.slowRatio ? '减速' : tower.burstCount ? '散射' : '单体'} · {tower.fireRate}秒</span>
 
               {dragTowerId === tower.id ? (
                 <div className="absolute -top-10 whitespace-nowrap rounded bg-slate-800 px-2 py-1 text-xs text-white animate-fade-in-up">

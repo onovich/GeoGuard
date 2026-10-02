@@ -212,7 +212,7 @@ export const createBossPhaseShiftEffectPlan = ({
 
 export const shouldTriggerBossClimaxAccent = (boss) => {
   const phaseCount = boss.phases?.length ?? 0;
-  return phaseCount > 0 && boss.currentPhaseIndex >= phaseCount - 1;
+  return phaseCount >= 3 && boss.currentPhaseIndex >= phaseCount - 1;
 };
 
 export const getBossClimaxAccentCooldown = (boss) =>

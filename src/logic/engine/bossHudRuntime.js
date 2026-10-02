@@ -1,4 +1,5 @@
 import { getBossPhaseHint, getBossPhaseTone, getBossPresentation } from '../../data/bossPresentation.js';
+import { getBossActionLabel } from './bossCombatRuntime.js';
 
 export const getBossHudGroupId = (boss) => (boss.encounterUid ? `enc-${boss.encounterUid}` : `boss-${boss.uid}`);
 
@@ -34,6 +35,9 @@ export const buildBossHudRuntime = ({
       phaseHint: getPhaseHint(boss, activePhaseIndex),
       phaseTone: getPhaseTone(boss, activePhaseIndex),
       enraged: Boolean(boss.bossState.partnerFallen),
+      actionLabel: getBossActionLabel(boss),
+      exposed: (boss.damageTakenMultiplier ?? 1) > 1,
+      guardCount: boss.bossState.guardCount ?? 0,
     });
     groups.set(key, existing);
   }

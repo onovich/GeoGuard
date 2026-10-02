@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const d=path.dirname(new URL(import.meta.url).pathname.replace(/^\/(\w:)/,'$1'));
+const m=JSON.parse(fs.readFileSync(path.join(d,'asset-manifest.json')));
+const names=[...m.hero,...m.towers,...m.enemies,...m.bosses,...m.mechanics,...m.projectiles,...m.ui].map(x=>x.sheet);
+const html=fs.readFileSync(path.join(d,'index.html'),'utf8');
+const links=[...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(x=>x[1]);
+const report={mappedAssets:names.length,missing:names.filter(f=>!fs.existsSync(path.join(d,f))),brokenGalleryLinks:links.filter(f=>!fs.existsSync(path.join(d,f))),bossAliases:new Set(m.bosses.flatMap(x=>x.aliases)).size};
+console.log(JSON.stringify(report));
+if(report.missing.length||report.brokenGalleryLinks.length)process.exitCode=1;

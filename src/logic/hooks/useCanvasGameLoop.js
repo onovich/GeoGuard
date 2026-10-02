@@ -35,12 +35,16 @@ export default function useCanvasGameLoop({
   game,
   gameState,
   rewardActive,
+  paused,
+  onPause,
+  onTogglePause,
   resumeAudio,
   closeTowerContextMenu,
   setTowerContextMenu,
   updateDragPlacement,
   tryBuildDraggedTower,
   update,
+  onFrameTiming,
   drawScene,
 }) {
   useEffect(() => {
@@ -66,6 +70,11 @@ export default function useCanvasGameLoop({
     };
 
     const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && gameState === 'PLAYING' && !rewardActive && !event.repeat) {
+        onTogglePause();
+        return;
+      }
+      if (paused || rewardActive || gameState !== 'PLAYING') return;
       setMovementKey(game.current.keys, event.key.toLowerCase(), true);
     };
 
@@ -76,7 +85,7 @@ export default function useCanvasGameLoop({
     const handlePointerDown = (event) => {
       void resumeAudio();
       closeTowerContextMenu();
-      if (gameState !== 'PLAYING' || rewardActive || game.current.dragPlacement.active) return;
+      if (gameState !== 'PLAYING' || paused || rewardActive || game.current.dragPlacement.active) return;
 
       const isTouch = event.type.includes('touch');
       if (isTouch) {
@@ -93,6 +102,7 @@ export default function useCanvasGameLoop({
     };
 
     const handlePointerMove = (event) => {
+      if (paused || rewardActive) return;
       const isTouch = event.type.includes('touch');
       if ((game.current.joystick.active || game.current.dragPlacement.active) && event.cancelable) {
         event.preventDefault();
@@ -143,6 +153,7 @@ export default function useCanvasGameLoop({
     };
 
     const handlePointerUp = (event) => {
+      if (paused || rewardActive) return;
       const isTouch = event.type.includes('touch');
 
       if (isTouch) {
@@ -172,7 +183,7 @@ export default function useCanvasGameLoop({
 
     const handleContextMenu = (event) => {
       event.preventDefault();
-      if (gameState !== 'PLAYING') return;
+      if (gameState !== 'PLAYING' || game.current.mode !== 'debug' || paused || rewardActive) return;
 
       const worldPoint = toWorldPoint(event.clientX, event.clientY, game.current.camera, window.innerWidth, window.innerHeight);
       const tower = game.current.towers.find((candidate) => dist(candidate, worldPoint) <= candidate.radius + 10);
@@ -182,16 +193,35 @@ export default function useCanvasGameLoop({
     };
 
     let animationFrameId;
+    const clearInput = () => {
+      for (const key of Object.keys(game.current.keys)) game.current.keys[key] = false;
+      game.current.joystick.active = false;
+      game.current.joystick.dirX = 0;
+      game.current.joystick.dirY = 0;
+      game.current.dragPlacement.active = false;
+      game.current.lastTime = 0;
+    };
+    const handleBlur = () => {
+      clearInput();
+      if (gameState === 'PLAYING' && !rewardActive) onPause();
+    };
+    const handleVisibility = () => {
+      if (document.hidden) handleBlur();
+    };
+    clearInput();
     const loop = (timestamp) => {
       if (!game.current.lastTime) game.current.lastTime = timestamp;
-      const dt = (timestamp - game.current.lastTime) / 1000;
+      const rawDt = Math.max(0, (timestamp - game.current.lastTime) / 1000);
+      const dt = Math.min(0.05, rawDt);
       game.current.lastTime = timestamp;
-      if (gameState === 'PLAYING') update(dt);
+      if (gameState === 'PLAYING' && !paused && !rewardActive && !document.hidden) { onFrameTiming?.(rawDt); update(dt); }
       drawScene(ctx, canvas);
       animationFrameId = window.requestAnimationFrame(loop);
     };
 
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('blur', handleBlur);
+    document.addEventListener('visibilitychange', handleVisibility);
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     canvas.addEventListener('mousedown', handlePointerDown);
@@ -201,12 +231,15 @@ export default function useCanvasGameLoop({
     window.addEventListener('mouseup', handlePointerUp);
     window.addEventListener('touchmove', handlePointerMove, { passive: false });
     window.addEventListener('touchend', handlePointerUp);
+    window.addEventListener('touchcancel', clearInput);
 
     resizeCanvas();
     animationFrameId = window.requestAnimationFrame(loop);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('blur', handleBlur);
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       canvas.removeEventListener('mousedown', handlePointerDown);
@@ -216,7 +249,8 @@ export default function useCanvasGameLoop({
       window.removeEventListener('mouseup', handlePointerUp);
       window.removeEventListener('touchmove', handlePointerMove);
       window.removeEventListener('touchend', handlePointerUp);
+      window.removeEventListener('touchcancel', clearInput);
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [gameState, rewardActive]);
+  }, [gameState, rewardActive, paused]);
 }

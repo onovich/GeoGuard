@@ -30,9 +30,10 @@ export const runBossAbilityEffect = ({
   getBossOwnership,
   getEncounterPartner,
 }) => {
-  const target = chooseBossTarget(state, boss);
+  const target = boss.bossState?.lockedTarget ?? chooseBossTarget(state, boss);
+  const playerPoint = boss.bossState?.lockedPlayerPoint ?? state.player;
   const ownership = getBossOwnership(boss);
-  const isClimaxPhase = boss.currentPhaseIndex === boss.phases.length - 1;
+  const isClimaxPhase = boss.phases.length >= 3 && boss.currentPhaseIndex === boss.phases.length - 1;
   const primeBossAbility = (abilityId, cooldown) => {
     if (!boss.phases?.[boss.currentPhaseIndex]?.abilities?.includes(abilityId)) return;
     const current = boss.abilityCooldowns[abilityId];
@@ -40,13 +41,13 @@ export const runBossAbilityEffect = ({
   };
   if (abilityName === 'summonFormation') spawnAround(boss, 'BASIC', 4, boss.radius + 32, { ownerBossUid: boss.uid, summonCategory: 'formation', maxActive: 8 });
   if (abilityName === 'commandLine') {
-    const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     for (let index = -1; index <= 1; index += 1) {
       const offsetX = Math.cos(angle + Math.PI / 2) * index * 42;
       const offsetY = Math.sin(angle + Math.PI / 2) * index * 42;
       queueLineHazard(
         { x: boss.x + offsetX, y: boss.y + offsetY },
-        { x: state.player.x + offsetX * 0.4, y: state.player.y + offsetY * 0.4 },
+        { x: playerPoint.x + offsetX * 0.4, y: playerPoint.y + offsetY * 0.4 },
         { width: 12, damage: 16, color: COLORS.enemyBasic, delay: 0.7, length: 520, label: 'formation', ...ownership }
       );
     }
@@ -78,23 +79,23 @@ export const runBossAbilityEffect = ({
     });
   }
   if (abilityName === 'commandRush') {
-    const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     boss.dashTimer = 0.4;
     boss.dashVx = Math.cos(angle) * 460;
     boss.dashVy = Math.sin(angle) * 460;
-    queueLineHazard(boss, state.player, { width: 18, damage: 22, color: COLORS.enemyBasic, delay: 0.5, length: 420, label: 'charge', ...ownership });
+    queueLineHazard(boss, playerPoint, { width: 18, damage: 22, color: COLORS.enemyBasic, delay: 0.5, length: 420, label: 'charge', ...ownership });
     spawnImpactWave(boss.x, boss.y, { maxRadius: 58, color: COLORS.enemyBasic, fillAlpha: 0.1 });
   }
   if (abilityName === 'dashAtPlayer') {
-    const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     boss.dashTimer = 0.42;
     boss.dashVx = Math.cos(angle) * 560;
     boss.dashVy = Math.sin(angle) * 560;
     spawnImpactWave(boss.x, boss.y, { maxRadius: 44, color: boss.color, life: 0.18 });
   }
   if (abilityName === 'markPrey') {
-    queueLineHazard(boss, state.player, { width: 10, damage: 14, color: COLORS.enemyFast, delay: 0.45, length: 360, label: 'mark', ...ownership });
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueLineHazard(boss, playerPoint, { width: 10, damage: 14, color: COLORS.enemyFast, delay: 0.45, length: 360, label: 'mark', ...ownership });
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 64,
       damage: 10,
       delay: 0.8,
@@ -108,20 +109,20 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'summonScouts') spawnAround(boss, 'SCOUT', 3, boss.radius + 38, { ownerBossUid: boss.uid, summonCategory: 'scouts', maxActive: 6 });
   if (abilityName === 'pincerRush') {
     for (const side of [-1, 1]) {
-      const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x) + side * 0.6;
+      const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x) + side * 0.6;
       queueLineHazard(
         { x: boss.x + Math.cos(angle) * 20, y: boss.y + Math.sin(angle) * 20 },
-        { x: state.player.x + Math.cos(angle) * 110, y: state.player.y + Math.sin(angle) * 90 },
+        { x: playerPoint.x + Math.cos(angle) * 110, y: playerPoint.y + Math.sin(angle) * 90 },
         { width: 10, damage: 16, color: COLORS.enemyFast, delay: 0.55, length: 460, label: 'slash', ...ownership }
       );
     }
     spawnAround(boss, 'SCOUT', 2, boss.radius + 34, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'pincerScout', maxActive: 6 });
   }
   if (abilityName === 'feintStrike') {
-    const retreatAngle = Math.atan2(boss.y - state.player.y, boss.x - state.player.x);
-    boss.x = state.player.x + Math.cos(retreatAngle) * 180;
-    boss.y = state.player.y + Math.sin(retreatAngle) * 140;
-    queueLineHazard(boss, state.player, { width: 14, damage: 20, color: COLORS.enemyFast, delay: 0.38, length: 300, label: 'charge', ...ownership });
+    const retreatAngle = Math.atan2(boss.y - playerPoint.y, boss.x - playerPoint.x);
+    boss.x = playerPoint.x + Math.cos(retreatAngle) * 180;
+    boss.y = playerPoint.y + Math.sin(retreatAngle) * 140;
+    queueLineHazard(boss, playerPoint, { width: 14, damage: 20, color: COLORS.enemyFast, delay: 0.38, length: 300, label: 'charge', ...ownership });
     spawnImpactWave(boss.x, boss.y, { maxRadius: 50, color: COLORS.enemyFast, fillAlpha: 0.1 });
   }
   if (abilityName === 'afterimageBurst') spawnAround(boss, 'PHASE', 3, boss.radius + 42, { ownerBossUid: boss.uid, summonCategory: 'afterimage', maxActive: 6 });
@@ -170,7 +171,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'prismBeam') queueLineHazard(boss, target, { width: 18, damage: 24, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
   if (abilityName === 'refractVolley') {
-    const baseAngle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     for (const offset of [-0.45, -0.15, 0.15, 0.45]) {
       queueLineHazard(
         boss,
@@ -196,15 +197,15 @@ export const runBossAbilityEffect = ({
     });
   }
   if (abilityName === 'tripleBeam') {
-    queueLineHazard(boss, state.player, { width: 16, damage: 22, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
+    queueLineHazard(boss, playerPoint, { width: 16, damage: 22, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
     queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x + 120, y: boss.y - 260 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
     queueLineHazard({ x: boss.x, y: boss.y }, { x: boss.x - 140, y: boss.y - 240 }, { width: 14, damage: 18, color: COLORS.enemyPhase, ownerBossUid: boss.uid });
   }
   if (abilityName === 'mirrorStep') {
     const oldX = boss.x;
     const oldY = boss.y;
-    boss.x = state.player.x + rand(-180, 180);
-    boss.y = state.player.y + rand(-120, 120);
+    boss.x = playerPoint.x + rand(-180, 180);
+    boss.y = playerPoint.y + rand(-120, 120);
     queueLineHazard({ x: oldX, y: oldY }, boss, { width: 12, damage: 18, color: COLORS.enemyPhase, delay: 0.52, length: Math.hypot(boss.x - oldX, boss.y - oldY), label: 'mirror', ...ownership });
     spawnAround(boss, 'PHASE', 1, boss.radius + 28, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'mirrorStep', maxActive: 3 });
     spawnImpactWave(boss.x, boss.y, { maxRadius: 62, color: COLORS.enemyPhase, fillAlpha: 0.1 });
@@ -276,7 +277,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'whiteout') {
     for (let index = 0; index < 3; index += 1) {
-      queueAreaHazard(state.player.x + rand(-120, 120), state.player.y + rand(-90, 90), {
+      queueAreaHazard(playerPoint.x + rand(-120, 120), playerPoint.y + rand(-90, 90), {
         radius: 74,
         damage: 8,
         delay: 0.6 + index * 0.14,
@@ -330,8 +331,8 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'railShot') queueLineHazard(boss, target, { width: 14, damage: 34, color: COLORS.towerRail, delay: 0.65, label: 'rail', ...ownership });
   if (abilityName === 'crosshairBarrage') {
-    queueLineHazard({ x: state.player.x - 260, y: state.player.y }, { x: state.player.x + 260, y: state.player.y }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.7, length: 520, label: 'crosshair', ...ownership });
-    queueLineHazard({ x: state.player.x, y: state.player.y - 220 }, { x: state.player.x, y: state.player.y + 220 }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.82, length: 440, label: 'crosshair', ...ownership });
+    queueLineHazard({ x: playerPoint.x - 260, y: playerPoint.y }, { x: playerPoint.x + 260, y: playerPoint.y }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.7, length: 520, label: 'crosshair', ...ownership });
+    queueLineHazard({ x: playerPoint.x, y: playerPoint.y - 220 }, { x: playerPoint.x, y: playerPoint.y + 220 }, { width: 10, damage: 16, color: COLORS.towerRail, delay: 0.82, length: 440, label: 'crosshair', ...ownership });
   }
   if (abilityName === 'markTower') {
     const tower = state.towers.reduce((nearest, candidate) => (!nearest || dist(candidate, boss) < dist(nearest, boss) ? candidate : nearest), null);
@@ -346,14 +347,14 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'overload') {
     boss.hp -= Math.min(24, boss.hp - 1);
-    queueLineHazard(boss, state.player, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, label: 'overload', ...ownership });
+    queueLineHazard(boss, playerPoint, { width: 20, damage: 38, color: COLORS.towerRail, delay: 0.45, label: 'overload', ...ownership });
   }
   if (abilityName === 'killLane') {
-    const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     for (const offset of [-0.18, 0.18]) {
       queueLineHazard(
         { x: boss.x + Math.cos(angle + Math.PI / 2) * offset * 180, y: boss.y + Math.sin(angle + Math.PI / 2) * offset * 180 },
-        state.player,
+        playerPoint,
         { width: 14, damage: 24, color: COLORS.towerRail, delay: 0.75, length: 720, label: 'crosshair', ...ownership }
       );
     }
@@ -367,7 +368,7 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'taxBeacon') {
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 82,
       damage: 8,
       delay: 0.75,
@@ -386,8 +387,8 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'paydaySweep') {
     for (const side of [-1, 1]) {
       queueLineHazard(
-        { x: state.player.x + side * 220, y: state.player.y - 120 },
-        { x: state.player.x - side * 220, y: state.player.y + 120 },
+        { x: playerPoint.x + side * 220, y: playerPoint.y - 120 },
+        { x: playerPoint.x - side * 220, y: playerPoint.y + 120 },
         { width: 10, damage: 14, color: COLORS.enemyScout, delay: 0.68, length: Math.hypot(440, 240), label: 'coinline', ...ownership }
       );
     }
@@ -420,13 +421,13 @@ export const runBossAbilityEffect = ({
     spawnImpactWave(boss.x, boss.y, { maxRadius: 118, color: boss.color, fillAlpha: 0.08 });
   }
   if (abilityName === 'twinBolt') {
-    queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, state.player, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, label: 'moonbolt', ownerBossUid: boss.uid });
+    queueLineHazard({ x: boss.x - boss.radius * 0.6, y: boss.y }, playerPoint, { width: 11, damage: 16, color: COLORS.enemyPhase, delay: 0.5, label: 'moonbolt', ...ownership });
     queueLineHazard({ x: boss.x + boss.radius * 0.6, y: boss.y }, target, { width: 11, damage: 16, color: COLORS.enemyScout, delay: 0.7, label: 'sunbolt', ownerBossUid: boss.uid });
   }
   if (abilityName === 'twinSwap') {
     const angle = Math.random() * Math.PI * 2;
-    boss.x = state.player.x + Math.cos(angle) * 170;
-    boss.y = state.player.y + Math.sin(angle) * 170;
+    boss.x = playerPoint.x + Math.cos(angle) * 170;
+    boss.y = playerPoint.y + Math.sin(angle) * 170;
     spawnAround(boss, 'PHASE', 2, boss.radius + 34, { ownerBossUid: boss.uid, summonCategory: 'swapEcho', maxActive: 4 });
     spawnImpactWave(boss.x, boss.y, { maxRadius: 74, color: boss.color, fillAlpha: 0.12 });
   }
@@ -462,15 +463,15 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'solarDash') {
-    const angle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const angle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     boss.dashTimer = 0.34;
     boss.dashVx = Math.cos(angle) * 620;
     boss.dashVy = Math.sin(angle) * 620;
-    queueLineHazard(boss, state.player, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, label: 'solar', ...ownership });
+    queueLineHazard(boss, playerPoint, { width: 12, damage: 14, color: boss.color, delay: 0.42, length: 420, label: 'solar', ...ownership });
     spawnImpactWave(boss.x, boss.y, { maxRadius: 52, color: boss.color, fillAlpha: 0.12 });
   }
   if (abilityName === 'flareLance') {
-    const baseAngle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     for (const offset of [-0.2, 0, 0.2]) {
       queueLineHazard(
         boss,
@@ -480,7 +481,7 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'lunarSnare') {
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 92,
       damage: 10,
       slowRatio: 0.38,
@@ -492,8 +493,8 @@ export const runBossAbilityEffect = ({
     });
   }
   if (abilityName === 'shadowArc') {
-    queueLineHazard(boss, state.player, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, label: 'shadow', ...ownership });
-    queueAreaHazard(state.player.x + rand(-80, 80), state.player.y + rand(-80, 80), {
+    queueLineHazard(boss, playerPoint, { width: 12, damage: 18, color: boss.color, delay: 0.55, length: 520, label: 'shadow', ...ownership });
+    queueAreaHazard(playerPoint.x + rand(-80, 80), playerPoint.y + rand(-80, 80), {
       radius: 76,
       damage: 14,
       slowRatio: 0.52,
@@ -507,9 +508,9 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'twinCrossfire') {
     const partner = getEncounterPartner(boss);
     if (partner && boss.uid < partner.uid) {
-      queueLineHazard(boss, { x: state.player.x + 90, y: state.player.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, label: 'crossfire', ...ownership });
-      queueLineHazard(partner, { x: state.player.x - 90, y: state.player.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });
-      spawnImpactWave(state.player.x, state.player.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
+      queueLineHazard(boss, { x: playerPoint.x + 90, y: playerPoint.y - 24 }, { width: 12, damage: 18, color: boss.color, delay: 0.62, length: 640, label: 'crossfire', ...ownership });
+      queueLineHazard(partner, { x: playerPoint.x - 90, y: playerPoint.y + 24 }, { width: 12, damage: 18, color: partner.color, delay: 0.62, length: 640, label: 'crossfire', ...getBossOwnership(partner) });
+      spawnImpactWave(playerPoint.x, playerPoint.y, { maxRadius: 88, color: COLORS.boss, fillAlpha: 0.06 });
       if (isClimaxPhase) {
         const midX = (boss.x + partner.x) * 0.5;
         const midY = (boss.y + partner.y) * 0.5;
@@ -531,7 +532,7 @@ export const runBossAbilityEffect = ({
           anchorA: { x: boss.x, y: boss.y, color: boss.color },
           anchorB: { x: partner.x, y: partner.y, color: partner.color },
         });
-        queueAreaHazard(state.player.x, state.player.y, {
+        queueAreaHazard(playerPoint.x, playerPoint.y, {
           radius: 112,
           damage: 18,
           delay: 0.96,
@@ -551,18 +552,18 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'dragonBreath') {
-    queueLineHazard(boss, state.player, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, label: 'breath', ...ownership });
-    queueLineHazard(boss, { x: state.player.x + 120, y: state.player.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
-    queueLineHazard(boss, { x: state.player.x - 120, y: state.player.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
+    queueLineHazard(boss, playerPoint, { width: 24, damage: 26, color: COLORS.enemyBomber, delay: 0.75, length: 720, label: 'breath', ...ownership });
+    queueLineHazard(boss, { x: playerPoint.x + 120, y: playerPoint.y + 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
+    queueLineHazard(boss, { x: playerPoint.x - 120, y: playerPoint.y - 40 }, { width: 16, damage: 18, color: COLORS.enemyBomber, delay: 0.85, length: 680, label: 'breath', ...ownership });
   }
   if (abilityName === 'dragonStrafe') {
     boss.bossState.strafeSide = boss.bossState.strafeSide === 'left' ? 'right' : 'left';
     const side = boss.bossState.strafeSide === 'left' ? -1 : 1;
-    const baseAngle = Math.atan2(state.player.y - boss.y, state.player.x - boss.x);
+    const baseAngle = Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x);
     for (const offset of [-0.28, 0, 0.28]) {
       queueLineHazard(
         { x: boss.x + Math.cos(baseAngle + Math.PI / 2 * side) * 34, y: boss.y + Math.sin(baseAngle + Math.PI / 2 * side) * 34 },
-        { x: state.player.x + Math.cos(baseAngle + offset) * 180, y: state.player.y + Math.sin(baseAngle + offset) * 180 },
+        { x: playerPoint.x + Math.cos(baseAngle + offset) * 180, y: playerPoint.y + Math.sin(baseAngle + offset) * 180 },
         { width: offset === 0 ? 18 : 12, damage: offset === 0 ? 24 : 16, color: COLORS.enemyBomber, delay: 0.7, length: 760, label: 'strafe', ...ownership }
       );
     }
@@ -570,7 +571,7 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'emberWake') {
     for (let index = 0; index < 3; index += 1) {
       const angle = boss.bossState.strafeSide === 'left' ? Math.PI * 0.75 - index * 0.26 : Math.PI * 0.25 + index * 0.26;
-      queueAreaHazard(state.player.x + Math.cos(angle) * 110, state.player.y + Math.sin(angle) * 80, {
+      queueAreaHazard(playerPoint.x + Math.cos(angle) * 110, playerPoint.y + Math.sin(angle) * 80, {
         radius: 58 + index * 8,
         damage: 10 + index * 2,
         delay: 0.65 + index * 0.1,
@@ -598,7 +599,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'meteorRain') {
     for (let index = 0; index < 6; index += 1) {
-      queueAreaHazard(state.player.x + rand(-200, 200), state.player.y + rand(-160, 160), {
+      queueAreaHazard(playerPoint.x + rand(-200, 200), playerPoint.y + rand(-160, 160), {
         radius: 50 + (index % 2) * 8,
         damage: 22,
         delay: 0.95 + index * 0.1,
@@ -612,8 +613,8 @@ export const runBossAbilityEffect = ({
     const oldX = boss.x;
     const oldY = boss.y;
     const angle = Math.random() * Math.PI * 2;
-    boss.x = state.player.x + Math.cos(angle) * 140;
-    boss.y = state.player.y + Math.sin(angle) * 120;
+    boss.x = playerPoint.x + Math.cos(angle) * 140;
+    boss.y = playerPoint.y + Math.sin(angle) * 120;
     spawnImpactWave(oldX, oldY, { maxRadius: 70, color: COLORS.enemyBomber, fillAlpha: 0.08 });
     queueLineHazard({ x: oldX, y: oldY }, boss, { width: 10, damage: 14, delay: 0.45, length: Math.hypot(boss.x - oldX, boss.y - oldY), color: COLORS.enemyBomber, label: 'diveTrail', ...ownership });
     queueAreaHazard(boss.x, boss.y, { radius: 118, damage: 28, delay: 0.8, color: COLORS.enemyBomber, label: 'dive', ...ownership });
@@ -653,7 +654,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'infernoRing') {
     if (isClimaxPhase) {
-      spawnImpactWave(state.player.x, state.player.y, {
+      spawnImpactWave(playerPoint.x, playerPoint.y, {
         startRadius: 28,
         maxRadius: 150,
         growth: 220,
@@ -667,12 +668,12 @@ export const runBossAbilityEffect = ({
         spokes: 6,
         spin: 0.65,
         style: 'dragonFinisher',
-        rotation: Math.atan2(state.player.y - boss.y, state.player.x - boss.x),
+        rotation: Math.atan2(playerPoint.y - boss.y, playerPoint.x - boss.x),
       });
     }
     for (let index = 0; index < 6; index += 1) {
       const angle = (Math.PI * 2 * index) / 6;
-      queueAreaHazard(state.player.x + Math.cos(angle) * 140, state.player.y + Math.sin(angle) * 110, {
+      queueAreaHazard(playerPoint.x + Math.cos(angle) * 140, playerPoint.y + Math.sin(angle) * 110, {
         radius: 60,
         damage: 18,
         delay: 0.8 + index * 0.05,
@@ -686,7 +687,7 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'webTrap') {
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 86,
       damage: 8,
       slowRatio: 0.42,
@@ -702,7 +703,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'silkVolley') {
     for (let index = 0; index < 3; index += 1) {
-      queueAreaHazard(state.player.x + rand(-120, 120), state.player.y + rand(-90, 90), {
+      queueAreaHazard(playerPoint.x + rand(-120, 120), playerPoint.y + rand(-90, 90), {
         radius: 62,
         damage: 8,
         slowRatio: 0.5,
@@ -719,8 +720,8 @@ export const runBossAbilityEffect = ({
     spawnAround(boss, 'BURROWER', 2, boss.radius + 50, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'broodBurrower', maxActive: 4 });
     for (let index = 0; index < 4; index += 1) {
       const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.3;
-      const x = state.player.x + Math.cos(angle) * 118;
-      const y = state.player.y + Math.sin(angle) * 84;
+      const x = playerPoint.x + Math.cos(angle) * 118;
+      const y = playerPoint.y + Math.sin(angle) * 84;
       spawnEnemyAt('SPLINTER', x, y, {
         skipBurrowPosition: true,
         summonedByBossUid: boss.uid,
@@ -798,7 +799,7 @@ export const runBossAbilityEffect = ({
         style: 'spiderFinisher',
         nodeCount: 6,
       });
-      queueAreaHazard(state.player.x, state.player.y, {
+      queueAreaHazard(playerPoint.x, playerPoint.y, {
         radius: 98,
         damage: 12,
         slowRatio: 0.58,
@@ -815,7 +816,7 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'gravityWell') {
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 120,
       damage: 10,
       pull: 220,
@@ -831,7 +832,7 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'starfall') {
     for (let index = 0; index < 4; index += 1) {
       const angle = (Math.PI * 2 * index) / 4 + Math.random() * 0.22;
-      queueAreaHazard(state.player.x + Math.cos(angle) * 120, state.player.y + Math.sin(angle) * 88, {
+      queueAreaHazard(playerPoint.x + Math.cos(angle) * 120, playerPoint.y + Math.sin(angle) * 88, {
         radius: 58,
         damage: 14,
         delay: 0.65 + index * 0.08,
@@ -856,8 +857,8 @@ export const runBossAbilityEffect = ({
   if (abilityName === 'orbitalLock') {
     for (let index = 0; index < 4; index += 1) {
       const angle = (Math.PI * 2 * index) / 4;
-      const source = { x: state.player.x + Math.cos(angle) * 180, y: state.player.y + Math.sin(angle) * 140 };
-      queueLineHazard(source, state.player, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - state.player.x, source.y - state.player.y), label: 'lock', ...ownership });
+      const source = { x: playerPoint.x + Math.cos(angle) * 180, y: playerPoint.y + Math.sin(angle) * 140 };
+      queueLineHazard(source, playerPoint, { width: 12, damage: 18, color: COLORS.enemyJammer, delay: 0.72, length: Math.hypot(source.x - playerPoint.x, source.y - playerPoint.y), label: 'lock', ...ownership });
     }
   }
   if (abilityName === 'singularity') {
@@ -981,8 +982,8 @@ export const runBossAbilityEffect = ({
     damageArea(boss.x, boss.y, 95 + sacrificed * 18, 10 + sacrificed * 4, { color: COLORS.enemySiege, towerFactor: 1.3 });
   }
   if (abilityName === 'brandLine') {
-    queueLineHazard(boss, state.player, { width: 14, damage: 20, color: COLORS.enemySiege, delay: 0.58, length: 520, label: 'brand', ...ownership });
-    queueAreaHazard(state.player.x, state.player.y, {
+    queueLineHazard(boss, playerPoint, { width: 14, damage: 20, color: COLORS.enemySiege, delay: 0.58, length: 520, label: 'brand', ...ownership });
+    queueAreaHazard(playerPoint.x, playerPoint.y, {
       radius: 82,
       damage: 12,
       delay: 0.82,
@@ -1015,12 +1016,12 @@ export const runBossAbilityEffect = ({
     }
   }
   if (abilityName === 'conductLines') {
-    queueLineHazard(boss, state.player, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, label: 'tempo', ...ownership });
+    queueLineHazard(boss, playerPoint, { width: 12, damage: 18, color: COLORS.towerRail, delay: 0.45, label: 'tempo', ...ownership });
     queueLineHazard({ x: boss.x - 90, y: boss.y - 80 }, { x: boss.x + 180, y: boss.y + 120 }, { width: 10, damage: 15, color: COLORS.towerRail, delay: 0.75, length: 560, label: 'tempo', ...ownership });
   }
   if (abilityName === 'pulseMeasure') {
     for (let index = 0; index < 4; index += 1) {
-      queueAreaHazard(state.player.x + rand(-150, 150), state.player.y + rand(-110, 110), {
+      queueAreaHazard(playerPoint.x + rand(-150, 150), playerPoint.y + rand(-110, 110), {
         radius: 54,
         damage: 10,
         delay: 0.5 + index * 0.16,
@@ -1040,8 +1041,8 @@ export const runBossAbilityEffect = ({
     for (let index = 0; index < 3; index += 1) {
       const delay = 0.42 + index * 0.18;
       queueLineHazard(
-        { x: state.player.x - 220, y: state.player.y - 70 + index * 70 },
-        { x: state.player.x + 220, y: state.player.y - 70 + index * 70 },
+        { x: playerPoint.x - 220, y: playerPoint.y - 70 + index * 70 },
+        { x: playerPoint.x + 220, y: playerPoint.y - 70 + index * 70 },
         { width: 9, damage: 14, color: COLORS.towerRail, delay, length: 440, label: 'tempo', ...ownership }
       );
     }
@@ -1054,7 +1055,7 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'crescendo') {
     for (let index = 0; index < 5; index += 1) {
-      queueAreaHazard(state.player.x, state.player.y, {
+      queueAreaHazard(playerPoint.x, playerPoint.y, {
         radius: 46 + index * 16,
         damage: 8 + index * 2,
         delay: 0.4 + index * 0.14,
@@ -1066,35 +1067,35 @@ export const runBossAbilityEffect = ({
   }
   if (abilityName === 'raiseWalls') {
     spawnAround(boss, 'SIEGE', 3, boss.radius + 58, { ownerBossUid: boss.uid, ownerEncounterUid: boss.encounterUid ?? null, summonCategory: 'wallGuard', maxActive: 6 });
-    queueAreaHazard(state.player.x, state.player.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ...ownership });
+    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 95, damage: 8, slowRatio: 0.65, slowDuration: 2.2, delay: 0.75, color: COLORS.enemyShield, label: 'wall', ...ownership });
   }
   if (abilityName === 'corridorClamp') {
-    queueLineHazard({ x: state.player.x - 240, y: state.player.y - 110 }, { x: state.player.x - 240, y: state.player.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
-    queueLineHazard({ x: state.player.x + 240, y: state.player.y - 110 }, { x: state.player.x + 240, y: state.player.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
+    queueLineHazard({ x: playerPoint.x - 240, y: playerPoint.y - 110 }, { x: playerPoint.x - 240, y: playerPoint.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
+    queueLineHazard({ x: playerPoint.x + 240, y: playerPoint.y - 110 }, { x: playerPoint.x + 240, y: playerPoint.y + 110 }, { width: 12, damage: 14, color: COLORS.enemyShield, delay: 0.72, length: 220, label: 'gate', ...ownership });
   }
   if (abilityName === 'gateSwap') {
     const oldX = boss.x;
     const oldY = boss.y;
-    boss.x = state.player.x + rand(-210, 210);
-    boss.y = state.player.y + rand(-160, 160);
+    boss.x = playerPoint.x + rand(-210, 210);
+    boss.y = playerPoint.y + rand(-160, 160);
     queueLineHazard({ x: oldX, y: oldY }, boss, { width: 18, damage: 20, color: COLORS.enemyShield, delay: 0.6, label: 'gate', ...ownership });
   }
   if (abilityName === 'mazeFold') {
     for (const tower of state.towers.slice(0, 2)) {
       queueLineHazard({ x: tower.x - 160, y: tower.y }, { x: tower.x + 160, y: tower.y }, { width: 10, damage: 16, color: COLORS.enemyShield, delay: 0.68, length: 320, label: 'maze', ...ownership });
     }
-    queueAreaHazard(state.player.x, state.player.y, { radius: 84, damage: 12, delay: 0.82, color: COLORS.enemyShield, label: 'wall', ...ownership });
+    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 84, damage: 12, delay: 0.82, color: COLORS.enemyShield, label: 'wall', ...ownership });
   }
   if (abilityName === 'mazeCrush') {
     for (const tower of state.towers.slice(0, 4)) {
       queueAreaHazard(tower.x, tower.y, { radius: 72, damage: 24, delay: 0.7, color: COLORS.enemyShield, label: 'wall', ...ownership });
     }
-    queueAreaHazard(state.player.x, state.player.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ...ownership });
+    queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 88, damage: 18, delay: 0.8, color: COLORS.enemyShield, label: 'wall', ...ownership });
   }
   if (abilityName === 'deadEnd') {
     for (let index = 0; index < 4; index += 1) {
       const angle = (Math.PI * 2 * index) / 4;
-      queueAreaHazard(state.player.x + Math.cos(angle) * 120, state.player.y + Math.sin(angle) * 90, {
+      queueAreaHazard(playerPoint.x + Math.cos(angle) * 120, playerPoint.y + Math.sin(angle) * 90, {
         radius: 68,
         damage: 16,
         delay: 0.7 + index * 0.06,
@@ -1109,16 +1110,16 @@ export const runBossAbilityEffect = ({
     for (let index = 0; index < 3; index += 1) {
       queueLineHazard(
         { x: boss.x + rand(-70, 70), y: boss.y + rand(-70, 70) },
-        { x: state.player.x + rand(-110, 110), y: state.player.y + rand(-90, 90) },
+        { x: playerPoint.x + rand(-110, 110), y: playerPoint.y + rand(-90, 90) },
         { width: 10, damage: 12, color: COLORS.enemyMedic, delay: 0.6 + index * 0.08, length: 420, label: 'vine', ...ownership }
       );
     }
   }
-  if (abilityName === 'poisonBloom') queueAreaHazard(state.player.x, state.player.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ...ownership });
+  if (abilityName === 'poisonBloom') queueAreaHazard(playerPoint.x, playerPoint.y, { radius: 110, damage: 14, slowRatio: 0.7, slowDuration: 2, delay: 0.75, color: COLORS.enemyMedic, label: 'poison', ...ownership });
   if (abilityName === 'sporeBurst') {
     for (let index = 0; index < 4; index += 1) {
       const angle = (Math.PI * 2 * index) / 4;
-      queueAreaHazard(state.player.x + Math.cos(angle) * 90, state.player.y + Math.sin(angle) * 80, {
+      queueAreaHazard(playerPoint.x + Math.cos(angle) * 90, playerPoint.y + Math.sin(angle) * 80, {
         radius: 64,
         damage: 10,
         delay: 0.7 + index * 0.05,

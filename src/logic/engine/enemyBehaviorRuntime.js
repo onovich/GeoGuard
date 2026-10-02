@@ -1,5 +1,6 @@
 import { COLORS } from '../../data/gameConfig.js';
 import { dist } from './gameMath.js';
+import { tickBossMechanicRuntime } from './bossMechanicEntities.js';
 
 export const updateEnemyBehaviorRuntime = ({
   state,
@@ -12,15 +13,21 @@ export const updateEnemyBehaviorRuntime = ({
   damageArea,
   spawnParticle,
   syncHudHealth,
+  queueAreaHazard,
 }) => {
+  if (enemy.hp <= 0) return { continueLoop: false };
   enemy.hitFlash = Math.max(0, enemy.hitFlash - dt * 5);
   enemy.slowTimer = Math.max(0, enemy.slowTimer - dt);
   enemy.armoredTimer = Math.max(0, (enemy.armoredTimer ?? 0) - dt);
-  if (enemy.isBoss && enemy.bossState.phaseIntroTimer) {
+  if (enemy.isBoss && enemy.bossState.phaseIntroTimer && !enemy.bossState.combatClockManaged) {
     enemy.bossState.phaseIntroTimer = Math.max(0, enemy.bossState.phaseIntroTimer - dt);
   }
   if (enemy.slowTimer <= 0) {
     enemy.slowRatio = 1;
+  }
+  if (enemy.mechanic) {
+    tickBossMechanicRuntime({ state, enemy, dt, spawnAround, queueAreaHazard });
+    return { continueLoop: false };
   }
 
   if (enemy.burrowed) {
@@ -43,7 +50,7 @@ export const updateEnemyBehaviorRuntime = ({
 
   if (enemy.healAura) {
     for (const otherEnemy of state.enemies) {
-      if (otherEnemy !== enemy && !otherEnemy.isBoss && dist(enemy, otherEnemy) <= enemy.healAura.range) {
+      if (otherEnemy !== enemy && otherEnemy.hp > 0 && !otherEnemy.isBoss && !otherEnemy.mechanic && dist(enemy, otherEnemy) <= enemy.healAura.range) {
         otherEnemy.hp = Math.min(otherEnemy.maxHp, otherEnemy.hp + enemy.healAura.amount * dt);
       }
     }
@@ -78,18 +85,25 @@ export const updateEnemyBehaviorRuntime = ({
     }
   }
 
-  const angle = Math.atan2(target.y - enemy.y, target.x - enemy.x);
+  let movementTarget = target;
+  if (enemy.isBoss && enemy.form === 'dragon' && enemy.bossState.actionMode === 'idle') {
+    enemy.bossState.patrolAngle = (enemy.bossState.patrolAngle ?? 0) + dt * 0.7;
+    movementTarget = { x: state.player.x + Math.cos(enemy.bossState.patrolAngle) * 240,
+      y: state.player.y + Math.sin(enemy.bossState.patrolAngle) * 180 };
+  }
+  const angle = Math.atan2(movementTarget.y - enemy.y, movementTarget.x - enemy.x);
   const effectiveSpeed = enemy.baseSpeed * enemy.slowRatio;
   if (enemy.dashTimer > 0) {
     enemy.dashTimer -= dt;
     enemy.x += enemy.dashVx * dt;
     enemy.y += enemy.dashVy * dt;
-  } else {
+  } else if (!enemy.isBoss || enemy.bossState.actionMode === 'idle') {
     enemy.x += Math.cos(angle) * effectiveSpeed * dt;
     enemy.y += Math.sin(angle) * effectiveSpeed * dt;
   }
 
-  if (minDistance < enemy.radius + target.radius) {
+  const contactActive = !enemy.isBoss || ['idle', 'attack'].includes(enemy.bossState.actionMode ?? 'idle');
+  if (contactActive && target.hp > 0 && minDistance < enemy.radius + target.radius) {
     const damageFactor = target !== state.player ? enemy.towerDamageFactor ?? 1 : 1;
     damageTarget(target, enemy.damage * damageFactor * dt);
     if (target === state.player && state.gameTime % 0.5 < dt) {

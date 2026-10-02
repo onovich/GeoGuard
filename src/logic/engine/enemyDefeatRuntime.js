@@ -1,5 +1,6 @@
 import { COLORS } from '../../data/gameConfig.js';
 import { getBossRewardResolution, hasPendingBossAftermath, hasPendingEncounterAftermath } from './bossFlowRules.js';
+import { expireBossMechanicsRuntime, settleMechanicDefeatRuntime } from './bossMechanicEntities.js';
 
 export const settleEnemyDefeatRuntime = ({
   state,
@@ -17,11 +18,17 @@ export const settleEnemyDefeatRuntime = ({
   }
 
   spawnParticle(enemy.x, enemy.y, enemy.color, enemy.isBoss ? 18 : 8);
-  state.drops.push({ x: enemy.x, y: enemy.y, value: enemy.value, radius: 4 + enemy.value, color: COLORS.gem, magnetized: false });
-  if (enemy.deathSpawn) {
+  if (settleMechanicDefeatRuntime({ state, enemy }) > 0) syncHudMoney();
+  // Wave bosses pay immediately; leaving another gem would pay the bounty twice.
+  const paysImmediately = enemy.isBoss && (state.mode !== 'debug' || state.debugWaveFlow);
+  if (!paysImmediately && enemy.value > 0 && !enemy.consumed) {
+    state.drops.push({ x: enemy.x, y: enemy.y, value: enemy.value, radius: Math.min(12, 4 + Math.sqrt(enemy.value)), color: COLORS.gem, magnetized: false });
+  }
+  if (enemy.deathSpawn && !enemy.consumed) {
     spawnAround(enemy, enemy.deathSpawn.type, enemy.deathSpawn.count, enemy.deathSpawn.spread);
   }
   state.enemies.splice(enemyIndex, 1);
+  if (enemy.isBoss) expireBossMechanicsRuntime(state, enemy);
 
   if (!enemy.isBoss || (state.mode === 'debug' && !state.debugWaveFlow)) {
     return { defeated: true, rewardAction: null };

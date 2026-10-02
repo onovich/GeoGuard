@@ -219,25 +219,32 @@ const BASE_WAVES = [
   },
 ];
 
-const TIER1_INDICES = [0, 3, 6, 9, 12, 15];
 const TIER2_INDICES = [0, 1, 3, 4, 6, 7, 9, 10, 12, 13, 14, 15];
-
-const TIER1_WAVES = TIER1_INDICES.map(i => BASE_WAVES[i]);
 const TIER2_WAVES = TIER2_INDICES.map(i => BASE_WAVES[i]);
 
+// Introduce one pressure at a time before tier two combines mechanics.
+const INTRO_WAVES = [
+  { bossId: 'COMMANDER', label: '建立防线', focus: '先建塔，再靠近水晶收集资金。', spawnInterval: 1.15, groups: [{ type: 'BASIC', count: 14 }] },
+  { bossId: 'HUNTER', label: '侧向闪避', focus: '疾袭兵逼近时横向移动，避免直线后退。', spawnInterval: 1.05, groups: [{ type: 'BASIC', count: 12 }, { type: 'FAST', count: 6 }] },
+  { bossId: 'FORTRESS', label: '集中火力', focus: '重装兵耐久更高，让多座塔共同覆盖前线。', spawnInterval: 1, groups: [{ type: 'BASIC', count: 12 }, { type: 'FAST', count: 6 }, { type: 'TANK', count: 2 }] },
+  { bossId: 'PRISM', label: '读取预警', focus: '先离开光束预警，再回到火力覆盖区。', spawnInterval: 0.95, groups: [{ type: 'BASIC', count: 12 }, { type: 'FAST', count: 6 }, { type: 'TANK', count: 2 }, { type: 'SHIELD', count: 2 }] },
+  { bossId: 'HIVE', label: '控制增援', focus: '清理召唤单位，避免增援持续累积。', spawnInterval: 0.9, groups: [{ type: 'BASIC', count: 12 }, { type: 'FAST', count: 6 }, { type: 'TANK', count: 3 }, { type: 'BEACON', count: 1 }] },
+  { bossId: 'FROST_JUDGE', label: '分散阵地', focus: '护盾与治疗出现，分散关键塔并保留逃生路线。', spawnInterval: 0.85, groups: [{ type: 'BASIC', count: 12 }, { type: 'FAST', count: 6 }, { type: 'TANK', count: 3 }, { type: 'SHIELD', count: 3 }, { type: 'MEDIC', count: 1 }] },
+];
+
 export const WAVE_TABLE = [
-  ...TIER1_WAVES.map((w, i) => ({
+  ...INTRO_WAVES.map((w, i) => ({
     ...w,
     number: i + 1,
-    spawnInterval: w.spawnInterval + 0.2,
-    groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
+    spawnInterval: w.spawnInterval,
+    groups: w.groups.map(g => ({ ...g })),
     isWeakened: true,
     tier: 1,
     bossId: w.bossId ? `${w.bossId}_T1` : undefined,
   })),
   ...TIER2_WAVES.map((w, i) => ({
     ...w,
-    number: i + 1 + TIER1_WAVES.length,
+    number: i + 1 + INTRO_WAVES.length,
     spawnInterval: w.spawnInterval + 0.05,
     groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
     isWeakened: true,
@@ -246,7 +253,7 @@ export const WAVE_TABLE = [
   })),
   ...BASE_WAVES.map((w, i) => ({
     ...w,
-    number: i + 1 + TIER1_WAVES.length + TIER2_WAVES.length,
+    number: i + 1 + INTRO_WAVES.length + TIER2_WAVES.length,
     groups: w.groups.map(g => ({ ...g, count: Math.max(1, Math.round(g.count * 1.5)) })),
     isWeakened: false,
     tier: 3,

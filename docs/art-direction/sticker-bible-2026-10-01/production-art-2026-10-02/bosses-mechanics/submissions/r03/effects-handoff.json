@@ -1,0 +1,273 @@
+{
+  "scope": "all skill effects handled by effects-ui; this package only body references",
+  "runtimeCatalog": "production-split.json#abilityCatalog",
+  "defaultAbilityIds": [
+    "summonFormation",
+    "commandLine",
+    "shieldPulse",
+    "phalanxAdvance",
+    "commandRush",
+    "dashAtPlayer",
+    "markPrey",
+    "summonScouts",
+    "pincerRush",
+    "afterimageBurst",
+    "feintStrike",
+    "summonSiege",
+    "bastionMortar",
+    "fortify",
+    "shockRam",
+    "quake",
+    "bunkerRing",
+    "prismBeam",
+    "refractVolley",
+    "mirrorSummon",
+    "prismLattice",
+    "tripleBeam",
+    "mirrorStep",
+    "spawnHive",
+    "broodShift",
+    "hivePulse",
+    "summonSwarm",
+    "hiveCollapse",
+    "frostRing",
+    "whiteout",
+    "freezeTower",
+    "glacialPrison",
+    "summonFrostGuards",
+    "coldSnap",
+    "railShot",
+    "crosshairBarrage",
+    "markTower",
+    "suppressiveGrid",
+    "overload",
+    "killLane",
+    "stealMoney",
+    "taxBeacon",
+    "paydaySweep",
+    "ransomBurst",
+    "repossess",
+    "solarDash",
+    "flareLance",
+    "twinCrossfire",
+    "eclipsePulse",
+    "lunarSnare",
+    "shadowArc",
+    "dragonStrafe",
+    "emberWake",
+    "wingBuffet",
+    "meteorRain",
+    "skyDive",
+    "infernoRing",
+    "webTrap",
+    "silkVolley",
+    "spawnSpiderlings",
+    "broodAmbush",
+    "nestBloom",
+    "webField",
+    "gravityWell",
+    "starfall",
+    "orbitalShots",
+    "orbitalLock",
+    "singularity",
+    "eventHorizon",
+    "forgeArmor",
+    "slagDrop",
+    "sacrificeMinions",
+    "brandLine",
+    "moltenBurst",
+    "forgeDetonation",
+    "conductLines",
+    "pulseMeasure",
+    "tempoShift",
+    "syncopate",
+    "finale",
+    "crescendo",
+    "raiseWalls",
+    "corridorClamp",
+    "gateSwap",
+    "mazeFold",
+    "mazeCrush",
+    "deadEnd",
+    "seedPods",
+    "blightRoots",
+    "poisonBloom",
+    "sporeBurst",
+    "gardenWake",
+    "creepingCanopy"
+  ],
+  "survivorAbilities": [
+    "soloSolarVolley",
+    "soloLunarOrbit"
+  ],
+  "oldNonDefaultKeys": [
+    "hiveHeal",
+    "twinOrbit",
+    "twinBolt",
+    "twinSwap",
+    "dragonBreath",
+    "tailSweep"
+  ],
+  "bodySourceComplete": true,
+  "bodyReferenceCount": 192,
+  "sharedRules": [
+    "OPEN complete silhouette vulnerability overlay, no core-only cue",
+    "No body includes projectile/flash/beam/hazard/child entity/other target",
+    "Hazards use actual runtime geometry and lifecycle; no invented projectiles",
+    "Summon feedback only on actual successful creation and budget",
+    "No altered collision or gameplay timing from art"
+  ],
+  "mechanics": [
+    {
+      "id": "NEST",
+      "bodySource": {
+        "file": "submissions/r03/pair-09-nest-web.png",
+        "row": 1,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "independent summon feedback only after successful spawn",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "At timer expiry spawnAround BASIC x3; timer resets 6s; first timer 3s. Spawn budget may prevent actual children."
+    },
+    {
+      "id": "WEB",
+      "bodySource": {
+        "file": "submissions/r03/pair-09-nest-web.png",
+        "row": 2,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "ownerMechanicUid web terrain",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "WEB terrain queued at creation; timer eventually set 100. TRIGGER is visual active-state reference, not a second damage or spawn event."
+    },
+    {
+      "id": "ROOT",
+      "bodySource": {
+        "file": "submissions/r03/pair-10-root-wall.png",
+        "row": 1,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "ownerMechanicUid poison terrain",
+        "optional parent-child link is effect only",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "At timer expiry create child ROOT with own uid/hp and parentUid; first timer3s then4s; each child queues its own terrain."
+    },
+    {
+      "id": "WALL",
+      "bodySource": {
+        "file": "submissions/r03/pair-10-root-wall.png",
+        "row": 2,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "ownerMechanicUid wall area warnings for mazeCrush/deadEnd",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "Solid independent enemy; timer becomes100. Layout replacement kills previous walls; no new attack in TRIGGER pose. mazeCrush/deadEnd hazards separate."
+    },
+    {
+      "id": "SEAL",
+      "bodySource": {
+        "file": "submissions/r01/seal-production.png",
+        "row": 1,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "accepted",
+        "review": "../reviews/bosses-mechanics-r01.md"
+      },
+      "effects": [
+        "target-only freeze overlay, separate tower anchor; do not include tower or FROST_JUDGE in SEAL body",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "timer1.5s; living target tower gets max(current frozenTimer,1.6); node hp=0. Pre-trigger destruction prevents freeze. life2s."
+    },
+    {
+      "id": "RETICLE",
+      "bodySource": {
+        "file": "submissions/r03/pair-11-reticle-courier.png",
+        "row": 1,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "target area mark, separate from three-arc node",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "timer1.5s; living target gets area hazard radius32 damage22 delay0.8; node hp=0. Pre-trigger destruction prevents warning/attack. life2s."
+    },
+    {
+      "id": "COURIER",
+      "bodySource": {
+        "file": "submissions/r03/pair-11-reticle-courier.png",
+        "row": 2,
+        "states": [
+          "INTACT",
+          "TRIGGER",
+          "BROKEN",
+          "FADE"
+        ],
+        "reviewStatus": "pending",
+        "review": null
+      },
+      "effects": [
+        "cargo/coin feedback and floating text; no new state.drops pickup",
+        "decorative break/fade only; no additional damage or spawn event",
+        "decorative break/fade only; no additional damage or spawn event"
+      ],
+      "trigger": "Moves along escapeVx/y; life8s then escaped=true hp=0. Defeat before escape returns cargo directly to state.money. TRIGGER is escape pose, not a pickup spawn."
+    }
+  ],
+  "courierRefund": "settleMechanicDefeatRuntime credits money directly; feedback only, no extra state.drops or pickup step",
+  "rootChild": "own uid/hp/timer/root with parentUid; never a new sprout attached to parent body",
+  "routing": "Main reviewer routes this handoff; no direct cross-group messaging or edits"
+}

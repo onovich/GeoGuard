@@ -1,7 +1,7 @@
 import { UI_COPY } from '../../data/gameConfig';
 import { Button, Panel } from './ui.jsx';
 
-export default function OverlayScreen({ gameState, time, initGame }) {
+export default function OverlayScreen({ gameState, time, currentWave, initGame }) {
   if (gameState === 'PLAYING') {
     return null;
   }
@@ -11,7 +11,7 @@ export default function OverlayScreen({ gameState, time, initGame }) {
       <Panel variant="modalPanel" className="p-8 text-center max-w-sm w-full mx-4 transform transition-all">
         <h1 className="text-4xl font-black text-slate-800 mb-2">{gameState === 'START' ? UI_COPY.startTitle : UI_COPY.gameOverTitle}</h1>
         <p className="text-slate-500 mb-8 font-medium">
-          {gameState === 'START' ? UI_COPY.startDescription : `你生存了 ${Math.floor(time / 60)}分${time % 60}秒`}
+          {gameState === 'START' ? UI_COPY.startDescription : `到达第 ${currentWave} 波 · 战斗 ${Math.floor(time / 60)}分${time % 60}秒`}
         </p>
 
         <Button onClick={initGame} variant="blue" size="lg" className="w-full py-4 text-lg hover:-translate-y-1">

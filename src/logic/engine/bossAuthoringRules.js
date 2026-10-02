@@ -50,6 +50,8 @@ export const DEFAULT_BOSS_ABILITY_COOLDOWNS = {
   twinSwap: 7,
   eclipsePulse: 8,
   solarDash: 4.6,
+  soloSolarVolley: 7,
+  soloLunarOrbit: 7,
   flareLance: 7.5,
   lunarSnare: 5.8,
   shadowArc: 7.2,

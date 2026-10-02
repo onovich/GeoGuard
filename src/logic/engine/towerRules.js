@@ -2,6 +2,7 @@ import { TOWER_LIBRARY } from '../../data/gameConfig.js';
 
 export const getTowerPreviewSummary = (tower) => {
   const tags = [`造价 ${tower.cost}`, `伤害 ${tower.damage}`, `射程 ${tower.range}`];
+  tags.push(`射击间隔 ${tower.fireRate}秒`);
   if (tower.splash) tags.push(`溅射 ${tower.splash}`);
   if (tower.pierce) tags.push(`穿透 ${tower.pierce}`);
   if (tower.slowRatio) tags.push('减速');

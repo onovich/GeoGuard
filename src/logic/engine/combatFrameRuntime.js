@@ -1,6 +1,7 @@
 import { COLORS } from '../../data/gameConfig.js';
 import { getPulledPosition, isLineHazardHit, isTargetWithinArea } from './combatRules.js';
 import { dist } from './gameMath.js';
+import { applyPlayerSlow, movePlayerOnBattlefield } from './battlefieldRules.js';
 
 export const updateProjectileRuntime = ({
   state,
@@ -20,9 +21,11 @@ export const updateProjectileRuntime = ({
 
     let hit = false;
     for (const enemy of state.enemies) {
+      if (enemy.hp <= 0) continue;
       if (enemy.burrowed) continue;
       if (projectile.hitEnemies && projectile.hitEnemies.has(enemy)) continue;
-      if (dist(projectile, enemy) < projectile.radius + enemy.radius + 4) {
+      if (isLineHazardHit({ hazard: { x: projectile.previousX, y: projectile.previousY, x2: projectile.x, y2: projectile.y,
+        width: projectile.radius + 4 }, target: enemy })) {
         hit = true;
         damageEnemy(enemy, projectile.damage);
         enemy.hitFlash = 1;
@@ -123,9 +126,17 @@ export const updateHazardRuntime = ({ state, dt, damageTarget, spawnImpactWave, 
     if (hazard.type === 'area') {
       if (isTargetWithinArea(hazard, hazard.radius, state.player)) {
         damageTarget(state.player, hazard.damage);
+        applyPlayerSlow(state.player, hazard.slowRatio, hazard.slowDuration);
         const pulledPlayerPosition = getPulledPosition({ target: state.player, hazard });
-        state.player.x = pulledPlayerPosition.x;
-        state.player.y = pulledPlayerPosition.y;
+        const effectiveSpeed = state.player.speed * (state.player.slowRatio ?? 1);
+        if (effectiveSpeed) {
+          movePlayerOnBattlefield({ player: state.player, enemies: state.enemies,
+            dx: (pulledPlayerPosition.x - state.player.x) / effectiveSpeed,
+            dy: (pulledPlayerPosition.y - state.player.y) / effectiveSpeed, dt: 1 });
+        } else {
+          state.player.x = pulledPlayerPosition.x;
+          state.player.y = pulledPlayerPosition.y;
+        }
       }
       syncHudHealth();
       for (const tower of state.towers) {

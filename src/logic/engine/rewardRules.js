@@ -65,7 +65,7 @@ export const createRewardHistory = () => ({
   pickedKeys: [],
 });
 
-export const buildRewardOfferPlan = ({ catalog, waveNumber, money, hp, maxHp, infiniteMoney, history = createRewardHistory() }) => {
+export const buildRewardOfferPlan = ({ catalog, waveNumber, money, hp, maxHp, infiniteMoney, towers = [], history = createRewardHistory() }) => {
   const offeredKeys = history.offeredKeys ?? [];
   const pickedKeys = history.pickedKeys ?? [];
   const locked = catalog
@@ -73,7 +73,10 @@ export const buildRewardOfferPlan = ({ catalog, waveNumber, money, hp, maxHp, in
     .sort((left, right) => scoreUnlockTower(right, waveNumber, offeredKeys, pickedKeys) - scoreUnlockTower(left, waveNumber, offeredKeys, pickedKeys));
   const upgrades = catalog
     .filter((tower) => tower.available && tower.level < tower.maxLevel)
-    .sort((left, right) => scoreUpgradeTower(right, waveNumber, offeredKeys, pickedKeys) - scoreUpgradeTower(left, waveNumber, offeredKeys, pickedKeys));
+    .sort((left, right) => {
+      const usageBonus = (tower) => Math.min(3, towers.filter((placed) => placed.id === tower.id).length) * 8;
+      return scoreUpgradeTower(right, waveNumber, offeredKeys, pickedKeys) + usageBonus(right) - scoreUpgradeTower(left, waveNumber, offeredKeys, pickedKeys) - usageBonus(left);
+    });
   const supports = buildSupportChoices({ waveNumber, money, hp, maxHp, infiniteMoney });
 
   const choices = [];
@@ -169,8 +172,9 @@ export const materializeRewardChoices = (catalog, plan) =>
           id: `unlock-${tower.id}`,
           type: 'unlock',
           towerId: tower.id,
+          amount: tower.cost,
           title: `解锁 ${tower.name}`,
-          subtitle: '将该蓝图加入建造栏',
+          subtitle: `加入建造栏，并获得 ${tower.cost} 资金试建`,
           detail: `${tower.summary} ${getTowerPreviewSummary(tower)}`,
         };
       }
@@ -180,9 +184,10 @@ export const materializeRewardChoices = (catalog, plan) =>
         id: `upgrade-${tower.id}`,
         type: 'upgrade',
         towerId: tower.id,
-        title: `升级 ${tower.name}`,
+        amount: preview.cost - tower.cost,
+        title: `升级 ${tower.name} 蓝图`,
         subtitle: `等级 ${tower.level + 1} -> 等级 ${preview.level + 1}`,
-        detail: `造价: ${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
+        detail: `仅强化后续建造，已有塔保持原等级。获得 ${preview.cost - tower.cost} 资金补贴。造价: ${tower.cost} -> ${preview.cost}, ${getTowerPreviewSummary(preview)}`,
       };
     })
     .filter(Boolean);
@@ -193,6 +198,7 @@ export const applyRewardChoiceEffects = ({ catalog, choice, money, hp, maxHp }) 
   let nextHp = hp;
 
   if (choice.type === 'unlock' || choice.type === 'upgrade') {
+    nextMoney += choice.amount ?? 0;
     nextCatalog = catalog.map((tower) => {
       if (tower.id !== choice.towerId) {
         return tower;

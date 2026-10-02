@@ -1,4 +1,4 @@
-import { createInitialTowerCatalog } from '../../data/gameConfig.js';
+import { STARTING_MONEY, createInitialTowerCatalog } from '../../data/gameConfig.js';
 import { createRewardHistory } from './rewardRules.js';
 
 export const createPlayerState = () => ({
@@ -14,6 +14,9 @@ export const createPlayerState = () => ({
   shootCd: 0.5,
   damage: 8,
   range: 200,
+  slowTimer: 0,
+  slowRatio: 1,
+  controlGraceTimer: 0,
 });
 
 export const createEmptyWaveState = () => ({
@@ -62,7 +65,7 @@ export const createRuntimeState = () => ({
   nextBossEncounterUid: 1,
   lastTime: 0,
   gameTime: 0,
-  money: 20,
+  money: STARTING_MONEY,
   towerCatalog: createInitialTowerCatalog(),
   rewardHistory: createRewardHistory(),
   wave: {
