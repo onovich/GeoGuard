@@ -1,5 +1,7 @@
 # GeoGuard
 
+[新电脑接手与当前美术进度](docs/HANDOFF.md)
+
 [English](README.md)
 
 [在线试玩](https://game.onovich.com/GeoGuard/)

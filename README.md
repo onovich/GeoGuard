@@ -1,5 +1,7 @@
 # GeoGuard
 
+[New computer handoff and current art status](docs/HANDOFF.md)
+
 [简体中文](README.zh-CN.md)
 
 [Play online](https://game.onovich.com/GeoGuard/)

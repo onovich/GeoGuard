@@ -51,3 +51,7 @@ This file is for later work that is intentionally not part of the current fast-i
 
 - Run deeper real-play balancing across waves 1-18 after enough iteration data accumulates.
 - Add late-game economy sinks, recovery options, or broader progression systems only after the current core loop is stable.
+
+## 电脑端美术视觉还原待办（2026-10-03）
+
+- [ ] 完成[视觉还原待办 VF-01–VF-20](art-fidelity-2026-10-03/backlog.md)：10项P1、9项P2和1项验收补充；目前仅登记，未启动修复。
