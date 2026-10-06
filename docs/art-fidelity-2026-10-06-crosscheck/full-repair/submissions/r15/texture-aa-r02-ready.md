@@ -1,0 +1,7 @@
+# R15 texture AA r02 local review
+
+Entry remains `freeaim-source-runtime.html`. This revision only addresses the rejected checker/triangle cracks: source texture is now composed into one 2× source-resolution transparent surface, shared texture-cell edges overlap by 0.8 source pixels, and the game receives one final sampled image. The overlap samples the same PNG through its existing affine texture transform; it does not paint color, a contour, or an artificial body. Twelve composed surfaces are retained in a bounded cache; exact angles are not quantized. Head and feet strips remain rigid and fixed.
+
+Direction-boundary registration jumps remain explicitly OPEN and are not submitted as repaired. Root can inspect a few non-source-axis poses to accept/return AA independently instead of repeating all 162. Ordinary density/CPU/cache memory remain OPEN. Texture coverage expands by one source pixel; current geometric bounds remain the same mapped alpha support, so the subpixel AA fringe is approximate rather than claiming bit-exact raster bounds. Two math tests still pass.
+
+Additional external finite evidence: 96 actual endpoint alpha-boundary cases had zero proper boundary crossings after splitting boundary segments at every actual mesh/diagonal edge. This supplements local positive-alpha-triangle checks, but is not claimed as a universal mathematical injectivity proof or a visual approval.

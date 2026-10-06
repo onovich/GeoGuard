@@ -1,0 +1,19 @@
+# R16 r09 — centre-emission display + formal production registration READY
+
+Fix targets the common accepted==ownerCentre and requestedM!=ownerCentre case, not a no-safe string special case. It covers both natural centreOverlap and conservative no-safe. Logical hero centre emitters remain legitimate because their requested centre equals accepted centre.
+
+## Presentation only
+`sourceBirthVisibility.js`: anatomical centre birth is not a muzzle. Omit its misleading gun-star flash; retain attack source/real independent projectile/collision/hit feedback. Suppress independent bullet pixels only while the real bullet centre lies within its owner's measured original-alpha bounding rectangle (+actual bullet radius), explicitly a conservative visual mask, not new collision geometry. Once it clears that rectangle, draw at the unchanged actual position with source-tail anchor; if owner is gone there is no body to occlude and normal drawing resumes. No offset/warp/fake aperture or artificial physics teleport. `onPresentationSuppressed` receipts explain each actual omission separately from real source draw calls. Source asset validation still precedes the projectile visual hide: missing PNG is never excused by suppression.
+
+Two renderer tests confirm no fake flash paint for owner-segment centreOverlap and no-safe; PLAYER logical centre and noncentre near clamping remain visible. Source bounds hide/clear/no-owner paths and missing original asset rejection verified. Real source-ray/offense/collision tests unchanged. Total relevant tests8/8 pass.
+
+## Production registration
+SNIPER/RAIL source layers now registered in normal `originalPartSources`, normal loader/preload/decode/error gate. This replaces their old eight directional whole-frame body registrations; original body frames are not an alternative or failure fallback. Formal `candidateCommands` source composition applies automatically to these explicit two registered IDs, not a entity test flag. Retained QA loader is idempotent and skips already-decoded formal parts. Existing approved static original UI portraits remain their independently decoded source images; this is documented deliberate static art, not failure fallback.
+
+Both manifest actualRuntimePixelRegistration fields now record current source-layer registration, sixteen source/request/processing/output records, same rigid head + source-only neck mapper, and honest attack neutral derivation. Historical whole-frame registrations are explicitly historical and unused for player body rendering. All registry runtime URLs are deploy relative; public/base-once tests pass. Dist test fails because agreed old4294 snapshot does not contain current parts; no build performed. Source/frame/crop bytes are unchanged after R08 exact16 SHA approval.
+
+## Review
+Same r16 continuous-shot-runtime: RAIL down10 normal centreOverlap and RAIL free19.82/30 endpoint blocker should have no belly/foot gun-star or inside first bullet image, while actual births/hits persist and `presentationSuppressions` explains omission. Existing noncentre near source remains drawn. All source is now loaded through actual production loader before optional QA helper. Normal game on dev5173 uses the same formal source automatically; old dist4294 unchanged.
+
+## Still OPEN
+Root centre visibility/normal production activation review; twin surviving enrage/independent cleanup; four-heading true actions/T3/all375 qualifications; full dense feedback; final desktop+DPR2/input; complete deployed source consumer audit; samecandidate performance/regression/coordinated build/CRLF and user review. No broad pass or global success claim.

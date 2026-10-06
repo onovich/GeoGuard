@@ -1,0 +1,2 @@
+# r05 native焦点滚动浮层
+onScroll先上报原bar边界/edge状态；若document.activeElement为本scroll容器内塔卡，则按滚动后的card viewport坐标重新计算360px浮层与尾；否则保持原清空行为。current towerTypes ref避免目录升级后stale数据，dragId依赖避免滚动回调过期，拖建仍不显示tooltip。仅BuildBar.jsx，未改规则/滚轮模拟/native滚动，等待主审首末focus及纯鼠标滚动回归。

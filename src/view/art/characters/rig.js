@@ -299,7 +299,7 @@ export function drawPlan(ctx, plan) {
 }
 
 const pointObject = (p) => ({ x: p[0], y: p[1] });
-export function getPlanAnchors(plan) {
+export function getPlanAnchors(plan,{measureAuthoredBounds=true}={}) {
   const { rig, world, soft, launcher, partMatrices } = plan;
   const parts = {};
   for (const [id, joint] of Object.entries(rig.joints)) {
@@ -316,7 +316,7 @@ export function getPlanAnchors(plan) {
   if (launcher) parts.launcher = { ...pointObject(transformPoint(world, launcher.pivot)), angle: world[0] < 0 ? Math.PI - launcher.angle : launcher.angle };
   let minX = Infinity; let minY = Infinity; let maxX = -Infinity; let maxY = -Infinity;
   const include = (p, padding) => { minX = Math.min(minX, p[0] - padding); maxX = Math.max(maxX, p[0] + padding); minY = Math.min(minY, p[1] - padding); maxY = Math.max(maxY, p[1] + padding); };
-  for (const { shape, matrix } of plan.commands) {
+  for (const { shape, matrix } of measureAuthoredBounds?plan.commands:[]) {
     const padding = (shape.stroke ? shape.width / 2 : 0) * Math.max(Math.hypot(matrix[0], matrix[1]), Math.hypot(matrix[2], matrix[3]));
     if (shape.ellipse) {
       const [cx, cy, rx, ry] = shape.ellipse;

@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { UI_COPY } from '../../data/gameConfig';
 import { cx, playerUi } from '../designSystem.js';
-import { Button, CharacterIcon, Panel, StickerSymbol } from './ui.jsx';
+import { Button, CharacterIcon, Panel, StickerSymbol, OriginalKeycap, OriginalArt, originalSkin } from './ui.jsx';
 
 export default function GameHud({
   gameState, paused, togglePause, health, maxHealth, money, formattedTime,
@@ -12,8 +12,15 @@ export default function GameHud({
   const layoutCallback = useRef(onLayout);
   layoutCallback.current = onLayout;
   const [showControlsHint, setShowControlsHint] = useState(true);
+  const [buildDescriptionVisible, setBuildDescriptionVisible] = useState(false);
   const [hintCountdown, setHintCountdown] = useState(30);
   const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  useEffect(() => {
+    const update = event => setBuildDescriptionVisible(Boolean(event.detail));
+    window.addEventListener('geoguard:build-description', update);
+    return () => window.removeEventListener('geoguard:build-description', update);
+  }, []);
 
   useLayoutEffect(() => {
     if (gameState !== 'PLAYING' || !rootRef.current) return;
@@ -41,25 +48,26 @@ export default function GameHud({
     <>
       <div ref={rootRef} data-player-hud className="pointer-events-none absolute left-4 right-4 top-4 z-20" style={playerUi.fontStyle}>
         <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-2">
-          <Panel variant="stickerHud" className="flex w-[min(200px,22vw)] items-center gap-2 px-2 py-1">
-            <StickerSymbol kind="heart" className="h-6 w-6" />
+          <Panel variant="stickerHud" style={{ borderColor: '#4B281C80' }} className="flex min-h-11 w-[min(210px,22vw)] items-center gap-2 px-2.5 py-1">
+            <StickerSymbol kind="heart" className="h-7 w-7" />
             <div className="min-w-0 flex-1">
-              <div className="flex justify-between gap-2 text-sm font-bold leading-4"><span>HP</span><span className="tabular-nums">{health}/{maxHealth}</span></div>
-              <div role="progressbar" aria-label="玩家生命" aria-valuenow={health} aria-valuemin={0} aria-valuemax={maxHealth} className="mt-1 h-1.5 overflow-hidden rounded-full border border-[#4B281C]/45 bg-[#EDE7DC]">
-                <div className="h-full bg-[#F4ADA0] transition-[width] duration-150 motion-reduce:transition-none" style={{ width: `${healthRatio * 100}%` }} />
+              <div className="flex justify-between gap-2 font-bold leading-5"><span className="text-xs">HP</span><span className="text-base tabular-nums">{health}/{maxHealth}</span></div>
+              <div role="progressbar" aria-label="玩家生命" aria-valuenow={health} aria-valuemin={0} aria-valuemax={maxHealth} className="relative mt-1 h-2.5 overflow-hidden">
+                <div className="absolute bottom-[2px] left-[3px] top-[2px] bg-[#F4ADA0] transition-[width] duration-150 motion-reduce:transition-none" style={{ width: `calc(${healthRatio * 100}% - ${healthRatio * 6}px)` }} /><span aria-hidden="true" data-original-art="world/hp-frame" className="pointer-events-none absolute inset-0 border border-transparent" style={originalSkin('world/hp-frame',21,5)} />
               </div>
             </div>
           </Panel>
-          <Panel variant="stickerHud" className="flex items-center gap-2 px-3 py-1.5 text-sm font-bold leading-5 tabular-nums">
+          <Panel variant="stickerHud" style={{ borderColor: '#4B281C50' }} className="flex min-h-11 items-center gap-2 px-3 py-1.5 text-sm font-bold leading-5 tabular-nums">
+            <StickerSymbol kind="wave" className="h-5 w-5" />
             <span>{debugMode ? 'TEST FIELD' : `WAVE ${currentWave}`}</span>
-            <span className="mx-0.5 h-4 w-px bg-[#4B281C]/25" />
+            <OriginalArt id="divider" className="mx-0.5 h-4 w-1 object-fill" />
             <StickerSymbol kind="clock" className="h-4 w-4" /><span>{formattedTime}</span>
           </Panel>
           <div className="pointer-events-auto flex flex-wrap items-start justify-end gap-2" onMouseDown={e => e.stopPropagation()} onTouchStart={e => e.stopPropagation()}>
-            <Panel variant="stickerHud" className="flex items-center gap-1.5 px-2 py-1 text-lg font-bold leading-6 tabular-nums"><StickerSymbol kind="gem" className="h-6 w-6" /><span>{money}</span></Panel>
-            <Button variant="sticker" size="sm" onClick={togglePause} className="h-9 text-sm">{paused ? '继续' : '暂停'}</Button>
+            <Panel variant="stickerHud" style={{ borderColor: '#4B281C80' }} className="flex min-h-11 items-center gap-1.5 px-2.5 py-1.5 text-xl font-bold leading-6 tabular-nums"><StickerSymbol kind="gem" className="h-7 w-7" /><span>{money}</span></Panel>
+            <Button variant="stickerSage" size="stickerMd" onClick={togglePause}>{paused ? '继续' : '暂停'}</Button>
             {audioSettings && setAudioEnabled && setAudioVolume ? (
-              <Panel variant="stickerHud" className="flex h-9 items-center gap-1.5 px-1.5 py-1">
+              <Panel variant="stickerHud" style={{ borderColor: '#4B281C50' }} className="flex h-11 items-center gap-1.5 px-1.5 py-1">
                 <Button variant="stickerQuiet" size="xs" onClick={() => setAudioEnabled(!audioSettings.enabled)} aria-label={audioSettings.enabled ? '关闭声音' : '开启声音'} aria-pressed={Boolean(audioSettings.enabled)} className="border-0 p-0.5">
                   <StickerSymbol kind={audioSettings.enabled ? 'sound' : 'muted'} className="h-5 w-5" />
                 </Button>
@@ -69,34 +77,36 @@ export default function GameHud({
           </div>
         </div>
         {bossHud.length > 0 ? (
-          <Panel variant="stickerHud" data-boss-hud className="mx-auto mt-1 w-[min(680px,100%)] px-2.5 py-2">
+          <Panel variant="stickerHud" data-boss-hud className="mx-auto mt-0.5 w-[min(680px,100%)] px-2.5 py-1">
             {bossHud.map(group => (
               <section key={group.id} aria-label={group.title} className="mb-2 last:mb-0">
-                <h2 className="text-center text-sm font-extrabold leading-4">{group.title}</h2>
-                <div className="mt-0.5 flex flex-col">
+                {group.members.length > 1 || group.title !== group.members[0]?.name ? <h2 className="mb-0.5 text-center text-sm font-extrabold leading-4">{group.title}</h2> : null}
+                <div data-boss-layout={group.members.length > 1 ? 'multiple' : 'single'} className="flex flex-col gap-0.5">
                   {group.members.map(member => (
-                    <div key={member.id} data-boss-member={member.id} className="grid min-h-8 grid-cols-[32px_50px_minmax(64px,1fr)_110px_minmax(140px,1fr)] items-center gap-x-2">
-                      <CharacterIcon artId={member.artId} label={member.name} className="h-8 w-8" />
-                      <span className="text-sm font-bold leading-4">{member.name}</span>
-                      <div role="progressbar" aria-label={`${member.name}生命比例`} aria-valuenow={Math.round(member.hpRatio * 100)} aria-valuemin={0} aria-valuemax={100} className="h-2 overflow-hidden rounded-full border border-[#4B281C]/45 bg-[#EDE7DC]">
-                        <div className="h-full bg-[#F4ADA0] transition-[width] duration-150 motion-reduce:transition-none" style={{ width: `${Math.max(0, Math.min(1, member.hpRatio)) * 100}%` }} />
+                    <div key={member.id} data-boss-member={member.id} className={cx('grid items-center gap-x-2', group.members.length > 1 ? 'grid-cols-[32px_minmax(96px,auto)_minmax(100px,1fr)_minmax(220px,1.4fr)]' : 'grid-cols-[40px_minmax(160px,1fr)_minmax(240px,1.2fr)]')}>
+                      <CharacterIcon artId={member.artId} label={member.name} className={group.members.length > 1 ? 'h-8 w-8' : 'row-span-2 h-10 w-10'} />
+                      <span className="whitespace-nowrap text-base font-extrabold leading-5">{member.name}</span>
+                      <div role="progressbar" aria-label={`${member.name}生命比例`} aria-valuenow={Math.round(member.hpRatio * 100)} aria-valuemin={0} aria-valuemax={100} className={cx('relative h-2.5 overflow-hidden', group.members.length === 1 && 'col-start-2 row-start-2')}>
+                        <div className="absolute bottom-[2px] left-[3px] top-[2px] bg-[#F4ADA0] transition-[width] duration-150 motion-reduce:transition-none" style={{ width: `calc(${Math.max(0, Math.min(1, member.hpRatio)) * 100}% - ${Math.max(0, Math.min(1, member.hpRatio)) * 6}px)` }} /><span aria-hidden="true" data-original-art="world/hp-frame" className="pointer-events-none absolute inset-0 border border-transparent" style={originalSkin('world/hp-frame',21,5)} />
                       </div>
-                      <span className="text-xs font-semibold leading-4">{member.phase}{member.enraged ? ' · ENRAGED' : ''}{member.phaseCount > 0 ? ` · P${Math.min(member.phaseCount, (member.phaseIndex ?? 0) + 1)}/${member.phaseCount}` : ''}</span>
-                      <span className={cx('text-sm leading-4', member.exposed && 'font-extrabold')}>{member.actionLabel}{member.guardCount > 0 ? ` · 护卫 ${member.guardCount}` : ''}</span>
+                      <div className={cx('min-w-0 text-sm leading-5', group.members.length === 1 && 'col-start-3 row-span-2 row-start-1 pl-2')}>
+                        <span className="font-semibold">{member.phase}{member.enraged ? ' · ENRAGED' : ''}{member.phaseCount > 0 ? ` · P${Math.min(member.phaseCount, (member.phaseIndex ?? 0) + 1)}/${member.phaseCount}` : ''}</span>
+                        <span className={cx(group.members.length === 1 ? 'block' : 'ml-2', member.exposed && 'font-extrabold')}>{member.actionLabel}{member.guardCount > 0 ? ` · 护卫 ${member.guardCount}` : ''}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <p className="mt-0.5 border-t border-[#4B281C]/20 pt-0.5 text-sm leading-[18px]">对策：{group.counterplay}</p>
+                <OriginalArt id="divider" className="mt-0.5 h-1 w-full object-fill" /><p className="text-sm leading-[18px]">对策：{group.counterplay}</p>
               </section>
             ))}
           </Panel>
         ) : null}
       </div>
-      {showControlsHint ? (
-        <div className="pointer-events-none absolute bottom-[300px] left-4 right-4 z-20 flex justify-center" style={playerUi.fontStyle}>
-          <Panel variant="stickerPanel" className="pointer-events-auto flex max-w-full items-center gap-2 px-3 py-2 text-sm leading-5">
-            <span>{isMobile ? UI_COPY.controlsMobile : UI_COPY.controlsPc}</span>
-            <Button variant="stickerQuiet" size="xs" onClick={() => setShowControlsHint(false)} className="shrink-0 text-xs">{isMobile ? `知道了 (${hintCountdown}s)` : '我知道了'}</Button>
+      {showControlsHint && !buildDescriptionVisible ? (
+        <div className="pointer-events-none absolute bottom-[238px] left-4 right-4 z-20 flex justify-center" style={playerUi.fontStyle}>
+          <Panel variant="stickerPanel" style={{ borderColor: '#4B281C50' }} className="pointer-events-auto flex max-w-full items-center gap-3 px-3 py-1.5 text-sm leading-5">
+            {isMobile ? <span>{UI_COPY.controlsMobile}</span> : <span aria-label={UI_COPY.controlsPc} className="flex flex-wrap items-center gap-1.5"><span className="flex gap-1">{'WASD'.split('').map(key => <OriginalKeycap key={key}>{key}</OriginalKeycap>)}</span><span>/ 方向键移动</span><span>· 拖拽塔卡建造</span></span>}
+            <Button variant="stickerQuiet" size="stickerSm" onClick={() => setShowControlsHint(false)} className="shrink-0">{isMobile ? `知道了 (${hintCountdown}s)` : '我知道了'}</Button>
           </Panel>
         </div>
       ) : null}

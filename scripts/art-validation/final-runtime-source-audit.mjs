@@ -1,0 +1,17 @@
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { originalPartSources } from '../../src/view/art/characters/originalPixels.js';
+import { originalEffectsData } from '../../src/view/art/world/originalEffectsData.js';
+import { uiSourcePaths } from '../../src/view/art/integration/uiSourceAssets.js';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const paths=new Map();const add=(src,consumer)=>paths.set(src,[...(paths.get(src)??[]),consumer]);
+for(const[id,parts]of Object.entries(originalPartSources))for(const part of parts)add(part.src,'characters/'+id+'/'+part.part);
+for(const[key,item]of Object.entries(originalEffectsData))add(item.src,'world/'+key);
+for(const src of uiSourcePaths)add(src,'UI required preload / actual image or skin consumer');
+add('art/original/v1/root-shadow-ground.png','actor ground shadow');
+const walk=root=>readdirSync(root).flatMap(name=>{const p=root+'/'+name;return statSync(p).isDirectory()?walk(p):[p]});
+const records=[...walk('public/art/original'),...walk('docs/art-fidelity-2026-10-06-crosscheck/full-repair/submissions')].filter(p=>p.endsWith('.json')&&(/source|manifest|candidate|parts/.test(p.split('/').at(-1))||p.startsWith('public/'))&&!/preview|decode|audit|boundary|ready|reproduction-verification/.test(p.split('/').at(-1))).map(path=>({path,text:readFileSync(path,'utf8').replaceAll('\\\\','/').replaceAll('\\','/')})).filter(r=>/sourceSha|sourceSHA|sourceHash|source_sha|originalReferenceSha|"crop"|"classification"/.test(r.text));
+const runtime=[...paths].map(([src,consumers])=>{const bytes=readFileSync('public/'+src),directory='public/'+src.slice(0,src.lastIndexOf('/')),matches=records.filter(r=>r.text.includes(src)||r.text.includes('public/'+src)||(r.path.slice(0,r.path.lastIndexOf('/'))===directory&&/source|parts/.test(r.path.split('/').at(-1))));return{src,sha256:sha(bytes),bytes:bytes.length,width:bytes.readUInt32BE(16),height:bytes.readUInt32BE(20),consumers,metadataRecords:matches.map(r=>r.path),metadataScope:'producer records (same asset directory or exact runtime path); excludes HTTP decode/screenshot receipts. Individual approved source batches remain authoritative.'};});
+const output={scope:'actual required production character/world/UI registries; PNG header/bytes/hash and producer record linkage, not browser decode',uniquePNGs:runtime.length,encodedBytes:runtime.reduce((s,r)=>s+r.bytes,0),theoreticalRGBABytes:runtime.reduce((s,r)=>s+r.width*r.height*4,0),runtime,unlinkedRuntime:runtime.filter(r=>!r.metadataRecords.length).map(r=>r.src)};
+writeFileSync(process.argv[2]??'C:/Users/Administrator/AppData/Local/Temp/geoguard-final-source-audit.json',JSON.stringify(output,null,2));
+console.log(JSON.stringify({uniquePNGs:output.uniquePNGs,encodedBytes:output.encodedBytes,theoreticalRGBABytes:output.theoreticalRGBABytes,unlinkedRuntime:output.unlinkedRuntime}));

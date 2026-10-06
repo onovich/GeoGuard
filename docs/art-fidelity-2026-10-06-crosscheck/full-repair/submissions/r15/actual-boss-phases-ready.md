@@ -1,0 +1,3 @@
+# R15N actual Boss phase candidate
+
+Visible actual-boss-phases-runtime.html; real AI windup/attack/recover samples, actual source keys/root. Diagnosis: source poseMapping recover=neutral meant approved OPEN body was never selected on real vulnerable recovery. originalPixels now selects source OPEN only when actual boss recovery and actual states.open (damageTakenMultiplier>1); actual DTO/actionMode/logic stays unchanged. Non-vulnerable recovery remains neutral. Unobserved attack mode is reported honestly, not forced. All17 source identity mappings must be reviewed; this entry selects real base encounters including TWINS two bodies. Declared high-HP observer scope retained from95 QA, no normal reachability claim.

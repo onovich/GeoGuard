@@ -1,0 +1,7 @@
+# R16 r06 minimal original-layer candidate
+
+The new rigid-neck swivel sources remain rejected/unregistered experiments; not used in this candidate. Reuses R16 r03 approved soft body/patch/feet and rigid head PNGs. Original commands now continuously move the high head to the left for left-down rather than keeping it on the right while its long muzzle points back across neck. During the narrow right-to-left downward sweep the neck naturally bends forward; eye target never moves below y=-80 source units, belly/sole pixels remain fixed. It does not rotate whole body or head around a low circular joint. Head/weapon pixels are rigid at exact axis; attack remains neutral-derived.
+
+Target x = side*cos(a)+perpendicular*sin(a)-300*max(0,-cos(a))*max(0,sin(a)). Target y = -headHeight+(headHeight-80)*exp(-((a-100deg)/18deg)^2) for down hemisphere. Angles normalize before evaluation. These are explicit source transforms, not new drawn contours. 7200 angle mesh samples minimum positive area ratio .14182933117, zero nonpositive triangles.
+
+Entry continuous-parts-runtime.html now includes full lower sector×4poses at64.17/90/95/100/108/112.5/115/125/135/157.5/180 and native slow sweep. continuous-shot-runtime.html sameactualoffense with long image forward-tail anchor retained. Temp fixed-scale source preview inspected; actual GPU/offense visual remains root approval. Possible forehead lowering/neck exaggeration at95–110 is explicitly the aesthetic question, not claimed passed. No build/dist overwrite.

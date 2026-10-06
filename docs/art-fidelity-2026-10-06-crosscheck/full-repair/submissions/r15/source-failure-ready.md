@@ -1,0 +1,9 @@
+# R15C actual failure-stop verification READY
+
+`actual-game-failure-runtime.html` renders the actual GameScreen with its actual hook/RAF and real CSS. Click the real start CTA, then the declared QA fault button. It decodes a deliberately missing PNG through the actual UI source service and observes the production registry/update gate via the existing **read-only** snapshot. It does not invoke the manual clock bridge, alter HP/money, or directly pause. The DOM receipt records real simulation time, entity positions/HP/timer, projectile lifetime, and art state at +100ms/+500ms/+2000ms. Fatal art diagnostics must be visible and simulation values must remain fixed after failure. Browser approval remains pending.
+
+The additional registered-body runtime failure branch identified by root is now fatal and visible: body false/throw/retired failure and anchor exceptions join the current diagnostic; world method false/exception also becomes fatal, including background/overlay/item instead of only hazards. `callArt` exception marks registry failed, so the next actual hook update uses the already-existing readiness gate. No character or ornamental fallback is drawn. Exact functional hazard geometry may still draw during the failing frame before the full-screen diagnostic replaces it.
+
+Two focused integration tests pass: registered body false/throw with its asset present, and non-hazard background/overlay exceptions. They exercise actual drawStickerScene/callArt and require fatal state plus user-visible diagnosis. These tests do not replace the real hook/RAF browser entry above. No build/dist overwrite occurred.
+
+R15B remains returned: AA texture seams have been changed to a two-times-source composition with shared-edge coverage and one final source-image sample, but not visually approved. Direction-boundary jumps are still OPEN; no claim of continuous source-angle switching. Full remaining scope stays OPEN.

@@ -1,0 +1,3 @@
+import {originalContinuousCandidateData as data} from 'file:///D:/WebProjects/GeoGuard/src/view/art/characters/originalContinuousCandidateData.js';
+import fs from 'node:fs';import assert from 'node:assert/strict';
+for(const [id,d] of Object.entries(data)){const file='D:/WebProjects/GeoGuard/public/art/original/v1/characters/'+id.split(':')[1].toLowerCase()+'/continuous-parts-candidate/source-record.json';const r=JSON.parse(fs.readFileSync(file));assert.deepEqual(r.runtimeRegistration,d);console.log(JSON.stringify({id,registrationExact:true,parts:d.parts.length,runtimeConsumer:r.runtimeConsumer}));}

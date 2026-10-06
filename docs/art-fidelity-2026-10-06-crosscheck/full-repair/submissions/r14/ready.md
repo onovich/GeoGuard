@@ -1,0 +1,11 @@
+# R14 independent READY — not overall completion
+
+## Skill re-audit entry (dev)
+`../r12/skill-family-runtime.html`: real-stage labels/N/A retained; selected-cast attribution now includes pre-execute windup token, actor keys/domain+UID, real childKeys success events, hazard/wave source origins and mechanism-produced target-state changes. Full scalar before/after direct cast recipient evidence and timed status event traces. Each cell has applicable/conditionNotMet/observedSource/MISSING_APPLICABLE_SOURCE and explicit functionalGeometryException. Scene-only calls never become selected-cast hits. Conditions not met remain unvalidated, not passed. QA child callbacks now mirror production captureBirths with boss source, rather than changing correct production art.
+
+## Deployment/source error closure
+Seven `public/` runtime prefixes removed; filesystem provenance still points at public correctly. tests/art-source-urls.test.js checks all runtime relative URLs, public PNG presence/dimensions, base prefix exactly once, built dist path presence. `preview-source-decode.json`:318 actual /GeoGuard/ preview HTTP PNG full pixel decodes, not gameplay/browser memory claim. Worker preview4174/GeoGuard remains available; root has separate4294 snapshot. No further build until root release.
+
+UI `uiSourceAssets.js` preloads real skin/title/symbol/frame/icon source paths. originalSkin observes PNG decode, OriginalArt/StickerSymbol/CharacterIcon image errors or missing bindings report a global plain-text resource diagnostic; registry becomes failed and existing update pause gate applies. `ui-source-failure-runtime.html?case=title|skin|icon|symbol` exercises actual UI consumers with deliberate bad resources/bindings, not deletion of accepted sources. Browser negative tests pending. World single-key failure cases already root locally passed; late unknown source keys also mark fatal. Hazard unsupported/error keeps only exact functional fallback while source failure is explicit, not silently successful. `callArt` boolean false/null is now actually failure.
+
+Full remaining table is remaining-and-order.md. r13 joining candidates remain unapproved and not registered in production. Source-specific shaft/neck artifact repair ongoing. Existing source/static subitems are not resubmitted as complete gameplay.

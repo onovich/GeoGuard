@@ -1,0 +1,11 @@
+# R15B local runtime review READY — not overall approval
+
+Entry: `freeaim-source-runtime.html` (existing Vite dev server). Select SNIPER or RAIL, generate the contact. It uses the actual production character module and actual presentation actor DTO, then explicitly adapts pose/aim for this source review. Every source-heading boundary is sampled on both sides, plus 19.82°, 64.17° and -161.57°. Three poses retain a fixed referenceRoot and identical source scale. Real birth/first trajectory stays in `../r12/shot-runtime.html`; this page does not replace it.
+
+The rejected eight-column texture approximation was replaced by 16×16 local soft-body texture cells; rigid head and fixed feet are whole affine strips. Original PNG pixels supply all triangles. Alpha-support coverage is cached once per image/grid and skips only empty cells with a one-source-pixel margin. Rendering and measured bounds use the same piecewise-affine map and include rigid attachments. Receipts explicitly say `original-source-texture-remap` and record residual/grid, rather than untouched crop.
+
+`actual-residual-alpha-jacobian.json` checks both actual nearest-heading residual endpoints for all 48 registered pose/direction frames. The analytic determinant on alpha>12 pixels is positive: minimum 0.0814671671. Because its determinant is linear in residual, these endpoint checks cover the intermediate residual values for that analytic map. The previously reported conservative +/-0.535 assumed the same residual for every heading; actual ranges are source-dependent (largest absolute residual 0.5357288139).
+
+The 16×16 actual texture triangles at both true endpoints intersecting actual alpha have no negative/near-zero (<0.05) determinant ratios (`grid16-low-visible-triangles.json` is empty). This is a local no-fold preflight, **not a proof of global non-overlap or a visual approval**. Extreme actual images still require inspection for seams, doubled silhouette, body distortion and continuity. Full density performance also remains open; no FPS/memory promise is inferred from this preflight.
+
+Three focused head/shaft/sole/texture-map/hero-facing tests pass. No build/dist overwrite. Remaining eight-group scope remains OPEN; R15A right-facing declared 48-action contact was independently approved by root and is not resubmitted as real combat proof.

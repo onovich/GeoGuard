@@ -8,6 +8,7 @@ import StatusBanner from '../components/StatusBanner';
 import TowerContextMenu from '../components/TowerContextMenu';
 import WaveRewardOverlay from '../components/WaveRewardOverlay';
 import PauseOverlay from '../components/PauseOverlay.jsx';
+import {OriginalAssetNotice} from '../components/ui.jsx';
 import useGeoGuardGame from '../../logic/hooks/useGeoGuardGame';
 
 export default function GameScreen() {
@@ -68,6 +69,7 @@ export default function GameScreen() {
 
   return (
     <div className="relative w-full h-screen overflow-hidden select-none touch-none bg-[#FFF9EF] font-sans">
+      <OriginalAssetNotice />
       <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full block" />
       <GameHud
         gameState={gameState}
@@ -111,7 +113,7 @@ export default function GameScreen() {
       />
       <BuildBar gameState={gameState} money={money} dragTowerId={dragTowerId} beginTowerDrag={beginTowerDrag} towerTypes={towerTypes} setBuildBarRect={setBuildBarRect} openBlueprintContextMenu={openBlueprintContextMenu} />
       <TowerContextMenu menu={towerContextMenu} applyTowerContextAction={applyTowerContextAction} closeTowerContextMenu={closeTowerContextMenu} />
-      <WaveRewardOverlay rewardState={rewardState} applyRewardChoice={applyRewardChoice} />
+      <WaveRewardOverlay rewardState={rewardState} applyRewardChoice={applyRewardChoice} towerTypes={towerTypes} />
       <OverlayScreen gameState={gameState} time={time} currentWave={currentWave} initGame={initGame} />
       <PlaytestExport gameState={gameState} exportPlaytest={exportPlaytest} closePlaytestExport={closePlaytestExport} exportPreviousPlaytest={exportPreviousPlaytest} />
       <PauseOverlay visible={paused && gameState === 'PLAYING' && !rewardState.active} onResume={togglePause} />

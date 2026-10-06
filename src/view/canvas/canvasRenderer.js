@@ -1337,27 +1337,17 @@ const drawLegacyGameScene = (ctx, canvas, { state, getTowerById, getDebugDragEnt
     }
   };
 
-export const drawGameScene = (ctx, canvas, options) => {
-  const fallbackBody = (context, entity, domain) => {
-    if (domain === 'tower') drawTowerShape(context, entity, entity.x, entity.y, entity.color);
-    else if (domain === 'boss') drawBossBody(context, entity);
-    else if (domain === 'hero') {
-      context.fillStyle = COLORS.player; context.beginPath();
-      context.arc(entity.x, entity.y, entity.radius, 0, Math.PI * 2); context.fill();
-      context.strokeStyle = COLORS.playerStroke; context.lineWidth = 3; context.stroke();
-    } else {
-      context.fillStyle = entity.color;
-      drawRoundRect(context, entity.x - entity.radius, entity.y - entity.radius, entity.radius * 2, entity.radius * 2, 5);
-      context.fill();
-    }
-  };
-  let rendered = false;
-  ctx.save();
-  try { rendered = drawStickerScene(ctx, canvas, { ...options, fallbackBody }); }
-  catch (error) {
-    const errors = options.art?.registry?.drawErrors;
-    const message = `stickerScene: ${error?.message ?? error}`;
-    if (errors && !errors.includes(message) && errors.length < 16) errors.push(message);
-  } finally { ctx.restore(); }
-  if (!rendered) drawLegacyGameScene(ctx, canvas, options);
+// Historical render helpers above are retained for archived comparisons only.
+// The player entry point never invokes them on missing/failed original assets.
+export const drawGameScene = (ctx,canvas,options) => {
+ let rendered=false;ctx.save();
+ try{rendered=drawStickerScene(ctx,canvas,options)}
+ catch(error){const errors=options.art?.registry?.drawErrors,message=`stickerScene: ${error?.message??error}`;if(errors&&!errors.includes(message)&&errors.length<16)errors.push(message)}
+ finally{ctx.restore()}
+ if(!rendered){
+  const dpr=globalThis.window?.devicePixelRatio||1;
+  ctx.save();ctx.fillStyle='#FFF9EF';ctx.fillRect(0,0,canvas.width/dpr,canvas.height/dpr);
+  ctx.fillStyle='#4B281C';ctx.font='16px system-ui, sans-serif';ctx.textAlign='center';
+  ctx.fillText('原画渲染异常，请刷新重试',canvas.width/dpr/2,canvas.height/dpr/2);ctx.restore();
+ }
 };

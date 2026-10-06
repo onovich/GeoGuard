@@ -1,0 +1,11 @@
+# R15E qualified heal/armor READY — local timing scope
+
+Entry: heal-armor-runtime.html. Select each of two cases and Generate. Actual exported behavior/AI/timers and production drawStickerScene source receipts; no handcrafted rendering. Complete raw per-sample JSON remains inline, not deeply nested tool summaries.
+
+MEDIC: declared initial TANK injury68/80 is a qualification precondition, not normal gameplay evidence. Actual healAura amount6/range118 increments health during real1/60 behavior updates; capture after1second and2seconds, then declared recipient relocation300 units outside source range and one true behavior update. Healing source eligibility/source removal is inspected, no HP writes after initial seed. Full-health receiver remains eligible per real behavior and current presentation contract; do not claim aura clears merely on full HP.
+
+Armor: true COMMANDER phase1 observer AI reaches shieldPulse. Three normal live TANKs are declared placed at actual windup within qualification radius (otherwise initial recipients chase player and leave range). Actual cast UID6/7/8 shield18, armoredTimer3.9833, natural midpoint and242steps later armor0 while shield18 remains. Independent engine preflight confirms these values. Source world:armor must appear/clear separately from persistent world:shield. This avoids pretending shield lifetime equals four-second armor timer.
+
+Speed audit: production logic has no speedBoostTimer/speedBuffTimer consumers. Actual speed changes are encounter template multipliers and twin survivor enrage baseSpeed*=1.12 (bossCombatRuntime.js:31), not a timed recipient buff. Presentation currently has no speed-buff ornamental source branch to remove. The real twin enrage timing/appearance remains separately OPEN; no nonexistent gameplay buff is added to satisfy a label.
+
+remaining-and-order.md updated with R14 all95 applicable-source, R15A rightward480 samples, R15C actual update-stop, R15D freeze/refund and normal green-leaf paid build local approvals. Eight broad groups remain OPEN, especially direction jump/freeaim, normal reward chain, density/performance and final source audit. No build/dist overwrite. Request short full-workspace freeze when parent is ready to review these two cases; worker will explicitly confirm before stopping writes.

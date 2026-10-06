@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { dist } from '../engine/gameMath';
 import { getWorldView, screenToWorld } from '../../view/art/integration/worldCamera.js';
 
@@ -49,6 +49,7 @@ export default function useCanvasGameLoop({
   onFrameTiming,
   drawScene,
 }) {
+  const profileFramesRef=useRef([]);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -195,6 +196,10 @@ export default function useCanvasGameLoop({
     };
 
     let animationFrameId;
+    // Explicit DEV-only read-only profiling; never changes simulation or input.
+    const profileEnabled=import.meta.env.DEV&&new URLSearchParams(window.location.search).get('artprofile')==='1';
+    const profileFrames=profileFramesRef.current,profileRead=()=>profileFrames.map(frame=>({...frame}));
+    if(profileEnabled)window.__GEOGUARD_ART_PROFILE__=profileRead;
     const clearInput = () => {
       for (const key of Object.keys(game.current.keys)) game.current.keys[key] = false;
       game.current.joystick.active = false;
@@ -216,8 +221,12 @@ export default function useCanvasGameLoop({
       const rawDt = Math.max(0, (timestamp - game.current.lastTime) / 1000);
       const dt = Math.min(0.05, rawDt);
       game.current.lastTime = timestamp;
-      if (gameState === 'PLAYING' && !paused && !rewardActive && !document.hidden && (shouldAutomaticallyUpdate?.() ?? true)) { onFrameTiming?.(rawDt); update(dt); }
+      const active=gameState==='PLAYING'&&!paused&&!rewardActive&&!document.hidden&&(shouldAutomaticallyUpdate?.()??true);
+      const updateStart=profileEnabled?performance.now():0;
+      if (active) { onFrameTiming?.(rawDt); update(dt); }
+      const updateMs=profileEnabled?performance.now()-updateStart:0,drawStart=profileEnabled?performance.now():0;
       drawScene(ctx, canvas);
+      if(profileEnabled){const state=game.current;profileFrames.push({timestamp,rawDt,active,hidden:document.hidden,gameState,paused,rewardActive,updateMs,drawMs:performance.now()-drawStart,time:state.gameTime,enemies:state.enemies.length,towers:state.towers.length,projectiles:state.projectiles.length,particles:state.particles.length,hazards:state.hazards.length,hp:state.player.hp,money:state.money});if(profileFrames.length>1800)profileFrames.shift();}
       animationFrameId = window.requestAnimationFrame(loop);
     };
 
@@ -253,6 +262,7 @@ export default function useCanvasGameLoop({
       window.removeEventListener('touchend', handlePointerUp);
       window.removeEventListener('touchcancel', clearInput);
       window.cancelAnimationFrame(animationFrameId);
+      if(profileEnabled&&window.__GEOGUARD_ART_PROFILE__===profileRead)delete window.__GEOGUARD_ART_PROFILE__;
     };
   }, [gameState, rewardActive, paused]);
 }

@@ -1,0 +1,5 @@
+# Exact cached-support numerical checkpoint
+
+Independent actual48 source pose/direction frames × actual source-heading residual endpoints plus0 =144 cases. PNG alpha>12 row-envelope extraction uses Pillow. Python uncached clips every row pixel-envelope rectangle against each runtime texture triangle and transforms all resulting vertices; JS caches each triangle clipped convex support then projects it. Maximum coordinate difference1.1368683772161603e-13. This proves equality for the stated source-alpha row-envelope support model, not interior transparency contour or antialias fringe. Real image/body scale and collision remain separately inspected/unchanged.
+
+Ground source background now reports optional `onSourceDependency`, distinct from `onSourceDraw`; five registered PNG dependencies cannot imply every viewport visibly paints each grass/patch kind. Cached-source composition retains actual source pixels. No ordinary source-paint counter claims are emitted for whole cached ground surface.

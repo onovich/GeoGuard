@@ -1,6 +1,7 @@
 import { COLORS } from '../../data/gameConfig.js';
 import { findNearestTarget } from './gameRules.js';
 import { dist } from './gameMath.js';
+import {resolveProjectileBirth} from './projectileBirth.js';
 
 export const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
   x,
@@ -22,6 +23,7 @@ export const createProjectile = (x, y, angle, speed, damage, extras = {}) => ({
   sourceArtId: extras.sourceArtId ?? null,
   sourceUid: extras.sourceUid ?? null,
   shotIndex: extras.shotIndex ?? 0,
+  ...(extras.birthOrigin?{birthOrigin:extras.birthOrigin,sourceAimAngle:extras.sourceAimAngle}:{}),
 });
 
 export const getTowerFireRateFactor = (state, tower) => {
@@ -34,7 +36,7 @@ export const getTowerFireRateFactor = (state, tower) => {
   return factor;
 };
 
-export const updatePlayerOffenseRuntime = ({ state, dt }) => {
+export const updatePlayerOffenseRuntime = ({ state, dt, resolveProjectileOrigin }) => {
   state.player.lastShoot += dt;
   if (state.player.lastShoot < state.player.shootCd) {
     return;
@@ -46,11 +48,13 @@ export const updatePlayerOffenseRuntime = ({ state, dt }) => {
   }
 
   const angle = Math.atan2(target.y - state.player.y, target.x - state.player.x);
-  state.projectiles.push(createProjectile(state.player.x, state.player.y, angle, 400, state.player.damage, { kind: 'basic', radius: 4, sourceArtId: 'hero:PLAYER', sourceUid: 'player', shotIndex: 0 }));
+  const birth=resolveProjectileBirth({owner:state.player,state,target,angle,radius:4,sourceArtId:'hero:PLAYER',resolveProjectileOrigin});
+  const projectileAngle=resolveProjectileOrigin?Math.atan2(target.y-birth.point.y,target.x-birth.point.x):angle;
+  state.projectiles.push(createProjectile(birth.point.x, birth.point.y, projectileAngle, 400, state.player.damage, { kind: 'basic', radius: 4, sourceArtId: 'hero:PLAYER', sourceUid: 'player', shotIndex: 0,birthOrigin:birth.metadata,sourceAimAngle:birth.metadata?.sourceAimAngle??angle }));
   state.player.lastShoot = 0;
 };
 
-export const updateTowerOffenseRuntime = ({ state, dt, spawnParticle }) => {
+export const updateTowerOffenseRuntime = ({ state, dt, spawnParticle, resolveProjectileOrigin }) => {
   for (let towerIndex = state.towers.length - 1; towerIndex >= 0; towerIndex -= 1) {
     const tower = state.towers[towerIndex];
     tower.frozenTimer = Math.max(0, (tower.frozenTimer ?? 0) - dt);
@@ -69,8 +73,10 @@ export const updateTowerOffenseRuntime = ({ state, dt, spawnParticle }) => {
         for (let index = 0; index < burstCount; index += 1) {
           const offset = burstCount === 1 ? 0 : (index - (burstCount - 1) / 2) * (tower.spread ?? 0.12);
           const projectileKind = tower.splash ? 'cannon' : tower.pierce ? 'sniper' : 'basic';
+          const birth=resolveProjectileBirth({owner:tower,state,target,angle:baseAngle,shotIndex:index,radius:tower.splash?7:tower.pierce?3:4,sourceArtId:`tower:${tower.id}`,resolveProjectileOrigin});
+          const shotAngle=(resolveProjectileOrigin?Math.atan2(target.y-birth.point.y,target.x-birth.point.x):baseAngle)+offset;
           state.projectiles.push(
-            createProjectile(tower.x, tower.y, baseAngle + offset, tower.projectileSpeed ?? 500, tower.damage, {
+            createProjectile(birth.point.x, birth.point.y, shotAngle, tower.projectileSpeed ?? 500, tower.damage, {
               splash: tower.splash,
               pierce: tower.pierce || 0,
               life: tower.projectileLife ?? 2,
@@ -83,6 +89,7 @@ export const updateTowerOffenseRuntime = ({ state, dt, spawnParticle }) => {
               sourceArtId: `tower:${tower.id}`,
               sourceUid: tower.uid,
               shotIndex: index,
+              birthOrigin:birth.metadata,sourceAimAngle:birth.metadata?.sourceAimAngle??baseAngle,
             })
           );
         }

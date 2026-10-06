@@ -159,7 +159,7 @@ export default function useGeoGuardGame() {
     waveMessageTimeoutRef.current = window.setTimeout(() => setWaveMsg(null), duration);
   };
 
-  const spawnParticle = (x, y, color, count, speedBase = 50) => {
+  const spawnParticle = (x, y, color, count, speedBase = 50, style = null) => {
     for (let index = 0; index < count; index += 1) {
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * speedBase + 20;
@@ -171,6 +171,7 @@ export default function useGeoGuardGame() {
         life: 1,
         maxLife: rand(0.3, 0.6),
         color,
+        ...(style ? { style } : {}),
         size: rand(2, 4),
       });
     }
@@ -562,7 +563,7 @@ export default function useGeoGuardGame() {
     );
     telemetry.current.syncEntities(game.current);
     void playCue('tower_place');
-    spawnParticle(commitPlan.worldPoint.x, commitPlan.worldPoint.y, tower.color, 15, 60);
+    spawnParticle(commitPlan.worldPoint.x, commitPlan.worldPoint.y, tower.color, 15, 60, "leaf");
     clearDragPlacement();
   };
 
@@ -879,7 +880,7 @@ export default function useGeoGuardGame() {
   };
 
   const update = (dt) => {
-    if (paused || rewardState.active) return;
+    if (paused || rewardState.active || artRef.current.registry.status !== 'ready' || artRef.current.registry.fatalSourceMissing) return;
     const state = game.current;
     const previousPosition = { x: state.player.x, y: state.player.y };
     damageContext = 'contact-or-ability';
@@ -917,8 +918,9 @@ export default function useGeoGuardGame() {
     state.camera.y += (state.player.y - state.camera.y) * 5 * dt;
 
     const firstNewProjectile = state.projectiles.length;
-    updatePlayerOffenseRuntime({ state, dt });
-    updateTowerOffenseRuntime({ state, dt, spawnParticle });
+    const resolveProjectileOrigin=request=>artRef.current.runtime.resolveProjectileOrigin(state,request,artRef.current.registry.characters.module?.getCharacterAnchors);
+    updatePlayerOffenseRuntime({ state, dt, resolveProjectileOrigin });
+    updateTowerOffenseRuntime({ state, dt, spawnParticle, resolveProjectileOrigin });
     artRef.current.runtime.captureShots(state, firstNewProjectile);
 
     const waveTick = advanceWaveTickRuntime({ state, dt });

@@ -1,0 +1,5 @@
+# Followup overlays r02
+
+Parent returned mixed reward567.5px height and unneeded title/subtitle minimum slots. Replaced internal card flex columns with7 shared CSS grid-subgrid rows (badge/title/object/primary benefit/rules/stats/CTA). Title height now follows actual largest title in row, never fixed two empty lines. Objects align even when real long titles wrap. Upgrade level and cost conversion now one primary benefit block; no separate32px cost paragraph. All fields remain unchanged. Rules and stats auto row sizes follow actual content, CTA shared last row. One/two/three actual count and420/580/768 shells preserved.
+
+Canonical tower identity64px and two short static strokes retained. Body14px/20px, primary16px/24px, CTA16px/48px untouched. Only WaveRewardOverlay.jsx changed. ui-design-system4/4 and build passed. Modern desktop CSS subgrid is required; parent current Chromium browser should verify computed rows, mixed/long/same-type heights and1/2 quantity. No unmeasured visual-pass claim.

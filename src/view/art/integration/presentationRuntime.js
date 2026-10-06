@@ -2,7 +2,7 @@ import { ART_SCHEMA_VERSION, clamp01, finite, freezeArtDto, getActorDomain, getA
 
 const eventLife = { shot: 0.12, hit: 0.18, defeat: 0.24, 'summon-success': 0.32, 'split-success': 0.32, refund: 0.5 };
 const copyPoint = entity => ({ x: finite(entity.x), y: finite(entity.y) });
-const facingFor = angle => Math.sin(angle) < -0.7 ? 'up' : Math.cos(angle) < 0 ? 'left' : 'right';
+const facingFor = angle => Math.sin(angle)<-.7?'up':Math.sin(angle)>.7?'down':Math.cos(angle)<0?'left':'right';
 
 // This object is owned by the view. Nothing is attached to a simulation entity.
 export const createPresentationRuntime = ({ getTowerFireRateFactor } = {}) => {
@@ -36,20 +36,22 @@ export const createPresentationRuntime = ({ getTowerFireRateFactor } = {}) => {
 
   const captureShots = safe((state, firstNewIndex) => {
     ensure(state);
-    const directions = new Map();
+    const directions = new Map(), sourceRegistrations=new Map();
     for (const projectile of state.projectiles.slice(firstNewIndex)) {
       if (!projectile.sourceArtId) continue;
       const sourceDomain = projectile.sourceArtId.startsWith('hero:') ? 'hero' : 'tower';
       const source = sourceDomain === 'hero' ? state.player : state.towers.find(tower => tower.uid === projectile.sourceUid);
       if (!source) continue;
       const sourceKey = keyFor(source, sourceDomain);
+      sourceRegistrations.set(sourceKey,projectile.birthOrigin);
       const angle = Math.atan2(projectile.vy, projectile.vx);
       const direction = directions.get(sourceKey) ?? { x: 0, y: 0 };
-      direction.x += projectile.vx; direction.y += projectile.vy; directions.set(sourceKey, direction);
+      const bodyAngle=projectile.sourceAimAngle??angle;
+      direction.x += Math.cos(bodyAngle); direction.y += Math.sin(bodyAngle); directions.set(sourceKey, direction);
       emit(state, 'shot', { sourceArtId: projectile.sourceArtId, sourceKey, position: copyPoint(projectile),
-        angle, shotIndex: projectile.shotIndex, projectileKind: projectile.kind, projectileKey: objectKey(projectile, 'projectile') });
+        angle, birthOrigin: projectile.birthOrigin ?? null, shotIndex: projectile.shotIndex, projectileKind: projectile.kind, projectileKey: objectKey(projectile, 'projectile') });
     }
-    for (const [key, direction] of directions) shots.set(key, { time: state.gameTime, angle: Math.atan2(direction.y, direction.x) });
+    for (const [key, direction] of directions) shots.set(key, { time: state.gameTime, angle: Math.atan2(direction.y, direction.x),sourceAimExact:sourceRegistrations.get(key)?.sourceAimExact??false,sourceFacing:sourceRegistrations.get(key)?.sourceFacing });
   });
   const captureBirths = safe((state, children, source = null) => {
     ensure(state);
@@ -117,7 +119,7 @@ export const createPresentationRuntime = ({ getTowerFireRateFactor } = {}) => {
     const distance = previous ? Math.hypot(entity.x - previous.x, entity.y - previous.y) : 0;
     const movementSpeed = elapsed > 0 ? distance / elapsed : previous?.movementSpeed ?? 0;
     let angle = shot?.angle ?? previous?.angle ?? 0;
-    if (actualDomain !== 'tower' && elapsed > 0 && distance > 0.01) angle = Math.atan2(entity.y - previous.y, entity.x - previous.x);
+    if (actualDomain !== 'tower' && elapsed > 0 && distance > 0.01 && !(actualDomain === 'hero' && shot && time - shot.time <= 0.16)) angle = Math.atan2(entity.y - previous.y, entity.x - previous.x);
     const bs = entity.bossState, target = bs?.lockedTarget;
     if (bs?.actionMode === 'windup' && target) angle = Math.atan2(target.y - entity.y, target.x - entity.x);
     const recentShot = shot && time - shot.time <= 0.16;
@@ -136,7 +138,7 @@ export const createPresentationRuntime = ({ getTowerFireRateFactor } = {}) => {
     return freezeArtDto({
       key, artId: getArtIdentity(entity, domain), domain: actualDomain,
       x: finite(entity.x), y: finite(entity.y), radius: finite(entity.radius, 12), referenceRadius: finite(entity.radius, 12),
-      facing: facingFor(angle), aimAngle: angle, pose, poseTime: Math.max(0, time - poseStart),
+      facing: (actualDomain==='tower'||recentShot)?shot?.sourceFacing??facingFor(angle):facingFor(angle), aimAngle: angle, sourceCandidateContinuousParts:entity.artContinuousCandidate===true, sourceAimExact:shot?.sourceAimExact??false, pose, poseTime: Math.max(0, time - poseStart),
       poseProgress: bs?.actionMode === 'windup' ? clamp01(1 - bs.actionTimer / Math.max(0.001, bs.windupDuration)) :
         recentShot ? clamp01((time - shot.time) / 0.16) : recentTrigger ? clamp01((time - triggeredAt) / 0.2) :
           pose === 'attack' ? clamp01((time - poseStart) / 0.18) : 0,
@@ -224,6 +226,26 @@ export const createPresentationRuntime = ({ getTowerFireRateFactor } = {}) => {
       mechanicKind: enemyByUid.get(hazard.ownerMechanicUid)?.mechanic?.kind ?? null })),
       actorForGhost: (entity, domain) => actorFor(state, entity, domain, true) };
   };
-  return { reset, safe, captureShots, captureBirths, captureDefeat, captureHit, beginMechanicStep, endMechanicStep, captureHazardPulses, prepare,
+  const resolveProjectileOrigin=(state,request,getAnchors)=>{
+    if(typeof getAnchors!=='function')return null;
+    ensure(state);const domain=request.sourceArtId.startsWith('hero:')?'hero':'tower';
+    const facing=request.sourceFacingOverride??facingFor(request.angle),exact=domain==='tower';
+    let angle=request.angle;
+    const sample=aim=>getAnchors({...actorFor(state,request.source,domain,true),pose:'attack',poseTime:0,poseProgress:0,facing,aimAngle:aim,sourceAimExact:exact},{time:state.gameTime})?.muzzles??[];
+    let muzzles=sample(angle);
+    if(!muzzles.length)return domain==='hero'?{x:request.source.x,y:request.source.y,kind:'logical-emitter',measurement:'source identity has no anatomical muzzle; unchanged independent centre emitter'}:null;
+    if(exact&&request.target&&!request.acceptedBirthAim){
+      const pivot=muzzles[0].launcherPivot,axis=muzzles[0].sourceBoreAxisAngle??muzzles[0].imageXAxisAngle;
+      const aimM=muzzles.reduce((sum,p)=>({x:sum.x+p.x/muzzles.length,y:sum.y+p.y/muzzles.length}),{x:0,y:0});
+      if(pivot&&Number.isFinite(axis)){
+        const b=-(aimM.x-pivot.x)*Math.sin(axis)+(aimM.y-pivot.y)*Math.cos(axis);
+        const tx=request.target.x-pivot.x,ty=request.target.y-pivot.y,r=Math.hypot(tx,ty);
+        if(r>Math.abs(b)+.01){angle=Math.atan2(ty,tx)-Math.asin(b/r);muzzles=sample(angle)}
+      }
+    }
+    const m=muzzles[request.shotIndex%muzzles.length];
+    return{x:m.x,y:m.y,kind:'source-muzzle',imageXAxisAngle:m.imageXAxisAngle,sourceBoreAxisAngle:m.sourceBoreAxisAngle??m.imageXAxisAngle,sourceAimAngle:angle,sourceFacing:facing,sourceAimExact:exact,measurement:m.measurement};
+  };
+  return { reset, safe, resolveProjectileOrigin, captureShots, captureBirths, captureDefeat, captureHit, beginMechanicStep, endMechanicStep, captureHazardPulses, prepare,
     inspect: () => ({ epoch, events: events.map(event => ({ ...event })), actors: lastActors, retired: lastRetired, errors: [...errors], actorCacheSize: poses.size }) };
 };

@@ -1,0 +1,5 @@
+# R15G status face-coverage candidate
+
+Existing `heal-armor-runtime.html` armor case reuses actual qualified cast recipient setup and original source pixels. This revision changes only source placement/opacity, no timers or gameplay. Approved armor source is two arch strokes. Previously center=bounds.top+4 and height=.48*width put the lower arch over upper face; now center=bounds.top-.16*width, preserving source aspect and placing its lower edge only .08*width below outline top. Shield source max opacity decreases .90→.60 so neighboring actual shield effects retain recognizable outline while overlapping less opaquely. No new graphics or removal of status semantics.
+
+Please inspect armor cast/midpoint source-face result with actual three recipients (no need redo timer approval). This is only a dense shield+armor coverage candidate; ice/multiple hazard/particle budget and full battle density remain open. No source PNG/SHA changed, only approved source transform. remaining-and-order includes R15E and R15F exact local approvals, no overall closure.

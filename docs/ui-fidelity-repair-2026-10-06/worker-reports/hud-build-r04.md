@@ -1,0 +1,2 @@
+# r04 教学与浮层互斥
+通过表现组件CustomEvent geoguard:build-description短暂避让：hover/focus说明存在时隐藏教学；说明消失恢复原教学，已经关闭的不复活。保留showControlsHint一次关闭、倒计时和全部逻辑。没有抬高教学遮住场中央英雄，也没有删tooltip。BuildBar组件effect在scroll/drag/gameState变化或unmount清理false，GameHud监听cleanup移除。仅2授权组件，无逻辑层改动。需主审focus/hover及关闭后重复focus回归。

@@ -122,7 +122,7 @@ export const ENEMY_RIGS = {
     variants: { hop: { shapes: splinterHop, joints: { 'droplet-tip': [142, 29], eye: [146, 161] } } }, poseVariants: { attack: 'hop' },
   },
   'enemy:SHIELD': {
-    root: [128, 232], center: [130, 153], collisionRadius: 98, referenceRadius: 12, softPivot: [128, 232],
+    root: [128, 232], center: [128, 153], collisionRadius: 98, referenceRadius: 12, softPivot: [128, 232],
     shapes: [...shieldFeet, shieldBody, shieldFist, ...shieldEye, shieldLobe],
     joints: { 'foot-left': [100, 232], 'foot-right': [155, 232], 'soft-shield-lobe': [145, 144], 'shield-tip': [143, 54], 'rear-fist': [78, 149], 'eye-anchor': [119, 134] },
     variants: { guard: { shapes: shieldGuard, joints: { 'foot-left': [91, 232], 'foot-right': [155, 232], 'soft-shield-lobe': [148, 144], 'shield-tip': [151, 55], 'rear-fist': [78, 149], 'eye-anchor': [119, 134] } } }, poseVariants: { attack: 'guard' },

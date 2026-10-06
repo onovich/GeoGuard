@@ -1,99 +1,50 @@
+import {isSafeCentreEmission,recordSourceSuppression} from './sourceBirthVisibility.js';
 import { P, clamp, finitePoint, number, isolated, lifeAlpha, handled, unsupported, missing } from './palette.js';
-import { vector, ellipse, segment } from './vectors.js';
+import { sourceImage } from './sourcePixels.js';
 import { getShotStyle } from './projectiles.js';
 
 function flashAt(ctx,x,y,angle,kind,source,assets,scale=1) {
   const style=getShotStyle(source,kind) ?? getShotStyle(null,'basic');
-  ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.scale((kind==='cannon'?11:kind==='sniper'?9:7)*scale,(kind==='cannon'?11:kind==='sniper'?9:7)*scale);
-  vector(ctx,assets,kind==='sniper'?'star':'flash',source==='tower:FROST'?P.ice:P.honey,source==='tower:FROST'?P.iceEdge:P.ink,.08);
-  if(kind!=='sniper') ellipse(ctx,.73,0,.38,.28,source==='tower:FROST'?'#E6F5FF':'#FFE9B4');
-  ctx.restore();
+  const id=source??({basic:'tower:BASIC',cannon:'tower:CANNON',sniper:'tower:SNIPER'}[kind]??'tower:BASIC');
+  const image=assets?.originalEffects?.[id+'|flash'];if(!image)return null;
+  const width=(kind==='cannon'?22:kind==='sniper'?18:14)*scale,height=width*image.height/image.width;
+  ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.drawImage(image,0,-height/2,width,height);ctx.restore();
+  if(assets.onSourceDraw)try{assets.onSourceDraw({key:id+'|flash',mode:'image',context:assets.sourceContext??null,resource:image.src,x,y,width,height,angle,alpha:ctx.globalAlpha})}catch{}
   return style;
 }
 
+const chips=['chip-coral-a','chip-coral-b','chip-brown','chip-coral-c'];
+function chipKey(item) {
+  const text=String(item.key??item.id??item.style??'chip');
+  let hash=0;for(const character of text)hash=(hash*31+character.charCodeAt(0))>>>0;
+  return chips[hash%chips.length];
+}
 export function drawDrop(ctx,item,frame,assets) {
-  if(!finitePoint(item) || !(item.radius>0)) return unsupported;
-  isolated(ctx,lifeAlpha(item),()=>{
-    ctx.translate(item.x,item.y);ctx.scale(item.radius,item.radius);
-    vector(ctx,assets,'diamond',P.mint);
-    ctx.fillStyle='#88C9A8';ctx.beginPath();ctx.moveTo(0,-.78);ctx.lineTo(.59,0);ctx.lineTo(0,.7);ctx.fill();
-    segment(ctx,-.46,-.08,-.06,-.57,'#E5F7E8',.1);
-    vector(ctx,assets,'diamond',null,P.green,Math.max(.07,.65/item.radius));
-  });return handled;
+  if(!finitePoint(item)||!(item.radius>0))return unsupported;
+  // Every independent pickup retains its own exact position/value/lifecycle.
+  // A compact source sprite keeps dense loot subordinate to character silhouettes.
+  isolated(ctx,lifeAlpha(item)*.82,()=>sourceImage(ctx,assets,'ui:gem',item.x,item.y,item.radius*2*1.1));
+  return handled;
 }
-
 export function drawParticle(ctx,item,frame,assets) {
-  if(!finitePoint(item)) return unsupported;
+  if(!finitePoint(item))return unsupported;
   const size=Math.max(.5,number(item.data?.size,number(item.radius,2)));
-  isolated(ctx,lifeAlpha(item),()=>{
-    ctx.translate(item.x,item.y);ctx.rotate(number(item.angle,Math.atan2(number(item.data?.vy),number(item.data?.vx))));
-    ctx.scale(size*.85,size);
-    vector(ctx,assets,item.style==='leaf'?'leaf':'chip',item.style==='leaf'?P.mint:P.coral,frame?.quality==='reduced'?null:'#895344',.2);
-  });return handled;
+  const key=item.style==='leaf'?'particle-leaf':chipKey(item);
+  isolated(ctx,lifeAlpha(item),()=>sourceImage(ctx,assets,'world:'+key,item.x,item.y,size*1.7,undefined,number(item.angle,Math.atan2(number(item.data?.vy),number(item.data?.vx)))));
+  return handled;
 }
-
-function ring(ctx,x,y,r,color,width=1.7,fillAlpha=0) {
-  if(fillAlpha>0) {ctx.save();ctx.globalAlpha*=clamp(fillAlpha);ellipse(ctx,x,y,r,r,color);ctx.restore();}
-  ellipse(ctx,x,y,r,r,null,color,width);
-}
-
+function impactKey(t) {return t<.25?'impact-onset':t<.7?'impact-peak':'impact-fade';}
 export function drawImpactWave(ctx,item,frame,assets) {
-  if(!finitePoint(item) || !(item.radius>=0)) return unsupported;
-  const data=item.data??{}, r=item.radius;
-  isolated(ctx,lifeAlpha(item),()=>{
-    if(Array.isArray(data.dash))ctx.setLineDash(data.dash.filter(v=>Number.isFinite(v)&&v>=0).slice(0,12));
-    const color=item.sourceArtId ? getShotStyle(item.sourceArtId,data.kind)?.fill ?? P.honeyShade : P.honeyShade;
-    ring(ctx,item.x,item.y,r,color,Math.min(3,Math.max(1,number(data.lineWidth,1.7))),number(data.fillAlpha,.04));
-    ctx.setLineDash([]);
-    if(frame?.quality==='reduced') return;
-    const style=item.style ?? data.style;
-    if(style==='twinFinisher') {
-      ctx.save();ctx.translate(item.x,item.y);ctx.rotate(number(data.rotation));
-      for(let part=0;part<2;part++) {
-        ctx.beginPath();
-        for(let i=0;i<=32;i++) {
-          const a=part*Math.PI+i*Math.PI/32;
-          const x=Math.cos(a)*r*.78,y=Math.sin(a*2)*r*.24;
-          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-        }ctx.strokeStyle=part?P.lavender:P.mint;ctx.lineWidth=2;ctx.stroke();
-      }ctx.restore();
-    } else if(style==='dragonFinisher') {
-      for(let row=-1;row<=1;row++) {
-        ctx.beginPath();
-        for(let i=0;i<=24;i++) {const x=item.x-r*.7+i*r*1.4/24,y=item.y+Math.sin(i/24*Math.PI*2)*r*.1+row*r*.19;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}
-        ctx.strokeStyle=P.honeyShade;ctx.lineWidth=2;ctx.stroke();
-      }
-    } else if(style==='spiderFinisher' || style==='astrolabeFinisher') {
-      const nodes=style==='spiderFinisher'?7:8;
-      for(let i=0;i<nodes;i++) {
-        const a=i*Math.PI*2/nodes+number(data.rotation);
-        const x=item.x+Math.cos(a)*r*.78,y=item.y+Math.sin(a)*r*(style==='astrolabeFinisher'?.4:.78);
-        if(style==='spiderFinisher')segment(ctx,item.x,item.y,x,y,P.purple,1);
-        ellipse(ctx,x,y,2.1,2.1,style==='spiderFinisher'?P.lavender:P.ice,P.iceEdge,.8);
-      }
-    } else {
-      const count=Math.min(24,Math.max(0,Math.round(number(data.spokes))));
-      for(let i=0;i<count;i++) {
-        const a=i*Math.PI*2/count+number(data.rotation);
-        segment(ctx,item.x+Math.cos(a)*r*.55,item.y+Math.sin(a)*r*.55,item.x+Math.cos(a)*r*.88,item.y+Math.sin(a)*r*.88,color,1);
-      }
-    }
-  });return handled;
+  if(!finitePoint(item)||!(item.radius>=0))return unsupported;
+  const style=item.style??item.data?.style;
+  const accent={twinFinisher:'accent-twin',dragonFinisher:'accent-dragon',spiderFinisher:'accent-spider',astrolabeFinisher:'accent-astro'}[style];
+  const t=item.maxLife>0?1-clamp(item.life/item.maxLife):.5;
+  isolated(ctx,lifeAlpha(item),()=>sourceImage(ctx,assets,'world:'+(accent??impactKey(t)),item.x,item.y,Math.max(1,item.radius*2),undefined,number(item.data?.rotation)));
+  return handled;
 }
-
 function drawHit(ctx,x,y,kind,source,t,assets) {
-  const scale=.55+Math.sin(Math.PI*t)*.6;
-  if(kind==='sniper')flashAt(ctx,x-9*scale,y,0,'sniper',source,assets,scale);
-  else if(kind==='cannon') {
-    ring(ctx,x,y,7+12*t,P.mintShade,1.7,.06);
-    ctx.save();ctx.setLineDash([5,4]);ring(ctx,x,y,10+16*t,P.mint,1.3);ctx.restore();
-  } else {
-    for(let i=0;i<4;i++) {
-      const a=i*Math.PI/2,r=7*scale;
-      ctx.save();ctx.translate(x+Math.cos(a)*r,y+Math.sin(a)*r);ctx.rotate(a);ctx.scale(4.2*scale,2.4*scale);
-      vector(ctx,assets,'seed',P.honey,P.green,.2);ctx.restore();
-    }
-  }
+  const width=(kind==='cannon'?28:kind==='sniper'?20:16)*(.7+.3*Math.sin(Math.PI*t));
+  sourceImage(ctx,assets,'world:'+impactKey(t),x,y,width);
 }
 
 export function drawFeedback(ctx,item,frame,assets) {
@@ -107,6 +58,7 @@ export function drawFeedback(ctx,item,frame,assets) {
   if(age>=duration) return handled;
   const t=age/duration, alpha=Number.isFinite(item.alpha)||item.maxLife>0?lifeAlpha(item):1-t,source=item.sourceArtId??event.sourceArtId;
   const kind=event.projectileKind??getShotStyle(source)?.kind??'basic';
+  if(type==='shot'&&isSafeCentreEmission(event.birthOrigin)){recordSourceSuppression(assets,'flash',item,'safe centre is not anatomical aperture; actual hit feedback retained');return handled;}
   if(['summon-success','split-success'].includes(type) && !event.childKeys?.length) return missing;
   if(type==='refund' && !(event.amount>0)) return missing;
   isolated(ctx,alpha,()=>{
@@ -114,51 +66,40 @@ export function drawFeedback(ctx,item,frame,assets) {
     if(type==='shot') {
       const muzzles=item.anchors?.muzzles;
       const muzzle=muzzles?.length?muzzles[Math.max(0,number(event.shotIndex,item.shotIndex??0))%muzzles.length]:null;
-      const at=finitePoint(muzzle)?muzzle:position;
+      // A clamped near-field birth must never flash behind the blocking target.
+      // The shot owns its immutable accepted birth; subsequent pose motion cannot drag it.
+      const at=finitePoint(event.birthOrigin?.accepted)?event.birthOrigin.accepted:finitePoint(muzzle)?muzzle:position;
       flashAt(ctx,at.x,at.y,number(muzzle?.axisAngle,number(event.angle,item.angle??0)),kind,source,assets,.85+.15*Math.sin(t*Math.PI));
     } else if(type==='hit')drawHit(ctx,x,y,kind,source,t,assets);
     else if(type==='defeat') {
-      const count=frame?.quality==='reduced'?4:7;
+      // Presentation budget only: these are source chips, never independent entities.
+      const count=frame?.quality==='reduced'?2:3;
       for(let i=0;i<count;i++) {
-        const a=i*Math.PI*2/count,r=3+t*19;
-        ctx.save();ctx.translate(x+Math.cos(a)*r,y+Math.sin(a)*r);ctx.rotate(a);ctx.scale(2.3*(1-t*.4),3);
-        vector(ctx,assets,'chip',P.coral,'#895344',.2);ctx.restore();
+        const a=i*Math.PI*2/count,r=1+t*11;
+        sourceImage(ctx,assets,'world:'+chips[i],x+Math.cos(a)*r,y+Math.sin(a)*r,4.5*(1-t*.4),undefined,a);
       }
     } else if(type==='refund') {
-      // The actual amount is handled by HUD/floating text; no new pickup object.
-      ring(ctx,x,y,7+t*12,P.mintShade,1.6);
-      for(let i=0;i<4;i++) {const a=i*Math.PI/2;segment(ctx,x+Math.cos(a)*12,y+Math.sin(a)*12,x+Math.cos(a)*16,y+Math.sin(a)*16,P.green,1.5);}
+      // The actual amount remains dynamic; this creates no pickup or AI object.
+      sourceImage(ctx,assets,'ui:gem',x-15,y,12);
+      sourceImage(ctx,assets,'world:refund-rays',x+10,y,32,40);
+      ctx.save();ctx.fillStyle='#3F7659';ctx.font='bold 14px system-ui, sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('+'+event.amount,x+10,y);ctx.restore();
     } else {
-      ring(ctx,x,y,7+13*t,P.mintShade,2);
-      if(frame?.quality!=='reduced')for(let i=0;i<5;i++) {
-        const a=i*Math.PI*2/5,r=12+10*t;
-        ctx.save();ctx.translate(x+Math.cos(a)*r,y+Math.sin(a)*r);ctx.rotate(a);ctx.scale(1.8,3.2);
-        vector(ctx,assets,'leaf',P.mint);ctx.restore();
-      }
+      sourceImage(ctx,assets,type==='split-success'?'world:split-small':'world:summon',x,y,20+12*t);
     }
   });return handled;
 }
 
 export function drawLink(ctx,item,frame,assets) {
-  const from=item.data?.from ?? item, to=item.data?.to ?? {x:item.x2,y:item.y2};
+  const from=item.data?.from??item,to=item.data?.to??{x:item.x2,y:item.y2};
   if(!finitePoint(from)||!finitePoint(to))return unsupported;
   const style=item.style??item.data?.type;
-  const root=style==='root',target=['target','seal','reticle','windup'].includes(style);
   isolated(ctx,lifeAlpha(item)*.6,()=>{
-    if(root) {
+    if(style==='root') {
       const dx=to.x-from.x,dy=to.y-from.y,len=Math.hypot(dx,dy);
-      if(!len)return;
-      for(let side=-1;side<=1;side+=2) {
-        ctx.beginPath();
-        for(let i=0;i<=16;i++) {
-          const t=i/16,off=Math.sin(t*Math.PI*2)*4*side;
-          const x=from.x+dx*t-dy/len*off,y=from.y+dy*t+dx/len*off;
-          i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-        }ctx.strokeStyle=P.mintShade;ctx.lineWidth=1.5;ctx.stroke();
-      }
+      if(len>0)sourceImage(ctx,assets,'world:root-link',(from.x+to.x)/2,(from.y+to.y)/2,len,10,Math.atan2(dy,dx));
     } else {
-      ctx.setLineDash([4,5]);segment(ctx,from.x,from.y,to.x,to.y,target?P.coralShade:P.sage,1.2);
-      ctx.setLineDash([]);ellipse(ctx,to.x,to.y,5,5,null,target?P.coralShade:P.sage,1.2);
+      // Target acquisition has an actual destination reticle; no illustrative A/B arrow.
+      sourceImage(ctx,assets,'world:target-ring',to.x,to.y,18);
     }
   });return handled;
 }

@@ -1,10 +1,27 @@
 import { forwardRef, useEffect, useState } from 'react';
-import { cx, getBadgeClass, getButtonClass, ui } from '../designSystem.js';
+import { cx, getBadgeClass, getButtonClass, playerUi, ui } from '../designSystem.js';
 import { getCharacterIcon } from '../art/characters/index.js';
+import {ensureUiSource,reportUiSourceFailure,getUiSourceFailures,subscribeUiSourceFailures} from '../art/integration/uiSourceAssets.js';
 
-export function Button({ variant = 'default', size = 'sm', selected = false, className = '', children, ...props }) {
+const originalSymbols = new Set(['leafLogo', 'shattered', 'wave', 'check', 'warning', 'arrowUp', 'arrowLeft', 'arrowDown', 'arrowRight', 'upgradeBlueprint', 'heart', 'gem', 'blueprint', 'close']);
+const originalButtons = { stickerSage: ['button-sage', 29], stickerCoral: ['button-coral', 29], stickerBlue: ['button-blue', 26], stickerHoney: ['button-honey', 26], stickerQuiet: ['card', 16] };
+export function originalSkin(id, slice, width = 16) {
+  const source=`${import.meta.env.BASE_URL}art/original/v1/${id}.png`;if(typeof Image!=='undefined')void ensureUiSource(source);
+  return { background: 'transparent', boxShadow: 'none', borderColor: 'transparent', borderImageSource: `url(${import.meta.env.BASE_URL}art/original/v1/${id}.png)`, borderImageSlice: `${slice} fill`, borderImageWidth: width, borderImageRepeat: 'stretch' };
+}
+
+export function OriginalArt({ id, className = '', style, ...props }) {
+  return <img src={`${import.meta.env.BASE_URL}art/original/v1/${id}.png`} alt="" aria-hidden="true" draggable={false} data-original-art={id} className={className} style={style} {...props} onError={event=>{reportUiSourceFailure(event.currentTarget.currentSrc||event.currentTarget.src);props.onError?.(event)}} />;
+}
+
+export function OriginalKeycap({ children, className = '' }) {
+  return <kbd className={cx('inline-flex items-center justify-center px-1.5 py-0.5 font-bold', className)} style={{ borderStyle: 'solid', borderWidth: 1, ...originalSkin('keycap', 9, 6) }} data-original-art="keycap">{children}</kbd>;
+}
+
+export function Button({ variant = 'default', size = 'sm', selected = false, className = '', style, children, ...props }) {
+  const skin = originalButtons[variant];
   return (
-    <button className={getButtonClass({ variant, size, selected, className })} {...props}>
+    <button data-original-art={skin?.[0]} className={getButtonClass({ variant, size, selected, className })} style={{ ...style, ...playerUi.buttonType[size], ...(skin ? originalSkin(...skin) : {}) }} {...props}>
       {children}
     </button>
   );
@@ -14,10 +31,11 @@ export function Badge({ variant = 'neutral', className = '', children }) {
   return <span className={getBadgeClass({ variant, className })}>{children}</span>;
 }
 
-export const Panel = forwardRef(function Panel({ variant = 'card', className = '', children, ...props }, ref) {
+export const Panel = forwardRef(function Panel({ variant = 'card', className = '', style, children, ...props }, ref) {
   const variantClass = ui.surface[variant] ?? ui.surface.card;
+  const skin = variant.startsWith('sticker') ? (variant === 'stickerCard' ? 'card' : 'panel') : null;
   return (
-    <div ref={ref} className={cx(variantClass, className)} {...props}>
+    <div ref={ref} data-original-art={skin || undefined} className={cx(variantClass, className)} style={{ ...style, ...(skin ? originalSkin(skin, 16) : {}) }} {...props}>
       {children}
     </div>
   );
@@ -57,23 +75,18 @@ export function CharacterIcon({ artId, label, className = '' }) {
   const icon = getCharacterIcon(artId);
   const [failedSrc, setFailedSrc] = useState(null);
   if (!icon || failedSrc === icon.src) {
+    if(!icon)queueMicrotask(()=>reportUiSourceFailure('character-icon:'+artId,'Missing original icon binding'));
     return <span data-art-missing={artId || 'unspecified'} className={cx('flex items-center justify-center text-center text-xs font-semibold', className)}>{label}</span>;
   }
-  return <img src={icon.src} alt={icon.alt || label} width={icon.width} height={icon.height} draggable={false} onError={() => setFailedSrc(icon.src)} data-art-id={artId} className={cx('object-contain', className)} />;
+  return <img src={icon.src} alt={icon.alt || label} width={icon.width} height={icon.height} draggable={false} onError={() => {setFailedSrc(icon.src);reportUiSourceFailure(icon.src)}} data-art-id={artId} className={cx('object-contain', className)} />;
 }
 
 export function StickerSymbol({ kind, className = '' }) {
-  const paths = {
-    heart: <path d="M32 55C-6 31 10 3 26 13L32 19 38 13C54 3 70 31 32 55Z" fill="#F4ADA0" />,
-    gem: <><path d="M32 5 58 32 32 59 6 32Z" fill="#A8D8BC" /><path d="m32 5-9 27 9 27M6 32h52" opacity=".2" fill="none" /></>,
-    blueprint: <><rect x="12" y="8" width="40" height="49" rx="5" fill="#C7E4F4" /><path d="M22 19h20M22 46h20M32 40V26m-8 8 8-8 8 8" fill="none" /></>,
-    clock: <><circle cx="32" cy="32" r="24" fill="#FFF9EF" /><path d="M32 17v16l12 7" fill="none" /></>,
-    pause: <><path d="M23 16v32M41 16v32" strokeWidth="7" /></>,
-    sound: <><path d="M9 25h11l14-12v38L20 39H9Z" fill="#F8DDAA" /><path d="M42 22q14 10 0 20M47 14q24 18 0 36" fill="none" /></>,
-    muted: <><path d="M9 25h11l14-12v38L20 39H9Z" fill="#F8DDAA" /><path d="m42 25 14 14m0-14L42 39" fill="none" /></>,
-    close: <path d="m18 18 28 28m0-28L18 46" fill="none" />,
-  };
-  return <svg viewBox="0 0 64 64" aria-hidden="true" className={cx('shrink-0', className)} stroke="#4B281C" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none">{paths[kind] ?? paths.blueprint}</svg>;
+  if(originalSymbols.has(kind))return <OriginalArt id={kind} className={cx('shrink-0 object-contain',className)}/>;
+  const supplements = new Set(['clock', 'boss', 'phase', 'pause', 'sound', 'muted']);
+  if(supplements.has(kind))return <OriginalArt id={'supplement/'+kind} className={cx('shrink-0 object-contain',className)}/>;
+  queueMicrotask(()=>reportUiSourceFailure('symbol:'+kind,'Missing original symbol binding'));
+  return <span aria-hidden="true" data-art-missing={kind} className={className} />;
 }
 
 export function useModalFocus(ref, visible) {
@@ -97,3 +110,6 @@ export function useModalFocus(ref, visible) {
     };
   }, [ref, visible]);
 }
+
+// Plain failure text is intentional diagnostic UI; it never substitutes program-authored artwork.
+export function OriginalAssetNotice(){const[failures,setFailures]=useState(getUiSourceFailures);useEffect(()=>subscribeUiSourceFailures(setFailures),[]);if(!failures.length)return null;return <div role="alert" className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#FFF9EF] p-6 text-center text-base text-[#4B281C]"><p>美术资源不完整，游戏已暂停，请刷新重试</p><p className="mt-3 break-all">{failures.map(f=>f.url).join('、')}</p></div>}

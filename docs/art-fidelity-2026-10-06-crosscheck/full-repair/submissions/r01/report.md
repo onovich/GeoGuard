@@ -1,0 +1,9 @@
+# S1 asset preflight READY r01 (not complete package)
+
+22 deterministic original-pixel candidates extracted with sourceSHA/crop/processing/outputSHA in public/art/original/v1/manifest.json. Generator scripts/art-validation/extract-original-art.py contains no SVG rasterization/shape authoring. Sources are effectiveB05/B06/B07/DUI03. Hero/character runtime not yet touched.
+
+Initial selfreview rejected miscropped clock/root-shadow, removed both outputs and manifest entries (asset gaps remain). Corrected gem full diamond, keyboard arrow coordinates, warning circle and upgrade arrow lower-line crop. Exterior-connected pale paper and sampled-corner background removed, enclosed source fills retained; tiny disconnected dust components<12px removed. Leaf/shattered include original independent source rays in samecrop, explicitly retained not invented.
+
+Nine-slice skin mosaic preserves source corner regions; edge row/col sampled from text-free edge strips, center takes original text-freepixel. No generated label pixels intentionally retained. source contact s1-source-contact.jpg; actual browser expansion at skin-preview.html on cream/dark backgrounds required before accepting skins. Main game unchanged pending asset source/alpha acceptance, no silent selfdraw fallback introduced.
+
+Open gaps not claimed passed: clock/sound/muted/boss/phase need verified source or formallynew imagegen asset; root-shadow needs clean source; body/particles/projectiles futureS2/S3. This READY asks only22candidate extraction preflight review, notS1 full completion. Continue other independent source acquisition while waiting.
